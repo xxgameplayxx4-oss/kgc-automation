@@ -22,3 +22,8 @@ All 10 clips were launched in parallel at 1080p before the 720p / reduced-list u
 voice/<voice>/<scene>.mp3 for scenes 1-9 (edge-tts, rate -5%). 54 files in total.
 - German: de-DE-ConradNeural, de-DE-FlorianMultilingualNeural, de-DE-SeraphinaMultilingualNeural
 - English: en-GB-RyanNeural, en-GB-SoniaNeural, en-US-AndrewMultilingualNeural (scenes 4, 7 and 8 needed a free re-run after "No audio received")
+
+## Chosen voices (KGC, 2026-11-03)
+
+- German: de-DE-SeraphinaMultilingualNeural, in voice/de-DE-SeraphinaMultilingualNeural/1-9.mp3
+- English: en-GB-SoniaNeural, in voice/en-GB-SoniaNeural/1-9.mp3
