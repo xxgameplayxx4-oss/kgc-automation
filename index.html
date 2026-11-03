@@ -1804,17 +1804,17 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 /* ==== work ==== */
 (function () {
   /* Portfolio: names and categories only, no links (owner's request). Images live in assets/work/. */
-  const W = (img, name, de, en) => ({ img: 'assets/work/' + img + '.webp', name, kind: { de, en }, alt: { de: 'Startseite der Website von ' + name, en: 'Homepage of the ' + name + ' website' } });
+  const W = (img, name, de, en) => ({ img, name, kind: { de, en }, alt: { de: 'Startseite der Website von ' + name, en: 'Homepage of the ' + name + ' website' } });
   const WORK = [
-    W('souperbe', 'souperbe', 'Café & Restaurant · Brugg', 'Café & restaurant · Brugg'),
-    W('boxschule', 'Boxschule Gebenstorf', 'Boxclub · Gebenstorf', 'Boxing club · Gebenstorf'),
-    W('brugg-barber', 'Brugg Barber Shop', 'Barbier · Brugg', 'Barber · Brugg'),
-    W('halimi', 'R. Halimi Reinigungen', 'Reinigung · Aarau', 'Cleaning · Aarau'),
-    W('dd-informatic', 'D&D Informatic', 'Kassensysteme & IT · Brugg', 'POS & IT · Brugg'),
-    W('iservice24', 'i-Service24', 'Handyreparatur · Wildegg', 'Phone repair · Wildegg'),
-    W('freestar', 'Freestar-Informatik', 'IT-Dienstleistungen', 'IT services'),
-    W('reve', 'ReVe Hauswartung', 'Hauswartung · Brugg', 'Facility care · Brugg'),
-    W('swisstech', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'Precision manufacturing'),
+    W('assets/work/souperbe.webp', 'souperbe', 'Café & Restaurant · Brugg', 'Café & restaurant · Brugg'),
+    W('assets/work/boxschule.webp', 'Boxschule Gebenstorf', 'Boxclub · Gebenstorf', 'Boxing club · Gebenstorf'),
+    W('assets/work/brugg-barber.webp', 'Brugg Barber Shop', 'Barbier · Brugg', 'Barber · Brugg'),
+    W('assets/work/halimi.webp', 'R. Halimi Reinigungen', 'Reinigung · Aarau', 'Cleaning · Aarau'),
+    W('assets/work/dd-informatic.webp', 'D&D Informatic', 'Kassensysteme & IT · Brugg', 'POS & IT · Brugg'),
+    W('assets/work/iservice24.webp', 'i-Service24', 'Handyreparatur · Wildegg', 'Phone repair · Wildegg'),
+    W('assets/work/freestar.webp', 'Freestar-Informatik', 'IT-Dienstleistungen', 'IT services'),
+    W('assets/work/reve.webp', 'ReVe Hauswartung', 'Hauswartung · Brugg', 'Facility care · Brugg'),
+    W('assets/work/swisstech.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'Precision manufacturing'),
   ];
   document.addEventListener('DOMContentLoaded', () => {
     const rail = document.getElementById('work-rail');
