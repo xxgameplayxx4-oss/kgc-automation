@@ -935,7 +935,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       </button>
     </div>
     <div class="vsl-foot">
-      <p class="vsl-note"><span data-l="de">Mit Ton und Untertiteln. Danach berechnen Sie Ihre Offerte direkt hier.</span><span data-l="en">With sound and subtitles. Then get your quote right here.</span></p>
+      <p class="vsl-note"><span data-l="de">Mit Ton, Untertitel zuschaltbar. Danach berechnen Sie Ihre Offerte direkt hier.</span><span data-l="en">With sound, subtitles available. Then get your quote right here.</span></p>
       <button type="button" class="btn btn-cta" data-quote=""><span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span> →</button>
     </div>
   </div>
@@ -1677,8 +1677,9 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       v.querySelectorAll('track').forEach(t => t.remove());
       const tr = document.createElement('track');
       tr.kind = 'subtitles'; tr.srclang = l; tr.label = l === 'de' ? 'Deutsch' : 'English';
-      tr.src = 'assets/media/vsl-' + l + '.vtt'; tr.default = true;
+      tr.src = 'assets/media/vsl-' + l + '.vtt'; tr.default = false;
       v.appendChild(tr);
+      tr.track.mode = 'hidden'; // captions off by default, still selectable in the player
       if (wasPlaying) v.play();
     };
     btn.addEventListener('click', () => {

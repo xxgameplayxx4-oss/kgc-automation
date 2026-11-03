@@ -13,8 +13,9 @@
       v.querySelectorAll('track').forEach(t => t.remove());
       const tr = document.createElement('track');
       tr.kind = 'subtitles'; tr.srclang = l; tr.label = l === 'de' ? 'Deutsch' : 'English';
-      tr.src = 'assets/media/vsl-' + l + '.vtt'; tr.default = true;
+      tr.src = 'assets/media/vsl-' + l + '.vtt'; tr.default = false;
       v.appendChild(tr);
+      tr.track.mode = 'hidden'; // captions off by default, still selectable in the player
       if (wasPlaying) v.play();
     };
     btn.addEventListener('click', () => {
