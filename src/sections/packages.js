@@ -5,10 +5,11 @@
     const K = KGC; let view = 'monthly';
     const L = (de, en) => K.lang === 'en' ? en : de;
 
+    /* Saving over the first year (setup + 12 months) versus booking the same automations singly at their lowest price */
     function saving(p) {
-      let sum = p.includes.reduce((a, id) => a + K.offer(id).setup[0], 0);
-      p.choice.forEach(g => { sum += K.offer(g[0]).setup[0]; });
-      return sum - p.setup;
+      const ids = p.includes.concat(p.choice.map(g => g[0]));
+      const single = ids.reduce((a, id) => a + K.offer(id).setup[0] + 12 * K.offer(id).monthly[0], 0);
+      return Math.floor((single - p.setup - 12 * p.monthly) / 10) * 10;
     }
     function render() {
       seg.innerHTML = [['monthly', L('Einmalig + monatlich', 'One-off + monthly')], ['year', L('Erstes Jahr total', 'First year total')]]
@@ -25,7 +26,7 @@
           <div><h3 class="packages-name" id="pk-${p.id}">${nm}</h3><p class="packages-tag">${K.t(p.tagline)}</p></div>
           <div class="packages-price">${price}</div>
           <ul class="packages-list">${items}</ul>
-          <p class="packages-save">${sv > 0 ? L(`Sie sparen ${K.chf(sv)} gegenüber Einzelpreisen`, `You save ${K.chf(sv)} compared with single prices`) : ''}</p>
+          <p class="packages-save">${sv > 0 ? L(`Sie sparen ${K.chf(sv)} im ersten Jahr gegenüber Einzelpreisen`, `You save ${K.chf(sv)} in the first year compared with single prices`) : ''}</p>
           <button type="button" class="btn ${feat ? 'btn-cta' : 'btn-ghost'}" data-quote="${p.id}">${L(nm + ' wählen', 'Choose ' + nm)}</button>
         </article>`;
       }).join('');

@@ -6,8 +6,9 @@
 
   function price(o) {
     const de = KGC.lang === 'de';
-    return '<span>' + (de ? 'ab ' : 'from ') + KGC.chf(o.setup[0]) + (de ? ' einmalig' : ' one-time') + '</span>' +
-           '<span>' + (de ? 'ab ' : 'from ') + KGC.chf(o.monthly[0]) + (de ? '/Mt.' : '/mo') + '</span>';
+    const ab = r => r[0] === r[1] ? '' : (de ? 'ab ' : 'from ');
+    return '<span>' + ab(o.setup) + KGC.chf(o.setup[0]) + (de ? ' einmalig' : ' one-time') + '</span>' +
+           '<span>' + ab(o.monthly) + KGC.chf(o.monthly[0]) + (de ? '/Mt.' : '/mo') + '</span>';
   }
 
   function render() {
