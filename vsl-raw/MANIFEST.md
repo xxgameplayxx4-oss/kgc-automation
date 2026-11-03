@@ -25,8 +25,8 @@ voice/<voice>/<scene>.mp3 for scenes 1-9 (edge-tts, rate -5%). 54 files in total
 
 ## Chosen voices (KGC, 2026-11-03)
 
-- German: de-DE-SeraphinaMultilingualNeural, in voice/de-DE-SeraphinaMultilingualNeural/1-9.mp3
-- English: en-GB-SoniaNeural, in voice/en-GB-SoniaNeural/1-9.mp3
+- German: de-DE-SeraphinaMultilingualNeural, in voice/de-DE-SeraphinaMultilingualNeural/1-9.mp3, re-generated at rate +0% (was -5%), about 5% faster
+- English: en-GB-SoniaNeural, in voice/en-GB-SoniaNeural/1-9.mp3, re-generated at rate +0% (was -5%), about 5% faster
 
 ## Cost (from KGC's Higgsfield transaction history)
 
