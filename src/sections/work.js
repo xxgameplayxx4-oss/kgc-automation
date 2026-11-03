@@ -9,12 +9,12 @@
     C('assets/work/precision.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'precision manufacturing'),
     C('assets/work/boxing.webp', 'Boxschule Gebenstorf', 'Boxclub', 'boxing club'),
     D('assets/work/restaurant.webp', 'Café & Restaurant', 'Café & restaurant'),
-    D('assets/work/barber.webp', 'Barbier', 'Barber shop'),
+    D('assets/work/barber.webp', 'Barbier', 'Barbershop'),
     D('assets/work/cleaning.webp', 'Reinigungsfirma', 'Cleaning company'),
     D('assets/work/pos-it.webp', 'Kassensysteme & IT', 'POS & IT'),
     D('assets/work/phone-repair.webp', 'Handyreparatur', 'Phone repair'),
     D('assets/work/it-services.webp', 'IT-Dienstleister', 'IT services'),
-    D('assets/work/facility.webp', 'Hauswartung', 'Facility care'),
+    D('assets/work/facility.webp', 'Hauswartung', 'Building maintenance'),
   ];
   document.addEventListener('DOMContentLoaded', () => {
     const rail = document.getElementById('work-rail');

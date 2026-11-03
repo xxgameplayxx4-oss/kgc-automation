@@ -137,3 +137,4 @@
 .quote-nav .btn:disabled { opacity: .85; cursor: progress; }
 .quote-other { margin-top: 4px; }
 .quote-other[hidden] { display: none; }
+.quote-items li.disc { color: var(--ok); font-weight: 600; }

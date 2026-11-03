@@ -6,19 +6,22 @@
     const L = (de, en) => K.lang === 'en' ? en : de;
 
     /* Saving over the first year (setup + 12 months) versus booking the same automations singly at their lowest price */
+    /* Package one-time price after its discount (see KGC.discount) */
+    function pset(p) { const n = p.includes.length + p.choice.length; return p.setup - K.r5(p.setup * K.discount(n, true).rate); }
     function saving(p) {
       const ids = p.includes.concat(p.choice.map(g => g[0]));
-      const single = ids.reduce((a, id) => a + K.offer(id).setup[0] + 12 * K.offer(id).monthly[0], 0);
-      return Math.floor((single - p.setup - 12 * p.monthly) / 10) * 10;
+      const s = ids.reduce((a, id) => a + K.offer(id).setup[0], 0), m = ids.reduce((a, id) => a + K.offer(id).monthly[0], 0);
+      const single = s - K.r5(s * K.discount(ids.length, false).rate) + 12 * m;
+      return Math.floor((single - pset(p) - 12 * p.monthly) / 10) * 10;
     }
     function render() {
-      seg.innerHTML = [['monthly', L('Einmalig + monatlich', 'One-off + monthly')], ['year', L('Erstes Jahr total', 'First year total')]]
+      seg.innerHTML = [['monthly', L('Einmalig + monatlich', 'One-time + monthly')], ['year', L('Erstes Jahr total', 'First year total')]]
         .map(([k, t]) => `<button type="button" data-view="${k}" aria-pressed="${view === k}">${t}</button>`).join('');
       grid.innerHTML = K.packages.map(p => {
-        const feat = !!p.featured, sv = saving(p), year = p.setup + 12 * p.monthly, nm = K.t(p.name);
+        const feat = !!p.featured, sv = saving(p), ps = pset(p), was = ps < p.setup ? `<s>${K.chf(p.setup)}</s> ` : '', year = ps + 12 * p.monthly, nm = K.t(p.name);
         const price = view === 'monthly'
-          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${K.chf(p.setup)} ${L('einmalig', 'one-off')}</div>`
-          : `<div class="packages-big">${K.chf(year)}<small>${L('im 1. Jahr', 'in year 1')}</small></div><div class="packages-sub">${K.chf(p.setup)} + 12 × ${K.chf(p.monthly)}</div>`;
+          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${was}${K.chf(ps)} ${L('einmalig', 'one-time')}</div>`
+          : `<div class="packages-big">${K.chf(year)}<small>${L('im 1. Jahr', 'in year 1')}</small></div><div class="packages-sub">${K.chf(ps)} + 12 × ${K.chf(p.monthly)}</div>`;
         const items = p.includes.map(id => `<li>${K.t(K.offer(id).name)}</li>`).join('')
           + p.choice.map(g => `<li class="is-choice">${g.map(id => K.t(K.offer(id).name)).join(` <em>${L('oder', 'or')}</em> `)}</li>`).join('');
         return `<article class="packages-card${feat ? ' is-featured' : ''}" aria-labelledby="pk-${p.id}">

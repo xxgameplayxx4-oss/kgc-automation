@@ -50,8 +50,8 @@
       else msg = L('So viel bleibt jeden Monat liegen, ohne dass es jemand bemerkt.', 'This is what is left on the table every month, unnoticed.');
       if (total >= 1) {
         const x = total / COST;
-        if (x >= 1.5) { const s = x >= 10 ? String(Math.round(x)) : x.toFixed(1); ratio = '≈ ' + (K.lang === 'en' ? s : s.replace('.', ',')) + L('× Ihr Monatsbeitrag', '× your monthly fee'); }
-        else ratio = L('Etwa so viel wie der Monatsbeitrag. Der Gewinn liegt dann in der Ruhe.', 'About the size of the monthly fee. The gain then is peace of mind.');
+        if (x >= 1.5) { const s = x >= 10 ? String(Math.round(x)) : x.toFixed(1); ratio = '≈ ' + (K.lang === 'en' ? s : s.replace('.', ',')) + L('× Ihr Monatspreis', '× your monthly price'); }
+        else ratio = L('Etwa so viel wie der Monatspreis. Der Gewinn liegt dann in der Ruhe.', 'About the size of the monthly price. The gain is then peace of mind.');
       }
       $('roi-msg').textContent = msg; $('roi-ratio').textContent = ratio;
       clearTimeout(srTimer);

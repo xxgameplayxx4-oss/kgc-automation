@@ -38,15 +38,21 @@
       const S = sel(); let s = [0, 0], m = [0, 0];
       if (S.p) { s = [S.p.setup, S.p.setup]; m = [S.p.monthly, S.p.monthly]; }
       S.extras.forEach(id => { const x = po(K.offer(id)); s[0] += x.s[0]; s[1] += x.s[1]; m[0] += x.m[0]; m[1] += x.m[1]; });
+      /* Discount on the one-time cost of the automations (not the website): package 25 %, or by count 4/5/6+ = 30/40/50 %; the higher one applies */
+      const n = S.base.length + S.extras.length, D = K.discount(n, !!S.p);
+      const off = [K.r5(s[0] * D.rate), K.r5(s[1] * D.rate)];
+      s = [s[0] - off[0], s[1] - off[1]];
       const W = K.website(st.web); if (W) { s[0] += W.price; s[1] += W.price; }
-      return { S, W, setup: s, monthly: m, year: [s[0] + 12 * m[0], s[1] + 12 * m[1]] };
+      return { S, W, D, off, n, setup: s, monthly: m, year: [s[0] + 12 * m[0], s[1] + 12 * m[1]] };
     }
     // cheapest package that covers every picked offer (one per choice group)
     function tip() {
       if (st.pkg !== 'custom' || !st.picked.size) return null;
-      const ids = [...st.picked], minSetup = ids.reduce((a, id) => a + po(K.offer(id)).s[0], 0);
+      const ids = [...st.picked], raw = ids.reduce((a, id) => a + po(K.offer(id)).s[0], 0);
+      const minSetup = raw - K.r5(raw * K.discount(ids.length, false).rate);
       for (const p of K.packages) {
-        if (!(minSetup > p.setup)) continue;
+        const n = p.includes.length + p.choice.length, pSetup = p.setup - K.r5(p.setup * K.discount(n, true).rate);
+        if (!(minSetup > pSetup)) continue;
         const used = new Set(), choice = p.choice.map(g => g[0]); let ok = true;
         ids.forEach(id => {
           if (p.includes.includes(id)) return;
@@ -54,7 +60,7 @@
           if (gi < 0 || used.has(gi)) { ok = false; return; }
           used.add(gi); choice[gi] = id;
         });
-        if (ok) return { p, choice, save: minSetup - p.setup };
+        if (ok) return { p, choice, save: minSetup - pSetup };
       }
       return null;
     }
@@ -92,6 +98,7 @@
       } else if (S.extras.length) {
         S.extras.forEach(id => { const x = po(K.offer(id)); h += li('', nm(id), K.range(x.s[0], x.s[1])); });
       } else if (!T.W) h = `<li><span>${L('Noch nichts gewählt.', 'Nothing selected yet.')}</span></li>`;
+      if (T.off[0] > 0) h += li('disc', K.t(T.D.label) + ' · ' + Math.round(T.D.rate * 100) + (K.lang === 'de' ? ' %' : '%'), '− ' + K.range(T.off[0], T.off[1]));
       if (T.W) h += li('', (S.p || S.extras.length ? '+ ' : '') + K.t(T.W.name), (T.W.from ? L('ab ', 'from ') : '') + K.chf(T.W.price));
       return h;
     }
@@ -122,7 +129,7 @@
           <div class="quote-sum-title">${L('Ihre Auswahl', 'Your selection')}</div>
           <ul class="quote-items" id="q-items"></ul>
           <dl class="quote-tot">
-            <div class="big"><dt>${L('Einrichtung (einmalig)', 'Setup (one-off)')}</dt><dd>${money('setup')}</dd></div>
+            <div class="big"><dt>${L('Einrichtung (einmalig)', 'Setup (one-time)')}</dt><dd>${money('setup')}</dd></div>
             <div class="big"><dt>${L('Betreuung pro Monat', 'Care per month')}</dt><dd>${money('monthly')}</dd></div>
             <div class="yr"><dt>${L('Erstes Jahr total', 'First year total')}</dt><dd>${money('year')}</dd></div>
           </dl>
@@ -162,12 +169,12 @@
       }
       const rest = K.offers.map(o => o.id).filter(id => !S.base.includes(id));
       h += `<fieldset class="quote-fs"><legend>${S.p ? L('Weitere Automationen dazu', 'Add more automations') : L('Automationen wählen', 'Choose automations')}</legend>
-        <p class="quote-sub">${S.p ? L('Optional. Jede Zusatzleistung wird mit ihrer Preisspanne zur Auswahl addiert.', 'Optional. Each extra adds its price range to your selection.') : L('Mehrfachauswahl. Die Preisspanne sehen Sie in Ihrer Auswahl.', 'Pick as many as you like. “From” prices; the full range shows in your selection.')}</p>
+        <p class="quote-sub">${S.p ? L('Optional. Jede Zusatzleistung wird zu Ihrer Auswahl addiert.', 'Optional. Each extra is added to your selection.') : L('Mehrfachauswahl möglich. Ab 4 Automationen gibt es Rabatt auf die Einrichtung.', 'Pick as many as you like. From 4 automations you get a discount on setup.')}</p>
         <div class="quote-rows">${rest.map(id => rowHtml(id, 'x')).join('')}</div></fieldset>`;
       const wopts = [{ id: 'none', name: { de: 'Keine Website nötig', en: 'No website needed' }, short: { de: 'Die Automationen werden an Ihre bestehende Seite angebunden.', en: 'The automations connect to your existing site.' } }].concat(K.websites);
       h += `<fieldset class="quote-fs"><legend>${L('Website dazu', 'Add a website')}</legend><div class="quote-rows">`
         + wopts.map(w => `<label class="quote-row${st.web === w.id ? ' is-on' : ''}" for="q-web-${w.id}" data-row="web-${w.id}"><input type="radio" name="q-web" id="q-web-${w.id}" value="${w.id}"${st.web === w.id ? ' checked' : ''}>
-          <span><span class="t">${K.t(w.name)}</span><span class="s">${K.t(w.short)}</span></span><span class="p">${w.price ? (w.from ? L('ab ', 'from ') : '') + K.chf(w.price) + L(' einmalig', ' one-off') : ''}</span></label>`).join('')
+          <span><span class="t">${K.t(w.name)}</span><span class="s">${K.t(w.short)}</span></span><span class="p">${w.price ? (w.from ? L('ab ', 'from ') : '') + K.chf(w.price) + L(' einmalig', ' one-time') : ''}</span></label>`).join('')
         + `</div></fieldset>`;
       return h;
     }
@@ -289,7 +296,7 @@
       const f = st.f;
       return [
         { title: l('Auswahl', 'Selection'), rows: choice },
-        { title: l('Richtpreise', 'Indicative prices'), rows: [[l('Einrichtung (einmalig)', 'Setup (one-off)'), rng(T.setup)], [l('Betreuung pro Monat', 'Care per month'), rng(T.monthly)], [l('Erstes Jahr total', 'First year total'), rng(T.year), 'tot']] },
+        { title: l('Richtpreise', 'Indicative prices'), rows: (T.off[0] > 0 ? [[T.D.label[lang] + ' (' + Math.round(T.D.rate * 100) + (lang === 'de' ? ' %' : '%') + ')', '− ' + rng(T.off)]] : []).concat([[l('Einrichtung (einmalig)', 'Setup (one-time)'), rng(T.setup)], [l('Betreuung pro Monat', 'Care per month'), rng(T.monthly)], [l('Erstes Jahr total', 'First year total'), rng(T.year), 'tot']]) },
         { title: l('Betrieb', 'Business'), rows: [[l('Branche', 'Industry'), st.industry === 'other' ? (st.industryOther.trim() || l('Andere', 'Other')) : (ind ? ind.name[lang] : '')], [l('Mitarbeitende', 'Employees'), l(stf[1], stf[2])], [l('Kanton', 'Canton'), l(cn[1], cn[2] || cn[1])],
           [l('Kundensprachen', 'Customer languages'), LANGS.filter(x => st.langs.has(x[0])).map(x => l(x[1], x[2])).join(', ') || '–'], [l('Start', 'Start'), l(start[1], start[2])]] },
         { title: l('Kontakt', 'Contact'), rows: [[l('Name', 'Name'), f.name.trim()], [l('Firma', 'Company'), f.firma.trim()], [l('E-Mail', 'Email'), f.email.trim()]]
@@ -298,7 +305,7 @@
     }
     function textOf(lang) {
       const l = (de, en) => (lang === 'en' ? en : de);
-      return l('KGC Offerte-Anfrage', 'KGC quote request') + ' ' + new Date().toLocaleDateString('de-CH') + '\n\n'
+      return l('KGC-Offertanfrage', 'KGC quote request') + ' ' + new Date().toLocaleDateString('de-CH') + '\n\n'
         + sections(lang).map(s => s.title.toUpperCase() + '\n' + s.rows.map(r => r[0] + ': ' + r[1]).join('\n')).join('\n\n')
         + '\n\n' + l('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch. 50 % der einmaligen Kosten sind bei Auftrag fällig, 50 % nach Fertigstellung.', 'Indicative prices in CHF. Binding quote after the first call. 50% of the one-time cost is due on order, 50% on completion.');
     }
@@ -354,7 +361,7 @@
         const fields = { name: st.f.name.trim(), firma: st.f.firma.trim(), email: st.f.email.trim(), telefon: st.f.telefon.trim(), nachricht: st.f.nachricht.trim(), zusammenfassung: textOf('de') + (K.lang === 'en' ? '\n\n(Seitensprache: Englisch)' : '') };
         /* 1) FormSubmit e-mails the request straight to KGC. 2) Netlify Forms keeps a copy in the Netlify dashboard (only works when hosted on Netlify). */
         const viaMail = fetch('https://formsubmit.co/ajax/khangcung196@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(Object.assign({ _subject: 'Neue Offerten-Anfrage – KGC Automation', _template: 'table', _captcha: 'false', _replyto: fields.email, _honey: root.querySelector('[name="_honey"]').value }, fields)) })
+          body: JSON.stringify(Object.assign({ _subject: 'Neue Offertanfrage – KGC Automation', _template: 'table', _captcha: 'false', _replyto: fields.email, _honey: root.querySelector('[name="_honey"]').value }, fields)) })
           .then(async r => { let j = null; try { j = await r.json(); } catch (e) {} return r.ok && !!j && (j.success === true || j.success === 'true'); }).catch(() => false);
         const viaNetlify = fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(Object.assign({ 'form-name': 'offerte-anfrage', 'bot-field': '' }, fields)).toString() })
           .then(r => r.ok).catch(() => false);

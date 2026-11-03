@@ -41,7 +41,7 @@
     }).join('');
     const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
     const name = t(KGC.industries.find(i => i.id === ind).name);
-    count.textContent = ind === 'all' ? (de ? 'Alle 10 Mechanismen' : 'All 10 mechanisms')
+    count.textContent = ind === 'all' ? (de ? 'Alle 10 Automationen' : 'All 10 automations')
       : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
   }
 
@@ -64,7 +64,7 @@
       const de = KGC.lang === 'de';
       const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
       const name = t(KGC.industries.find(i => i.id === ind).name);
-      count.textContent = ind === 'all' ? (de ? 'Alle 10 Mechanismen' : 'All 10 mechanisms') : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
+      count.textContent = ind === 'all' ? (de ? 'Alle 10 Automationen' : 'All 10 automations') : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
     });
     grid.addEventListener('click', e => {
       const cell = e.target.closest('.offers-cell');

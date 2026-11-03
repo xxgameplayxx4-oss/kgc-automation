@@ -436,6 +436,12 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   .offers-cell[data-id="crm"] > .offers-name { grid-row: 2 / span 3; }
 }
 
+.offers-disc { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-bottom: 16px; padding: 16px 20px; border-radius: 12px; background: var(--sage-soft); color: var(--ink); }
+.offers-disc-t { font-weight: 600; font-size: var(--t-sm); }
+.offers-disc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: var(--t-sm); color: var(--graphite); }
+.offers-disc li { display: inline-flex; gap: 6px; align-items: baseline; }
+.offers-disc b { font-family: var(--f-data); font-weight: 500; color: var(--sage); }
+
 /* ==== work ==== */
 .work-head { display: grid; gap: 16px; max-width: 44rem; margin-bottom: clamp(32px, 4vw, 56px); }
 .work-rail {
@@ -577,6 +583,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 .packages-how-item h3 { font-family: var(--f-body); font-size: var(--t-md); font-weight: 600; line-height: 1.3; letter-spacing: 0; margin-bottom: 4px; }
 .packages-how-item p { font-size: var(--t-sm); color: var(--graphite); }
 @media (max-width: 900px) { .packages-how { grid-template-columns: 1fr; gap: 12px; } }
+.packages-sub s { color: var(--graphite); opacity: .7; margin-right: 4px; }
 
 /* ==== quote ==== */
 .quote-head { max-width: 760px; display: grid; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
@@ -718,6 +725,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 .quote-nav .btn:disabled { opacity: .85; cursor: progress; }
 .quote-other { margin-top: 4px; }
 .quote-other[hidden] { display: none; }
+.quote-items li.disc { color: var(--ok); font-weight: 600; }
 
 /* ==== faq ==== */
 .faq-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start; }
@@ -869,7 +877,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         <span data-l="en">Your business runs. <em class="it">Even when you don’t.</em></span>
       </h1>
       <p class="lede hero-lede">
-        <span data-l="de">Wir bauen keine Uhren, sondern Abläufe, die so präzise laufen wie eine: Buchungen, Bewertungen, Offerten und Rechnungen erledigen sich von selbst.</span>
+        <span data-l="de">Wir bauen keine Uhren. Wir bauen Abläufe, die genauso präzise laufen: Buchungen, Bewertungen, Offerten und Rechnungen erledigen sich von selbst.</span>
         <span data-l="en">We don’t make watches. We build workflows that run just as precisely: bookings, reviews, quotes and invoices take care of themselves.</span>
       </p>
       <div class="hero-actions" id="hero-actions">
@@ -879,7 +887,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         <a class="btn btn-lg hero-ghost" href="#demo"><span data-l="de">So funktioniert es</span><span data-l="en">See it work</span></a>
       </div>
       <p class="hero-trust">
-        <span data-l="de">Fixpreis ab CHF 400</span><span data-l="en">Fixed price from CHF 400</span>
+        <span data-l="de">Fixpreise ab CHF 150</span><span data-l="en">Fixed prices from CHF 150</span>
         <i aria-hidden="true">·</i>
         <span data-l="de">Daten in der Schweiz/EU</span><span data-l="en">Data in Switzerland/EU</span>
         <i aria-hidden="true">·</i>
@@ -896,7 +904,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <span class="eyebrow"><span data-l="de">Live-Ablauf</span><span data-l="en">Live sequence</span></span>
       <h2 id="demo-h"><span data-l="de">Sehen Sie zu, wie es <em class="it">läuft.</em></span><span data-l="en">Watch it <em class="it">run.</em></span></h2>
       <p class="lede">
-        <span data-l="de">Links sieht Ihr Kunde, rechts was im Hintergrund passiert.</span>
+        <span data-l="de">Links sieht Ihr Kunde, rechts, was im Hintergrund passiert.</span>
         <span data-l="en">On the left, what your customer sees. On the right, what happens behind the scenes.</span>
       </p>
     </header>
@@ -945,9 +953,9 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <li class="process-step">
         <span class="process-node" aria-hidden="true"></span>
         <span class="process-n num">01</span>
-        <h3><span data-l="de">Erstgespräch</span><span data-l="en">First conversation</span></h3>
+        <h3><span data-l="de">Erstgespräch</span><span data-l="en">First call</span></h3>
         <p class="process-meta"><span data-l="de">30 Min. · kostenlos</span><span data-l="en">30 min · free</span></p>
-        <p><span data-l="de">Wir klären, was bei Ihnen Zeit frisst. Vor Ort in der Region oder per Video.</span><span data-l="en">We work out what eats your time. On site in the region or by video call.</span></p>
+        <p><span data-l="de">Wir klären, was bei Ihnen Zeit frisst. Vor Ort in der Region oder per Video.</span><span data-l="en">We work out what eats your time. On site in the region or by video.</span></p>
       </li>
       <li class="process-step">
         <span class="process-node" aria-hidden="true"></span>
@@ -984,11 +992,20 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   <div class="wrap">
     <header class="offers-head">
       <span class="eyebrow"><span data-l="de">Leistungen</span><span data-l="en">Services</span></span>
-      <h2 id="offers-h"><span data-l="de">Zehn Mechanismen. Wählen Sie, was Ihnen <em class="it">Zeit kostet.</em></span><span data-l="en">Ten mechanisms. Choose what <em class="it">costs you time.</em></span></h2>
+      <h2 id="offers-h"><span data-l="de">Zehn Automationen. Wählen Sie, was Ihnen <em class="it">Zeit kostet.</em></span><span data-l="en">Ten automations. Choose what <em class="it">costs you time.</em></span></h2>
     </header>
     <div class="offers-filter">
       <div class="offers-pills" id="offers-pills" role="group" data-aria-de="Nach Branche filtern" data-aria-en="Filter by industry" aria-label="Nach Branche filtern"></div>
       <p class="offers-count num" id="offers-count" aria-live="polite"></p>
+    </div>
+    <div class="offers-disc">
+      <span class="offers-disc-t"><span data-l="de">Rabatt auf die Einrichtung</span><span data-l="en">Discount on setup</span></span>
+      <ul>
+        <li><b>25 %</b><span data-l="de">mit Paket</span><span data-l="en">with a package</span></li>
+        <li><b>30 %</b><span data-l="de">ab 4 Automationen</span><span data-l="en">from 4 automations</span></li>
+        <li><b>40 %</b><span data-l="de">ab 5 Automationen</span><span data-l="en">from 5 automations</span></li>
+        <li><b>50 %</b><span data-l="de">ab 6 Automationen</span><span data-l="en">from 6 automations</span></li>
+      </ul>
     </div>
     <div class="offers-grid" id="offers-grid"></div>
     <div class="offers-web" aria-labelledby="offers-web-h">
@@ -1010,10 +1027,10 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     <header class="work-head">
       <span class="eyebrow"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></span>
       <h2 id="work-h"><span data-l="de">Websites, die <em class="it">für sich sprechen.</em></span><span data-l="en">Websites that <em class="it">speak for themselves.</em></span></h2>
-      <p class="lede"><span data-l="de">Zwei Kundenprojekte, live. Dazu Entwürfe aus weiteren Branchen. Alle für Handy gebaut.</span><span data-l="en">Two client projects, live. Plus drafts from other industries. All built for phones.</span></p>
+      <p class="lede"><span data-l="de">Zwei Kundenprojekte, live. Dazu Entwürfe aus weiteren Branchen. Alle fürs Handy gebaut.</span><span data-l="en">Two client projects, live. Plus drafts from other industries. All built for phones.</span></p>
     </header>
   </div>
-  <div class="work-rail" id="work-rail" tabindex="0" data-aria-de="Arbeiten, horizontal scrollbar" data-aria-en="Work, scrolls horizontally" aria-label="Arbeiten, horizontal scrollbar"></div>
+  <div class="work-rail" id="work-rail" tabindex="0" data-aria-de="Arbeiten, seitlich scrollbar" data-aria-en="Work, scrolls horizontally" aria-label="Arbeiten, seitlich scrollbar"></div>
   <div class="wrap work-foot">
     <div class="work-nav">
       <button type="button" class="work-btn" id="work-prev" data-aria-de="Zurück" data-aria-en="Previous" aria-label="Zurück">←</button>
@@ -1030,8 +1047,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <span class="eyebrow"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></span>
       <h2><span data-l="de">Was Sie heute <em class="it">verlieren</em></span><span data-l="en">What slips <em class="it">through</em> today</span></h2>
       <p class="lede">
-        <span data-l="de">Verpasste Anrufe und Büroarbeit kosten Geld. Stellen Sie Ihre Zahlen ein.</span>
-        <span data-l="en">Missed calls and desk work cost money. Set your numbers.</span>
+        <span data-l="de">Verpasste Anrufe und Büroarbeit kosten Geld. Geben Sie Ihre Zahlen ein.</span>
+        <span data-l="en">Missed calls and desk work cost money. Enter your numbers.</span>
       </p>
     </header>
 
@@ -1113,7 +1130,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         <span class="roi-sr" id="roi-sr" aria-live="polite"></span>
 
         <a href="#offerte" class="btn btn-cta roi-cta" data-quote="growth">
-          <span data-l="de">Mit diesen Zahlen Offerte berechnen</span><span data-l="en">Get a quote with these numbers</span>
+          <span data-l="de">Offerte mit diesen Zahlen berechnen</span><span data-l="en">Get a quote with these numbers</span>
           <span class="arrow" aria-hidden="true">→</span>
         </a>
       </div>
@@ -1133,8 +1150,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       </p>
     </header>
     <div class="packages-how reveal">
-      <div class="packages-how-item"><span class="ico-chip tone-brass" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-8.6 8.6a2.1 2.1 0 0 1-3-3l8.6-8.6"/><path d="M14.7 6.3A4 4 0 0 1 19.4 3l-2.5 2.5.8 1.8 1.8.8 2.5-2.5a4 4 0 0 1-3.3 4.7"/></svg></span><div><h3><span data-l="de">Einmalig: Einrichtung</span><span data-l="en">One-time: setup</span></h3><p><span data-l="de">50 % bei Auftrag, 50 % nach Fertigstellung.</span><span data-l="en">50% on order, 50% on completion.</span></p></div></div>
-      <div class="packages-how-item"><span class="ico-chip tone-steel" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 11A7.5 7.5 0 0 0 6 6.5L4.5 8M4.5 13A7.5 7.5 0 0 0 18 17.5L19.5 16"/><path d="M4.5 4v4h4M19.5 20v-4h-4"/></svg></span><div><h3><span data-l="de">Monatlich: Betreuung</span><span data-l="en">Monthly: care</span></h3><p><span data-l="de">Betrieb, Anpassungen, Kurzbericht. Ab 3 Monaten monatlich kündbar.</span><span data-l="en">Operation, changes, a short report. Cancel monthly after 3 months.</span></p></div></div>
+      <div class="packages-how-item"><span class="ico-chip tone-brass" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-8.6 8.6a2.1 2.1 0 0 1-3-3l8.6-8.6"/><path d="M14.7 6.3A4 4 0 0 1 19.4 3l-2.5 2.5.8 1.8 1.8.8 2.5-2.5a4 4 0 0 1-3.3 4.7"/></svg></span><div><h3><span data-l="de">Einmalig: Einrichtung</span><span data-l="en">One-time: setup</span></h3><p><span data-l="de">Mit Paket mindestens 25 % günstiger. 50 % bei Auftrag, 50 % nach Fertigstellung.</span><span data-l="en">At least 25% off with a package. 50% on order, 50% on completion.</span></p></div></div>
+      <div class="packages-how-item"><span class="ico-chip tone-steel" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 11A7.5 7.5 0 0 0 6 6.5L4.5 8M4.5 13A7.5 7.5 0 0 0 18 17.5L19.5 16"/><path d="M4.5 4v4h4M19.5 20v-4h-4"/></svg></span><div><h3><span data-l="de">Monatlich: Betreuung</span><span data-l="en">Monthly: care</span></h3><p><span data-l="de">Betrieb, Anpassungen, Kurzbericht. Nach 3 Monaten auf Monatsende kündbar.</span><span data-l="en">Operation, changes, a short report. After 3 months, cancel at the end of any month.</span></p></div></div>
       <div class="packages-how-item"><span class="ico-chip tone-sage" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><div><h3><span data-l="de">Website: einmalig</span><span data-l="en">Website: one-time</span></h3><p><span data-l="de">Ab CHF 300, ohne Monatsgebühr.</span><span data-l="en">From CHF 300, no monthly fee.</span></p></div></div>
     </div>
     <div class="packages-toolbar">
@@ -1159,8 +1176,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <span class="eyebrow"><span data-l="de">Offerte</span><span data-l="en">Quote</span></span>
       <h2><span data-l="de">Ihre Offerte in <em class="it">60 Sekunden</em></span><span data-l="en">Your quote in <em class="it">60 seconds</em></span></h2>
       <p class="lede">
-        <span data-l="de">Wählen Sie aus, der Preis rechnet live mit.</span>
-        <span data-l="en">Pick what you need, the price updates live.</span>
+        <span data-l="de">Wählen Sie aus. Der Preis wird live berechnet.</span>
+        <span data-l="en">Pick what you need. The price updates live.</span>
       </p>
     </header>
     <div id="quote-app" class="quote-app"></div>
@@ -1222,7 +1239,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <img class="footer-ruby" src="assets/media/ruby.webp" alt="" width="720" height="720" loading="lazy">
       <div class="footer-band-text">
         <h2 class="footer-big"><span data-l="de">Bereit, <em class="it">Zeit zurückzugewinnen?</em></span><span data-l="en">Ready to <em class="it">win back your time?</em></span></h2>
-        <p class="lede"><span data-l="de">Rechnen Sie Ihre Offerte in 60 Sekunden selbst. Unverbindlich, mit Festpreis.</span><span data-l="en">Work out your quote yourself in 60 seconds. No obligation, fixed price.</span></p>
+        <p class="lede"><span data-l="de">Berechnen Sie Ihre Offerte in 60 Sekunden selbst. Unverbindlich, mit Fixpreis.</span><span data-l="en">Work out your quote yourself in 60 seconds. No obligation, fixed price.</span></p>
       </div>
       <button type="button" class="btn btn-cta btn-lg" data-quote="">
         <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span><span class="arrow" aria-hidden="true">→</span>
@@ -1374,13 +1391,22 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     },
     icon(name, tone) { return '<span class="ico-chip tone-' + tone + '" aria-hidden="true"><svg viewBox="0 0 24 24">' + (KGC.icons[name] || '') + '</svg></span>'; },
 
+    r5: n => Math.round(n / 5) * 5,
+    /* One-time discount on automations: package 25 %; 4 automations 30 %, 5 = 40 %, 6+ = 50 %. The higher rate wins. */
+    discount(n, isPackage) {
+      const tier = n >= 6 ? 0.5 : n === 5 ? 0.4 : n === 4 ? 0.3 : 0, pk = isPackage ? 0.25 : 0;
+      return tier >= pk
+        ? { rate: tier, label: { de: 'Mengenrabatt', en: 'Volume discount' } }
+        : { rate: pk, label: { de: 'Paketrabatt', en: 'Package discount' } };
+    },
+
     reducedMotion: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
 
     /* The ten automations. Prices: [min, max] in CHF. */
     offers: [
       { id: 'reviews', icon: 'star', tone: 'steel', setup: [300, 300], monthly: [49, 49], industries: ['trade', 'repair', 'beauty', 'gastro'],
         name: { de: 'Google-Bewertungs-Autopilot', en: 'Google review autopilot' },
-        short: { de: 'Mehr Bewertungen, jede beantwortet, schlechte nie öffentlich überrascht.', en: 'More reviews, every one answered, bad ones caught before they hurt.' },
+        short: { de: 'Mehr Bewertungen, jede beantwortet, schlechte fangen wir ab, bevor sie schaden.', en: 'More reviews, every one answered, bad ones caught before they hurt.' },
         steps: { de: ['Nach dem Auftrag: SMS mit direktem Bewertungslink', 'KI entwirft eine Antwort in Ihrem Ton', '4–5 Sterne: automatisch veröffentlicht. 1–3 Sterne: Alarm an Sie'],
                  en: ['After the job: SMS with a direct review link', 'AI drafts a reply in your voice', '4–5 stars: posted automatically. 1–3 stars: alert to you'] } },
       { id: 'leads', icon: 'inbox', tone: 'steel', setup: [250, 250], monthly: [29, 29], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
@@ -1391,35 +1417,35 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       { id: 'missedcall', icon: 'phone', tone: 'steel', setup: [400, 400], monthly: [60, 60], industries: ['trade'],
         name: { de: 'Rückruf-SMS bei verpassten Anrufen', en: 'Missed-call text-back' },
         short: { de: 'Wer anruft, während Sie arbeiten, bekommt innert einer Minute eine Antwort.', en: 'Callers you miss on the job get a reply within a minute.' },
-        steps: { de: ['Anruf verpasst', 'SMS innert 60 Sekunden mit Buchungslink', 'Antwort des Kunden geht direkt an Sie'],
-                 en: ['Call missed', 'SMS within 60 seconds with booking link', 'Customer reply goes straight to you'] } },
+        steps: { de: ['Verpasster Anruf', 'SMS innert 60 Sekunden mit Buchungslink', 'Antwort des Kunden geht direkt an Sie'],
+                 en: ['Missed call', 'SMS within 60 seconds with booking link', 'Customer reply goes straight to you'] } },
       { id: 'booking', icon: 'calendar', tone: 'steel', setup: [300, 300], monthly: [39, 39], industries: ['repair', 'beauty', 'office'],
-        name: { de: 'Online-Buchung mit Erinnerungen', en: 'Online booking + reminders' },
-        short: { de: 'Kunden buchen selbst, auch um 22 Uhr auf dem Sofa. Weniger Nichterscheinen.', en: 'Customers book themselves, even at 10 pm on the sofa. Fewer no-shows.' },
-        steps: { de: ['Kunde wählt einen freien Termin', 'Bestätigung sofort', 'Erinnerung 24 h vorher'],
+        name: { de: 'Online-Buchung mit Erinnerungen', en: 'Online booking with reminders' },
+        short: { de: 'Kunden buchen selbst, auch um 22 Uhr auf dem Sofa. Weniger Terminausfälle.', en: 'Customers book themselves, even at 10 pm on the sofa. Fewer no-shows.' },
+        steps: { de: ['Kunde wählt einen freien Termin', 'Sofortige Bestätigung', 'Erinnerung 24 h vorher'],
                  en: ['Customer picks a free slot', 'Instant confirmation', 'Reminder 24 h before'] } },
       { id: 'repair', icon: 'wrench', tone: 'steel', setup: [200, 200], monthly: [30, 30], industries: ['repair'],
         name: { de: 'Reparatur-Statusmeldungen', en: 'Repair status updates' },
-        short: { de: 'Schluss mit «Ist mein Handy schon fertig?»', en: 'No more "is my phone ready yet?" calls.' },
-        steps: { de: ['Sie ändern den Status in einer einfachen Liste', 'Kunde erhält automatisch SMS oder WhatsApp', '«Abholbereit» inklusive Öffnungszeiten'],
-                 en: ['You change the status in a simple list', 'Customer gets an SMS or WhatsApp automatically', '"Ready for pickup" including opening hours'] } },
+        short: { de: 'Schluss mit Anrufen wie «Ist mein Handy schon fertig?»', en: 'No more “is my phone ready yet?” calls.' },
+        steps: { de: ['Sie ändern den Status in einer einfachen Liste', 'Kunde erhält automatisch SMS oder WhatsApp', '«Abholbereit» mit Öffnungszeiten'],
+                 en: ['You change the status in a simple list', 'Customer gets an SMS or WhatsApp automatically', '“Ready for pickup”, with opening hours'] } },
       { id: 'quotes', icon: 'file', tone: 'brass', setup: [400, 400], monthly: [60, 60], industries: ['trade', 'office'],
         name: { de: 'Offerten-Generator', en: 'Quote generator' },
-        short: { de: 'Offerten in 10 Minuten statt einem Abend am Schreibtisch.', en: 'Quotes in 10 minutes instead of an evening at the desk.' },
+        short: { de: 'Offerten in 10 Minuten statt eines Abends am Schreibtisch.', en: 'Quotes in 10 minutes instead of an evening at the desk.' },
         steps: { de: ['Kurzes Formular mit Fotos', 'KI schreibt eine saubere Offerte als PDF in Ihrem Design', 'Nachfassen nach 5 Tagen, automatisch'],
                  en: ['Short form with photos', 'AI writes a clean, branded PDF quote', 'Follow-up after 5 days, automatically'] } },
       { id: 'invoices', icon: 'receipt', tone: 'brass', setup: [400, 400], monthly: [50, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
-        name: { de: 'Zahlungserinnerungen', en: 'Invoice reminders' },
+        name: { de: 'Zahlungserinnerungen', en: 'Payment reminders' },
         short: { de: 'Sie haben die Arbeit gemacht. Das System kümmert sich ums Geld.', en: 'You did the work. The system chases the money.' },
         steps: { de: ['Offene Rechnungen werden geprüft (z. B. bexio)', 'Höfliche Erinnerung nach 7, 14 und 30 Tagen', 'Danach Hinweis an Sie'],
                  en: ['Open invoices are checked (e.g. bexio)', 'Polite reminders at 7, 14 and 30 days', 'Then a note to you'] } },
       { id: 'inbox', icon: 'mail', tone: 'brass', setup: [400, 400], monthly: [50, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
-        name: { de: 'KI-Posteingangs-Assistent', en: 'AI inbox assistant' },
-        short: { de: 'Mails sortiert, Antworten vorbereitet, auf Wunsch in Schweizerdeutsch.', en: 'Emails sorted, replies drafted, in Swiss German if you like.' },
-        steps: { de: ['Neue Mails werden sortiert: Offerte, Reklamation, Lieferant, Spam', 'KI legt einen Antwortentwurf an', 'Sie prüfen und senden'],
+        name: { de: 'KI-Posteingangsassistent', en: 'AI inbox assistant' },
+        short: { de: 'E-Mails sortiert, Antworten vorbereitet, auf Wunsch in Schweizerdeutsch.', en: 'Emails sorted, replies drafted, in Swiss German if you like.' },
+        steps: { de: ['Neue E-Mails werden sortiert: Offerte, Reklamation, Lieferant, Spam', 'KI legt einen Antwortentwurf an', 'Sie prüfen und senden'],
                  en: ['New mail sorted: quote, complaint, supplier, spam', 'AI prepares a draft reply', 'You check and send'] } },
       { id: 'workspace', icon: 'cloud', tone: 'sage', setup: [150, 150], monthly: [20, 20], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
-        name: { de: 'E-Mail & Cloud mit Betreuung', en: 'Email + cloud with support' },
+        name: { de: 'E-Mail & Cloud mit Betreuung', en: 'Email & cloud with support' },
         short: { de: 'Eine Ansprechperson für Website, E-Mail und Dateien.', en: 'One contact for website, email and files.' },
         steps: { de: ['E-Mail-Adressen auf Ihrer Domain', 'Gemeinsame Ablage für Dokumente', 'Neue Benutzer, Passwörter, Änderungen: erledigt'],
                  en: ['Email addresses on your domain', 'Shared document storage', 'New users, passwords, changes: handled'] } },
@@ -1438,7 +1464,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         points: { de: ['Neues Design, Ihre bestehenden Texte und Bilder übernommen', 'Optimiert für Handy, Ladezeit und Google', 'Impressum und Datenschutz auf aktuellem Stand (nDSG)'],
                   en: ['New design, your existing text and images carried over', 'Optimised for phones, speed and Google', 'Legal notice and privacy policy brought up to date (nDSG)'] } },
       { id: 'one', price: 650, from: false,
-        name: { de: 'One-Pager Website', en: 'One-page website' },
+        name: { de: 'One-Pager-Website', en: 'One-page website' },
         short: { de: 'Eine elegante Seite mit allem Wichtigen. Impressum und Datenschutz inklusive.', en: 'One elegant page with everything that matters. Legal notice and privacy policy included.' },
         points: { de: ['Design nach Ihrem Betrieb, für Handy und Desktop', 'Kontaktformular, Impressum und Datenschutzerklärung (nDSG)', 'Einmalpreis, keine monatliche Gebühr'],
                   en: ['Designed for your business, phone and desktop', 'Contact form, legal notice and privacy policy (nDSG)', 'One-time price, no monthly fee'] } },
@@ -1453,7 +1479,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     industries: [
       { id: 'all', name: { de: 'Alle', en: 'All' } },
       { id: 'trade', name: { de: 'Handwerk', en: 'Trades' } },
-      { id: 'repair', name: { de: 'Reparatur & Retail', en: 'Repair & retail' } },
+      { id: 'repair', name: { de: 'Reparatur & Detailhandel', en: 'Repair & retail' } },
       { id: 'beauty', name: { de: 'Beauty & Gesundheit', en: 'Beauty & health' } },
       { id: 'gastro', name: { de: 'Gastronomie', en: 'Hospitality' } },
       { id: 'office', name: { de: 'Büro & Beratung', en: 'Office & consulting' } },
@@ -1602,18 +1628,18 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       phone: [
         { at: 200, k: 'call', title: L('Anruf verpasst · 14:32', 'Missed call · 14:32'), sub: BIZ },
         { at: 1500, k: 'in', from: BIZ, text: L('Grüezi, wir sind gerade auf einer Baustelle. Antworten Sie kurz, worum es geht, oder buchen Sie hier einen Termin: <span class="demo-lnk">kgc.link/termin</span>', 'Hello, we are on a job site right now. Reply with what you need, or book a time here: <span class="demo-lnk">kgc.link/termin</span>') },
-        { at: 3300, k: 'out', text: L('Boiler tropft, wäre morgen früh möglich?', 'Boiler is dripping, is tomorrow morning possible?') },
+        { at: 3300, k: 'out', text: L('Boiler tropft. Wäre morgen früh möglich?', 'My boiler is dripping. Is tomorrow morning possible?') },
       ],
       log: [
-        { at: 200, time: '+0:00', text: L('Anruf verpasst erkannt', 'Missed call detected') },
-        { at: 1500, time: '+0:04', text: L('SMS an Kunde gesendet', 'Text sent to customer'), sub: L('mit Buchungslink', 'with booking link') },
+        { at: 200, time: '+0:00', text: L('Verpasster Anruf erkannt', 'Missed call detected') },
+        { at: 1500, time: '+0:04', text: L('SMS an den Kunden gesendet', 'Text sent to the customer'), sub: L('mit Buchungslink', 'with booking link') },
         { at: 3300, time: '+0:41', text: L('Antwort weitergeleitet an Sie (WhatsApp)', 'Reply forwarded to you (WhatsApp)') },
         { at: 3900, time: '+0:41', text: L('Eintrag in Ihrer Kundenliste', 'Entry in your customer list') },
       ],
       stat: { at: 4500, big: L('41 Sekunden.', '41 seconds.'), small: L('Ohne dass Sie das Telefon angefasst haben.', 'Without you touching the phone.') },
     },
     reviews: {
-      app: L('Google Bewertungen', 'Google reviews'),
+      app: L('Google-Bewertungen', 'Google reviews'),
       cta: L('Das will ich: Bewertungs-Autopilot', 'I want this: review autopilot'),
       branches: {
         hi: {
@@ -1642,7 +1668,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
             { at: 200, time: '+0:00', text: L('Neue Bewertung erkannt', 'New review detected'), sub: L('2 Sterne', '2 stars') },
             { at: 1100, time: '+0:02', text: L('1–3 Sterne → keine öffentliche Antwort', '1–3 stars → no public reply'), branch: true },
             { at: 2000, time: '+0:04', text: L('Alarm an Sie (WhatsApp)', 'Alert to you (WhatsApp)'), sub: L('mit Entwurf für eine persönliche Antwort', 'with a draft for a personal reply') },
-            { at: 3000, time: '+0:05', text: L('Bewertung als «offen» markiert', 'Review marked «open»') },
+            { at: 3000, time: '+0:05', text: L('Bewertung als «offen» markiert', 'Review marked “open”') },
             { at: 3800, time: '+12:10', text: L('Sie melden sich beim Kunden', 'You get in touch with the customer') },
           ],
           stat: { at: 4400, big: L('Nichts geht öffentlich raus.', 'Nothing goes out publicly.'), small: L('Bevor Sie es gesehen haben.', 'Until you have seen it.') },
@@ -1655,11 +1681,11 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       phone: [
         { at: 200, k: 'form', fields: [[L('Name', 'Name'), 'Anna Keller'], [L('Anliegen', 'Request'), L('Neues Bad, Offerte bitte', 'New bathroom, quote please')]], btn: L('Anfrage senden', 'Send enquiry') },
         { at: 1700, k: 'toast', text: L('Danke, Ihre Anfrage ist eingegangen.', 'Thank you, your enquiry has arrived.') },
-        { at: 2800, k: 'mail', subj: L('Wir haben Ihre Anfrage erhalten', 'We have received your enquiry'), text: L('Grüezi Frau Keller, wir melden uns bis morgen 12 Uhr bei Ihnen. Meier Sanitär', 'Hello Ms Keller, we will get back to you by 12 noon tomorrow. Meier Sanitär') },
+        { at: 2800, k: 'mail', subj: L('Wir haben Ihre Anfrage erhalten', 'We have received your enquiry'), text: L('Grüezi Frau Keller, wir melden uns bis morgen 12 Uhr bei Ihnen. Meier Sanitär', 'Hello Ms Keller, we will get back to you by noon tomorrow. Meier Sanitär') },
       ],
       log: [
         { at: 200, time: '+0:00', text: L('Anfrage über die Website eingegangen', 'Website enquiry received') },
-        { at: 1500, time: '+0:01', text: L('Eingangsbestätigung an Kunde (E-Mail)', 'Confirmation sent to customer (email)') },
+        { at: 1500, time: '+0:01', text: L('Eingangsbestätigung an den Kunden (E-Mail)', 'Confirmation sent to the customer (email)') },
         { at: 2300, time: '+0:02', text: L('Eintrag in Ihrer Tabelle', 'Entry in your sheet') },
         { at: 3100, time: '+0:03', text: L('WhatsApp an Sie', 'WhatsApp to you') },
         { at: 3800, time: '+24 h', pending: true, text: L('Erinnerung an Sie, falls niemand geantwortet hat', 'Reminder to you if nobody has replied') },
@@ -1860,7 +1886,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     }).join('');
     const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
     const name = t(KGC.industries.find(i => i.id === ind).name);
-    count.textContent = ind === 'all' ? (de ? 'Alle 10 Mechanismen' : 'All 10 mechanisms')
+    count.textContent = ind === 'all' ? (de ? 'Alle 10 Automationen' : 'All 10 automations')
       : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
   }
 
@@ -1883,7 +1909,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       const de = KGC.lang === 'de';
       const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
       const name = t(KGC.industries.find(i => i.id === ind).name);
-      count.textContent = ind === 'all' ? (de ? 'Alle 10 Mechanismen' : 'All 10 mechanisms') : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
+      count.textContent = ind === 'all' ? (de ? 'Alle 10 Automationen' : 'All 10 automations') : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
     });
     grid.addEventListener('click', e => {
       const cell = e.target.closest('.offers-cell');
@@ -1913,12 +1939,12 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     C('assets/work/precision.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'precision manufacturing'),
     C('assets/work/boxing.webp', 'Boxschule Gebenstorf', 'Boxclub', 'boxing club'),
     D('assets/work/restaurant.webp', 'Café & Restaurant', 'Café & restaurant'),
-    D('assets/work/barber.webp', 'Barbier', 'Barber shop'),
+    D('assets/work/barber.webp', 'Barbier', 'Barbershop'),
     D('assets/work/cleaning.webp', 'Reinigungsfirma', 'Cleaning company'),
     D('assets/work/pos-it.webp', 'Kassensysteme & IT', 'POS & IT'),
     D('assets/work/phone-repair.webp', 'Handyreparatur', 'Phone repair'),
     D('assets/work/it-services.webp', 'IT-Dienstleister', 'IT services'),
-    D('assets/work/facility.webp', 'Hauswartung', 'Facility care'),
+    D('assets/work/facility.webp', 'Hauswartung', 'Building maintenance'),
   ];
   document.addEventListener('DOMContentLoaded', () => {
     const rail = document.getElementById('work-rail');
@@ -1996,8 +2022,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       else msg = L('So viel bleibt jeden Monat liegen, ohne dass es jemand bemerkt.', 'This is what is left on the table every month, unnoticed.');
       if (total >= 1) {
         const x = total / COST;
-        if (x >= 1.5) { const s = x >= 10 ? String(Math.round(x)) : x.toFixed(1); ratio = '≈ ' + (K.lang === 'en' ? s : s.replace('.', ',')) + L('× Ihr Monatsbeitrag', '× your monthly fee'); }
-        else ratio = L('Etwa so viel wie der Monatsbeitrag. Der Gewinn liegt dann in der Ruhe.', 'About the size of the monthly fee. The gain then is peace of mind.');
+        if (x >= 1.5) { const s = x >= 10 ? String(Math.round(x)) : x.toFixed(1); ratio = '≈ ' + (K.lang === 'en' ? s : s.replace('.', ',')) + L('× Ihr Monatspreis', '× your monthly price'); }
+        else ratio = L('Etwa so viel wie der Monatspreis. Der Gewinn liegt dann in der Ruhe.', 'About the size of the monthly price. The gain is then peace of mind.');
       }
       $('roi-msg').textContent = msg; $('roi-ratio').textContent = ratio;
       clearTimeout(srTimer);
@@ -2022,19 +2048,22 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     const L = (de, en) => K.lang === 'en' ? en : de;
 
     /* Saving over the first year (setup + 12 months) versus booking the same automations singly at their lowest price */
+    /* Package one-time price after its discount (see KGC.discount) */
+    function pset(p) { const n = p.includes.length + p.choice.length; return p.setup - K.r5(p.setup * K.discount(n, true).rate); }
     function saving(p) {
       const ids = p.includes.concat(p.choice.map(g => g[0]));
-      const single = ids.reduce((a, id) => a + K.offer(id).setup[0] + 12 * K.offer(id).monthly[0], 0);
-      return Math.floor((single - p.setup - 12 * p.monthly) / 10) * 10;
+      const s = ids.reduce((a, id) => a + K.offer(id).setup[0], 0), m = ids.reduce((a, id) => a + K.offer(id).monthly[0], 0);
+      const single = s - K.r5(s * K.discount(ids.length, false).rate) + 12 * m;
+      return Math.floor((single - pset(p) - 12 * p.monthly) / 10) * 10;
     }
     function render() {
-      seg.innerHTML = [['monthly', L('Einmalig + monatlich', 'One-off + monthly')], ['year', L('Erstes Jahr total', 'First year total')]]
+      seg.innerHTML = [['monthly', L('Einmalig + monatlich', 'One-time + monthly')], ['year', L('Erstes Jahr total', 'First year total')]]
         .map(([k, t]) => `<button type="button" data-view="${k}" aria-pressed="${view === k}">${t}</button>`).join('');
       grid.innerHTML = K.packages.map(p => {
-        const feat = !!p.featured, sv = saving(p), year = p.setup + 12 * p.monthly, nm = K.t(p.name);
+        const feat = !!p.featured, sv = saving(p), ps = pset(p), was = ps < p.setup ? `<s>${K.chf(p.setup)}</s> ` : '', year = ps + 12 * p.monthly, nm = K.t(p.name);
         const price = view === 'monthly'
-          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${K.chf(p.setup)} ${L('einmalig', 'one-off')}</div>`
-          : `<div class="packages-big">${K.chf(year)}<small>${L('im 1. Jahr', 'in year 1')}</small></div><div class="packages-sub">${K.chf(p.setup)} + 12 × ${K.chf(p.monthly)}</div>`;
+          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${was}${K.chf(ps)} ${L('einmalig', 'one-time')}</div>`
+          : `<div class="packages-big">${K.chf(year)}<small>${L('im 1. Jahr', 'in year 1')}</small></div><div class="packages-sub">${K.chf(ps)} + 12 × ${K.chf(p.monthly)}</div>`;
         const items = p.includes.map(id => `<li>${K.t(K.offer(id).name)}</li>`).join('')
           + p.choice.map(g => `<li class="is-choice">${g.map(id => K.t(K.offer(id).name)).join(` <em>${L('oder', 'or')}</em> `)}</li>`).join('');
         return `<article class="packages-card${feat ? ' is-featured' : ''}" aria-labelledby="pk-${p.id}">
@@ -2100,15 +2129,21 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       const S = sel(); let s = [0, 0], m = [0, 0];
       if (S.p) { s = [S.p.setup, S.p.setup]; m = [S.p.monthly, S.p.monthly]; }
       S.extras.forEach(id => { const x = po(K.offer(id)); s[0] += x.s[0]; s[1] += x.s[1]; m[0] += x.m[0]; m[1] += x.m[1]; });
+      /* Discount on the one-time cost of the automations (not the website): package 25 %, or by count 4/5/6+ = 30/40/50 %; the higher one applies */
+      const n = S.base.length + S.extras.length, D = K.discount(n, !!S.p);
+      const off = [K.r5(s[0] * D.rate), K.r5(s[1] * D.rate)];
+      s = [s[0] - off[0], s[1] - off[1]];
       const W = K.website(st.web); if (W) { s[0] += W.price; s[1] += W.price; }
-      return { S, W, setup: s, monthly: m, year: [s[0] + 12 * m[0], s[1] + 12 * m[1]] };
+      return { S, W, D, off, n, setup: s, monthly: m, year: [s[0] + 12 * m[0], s[1] + 12 * m[1]] };
     }
     // cheapest package that covers every picked offer (one per choice group)
     function tip() {
       if (st.pkg !== 'custom' || !st.picked.size) return null;
-      const ids = [...st.picked], minSetup = ids.reduce((a, id) => a + po(K.offer(id)).s[0], 0);
+      const ids = [...st.picked], raw = ids.reduce((a, id) => a + po(K.offer(id)).s[0], 0);
+      const minSetup = raw - K.r5(raw * K.discount(ids.length, false).rate);
       for (const p of K.packages) {
-        if (!(minSetup > p.setup)) continue;
+        const n = p.includes.length + p.choice.length, pSetup = p.setup - K.r5(p.setup * K.discount(n, true).rate);
+        if (!(minSetup > pSetup)) continue;
         const used = new Set(), choice = p.choice.map(g => g[0]); let ok = true;
         ids.forEach(id => {
           if (p.includes.includes(id)) return;
@@ -2116,7 +2151,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
           if (gi < 0 || used.has(gi)) { ok = false; return; }
           used.add(gi); choice[gi] = id;
         });
-        if (ok) return { p, choice, save: minSetup - p.setup };
+        if (ok) return { p, choice, save: minSetup - pSetup };
       }
       return null;
     }
@@ -2154,6 +2189,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       } else if (S.extras.length) {
         S.extras.forEach(id => { const x = po(K.offer(id)); h += li('', nm(id), K.range(x.s[0], x.s[1])); });
       } else if (!T.W) h = `<li><span>${L('Noch nichts gewählt.', 'Nothing selected yet.')}</span></li>`;
+      if (T.off[0] > 0) h += li('disc', K.t(T.D.label) + ' · ' + Math.round(T.D.rate * 100) + (K.lang === 'de' ? ' %' : '%'), '− ' + K.range(T.off[0], T.off[1]));
       if (T.W) h += li('', (S.p || S.extras.length ? '+ ' : '') + K.t(T.W.name), (T.W.from ? L('ab ', 'from ') : '') + K.chf(T.W.price));
       return h;
     }
@@ -2184,7 +2220,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
           <div class="quote-sum-title">${L('Ihre Auswahl', 'Your selection')}</div>
           <ul class="quote-items" id="q-items"></ul>
           <dl class="quote-tot">
-            <div class="big"><dt>${L('Einrichtung (einmalig)', 'Setup (one-off)')}</dt><dd>${money('setup')}</dd></div>
+            <div class="big"><dt>${L('Einrichtung (einmalig)', 'Setup (one-time)')}</dt><dd>${money('setup')}</dd></div>
             <div class="big"><dt>${L('Betreuung pro Monat', 'Care per month')}</dt><dd>${money('monthly')}</dd></div>
             <div class="yr"><dt>${L('Erstes Jahr total', 'First year total')}</dt><dd>${money('year')}</dd></div>
           </dl>
@@ -2224,12 +2260,12 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       }
       const rest = K.offers.map(o => o.id).filter(id => !S.base.includes(id));
       h += `<fieldset class="quote-fs"><legend>${S.p ? L('Weitere Automationen dazu', 'Add more automations') : L('Automationen wählen', 'Choose automations')}</legend>
-        <p class="quote-sub">${S.p ? L('Optional. Jede Zusatzleistung wird mit ihrer Preisspanne zur Auswahl addiert.', 'Optional. Each extra adds its price range to your selection.') : L('Mehrfachauswahl. Die Preisspanne sehen Sie in Ihrer Auswahl.', 'Pick as many as you like. “From” prices; the full range shows in your selection.')}</p>
+        <p class="quote-sub">${S.p ? L('Optional. Jede Zusatzleistung wird zu Ihrer Auswahl addiert.', 'Optional. Each extra is added to your selection.') : L('Mehrfachauswahl möglich. Ab 4 Automationen gibt es Rabatt auf die Einrichtung.', 'Pick as many as you like. From 4 automations you get a discount on setup.')}</p>
         <div class="quote-rows">${rest.map(id => rowHtml(id, 'x')).join('')}</div></fieldset>`;
       const wopts = [{ id: 'none', name: { de: 'Keine Website nötig', en: 'No website needed' }, short: { de: 'Die Automationen werden an Ihre bestehende Seite angebunden.', en: 'The automations connect to your existing site.' } }].concat(K.websites);
       h += `<fieldset class="quote-fs"><legend>${L('Website dazu', 'Add a website')}</legend><div class="quote-rows">`
         + wopts.map(w => `<label class="quote-row${st.web === w.id ? ' is-on' : ''}" for="q-web-${w.id}" data-row="web-${w.id}"><input type="radio" name="q-web" id="q-web-${w.id}" value="${w.id}"${st.web === w.id ? ' checked' : ''}>
-          <span><span class="t">${K.t(w.name)}</span><span class="s">${K.t(w.short)}</span></span><span class="p">${w.price ? (w.from ? L('ab ', 'from ') : '') + K.chf(w.price) + L(' einmalig', ' one-off') : ''}</span></label>`).join('')
+          <span><span class="t">${K.t(w.name)}</span><span class="s">${K.t(w.short)}</span></span><span class="p">${w.price ? (w.from ? L('ab ', 'from ') : '') + K.chf(w.price) + L(' einmalig', ' one-time') : ''}</span></label>`).join('')
         + `</div></fieldset>`;
       return h;
     }
@@ -2351,7 +2387,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       const f = st.f;
       return [
         { title: l('Auswahl', 'Selection'), rows: choice },
-        { title: l('Richtpreise', 'Indicative prices'), rows: [[l('Einrichtung (einmalig)', 'Setup (one-off)'), rng(T.setup)], [l('Betreuung pro Monat', 'Care per month'), rng(T.monthly)], [l('Erstes Jahr total', 'First year total'), rng(T.year), 'tot']] },
+        { title: l('Richtpreise', 'Indicative prices'), rows: (T.off[0] > 0 ? [[T.D.label[lang] + ' (' + Math.round(T.D.rate * 100) + (lang === 'de' ? ' %' : '%') + ')', '− ' + rng(T.off)]] : []).concat([[l('Einrichtung (einmalig)', 'Setup (one-time)'), rng(T.setup)], [l('Betreuung pro Monat', 'Care per month'), rng(T.monthly)], [l('Erstes Jahr total', 'First year total'), rng(T.year), 'tot']]) },
         { title: l('Betrieb', 'Business'), rows: [[l('Branche', 'Industry'), st.industry === 'other' ? (st.industryOther.trim() || l('Andere', 'Other')) : (ind ? ind.name[lang] : '')], [l('Mitarbeitende', 'Employees'), l(stf[1], stf[2])], [l('Kanton', 'Canton'), l(cn[1], cn[2] || cn[1])],
           [l('Kundensprachen', 'Customer languages'), LANGS.filter(x => st.langs.has(x[0])).map(x => l(x[1], x[2])).join(', ') || '–'], [l('Start', 'Start'), l(start[1], start[2])]] },
         { title: l('Kontakt', 'Contact'), rows: [[l('Name', 'Name'), f.name.trim()], [l('Firma', 'Company'), f.firma.trim()], [l('E-Mail', 'Email'), f.email.trim()]]
@@ -2360,7 +2396,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     }
     function textOf(lang) {
       const l = (de, en) => (lang === 'en' ? en : de);
-      return l('KGC Offerte-Anfrage', 'KGC quote request') + ' ' + new Date().toLocaleDateString('de-CH') + '\n\n'
+      return l('KGC-Offertanfrage', 'KGC quote request') + ' ' + new Date().toLocaleDateString('de-CH') + '\n\n'
         + sections(lang).map(s => s.title.toUpperCase() + '\n' + s.rows.map(r => r[0] + ': ' + r[1]).join('\n')).join('\n\n')
         + '\n\n' + l('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch. 50 % der einmaligen Kosten sind bei Auftrag fällig, 50 % nach Fertigstellung.', 'Indicative prices in CHF. Binding quote after the first call. 50% of the one-time cost is due on order, 50% on completion.');
     }
@@ -2416,7 +2452,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         const fields = { name: st.f.name.trim(), firma: st.f.firma.trim(), email: st.f.email.trim(), telefon: st.f.telefon.trim(), nachricht: st.f.nachricht.trim(), zusammenfassung: textOf('de') + (K.lang === 'en' ? '\n\n(Seitensprache: Englisch)' : '') };
         /* 1) FormSubmit e-mails the request straight to KGC. 2) Netlify Forms keeps a copy in the Netlify dashboard (only works when hosted on Netlify). */
         const viaMail = fetch('https://formsubmit.co/ajax/khangcung196@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(Object.assign({ _subject: 'Neue Offerten-Anfrage – KGC Automation', _template: 'table', _captcha: 'false', _replyto: fields.email, _honey: root.querySelector('[name="_honey"]').value }, fields)) })
+          body: JSON.stringify(Object.assign({ _subject: 'Neue Offertanfrage – KGC Automation', _template: 'table', _captcha: 'false', _replyto: fields.email, _honey: root.querySelector('[name="_honey"]').value }, fields)) })
           .then(async r => { let j = null; try { j = await r.json(); } catch (e) {} return r.ok && !!j && (j.success === true || j.success === 'true'); }).catch(() => false);
         const viaNetlify = fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(Object.assign({ 'form-name': 'offerte-anfrage', 'bot-field': '' }, fields)).toString() })
           .then(r => r.ok).catch(() => false);

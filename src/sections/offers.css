@@ -78,3 +78,9 @@
   .offers-cell[data-id="crm"] > .offers-short, .offers-cell[data-id="crm"] > .offers-price, .offers-cell[data-id="crm"] > .offers-acts, .offers-cell[data-id="crm"] > .offers-steps-w { grid-column: 2; }
   .offers-cell[data-id="crm"] > .offers-name { grid-row: 2 / span 3; }
 }
+
+.offers-disc { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-bottom: 16px; padding: 16px 20px; border-radius: 12px; background: var(--sage-soft); color: var(--ink); }
+.offers-disc-t { font-weight: 600; font-size: var(--t-sm); }
+.offers-disc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: var(--t-sm); color: var(--graphite); }
+.offers-disc li { display: inline-flex; gap: 6px; align-items: baseline; }
+.offers-disc b { font-family: var(--f-data); font-weight: 500; color: var(--sage); }

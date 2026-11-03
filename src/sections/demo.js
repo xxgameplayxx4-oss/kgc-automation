@@ -8,18 +8,18 @@
       phone: [
         { at: 200, k: 'call', title: L('Anruf verpasst · 14:32', 'Missed call · 14:32'), sub: BIZ },
         { at: 1500, k: 'in', from: BIZ, text: L('Grüezi, wir sind gerade auf einer Baustelle. Antworten Sie kurz, worum es geht, oder buchen Sie hier einen Termin: <span class="demo-lnk">kgc.link/termin</span>', 'Hello, we are on a job site right now. Reply with what you need, or book a time here: <span class="demo-lnk">kgc.link/termin</span>') },
-        { at: 3300, k: 'out', text: L('Boiler tropft, wäre morgen früh möglich?', 'Boiler is dripping, is tomorrow morning possible?') },
+        { at: 3300, k: 'out', text: L('Boiler tropft. Wäre morgen früh möglich?', 'My boiler is dripping. Is tomorrow morning possible?') },
       ],
       log: [
-        { at: 200, time: '+0:00', text: L('Anruf verpasst erkannt', 'Missed call detected') },
-        { at: 1500, time: '+0:04', text: L('SMS an Kunde gesendet', 'Text sent to customer'), sub: L('mit Buchungslink', 'with booking link') },
+        { at: 200, time: '+0:00', text: L('Verpasster Anruf erkannt', 'Missed call detected') },
+        { at: 1500, time: '+0:04', text: L('SMS an den Kunden gesendet', 'Text sent to the customer'), sub: L('mit Buchungslink', 'with booking link') },
         { at: 3300, time: '+0:41', text: L('Antwort weitergeleitet an Sie (WhatsApp)', 'Reply forwarded to you (WhatsApp)') },
         { at: 3900, time: '+0:41', text: L('Eintrag in Ihrer Kundenliste', 'Entry in your customer list') },
       ],
       stat: { at: 4500, big: L('41 Sekunden.', '41 seconds.'), small: L('Ohne dass Sie das Telefon angefasst haben.', 'Without you touching the phone.') },
     },
     reviews: {
-      app: L('Google Bewertungen', 'Google reviews'),
+      app: L('Google-Bewertungen', 'Google reviews'),
       cta: L('Das will ich: Bewertungs-Autopilot', 'I want this: review autopilot'),
       branches: {
         hi: {
@@ -48,7 +48,7 @@
             { at: 200, time: '+0:00', text: L('Neue Bewertung erkannt', 'New review detected'), sub: L('2 Sterne', '2 stars') },
             { at: 1100, time: '+0:02', text: L('1–3 Sterne → keine öffentliche Antwort', '1–3 stars → no public reply'), branch: true },
             { at: 2000, time: '+0:04', text: L('Alarm an Sie (WhatsApp)', 'Alert to you (WhatsApp)'), sub: L('mit Entwurf für eine persönliche Antwort', 'with a draft for a personal reply') },
-            { at: 3000, time: '+0:05', text: L('Bewertung als «offen» markiert', 'Review marked «open»') },
+            { at: 3000, time: '+0:05', text: L('Bewertung als «offen» markiert', 'Review marked “open”') },
             { at: 3800, time: '+12:10', text: L('Sie melden sich beim Kunden', 'You get in touch with the customer') },
           ],
           stat: { at: 4400, big: L('Nichts geht öffentlich raus.', 'Nothing goes out publicly.'), small: L('Bevor Sie es gesehen haben.', 'Until you have seen it.') },
@@ -61,11 +61,11 @@
       phone: [
         { at: 200, k: 'form', fields: [[L('Name', 'Name'), 'Anna Keller'], [L('Anliegen', 'Request'), L('Neues Bad, Offerte bitte', 'New bathroom, quote please')]], btn: L('Anfrage senden', 'Send enquiry') },
         { at: 1700, k: 'toast', text: L('Danke, Ihre Anfrage ist eingegangen.', 'Thank you, your enquiry has arrived.') },
-        { at: 2800, k: 'mail', subj: L('Wir haben Ihre Anfrage erhalten', 'We have received your enquiry'), text: L('Grüezi Frau Keller, wir melden uns bis morgen 12 Uhr bei Ihnen. Meier Sanitär', 'Hello Ms Keller, we will get back to you by 12 noon tomorrow. Meier Sanitär') },
+        { at: 2800, k: 'mail', subj: L('Wir haben Ihre Anfrage erhalten', 'We have received your enquiry'), text: L('Grüezi Frau Keller, wir melden uns bis morgen 12 Uhr bei Ihnen. Meier Sanitär', 'Hello Ms Keller, we will get back to you by noon tomorrow. Meier Sanitär') },
       ],
       log: [
         { at: 200, time: '+0:00', text: L('Anfrage über die Website eingegangen', 'Website enquiry received') },
-        { at: 1500, time: '+0:01', text: L('Eingangsbestätigung an Kunde (E-Mail)', 'Confirmation sent to customer (email)') },
+        { at: 1500, time: '+0:01', text: L('Eingangsbestätigung an den Kunden (E-Mail)', 'Confirmation sent to the customer (email)') },
         { at: 2300, time: '+0:02', text: L('Eintrag in Ihrer Tabelle', 'Entry in your sheet') },
         { at: 3100, time: '+0:03', text: L('WhatsApp an Sie', 'WhatsApp to you') },
         { at: 3800, time: '+24 h', pending: true, text: L('Erinnerung an Sie, falls niemand geantwortet hat', 'Reminder to you if nobody has replied') },
