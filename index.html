@@ -421,6 +421,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 .work-btn { width: 48px; height: 48px; border: 1px solid var(--rule); border-radius: 50%; background: transparent; color: var(--ink); font-size: 1.1rem; cursor: pointer; transition: border-color .2s, background .2s; }
 .work-btn:hover { border-color: var(--ink); background: var(--paper); }
 .work-btn:disabled { opacity: .35; cursor: default; }
+.work-kind.is-live { color: var(--ok); }
+.work-kind.is-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: .5em; vertical-align: .1em; }
 
 /* ==== roi ==== */
 .roi-head { max-width: 760px; display: grid; gap: 18px; margin-bottom: clamp(36px, 5vw, 64px); }
@@ -938,7 +940,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     <header class="work-head">
       <span class="eyebrow"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></span>
       <h2 id="work-h"><span data-l="de">Websites, die <em class="it">für sich sprechen.</em></span><span data-l="en">Websites that <em class="it">speak for themselves.</em></span></h2>
-      <p class="lede"><span data-l="de">Eine Auswahl von Websites für Betriebe in der Region. Jede gebaut für Handy und Desktop, jede bereit für Automationen.</span><span data-l="en">A selection of websites for local businesses. Each built for phone and desktop, each ready for automations.</span></p>
+      <p class="lede"><span data-l="de">Live-Projekte für Kunden und Konzeptentwürfe für verschiedene Branchen. Jede Seite gebaut für Handy und Desktop, jede bereit für Automationen.</span><span data-l="en">Live client projects and concept drafts for different industries. Each built for phone and desktop, each ready for automations.</span></p>
     </header>
   </div>
   <div class="work-rail" id="work-rail" tabindex="0" data-aria-de="Arbeiten, horizontal scrollbar" data-aria-en="Work, scrolls horizontally" aria-label="Arbeiten, horizontal scrollbar"></div>
@@ -1803,18 +1805,22 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 ;
 /* ==== work ==== */
 (function () {
-  /* Portfolio: names and categories only, no links (owner's request). Images live in assets/work/. */
-  const W = (img, name, de, en) => ({ img, name, kind: { de, en }, alt: { de: 'Startseite der Website von ' + name, en: 'Homepage of the ' + name + ' website' } });
+  /* Portfolio, no links (owner's request). Live client sites show their name; drafts are anonymised
+     (logos, names and addresses blurred in the image) and show only the industry. Images live in assets/work/. */
+  const LIVE = { de: 'Kundenprojekt · Live', en: 'Client project · live' };
+  const DRAFT = { de: 'Konzeptentwurf', en: 'Concept draft' };
+  const C = (img, name, de, en) => ({ img, name: { de: name, en: name }, kind: LIVE, alt: { de: 'Startseite der Website von ' + name + ' (' + de + ')', en: 'Homepage of the ' + name + ' website (' + en + ')' } });
+  const D = (img, de, en) => ({ img, name: { de, en }, kind: DRAFT, alt: { de: 'Konzeptentwurf einer Website: ' + de, en: 'Website concept draft: ' + en } });
   const WORK = [
-    W('assets/work/souperbe.webp', 'souperbe', 'Café & Restaurant · Brugg', 'Café & restaurant · Brugg'),
-    W('assets/work/boxschule.webp', 'Boxschule Gebenstorf', 'Boxclub · Gebenstorf', 'Boxing club · Gebenstorf'),
-    W('assets/work/brugg-barber.webp', 'Brugg Barber Shop', 'Barbier · Brugg', 'Barber · Brugg'),
-    W('assets/work/halimi.webp', 'R. Halimi Reinigungen', 'Reinigung · Aarau', 'Cleaning · Aarau'),
-    W('assets/work/dd-informatic.webp', 'D&D Informatic', 'Kassensysteme & IT · Brugg', 'POS & IT · Brugg'),
-    W('assets/work/iservice24.webp', 'i-Service24', 'Handyreparatur · Wildegg', 'Phone repair · Wildegg'),
-    W('assets/work/freestar.webp', 'Freestar-Informatik', 'IT-Dienstleistungen', 'IT services'),
-    W('assets/work/reve.webp', 'ReVe Hauswartung', 'Hauswartung · Brugg', 'Facility care · Brugg'),
-    W('assets/work/swisstech.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'Precision manufacturing'),
+    C('assets/work/precision.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'precision manufacturing'),
+    C('assets/work/boxing.webp', 'Boxschule Gebenstorf', 'Boxclub', 'boxing club'),
+    D('assets/work/restaurant.webp', 'Café & Restaurant', 'Café & restaurant'),
+    D('assets/work/barber.webp', 'Barbier', 'Barber shop'),
+    D('assets/work/cleaning.webp', 'Reinigungsfirma', 'Cleaning company'),
+    D('assets/work/pos-it.webp', 'Kassensysteme & IT', 'POS & IT'),
+    D('assets/work/phone-repair.webp', 'Handyreparatur', 'Phone repair'),
+    D('assets/work/it-services.webp', 'IT-Dienstleister', 'IT services'),
+    D('assets/work/facility.webp', 'Hauswartung', 'Facility care'),
   ];
   document.addEventListener('DOMContentLoaded', () => {
     const rail = document.getElementById('work-rail');
@@ -1824,7 +1830,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     const render = () => {
       rail.innerHTML = WORK.map(w => '<figure class="work-card"><div class="work-frame"><div class="work-bar" aria-hidden="true"><i></i><i></i><i></i></div>' +
         '<img class="work-shot" src="' + w.img + '" alt="' + KGC.t(w.alt).replace(/&/g, '&amp;') + '" loading="lazy" width="1280" height="800"></div>' +
-        '<figcaption class="work-cap"><span class="work-name">' + w.name + '</span><span class="work-kind">' + KGC.t(w.kind) + '</span></figcaption></figure>').join('');
+        '<figcaption class="work-cap"><span class="work-name">' + KGC.t(w.name).replace(/&/g, '&amp;') + '</span><span class="work-kind' + (w.kind === LIVE ? ' is-live' : '') + '">' + KGC.t(w.kind) + '</span></figcaption></figure>').join('');
       upd();
     };
     const prev = document.getElementById('work-prev'), next = document.getElementById('work-next');

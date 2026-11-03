@@ -1,16 +1,20 @@
 (function () {
-  /* Portfolio: names and categories only, no links (owner's request). Images live in assets/work/. */
-  const W = (img, name, de, en) => ({ img, name, kind: { de, en }, alt: { de: 'Startseite der Website von ' + name, en: 'Homepage of the ' + name + ' website' } });
+  /* Portfolio, no links (owner's request). Live client sites show their name; drafts are anonymised
+     (logos, names and addresses blurred in the image) and show only the industry. Images live in assets/work/. */
+  const LIVE = { de: 'Kundenprojekt · Live', en: 'Client project · live' };
+  const DRAFT = { de: 'Konzeptentwurf', en: 'Concept draft' };
+  const C = (img, name, de, en) => ({ img, name: { de: name, en: name }, kind: LIVE, alt: { de: 'Startseite der Website von ' + name + ' (' + de + ')', en: 'Homepage of the ' + name + ' website (' + en + ')' } });
+  const D = (img, de, en) => ({ img, name: { de, en }, kind: DRAFT, alt: { de: 'Konzeptentwurf einer Website: ' + de, en: 'Website concept draft: ' + en } });
   const WORK = [
-    W('assets/work/souperbe.webp', 'souperbe', 'Café & Restaurant · Brugg', 'Café & restaurant · Brugg'),
-    W('assets/work/boxschule.webp', 'Boxschule Gebenstorf', 'Boxclub · Gebenstorf', 'Boxing club · Gebenstorf'),
-    W('assets/work/brugg-barber.webp', 'Brugg Barber Shop', 'Barbier · Brugg', 'Barber · Brugg'),
-    W('assets/work/halimi.webp', 'R. Halimi Reinigungen', 'Reinigung · Aarau', 'Cleaning · Aarau'),
-    W('assets/work/dd-informatic.webp', 'D&D Informatic', 'Kassensysteme & IT · Brugg', 'POS & IT · Brugg'),
-    W('assets/work/iservice24.webp', 'i-Service24', 'Handyreparatur · Wildegg', 'Phone repair · Wildegg'),
-    W('assets/work/freestar.webp', 'Freestar-Informatik', 'IT-Dienstleistungen', 'IT services'),
-    W('assets/work/reve.webp', 'ReVe Hauswartung', 'Hauswartung · Brugg', 'Facility care · Brugg'),
-    W('assets/work/swisstech.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'Precision manufacturing'),
+    C('assets/work/precision.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'precision manufacturing'),
+    C('assets/work/boxing.webp', 'Boxschule Gebenstorf', 'Boxclub', 'boxing club'),
+    D('assets/work/restaurant.webp', 'Café & Restaurant', 'Café & restaurant'),
+    D('assets/work/barber.webp', 'Barbier', 'Barber shop'),
+    D('assets/work/cleaning.webp', 'Reinigungsfirma', 'Cleaning company'),
+    D('assets/work/pos-it.webp', 'Kassensysteme & IT', 'POS & IT'),
+    D('assets/work/phone-repair.webp', 'Handyreparatur', 'Phone repair'),
+    D('assets/work/it-services.webp', 'IT-Dienstleister', 'IT services'),
+    D('assets/work/facility.webp', 'Hauswartung', 'Facility care'),
   ];
   document.addEventListener('DOMContentLoaded', () => {
     const rail = document.getElementById('work-rail');
@@ -20,7 +24,7 @@
     const render = () => {
       rail.innerHTML = WORK.map(w => '<figure class="work-card"><div class="work-frame"><div class="work-bar" aria-hidden="true"><i></i><i></i><i></i></div>' +
         '<img class="work-shot" src="' + w.img + '" alt="' + KGC.t(w.alt).replace(/&/g, '&amp;') + '" loading="lazy" width="1280" height="800"></div>' +
-        '<figcaption class="work-cap"><span class="work-name">' + w.name + '</span><span class="work-kind">' + KGC.t(w.kind) + '</span></figcaption></figure>').join('');
+        '<figcaption class="work-cap"><span class="work-name">' + KGC.t(w.name).replace(/&/g, '&amp;') + '</span><span class="work-kind' + (w.kind === LIVE ? ' is-live' : '') + '">' + KGC.t(w.kind) + '</span></figcaption></figure>').join('');
       upd();
     };
     const prev = document.getElementById('work-prev'), next = document.getElementById('work-next');
