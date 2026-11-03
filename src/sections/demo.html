@@ -1,0 +1,43 @@
+<section id="demo" class="section demo" aria-labelledby="demo-h">
+  <div class="wrap">
+    <header class="demo-head">
+      <span class="eyebrow"><span data-l="de">Live-Ablauf</span><span data-l="en">Live sequence</span></span>
+      <h2 id="demo-h"><span data-l="de">Sehen Sie zu, wie es <em class="it">läuft.</em></span><span data-l="en">Watch it <em class="it">run.</em></span></h2>
+      <p class="lede">
+        <span data-l="de">Drei Situationen aus dem Alltag. Links sieht der Kunde, was ankommt. Rechts sehen Sie, was im Hintergrund geschieht.</span>
+        <span data-l="en">Three everyday situations. On the left, what your customer sees. On the right, what happens behind the scenes.</span>
+      </p>
+    </header>
+
+    <div class="demo-tabs" role="tablist" data-aria-de="Szenario wählen" data-aria-en="Choose a scenario" aria-label="Szenario wählen">
+      <button type="button" class="demo-tab" role="tab" id="demo-tab-missedcall" data-sc="missedcall" aria-controls="demo-panel" aria-selected="true"><span class="demo-tab-n num">01</span><span data-l="de">Verpasster Anruf</span><span data-l="en">Missed call</span></button>
+      <button type="button" class="demo-tab" role="tab" id="demo-tab-reviews" data-sc="reviews" aria-controls="demo-panel" aria-selected="false" tabindex="-1"><span class="demo-tab-n num">02</span><span data-l="de">Neue Google-Bewertung</span><span data-l="en">New Google review</span></button>
+      <button type="button" class="demo-tab" role="tab" id="demo-tab-leads" data-sc="leads" aria-controls="demo-panel" aria-selected="false" tabindex="-1"><span class="demo-tab-n num">03</span><span data-l="de">Anfrage über die Website</span><span data-l="en">Website enquiry</span></button>
+    </div>
+
+    <div class="demo-stage" id="demo-panel" role="tabpanel" aria-labelledby="demo-tab-missedcall">
+      <div class="demo-left">
+        <div class="demo-pane-label"><span data-l="de">Das sieht Ihr Kunde</span><span data-l="en">What your customer sees</span></div>
+        <div class="demo-phone">
+          <div class="demo-notch" aria-hidden="true"></div>
+          <div class="demo-phone-bar"><span class="demo-phone-app" id="demo-app"></span><span class="demo-phone-clock num">14:32</span></div>
+          <div class="demo-screen" id="demo-screen"></div>
+        </div>
+      </div>
+      <div class="demo-right">
+        <div class="demo-pane-label"><span data-l="de">Das geschieht im Hintergrund</span><span data-l="en">What happens behind the scenes</span></div>
+        <ol class="demo-log" id="demo-log" aria-live="off"></ol>
+        <div class="demo-stat" id="demo-stat"></div>
+      </div>
+    </div>
+
+    <div class="demo-controls">
+      <button type="button" class="btn btn-ghost demo-replay" id="demo-replay"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13 2v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-l="de">Nochmal abspielen</span><span data-l="en">Replay</span></button>
+      <button type="button" class="btn btn-ghost demo-branch" id="demo-branch" aria-pressed="false" hidden></button>
+    </div>
+
+    <div class="demo-cta">
+      <button type="button" class="btn btn-cta btn-lg" id="demo-cta" data-quote="missedcall"><span id="demo-cta-l">Das will ich: Rückruf-SMS</span> <span class="arrow" aria-hidden="true">→</span></button>
+    </div>
+  </div>
+</section>

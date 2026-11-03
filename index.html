@@ -1,0 +1,2454 @@
+<!doctype html>
+<html lang="de-CH" data-lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KGC Automation</title>
+<meta name="claude:viewport-fit-sides" content="cover"><meta name="description" content="Massgeschneiderte Automationen für Schweizer Unternehmen: Bewertungen, Anfragen, Buchungen, Offerten und Rechnungen laufen von selbst.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: a Swiss watch movement as metaphor — calm limestone ground, Bodoni display,
+   brass hairlines for structure, ruby (the jewel bearing) reserved for the call to action only. */
+:root {
+  --stone: #ECEDE8;      /* page ground, cool Jura limestone */
+  --paper: #F8F8F4;      /* raised surfaces */
+  --ink: #14191D;        /* text */
+  --graphite: #4D565C;   /* secondary text */
+  --rule: #CDD1CB;       /* hairlines */
+  --brass: #9A7740;      /* structure, labels, gears */
+  --brass-soft: #D9C8A6;
+  --ruby: #A3122E;       /* CTA only */
+  --ruby-hover: #870E25;
+  --on-ruby: #FFFFFF;
+  --ok: #2F6B4F;         /* semantic success */
+  --warn: #9A5B12;
+  --shadow: 0 1px 2px rgba(20,25,29,.06), 0 12px 32px -12px rgba(20,25,29,.18);
+
+  --f-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --f-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* type scale */
+  --t-xs: .75rem; --t-sm: .875rem; --t-md: 1rem; --t-lg: 1.25rem;
+  --t-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --t-2xl: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+  --t-3xl: clamp(2.6rem, 1.6rem + 4.6vw, 5.5rem);
+
+  --wrap: 1200px;
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --section-y: clamp(72px, 10vw, 140px);
+  --radius: 4px;
+  --ease: cubic-bezier(.2,.7,.2,1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --stone: #0E1418; --paper: #151D23; --ink: #E7E9E3; --graphite: #9AA4AA; --rule: #2A353D;
+    --brass: #C9A468; --brass-soft: #4A3F2C; --ruby: #D02A48; --ruby-hover: #E2455F; --on-ruby: #FFFFFF;
+    --ok: #6DBB93; --warn: #E0A458;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --stone: #0E1418; --paper: #151D23; --ink: #E7E9E3; --graphite: #9AA4AA; --rule: #2A353D;
+  --brass: #C9A468; --brass-soft: #4A3F2C; --ruby: #D02A48; --ruby-hover: #E2455F; --on-ruby: #FFFFFF;
+  --ok: #6DBB93; --warn: #E0A458;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+body {
+  background: var(--stone); color: var(--ink);
+  font-family: var(--f-body); font-size: var(--t-md); line-height: 1.6;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--stone); }
+
+/* i18n: paired spans; inactive language hidden */
+html[data-lang="de"] [data-l="en"], html[data-lang="en"] [data-l="de"] { display: none !important; }
+
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
+.section { padding-block: var(--section-y); }
+
+h1, h2, h3 { font-family: var(--f-display); font-weight: 400; line-height: 1.05; letter-spacing: -.01em; text-wrap: balance; margin: 0; }
+h2 { font-size: var(--t-2xl); }
+h3 { font-size: var(--t-xl); }
+p { margin: 0; text-wrap: pretty; }
+em.it { font-style: italic; }
+
+.eyebrow {
+  font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--brass); display: inline-flex; align-items: center; gap: .6em;
+}
+.eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; }
+.lede { font-size: var(--t-lg); color: var(--graphite); max-width: 58ch; }
+.num, .chf { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55em;
+  font: 600 var(--t-md)/1 var(--f-body); letter-spacing: .01em;
+  padding: 1em 1.5em; border-radius: var(--radius); border: 1px solid transparent;
+  cursor: pointer; text-decoration: none; transition: background .2s var(--ease), transform .2s var(--ease), border-color .2s, color .2s;
+  min-height: 48px;
+}
+.btn-cta { background: var(--ruby); color: var(--on-ruby); box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--ruby) 70%, transparent); }
+.btn-cta:hover { background: var(--ruby-hover); transform: translateY(-1px); }
+.btn-cta .arrow { transition: transform .2s var(--ease); }
+.btn-cta:hover .arrow { transform: translateX(3px); }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
+.btn-ghost:hover { border-color: var(--ink); }
+.btn-lg { padding: 1.15em 1.8em; font-size: var(--t-lg); }
+
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 2px; }
+::selection { background: var(--brass-soft); color: var(--ink); }
+
+.reveal { transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.js .reveal:not(.in) { opacity: .001; transform: translateY(18px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .js .reveal:not(.in) { opacity: 1; transform: none; }
+}
+
+/* ---- Premium primitives (from KGC's build-premium-website skill, adapted) ---- */
+/* Fine paper grain over the whole page */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: .05; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body::after { mix-blend-mode: screen; opacity: .035; } }
+:root[data-theme="dark"] body::after { mix-blend-mode: screen; opacity: .035; }
+
+/* CTA shimmer: a brass-tinted light sweep on hover */
+.btn-cta { position: relative; overflow: hidden; isolation: isolate; }
+.btn-cta::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.22) 50%, transparent 70%);
+  transform: translateX(-110%); transition: transform .7s var(--ease);
+}
+.btn-cta:hover::before { transform: translateX(110%); }
+.btn-cta:active { transform: scale(.98); }
+
+/* Thin brass scrollbar */
+html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--stone); }
+::-webkit-scrollbar-thumb { background: var(--brass); border-radius: 10px; border: 3px solid var(--stone); }
+
+/* ==== nav ==== */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--stone); border-bottom: 1px solid transparent; transition: border-color .25s var(--ease); }
+.nav.is-scrolled { border-bottom-color: var(--rule); background: color-mix(in srgb, var(--stone) 78%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); }
+.nav-in { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 68px; }
+.nav-brand { display: flex; align-items: baseline; gap: 12px; text-decoration: none; color: var(--ink); white-space: nowrap; }
+.nav-mark { font-family: var(--f-display); font-size: 1.75rem; letter-spacing: .06em; line-height: 1; }
+.nav-sub { font-family: var(--f-data); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--graphite); }
+.nav-links { display: none; gap: clamp(18px, 2.4vw, 34px); }
+.nav-links a { font-size: var(--t-sm); font-weight: 500; color: var(--graphite); text-decoration: none; padding: 8px 0; position: relative; transition: color .2s; }
+.nav-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 1px; background: var(--brass); transform: scaleX(0); transform-origin: left; transition: transform .3s var(--ease); }
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.nav-lang { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+.nav-lang button, .footer-lang button { font: 500 var(--t-xs)/1 var(--f-data); letter-spacing: .08em; background: transparent; color: var(--graphite); border: 0; padding: 0 10px; min-height: 36px; min-width: 38px; cursor: pointer; transition: background .2s, color .2s; }
+.nav-lang button:hover, .footer-lang button:hover { color: var(--ink); }
+.nav-lang button[aria-pressed="true"], .footer-lang button[aria-pressed="true"] { background: var(--ink); color: var(--stone); }
+.nav-cta { min-height: 44px; padding: .8em 1.2em; font-size: var(--t-sm); }
+
+.nav-bar { display: none; }
+
+@media (min-width: 900px) { .nav-links { display: flex; } }
+@media (max-width: 899px) { .nav-sub { display: none; } }
+@media (max-width: 480px) {
+  .nav-in { gap: 10px; height: 60px; }
+  .nav-right { gap: 8px; }
+  .nav-cta { padding: .7em .9em; font-size: var(--t-xs); min-height: 40px; }
+  .nav-cta .arrow { display: none; }
+}
+@media (max-width: 719px) {
+  .nav-bar { display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 55; padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); background: var(--stone); border-top: 1px solid var(--rule); transform: translateY(0); transition: transform .35s var(--ease), opacity .35s; }
+  .nav-bar .btn { width: 100%; }
+  .nav-bar.is-hidden { transform: translateY(110%); opacity: 0; pointer-events: none; }
+}
+.nav .btn, .nav-bar .btn, .nav button { box-sizing: border-box; }
+
+.nav-burger { display: none; position: relative; width: 44px; height: 44px; border: 1px solid var(--rule); border-radius: var(--radius); background: transparent; cursor: pointer; }
+.nav-burger span { position: absolute; left: 12px; right: 12px; height: 1px; background: var(--ink); transition: transform .3s var(--ease); }
+.nav-burger span:first-child { top: 18px; } .nav-burger span:last-child { top: 25px; }
+.nav-menu { position: fixed; inset: 0; z-index: 80; background: var(--stone); overflow-y: auto; padding-top: env(safe-area-inset-top, 0px); }
+.nav-menu[hidden] { display: none; }
+.nav-menu-in { min-height: 100%; display: flex; flex-direction: column; gap: 32px; padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); box-sizing: border-box; }
+.nav-menu-top { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+.nav-menu-x { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--rule); background: transparent; color: var(--ink); font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.nav-menu-links { display: flex; flex-direction: column; flex: 1; }
+.nav-menu-links a { font-family: var(--f-display); font-size: var(--t-2xl); color: var(--ink); text-decoration: none; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.nav-menu-links a:hover { color: var(--brass); }
+.nav-menu .btn { box-sizing: border-box; width: 100%; }
+@media (max-width: 899px) { .nav-burger { display: inline-block; } }
+@media (min-width: 900px) { .nav-menu { display: none !important; } }
+@media (max-width: 480px) { .nav-burger { width: 40px; height: 40px; } .nav-burger span:first-child { top: 16px; } .nav-burger span:last-child { top: 23px; } }
+
+/* ==== hero ==== */
+.hero { padding-top: clamp(40px, 6vw, 88px); padding-bottom: clamp(56px, 8vw, 112px); overflow: hidden; }
+.hero-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
+.hero-text { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; }
+.hero-h1 { font-size: clamp(2.5rem, 1.5rem + 3.9vw, 4.75rem); line-height: 1.02; letter-spacing: -.02em; font-weight: 400; }
+.hero-h1 .it { color: var(--brass); font-weight: 400; }
+.hero-lede { max-width: 50ch; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+.hero-trust { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .04em; color: var(--graphite); display: flex; flex-wrap: wrap; gap: 6px 10px; padding-top: 20px; border-top: 1px solid var(--rule); width: 100%; max-width: 560px; }
+.hero-trust i { font-style: normal; color: var(--brass); }
+
+.hero-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.hero-svg { width: 100%; max-width: 340px; height: auto; display: block; overflow: visible; }
+.hero-plate { fill: var(--paper); stroke: var(--brass); stroke-width: 1.6; }
+.hero-line { fill: none; stroke: var(--brass); stroke-width: 1.1; stroke-linejoin: round; }
+.hero-fine { stroke-width: .7; opacity: .8; }
+.hero-gear-body { fill: var(--paper); stroke: var(--brass); stroke-width: 1.2; stroke-linejoin: round; }
+.hero-gear-spoke { fill: none; stroke: var(--brass); stroke-width: 1; opacity: .85; }
+.hero-axle { fill: var(--stone); stroke: var(--brass); stroke-width: 1.2; }
+.hero-spin { animation: hero-spin var(--dur) linear infinite; animation-direction: var(--dir, normal); }
+@keyframes hero-spin { to { transform: rotate(360deg); } }
+.hero-balance-swing { animation: hero-swing 1.6s ease-in-out infinite alternate; }
+@keyframes hero-swing { from { transform: rotate(-38deg); } to { transform: rotate(38deg); } }
+.hero-spring { fill: none; stroke: var(--brass); stroke-width: .8; }
+
+.hero-jewel { cursor: pointer; outline: none; }
+.hero-jewel-set { fill: var(--paper); stroke: var(--brass); stroke-width: 1.2; }
+.hero-jewel-stone { fill: var(--ruby); transition: transform .3s var(--ease); transform-box: fill-box; transform-origin: center; }
+.hero-jewel-glint { fill: none; stroke: var(--on-ruby); stroke-width: .9; opacity: .6; stroke-linecap: round; pointer-events: none; }
+.hero-jewel-halo { fill: none; stroke: var(--ruby); stroke-width: 1; opacity: 0; transition: opacity .25s; transform-box: fill-box; transform-origin: center; }
+.hero-jewel:hover .hero-jewel-stone, .hero-jewel:focus-visible .hero-jewel-stone, .hero-jewel.is-on .hero-jewel-stone { transform: scale(1.35); }
+.hero-jewel:hover .hero-jewel-halo, .hero-jewel:focus-visible .hero-jewel-halo, .hero-jewel.is-on .hero-jewel-halo { opacity: .9; }
+.hero-jewel:focus-visible .hero-jewel-set { stroke: var(--ink); stroke-width: 1.8; }
+
+.hero-cap { display: flex; flex-direction: column; gap: 6px; text-align: center; min-height: 96px; max-width: 360px; }
+.hero-cap-t { font-family: var(--f-display); font-size: var(--t-lg); line-height: 1.2; }
+.hero-cap-s { font-size: var(--t-sm); color: var(--graphite); }
+.hero-cap.is-hint .hero-cap-s { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .06em; color: var(--brass); }
+
+@media (min-width: 900px) {
+  .hero-grid { grid-template-columns: 11fr 9fr; gap: clamp(32px, 5vw, 80px); }
+  .hero-svg { max-width: 520px; }
+  .hero-fig { align-items: stretch; }
+  .hero-cap { align-self: center; max-width: 420px; }
+}
+@media (max-width: 899px) { .hero-fig { margin-top: 8px; } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-spin, .hero-balance-swing { animation: none !important; }
+}
+.hero .btn, .hero-cap, .hero-trust { box-sizing: border-box; }
+
+/* ==== demo ==== */
+.demo-head { display: grid; gap: 18px; margin-bottom: clamp(32px, 5vw, 56px); }
+.demo-head .lede { margin-top: 2px; }
+
+.demo-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--rule); margin-bottom: clamp(24px, 4vw, 40px); overflow-x: auto; scrollbar-width: none; }
+.demo-tabs::-webkit-scrollbar { display: none; }
+.demo-tab {
+  appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  font: 500 var(--t-md)/1.2 var(--f-body); color: var(--graphite); padding: 16px 22px 14px 0; margin-right: 22px;
+  cursor: pointer; display: inline-flex; align-items: baseline; gap: .7em; white-space: nowrap; transition: color .2s, border-color .2s;
+}
+.demo-tab:hover { color: var(--ink); }
+.demo-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--brass); }
+.demo-tab-n { font-size: var(--t-xs); color: var(--brass); letter-spacing: .08em; }
+
+.demo-stage {
+  display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); align-items: start;
+  border: 1px solid var(--rule); border-radius: var(--radius); padding: clamp(24px, 4vw, 48px); background: var(--paper);
+}
+.demo-pane-label { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--graphite); margin-bottom: 22px; }
+.demo-left { display: flex; flex-direction: column; align-items: center; }
+.demo-left .demo-pane-label { align-self: flex-start; }
+
+/* phone */
+.demo-phone {
+  position: relative; width: 300px; max-width: 100%; height: 500px; background: var(--stone);
+  border: 1px solid var(--graphite); border-radius: 34px; box-shadow: 0 0 0 7px var(--paper), 0 0 0 8px var(--rule);
+  overflow: hidden; display: flex; flex-direction: column; margin: 8px 8px 0;
+}
+.demo-notch { position: absolute; top: 9px; left: 50%; width: 72px; height: 5px; margin-left: -36px; background: var(--rule); border-radius: 3px; }
+.demo-phone-bar { display: flex; justify-content: space-between; align-items: center; padding: 26px 20px 12px; border-bottom: 1px solid var(--rule); font-size: var(--t-xs); }
+.demo-phone-app { font-weight: 600; color: var(--ink); letter-spacing: .01em; }
+.demo-phone-clock { color: var(--graphite); }
+.demo-screen { flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 16px 14px; overflow: hidden; }
+
+.demo-it { opacity: 0; transform: translateY(10px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.demo-it.on { opacity: 1; transform: none; }
+.demo-noanim .demo-it, .demo-noanim .demo-lg, .demo-noanim .demo-st { transition: none !important; }
+
+.demo-p-call { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--paper); }
+.demo-p-call svg { flex: none; color: var(--warn); }
+.demo-p-call b { display: block; font-size: var(--t-sm); font-weight: 600; color: var(--warn); }
+.demo-p-call small, .demo-p-from { display: block; font-size: var(--t-xs); color: var(--graphite); }
+.demo-p-from { font-family: var(--f-data); margin-bottom: 4px; letter-spacing: .02em; }
+.demo-bub { max-width: 88%; font-size: var(--t-sm); line-height: 1.45; padding: 10px 13px; border-radius: 14px; }
+.demo-bub-in { align-self: flex-start; background: var(--paper); border: 1px solid var(--rule); border-bottom-left-radius: 4px; }
+.demo-bub-out { align-self: flex-end; background: var(--ink); color: var(--stone); border-bottom-right-radius: 4px; }
+.demo-bub .demo-p-from { color: inherit; opacity: .65; }
+.demo-bub a, .demo-lnk { text-decoration: underline; text-decoration-color: var(--brass); text-underline-offset: 2px; }
+
+.demo-card { background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); padding: 13px 14px; font-size: var(--t-sm); }
+.demo-stars { color: var(--brass); letter-spacing: .12em; font-size: var(--t-md); line-height: 1; margin-bottom: 7px; }
+.demo-stars i { font-style: normal; color: var(--rule); }
+.demo-card p { line-height: 1.45; }
+.demo-card .demo-p-from { margin: 7px 0 0; }
+.demo-reply { margin-left: 14px; border-left: 2px solid var(--brass); }
+.demo-note { font-size: var(--t-xs); color: var(--graphite); border: 1px dashed var(--rule); border-radius: var(--radius); padding: 10px 12px; line-height: 1.45; }
+.demo-field { display: block; font-size: var(--t-xs); color: var(--graphite); font-family: var(--f-data); margin-bottom: 8px; }
+.demo-field span { display: block; margin-top: 3px; font-family: var(--f-body); font-size: var(--t-sm); color: var(--ink); padding: 8px 10px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--stone); }
+.demo-sendbtn { margin-top: 4px; text-align: center; font-size: var(--t-sm); font-weight: 600; padding: 10px; border-radius: var(--radius); background: var(--ink); color: var(--stone); }
+.demo-toast { font-size: var(--t-sm); color: var(--ok); display: flex; gap: 8px; align-items: center; padding: 2px 2px; }
+.demo-mail { border-top: 2px solid var(--brass); }
+.demo-mail b { display: block; font-size: var(--t-sm); margin-bottom: 4px; }
+
+/* log */
+.demo-log { list-style: none; margin: 0; padding: 0; }
+.demo-lg { position: relative; display: grid; grid-template-columns: 56px 18px 1fr; gap: 0 12px; padding-bottom: 22px; opacity: 0; transform: translateX(-8px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.demo-lg.on { opacity: 1; transform: none; }
+.demo-lg-t { font-family: var(--f-data); font-size: var(--t-sm); color: var(--graphite); padding-top: 2px; font-variant-numeric: tabular-nums; }
+.demo-lg-d { position: relative; display: flex; justify-content: center; }
+.demo-lg-d::before { content: ""; position: absolute; top: 18px; bottom: -22px; width: 1px; background: var(--rule); }
+.demo-lg:last-child .demo-lg-d::before { display: none; }
+.demo-lg-d i { width: 11px; height: 11px; border-radius: 50%; background: var(--brass); margin-top: 7px; position: relative; }
+.demo-lg.pending .demo-lg-d i { background: var(--paper); border: 1px dashed var(--brass); }
+.demo-lg-x { font-size: var(--t-md); line-height: 1.4; }
+.demo-lg-x small { display: block; color: var(--graphite); font-size: var(--t-sm); margin-top: 2px; }
+.demo-lg.branch .demo-lg-x { font-family: var(--f-data); font-size: var(--t-sm); color: var(--brass); }
+.demo-stat { margin-top: 8px; padding-top: 22px; border-top: 1px solid var(--brass); opacity: 0; transform: translateY(8px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.demo-stat.on { opacity: 1; transform: none; }
+.demo-stat b { display: block; font: 400 clamp(2rem, 1.4rem + 2vw, 3rem)/1.05 var(--f-display); letter-spacing: -.01em; }
+.demo-stat span { display: block; margin-top: 8px; color: var(--graphite); max-width: 44ch; }
+
+.demo-controls { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.demo-controls .btn { min-height: 44px; padding: .8em 1.2em; font-size: var(--t-sm); }
+.demo-controls [hidden] { display: none; }
+.demo-branch[aria-pressed="true"] { border-color: var(--brass); color: var(--brass); }
+.demo-cta { margin-top: clamp(32px, 5vw, 56px); display: flex; justify-content: center; }
+
+@media (max-width: 860px) {
+  .demo-stage { grid-template-columns: 1fr; }
+  .demo-left .demo-pane-label { align-self: flex-start; }
+  .demo-phone { width: min(300px, calc(100% - 16px)); }
+}
+@media (max-width: 520px) {
+  .demo-cta .btn { width: 100%; padding-inline: 1em; font-size: var(--t-md); }
+  .demo-lg { grid-template-columns: 48px 14px 1fr; gap: 0 8px; }
+  .demo-tab { padding-right: 16px; margin-right: 16px; }
+}
+
+/* ==== offers ==== */
+.offers-head { display: grid; gap: 18px; max-width: 44rem; margin-bottom: clamp(28px, 4vw, 48px); }
+.offers-filter { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 28px; margin-bottom: 24px; }
+.offers-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.offers-pill {
+  appearance: none; font: 500 var(--t-sm)/1 var(--f-body); color: var(--graphite); background: transparent;
+  border: 1px solid var(--rule); border-radius: 999px; padding: 11px 16px; min-height: 40px; cursor: pointer;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.offers-pill:hover { border-color: var(--brass); color: var(--ink); }
+.offers-pill[aria-pressed="true"] { background: var(--ink); color: var(--stone); border-color: var(--ink); }
+.offers-count { font-size: var(--t-sm); color: var(--graphite); margin: 0; }
+
+.offers-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+.offers-cell {
+  position: relative; display: flex; flex-direction: column; gap: 14px; padding: clamp(22px, 2.6vw, 34px);
+  border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  transition: opacity .45s var(--ease), background .3s;
+}
+.offers-cell.is-dim { opacity: .28; }
+.offers-cell:hover, .offers-cell:focus-within { opacity: 1; background: var(--paper); }
+.offers-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; min-height: 1.4em; }
+.offers-idx { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; color: var(--brass); }
+.offers-tag { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--brass); border: 1px solid var(--brass); padding: 3px 8px; border-radius: 2px; }
+.offers-name { font-family: var(--f-display); font-weight: 400; font-size: var(--t-xl); line-height: 1.12; letter-spacing: -.01em; text-wrap: balance; margin: 0; }
+.offers-short { color: var(--graphite); }
+.offers-price { font-family: var(--f-data); font-size: var(--t-xs); line-height: 1.7; color: var(--ink); margin-top: auto; padding-top: 6px; border-top: 1px solid var(--rule); letter-spacing: .01em; }
+.offers-price span { white-space: nowrap; }
+.offers-price span + span::before { content: " · "; white-space: pre; color: var(--brass); }
+.offers-acts { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 16px; }
+.offers-more, .offers-add {
+  appearance: none; background: none; border: 0; cursor: pointer; font: 500 var(--t-sm)/1.2 var(--f-body); color: var(--ink);
+  padding: 12px 0; min-height: 44px; display: inline-flex; align-items: center; gap: .5em;
+}
+.offers-more .offers-pm { font-family: var(--f-data); color: var(--brass); width: 1em; text-align: center; transition: transform .3s var(--ease); display: inline-block; }
+.offers-more[aria-expanded="true"] .offers-pm { transform: rotate(45deg); }
+.offers-add { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 1.5px; text-underline-offset: 6px; }
+.offers-add:hover, .offers-more:hover { color: var(--brass); }
+.offers-steps-w { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease); margin-top: -14px; }
+.offers-steps-w > div { overflow: hidden; visibility: hidden; transition: visibility .4s; }
+.offers-cell.open .offers-steps-w { grid-template-rows: 1fr; margin-top: -4px; }
+.offers-cell.open .offers-steps-w > div { visibility: visible; }
+.offers-steps { list-style: none; margin: 0; padding: 4px 0 4px; display: grid; gap: 10px; counter-reset: s; }
+.offers-steps li { display: grid; grid-template-columns: 24px 1fr; gap: 8px; font-size: var(--t-sm); line-height: 1.45; counter-increment: s; }
+.offers-steps li::before { content: counter(s); font-family: var(--f-data); font-size: var(--t-xs); color: var(--brass); border: 1px solid var(--brass); border-radius: 50%; width: 20px; height: 20px; display: grid; place-items: center; margin-top: 1px; }
+.offers-cta { display: flex; justify-content: center; margin-top: clamp(36px, 5vw, 64px); }
+
+@media (max-width: 960px) { .offers-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) {
+  .offers-grid { grid-template-columns: 1fr; }
+  .offers-cta .btn { width: 100%; }
+}
+
+/* hover: brass hairline grows across the top, name lifts */
+.offers-cell::before { content: ""; position: absolute; top: -1px; left: 0; height: 1px; width: 100%; background: var(--brass); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); pointer-events: none; }
+.offers-cell:hover::before, .offers-cell:focus-within::before { transform: scaleX(1); }
+.offers-name { transition: transform .35s var(--ease); }
+.offers-cell:hover .offers-name, .offers-cell:focus-within .offers-name { transform: translateY(-2px); }
+
+/* ==== roi ==== */
+.roi-head { max-width: 760px; display: grid; gap: 18px; margin-bottom: clamp(36px, 5vw, 64px); }
+.roi-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
+.roi-inputs { display: grid; gap: 34px; }
+.roi-field { display: grid; gap: 6px; }
+.roi-fieldhead { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.roi-fieldhead label, .roi-rate label { font-weight: 600; line-height: 1.35; }
+.roi-val { font-size: var(--t-lg); color: var(--ink); white-space: nowrap; }
+.roi-scale { display: flex; justify-content: space-between; font-size: var(--t-xs); color: var(--graphite); }
+
+.roi input[type="range"] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 44px; margin: 0; background: transparent; cursor: pointer;
+  --fill: 50%;
+}
+.roi input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--brass) var(--fill), var(--rule) var(--fill)); }
+.roi input[type="range"]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--rule); }
+.roi input[type="range"]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--brass); }
+.roi input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; margin-top: -10px; border-radius: 50%; background: var(--ink); border: 3px solid var(--stone); box-shadow: 0 0 0 1px var(--ink); transition: transform .2s var(--ease); }
+.roi input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--ink); border: 3px solid var(--stone); box-shadow: 0 0 0 1px var(--ink); }
+.roi input[type="range"]:hover::-webkit-slider-thumb, .roi input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.12); }
+.roi input[type="range"]:focus-visible { outline: none; }
+.roi input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 1px var(--ink), 0 0 0 5px var(--brass); }
+.roi input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 1px var(--ink), 0 0 0 5px var(--brass); }
+
+.roi-rate { grid-template-columns: 1fr auto; align-items: center; gap: 16px; }
+.roi-rate select {
+  font: inherit; font-family: var(--f-data); color: var(--ink); background: var(--paper); border: 1px solid var(--rule);
+  border-radius: var(--radius); padding: 0 14px; min-height: 48px; min-width: 150px;
+}
+.roi-foot { font-size: var(--t-sm); color: var(--graphite); max-width: 52ch; border-top: 1px solid var(--rule); padding-top: 18px; }
+
+.roi-result { background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); padding: clamp(22px, 3vw, 40px); display: grid; gap: 26px; }
+.roi-lines { margin: 0; display: grid; gap: 0; }
+.roi-line { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.roi-line:first-child { padding-top: 0; }
+.roi-line dt { color: var(--graphite); }
+.roi-line dd { margin: 0; font-size: var(--t-lg); white-space: nowrap; }
+.roi-total-label { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+.roi-big { font-family: var(--f-display); font-size: clamp(2.8rem, 2rem + 3.6vw, 4.8rem); line-height: 1.02; letter-spacing: -.02em; font-variant-numeric: lining-nums tabular-nums; margin-top: 6px; overflow-wrap: anywhere; }
+.roi-cmp { color: var(--graphite); font-size: var(--t-sm); margin-top: 8px; }
+.roi-msg { margin-top: 10px; color: var(--ink); min-height: 1.6em; }
+
+.roi-bars { display: grid; gap: 16px; }
+.roi-bar-top { display: flex; justify-content: space-between; gap: 16px; font-size: var(--t-sm); color: var(--graphite); margin-bottom: 6px; }
+.roi-bar-top .num { color: var(--ink); white-space: nowrap; }
+.roi-track { height: 12px; background: transparent; border-left: 1px solid var(--rule); }
+.roi-bar { height: 100%; width: 0; transition: width .5s var(--ease); }
+.roi-bar-loss { background: var(--brass); }
+.roi-bar-cost { background: var(--graphite); }
+.roi-ratio { font-size: var(--t-lg); color: var(--ink); margin-top: -6px; min-height: 1.4em; }
+.roi-cta { justify-self: start; }
+.roi-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .roi-grid { grid-template-columns: minmax(0, 1fr); }
+  .roi-cta { justify-self: stretch; }
+}
+@media (max-width: 480px) {
+  .roi-rate { grid-template-columns: 1fr; gap: 6px; }
+  .roi-rate select { width: 100%; }
+  .roi-line { flex-direction: column; gap: 2px; }
+}
+
+/* ==== packages ==== */
+.packages-head { max-width: 760px; display: grid; gap: 18px; margin-bottom: clamp(28px, 4vw, 48px); }
+.packages-toolbar { display: flex; margin-bottom: 28px; }
+.packages-seg { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); padding: 3px; background: var(--paper); max-width: 100%; }
+.packages-seg button {
+  font: 600 var(--t-sm)/1.2 var(--f-body); color: var(--graphite); background: transparent; border: 0; border-radius: 2px;
+  padding: 0 18px; min-height: 44px; cursor: pointer; transition: background .2s, color .2s;
+}
+.packages-seg button[aria-pressed="true"] { background: var(--ink); color: var(--stone); }
+.packages-seg button:not([aria-pressed="true"]):hover { color: var(--ink); }
+
+.packages-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+.packages-card {
+  position: relative; display: flex; flex-direction: column; gap: 22px; padding: clamp(24px, 2.4vw, 36px);
+  border: 1px solid var(--rule); border-radius: var(--radius); background: transparent;
+}
+.packages-card.is-featured { background: var(--paper); border-color: var(--brass-soft); border-top: 3px solid var(--brass); box-shadow: var(--shadow); }
+.packages-flag { position: absolute; top: -1px; right: 24px; transform: translateY(-50%); background: var(--stone); padding: 0 10px; font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+.packages-card.is-featured .packages-flag { background: var(--paper); top: 0; }
+.packages-name { font-size: var(--t-2xl); }
+.packages-tag { color: var(--graphite); margin-top: 8px; }
+.packages-price { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 18px 0; display: grid; gap: 4px; }
+.packages-big { font-family: var(--f-data); font-size: clamp(2rem, 1.5rem + 1.6vw, 2.7rem); line-height: 1.1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.packages-big small { font-size: var(--t-sm); color: var(--graphite); letter-spacing: 0; margin-left: .35em; }
+.packages-sub { font-family: var(--f-data); font-size: var(--t-sm); color: var(--graphite); }
+.packages-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; flex: 1; align-content: start; }
+.packages-list li { position: relative; padding-left: 24px; line-height: 1.45; }
+.packages-list li::before { content: ""; position: absolute; left: 3px; top: .5em; width: 10px; height: 5px; border-left: 1.5px solid var(--brass); border-bottom: 1.5px solid var(--brass); transform: rotate(-45deg); }
+.packages-list li.is-choice::before { border: 1.5px solid var(--brass); width: 8px; height: 8px; transform: none; border-radius: 50%; top: .5em; left: 2px; }
+.packages-list em { font-style: italic; font-family: var(--f-display); color: var(--brass); padding: 0 .15em; }
+.packages-save { font-family: var(--f-data); font-size: var(--t-sm); color: var(--ok); min-height: 1.4em; }
+.packages-card .btn { width: 100%; }
+.packages-note { margin-top: 28px; font-size: var(--t-sm); color: var(--graphite); max-width: 78ch; }
+
+@media (max-width: 960px) {
+  .packages-grid { grid-template-columns: minmax(0, 1fr); max-width: 560px; }
+  .packages-card.is-featured { order: -1; }
+}
+@media (max-width: 480px) {
+  .packages-seg { width: 100%; }
+  .packages-seg button { flex: 1; padding: 0 8px; }
+}
+
+/* ==== quote ==== */
+.quote-head { max-width: 760px; display: grid; gap: 18px; margin-bottom: clamp(28px, 4vw, 56px); }
+.quote-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; grid-template-areas: "form sum"; gap: clamp(28px, 4vw, 64px); align-items: start; }
+.quote-form { grid-area: form; min-width: 0; }
+.quote-sum { grid-area: sum; position: sticky; top: 96px; background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); }
+
+/* step indicator */
+.quote-steps { list-style: none; margin: 0 0 28px; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--rule); }
+.quote-steps button {
+  width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; background: transparent; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  padding: 12px 4px; min-height: 52px; cursor: pointer; font: 600 var(--t-sm)/1.25 var(--f-body); color: var(--graphite);
+}
+.quote-steps button[aria-current="step"] { color: var(--ink); border-bottom-color: var(--brass); }
+.quote-steps .n { flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule); display: grid; place-items: center; font: 500 var(--t-xs)/1 var(--f-data); }
+.quote-steps button[aria-current="step"] .n { background: var(--ink); color: var(--stone); border-color: var(--ink); }
+.quote-steps .done .n { border-color: var(--brass); color: var(--brass); }
+
+.quote-panel h3 { font-size: var(--t-xl); margin-bottom: 20px; outline: none; }
+.quote-panel h3:focus-visible { outline: 2px solid var(--brass); outline-offset: 6px; }
+.quote-fs { border: 0; margin: 0 0 28px; padding: 0; min-width: 0; }
+.quote-fs > legend, .quote-label { padding: 0; font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--brass); margin-bottom: 12px; display: block; }
+.quote-sr { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+
+/* package cards */
+.quote-pkgs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.quote-pk { position: relative; display: grid; gap: 4px; align-content: start; padding: 16px; border: 1px solid var(--rule); border-radius: var(--radius); cursor: pointer; min-height: 96px; transition: border-color .2s, background .2s; }
+.quote-pk:hover { border-color: var(--graphite); }
+.quote-pk.is-on { border-color: var(--ink); background: var(--paper); box-shadow: inset 0 2px 0 var(--brass); }
+.quote-pk:has(input:focus-visible) { outline: 2px solid var(--brass); outline-offset: 3px; }
+.quote-pk b { font: 400 var(--t-lg)/1.1 var(--f-display); }
+.quote-pk span { font: 400 var(--t-xs)/1.4 var(--f-data); color: var(--graphite); }
+
+/* offer rows */
+.quote-rows { display: grid; gap: 0; border-top: 1px solid var(--rule); }
+.quote-row { position: relative; display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 14px; align-items: start; padding: 14px 8px; border-bottom: 1px solid var(--rule); cursor: pointer; transition: background .2s; }
+.quote-row:hover { background: var(--paper); }
+.quote-row:has(input:focus-visible) { outline: 2px solid var(--brass); outline-offset: -2px; }
+.quote-row input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--ink); cursor: pointer; }
+.quote-row .t { font-weight: 600; display: block; }
+.quote-row .s { font-size: var(--t-sm); color: var(--graphite); display: block; margin-top: 2px; }
+.quote-row .p { font: 400 var(--t-xs)/1.5 var(--f-data); color: var(--graphite); text-align: right; white-space: nowrap; }
+.quote-row.is-inc { cursor: default; }
+.quote-row.is-inc:hover { background: transparent; }
+.quote-row.is-inc .mark { width: 20px; height: 20px; display: grid; place-items: center; color: var(--brass); font-size: 14px; }
+.quote-row.is-on { background: var(--paper); }
+.quote-flash { animation: quote-flash 1.8s var(--ease); }
+@keyframes quote-flash { 0%, 35% { background: var(--brass-soft); } 100% { background: transparent; } }
+.quote-sub { font-size: var(--t-sm); color: var(--graphite); margin: 0 0 12px; }
+
+/* fields */
+.quote-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-bottom: 24px; }
+.quote-field { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.quote-field.full { grid-column: 1 / -1; }
+.quote-field > label, .quote-field > .quote-label { font-weight: 600; font-size: var(--t-sm); font-family: var(--f-body); text-transform: none; letter-spacing: 0; color: var(--ink); margin: 0; }
+.quote-field input[type="text"], .quote-field input[type="email"], .quote-field input[type="tel"], .quote-field select, .quote-field textarea {
+  font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); padding: .7em .85em; min-height: 48px; width: 100%; box-sizing: border-box;
+}
+.quote-field textarea { min-height: 120px; resize: vertical; }
+.quote-field input:focus-visible, .quote-field select:focus-visible, .quote-field textarea:focus-visible { outline: 2px solid var(--brass); outline-offset: 1px; border-color: var(--brass); }
+.quote-field [aria-invalid="true"] { border-color: var(--ruby); }
+.quote-err { color: var(--ruby); font-size: var(--t-sm); min-height: 0; }
+.quote-err:empty { display: none; }
+.quote-checks { display: flex; flex-wrap: wrap; gap: 8px; }
+.quote-check { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--rule); border-radius: var(--radius); padding: 0 14px; min-height: 44px; cursor: pointer; font-size: var(--t-sm); }
+.quote-check:has(input:checked) { border-color: var(--ink); background: var(--paper); }
+.quote-check:has(input:focus-visible) { outline: 2px solid var(--brass); outline-offset: 2px; }
+.quote-check input { accent-color: var(--ink); width: 16px; height: 16px; margin: 0; }
+.quote-consent { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; align-items: start; margin: 4px 0 8px; font-size: var(--t-sm); }
+.quote-consent input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--ink); }
+.quote-note20 { font-size: var(--t-sm); color: var(--brass); border-left: 2px solid var(--brass); padding-left: 12px; }
+
+/* nav */
+.quote-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--rule); }
+.quote-next { background: var(--ink); color: var(--stone); border-color: var(--ink); }
+.quote-next:hover { background: var(--graphite); border-color: var(--graphite); }
+.quote-nav .btn[hidden] { display: none; }
+
+/* summary */
+.quote-sum-bar { display: none; }
+.quote-sum-body { padding: 26px 26px 22px; display: grid; gap: 18px; }
+.quote-sum-title { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+.quote-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.quote-items li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: var(--t-sm); line-height: 1.4; }
+.quote-items li.sub { padding-left: 14px; color: var(--graphite); }
+.quote-items li.head { font-weight: 600; }
+.quote-items .v { font-family: var(--f-data); font-size: var(--t-xs); white-space: nowrap; color: var(--graphite); padding-top: 2px; }
+.quote-tot { margin: 0; display: grid; gap: 0; }
+.quote-tot > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.quote-tot dt { font-size: var(--t-sm); color: var(--graphite); }
+.quote-tot dd { margin: 0; font-family: var(--f-data); font-variant-numeric: tabular-nums; text-align: right; }
+.quote-tot .big dd { font-size: var(--t-lg); color: var(--ink); }
+.quote-tot .yr dd { font-family: var(--f-display); font-size: var(--t-xl); }
+.quote-tot .yr { border-bottom: 0; }
+.quote-tip { border: 1px solid var(--brass); border-radius: var(--radius); padding: 14px; font-size: var(--t-sm); display: grid; gap: 10px; background: color-mix(in srgb, var(--brass-soft) 35%, transparent); }
+.quote-tip[hidden] { display: none; }
+.quote-tip .btn { min-height: 44px; padding: .6em 1em; font-size: var(--t-sm); justify-self: start; }
+.quote-fine { font-size: var(--t-xs); color: var(--graphite); line-height: 1.5; }
+.quote-fine.n20 { color: var(--brass); }
+
+/* confirmation */
+.quote-done { max-width: 760px; margin-inline: auto; display: grid; gap: 28px; }
+.quote-done h3 { font-size: var(--t-2xl); }
+.quote-done.is-fail h3 { color: var(--ink); }
+.quote-fail { border-left: 3px solid var(--ruby); padding: 4px 0 4px 16px; }
+.quote-receipt { background: var(--paper); border: 1px solid var(--rule); border-top: 3px solid var(--brass); border-radius: var(--radius); padding: clamp(20px, 3vw, 36px); font-family: var(--f-data); font-size: var(--t-sm); line-height: 1.6; }
+.quote-receipt h4 { margin: 0 0 20px; font: 500 var(--t-xs)/1 var(--f-data); letter-spacing: .18em; text-transform: uppercase; color: var(--brass); display: flex; justify-content: space-between; gap: 12px; }
+.quote-receipt section + section { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--rule); }
+.quote-receipt dl { margin: 0; display: grid; gap: 4px; }
+.quote-receipt dl > div { display: grid; grid-template-columns: minmax(110px, 190px) minmax(0, 1fr); gap: 16px; }
+.quote-receipt dt { color: var(--graphite); }
+.quote-receipt dd { margin: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.quote-receipt .tot dd { font-size: var(--t-md); }
+.quote-receipt .fine { margin-top: 18px; color: var(--graphite); font-size: var(--t-xs); }
+.quote-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 1040px) {
+  .quote-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "sum" "form"; gap: 24px; }
+  .quote-sum { top: var(--quote-top, 64px); z-index: 20; box-shadow: var(--shadow); }
+  .quote-sum-bar { display: flex; align-items: center; gap: 14px; padding: 10px 14px; }
+  .quote-sum-bar .col { flex: 1; min-width: 0; display: grid; }
+  .quote-sum-bar .col span { font: 400 .6875rem/1.3 var(--f-data); letter-spacing: .08em; text-transform: uppercase; color: var(--graphite); }
+  .quote-sum-bar .col b { font: 500 var(--t-sm)/1.3 var(--f-data); font-variant-numeric: tabular-nums; }
+  .quote-sum-toggle { flex: none; min-height: 44px; min-width: 44px; padding: 0 12px; background: transparent; border: 1px solid var(--rule); border-radius: var(--radius); color: var(--ink); font: 600 var(--t-xs)/1 var(--f-body); cursor: pointer; }
+  .quote-sum-body { display: none; border-top: 1px solid var(--rule); padding: 18px 16px; max-height: 70vh; overflow-y: auto; }
+  .quote-sum.is-open .quote-sum-body { display: grid; }
+  .quote-pkgs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .quote-fields { grid-template-columns: minmax(0, 1fr); }
+  .quote-steps button { flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 2px; }
+  .quote-row { grid-template-columns: 24px minmax(0, 1fr); }
+  .quote-row .p { grid-column: 2; text-align: left; white-space: normal; }
+  .quote-receipt dl > div { grid-template-columns: minmax(0, 1fr); gap: 0; margin-bottom: 6px; }
+  .quote-nav .btn { flex: 1; }
+}
+.quote-spin { width: 1em; height: 1em; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: quote-spin .8s linear infinite; }
+@keyframes quote-spin { to { transform: rotate(360deg); } }
+.quote-nav .btn:disabled { opacity: .85; cursor: progress; }
+
+/* ==== process ==== */
+.process-head { display: flex; flex-direction: column; gap: 16px; margin-bottom: clamp(40px, 6vw, 72px); max-width: 40rem; }
+.process-head .it { color: var(--brass); }
+.process-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 36px; position: relative; }
+.process-step { position: relative; display: flex; flex-direction: column; gap: 10px; padding-left: 40px; }
+.process-step::before { content: ""; position: absolute; left: 5px; top: 18px; bottom: -36px; width: 1px; background: var(--brass); opacity: .6; }
+.process-step:last-child::before { display: none; }
+.process-node { position: absolute; left: 0; top: 8px; width: 11px; height: 11px; border-radius: 50%; background: var(--stone); border: 1px solid var(--brass); }
+.process-n { font-size: var(--t-xs); letter-spacing: .14em; color: var(--brass); }
+.process-step h3 { font-size: var(--t-xl); }
+.process-meta { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .06em; color: var(--ink); text-transform: uppercase; }
+.process-step p:last-child { color: var(--graphite); font-size: var(--t-sm); max-width: 38ch; }
+.process-cta { margin-top: clamp(40px, 6vw, 64px); }
+
+@media (min-width: 900px) {
+  .process-list { display: block; }
+  .process-step { position: sticky; top: calc(96px + var(--i, 0) * 18px); display: grid; grid-template-columns: minmax(120px, 200px) 1fr; grid-template-areas: "n h" "n m" "n p"; column-gap: 40px; row-gap: 12px; align-content: center; align-items: start; min-height: min(52vh, 380px); margin-bottom: 24px; padding: 48px clamp(28px, 4vw, 64px); background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); transform-origin: 50% 0; will-change: transform, opacity; box-sizing: border-box; }
+  .process-step::before, .process-node { display: none; }
+  .process-n { grid-area: n; font-family: var(--f-display); font-size: clamp(5rem, 9vw, 8.5rem); line-height: .9; letter-spacing: -.02em; color: var(--brass); }
+  .process-step h3 { grid-area: h; font-size: var(--t-2xl); }
+  .process-meta { grid-area: m; }
+  .process-step p:last-child { grid-area: p; font-size: var(--t-md); max-width: 52ch; }
+}
+.process .btn { box-sizing: border-box; }
+
+/* ==== faq ==== */
+.faq-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start; }
+.faq-side { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.faq-side .it { color: var(--brass); }
+.faq-side .lede { font-size: var(--t-md); }
+.faq-list { border-top: 1px solid var(--rule); }
+.faq-item { border-bottom: 1px solid var(--rule); }
+.faq-item summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 0; cursor: pointer; min-height: 48px; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-q { font-family: var(--f-display); font-size: var(--t-lg); line-height: 1.25; transition: color .2s; }
+.faq-item summary:hover .faq-q { color: var(--brass); }
+.faq-mark { position: relative; flex: none; width: 28px; height: 28px; border: 1px solid var(--rule); border-radius: 50%; transition: border-color .2s, background .2s; }
+.faq-mark::before, .faq-mark::after { content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 1px; background: var(--brass); transform: translate(-50%, -50%); transition: transform .3s var(--ease); }
+.faq-mark::after { transform: translate(-50%, -50%) rotate(90deg); }
+.faq-item[open] .faq-mark { border-color: var(--brass); }
+.faq-item[open] .faq-mark::after { transform: translate(-50%, -50%) rotate(0); }
+.faq-a { padding: 0 48px 24px 0; color: var(--graphite); max-width: 60ch; }
+.faq-item[open] .faq-a { animation: faq-in .35s var(--ease); }
+@keyframes faq-in { from { opacity: 0; transform: translateY(-4px); } }
+@media (min-width: 900px) {
+  .faq-grid { grid-template-columns: 5fr 7fr; gap: clamp(40px, 6vw, 96px); }
+  .faq-side { position: sticky; top: 108px; }
+}
+.faq .btn { box-sizing: border-box; }
+
+/* ==== footer ==== */
+.footer { border-top: 1px solid var(--rule); background: var(--stone); }
+.todo { border-bottom: 1px dashed var(--brass); padding-bottom: 1px; }
+
+.footer-band { background: var(--paper); border-bottom: 1px solid var(--rule); padding-block: clamp(56px, 8vw, 104px); }
+.footer-band-in { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
+.footer-band-text { display: flex; flex-direction: column; gap: 18px; }
+.footer-big { font-size: var(--t-2xl); max-width: 16ch; }
+.footer-big .it { color: var(--brass); }
+
+.footer-main { display: grid; grid-template-columns: 1fr; gap: 32px; padding-block: 48px; }
+.footer-brand { display: flex; flex-direction: column; gap: 6px; }
+.footer-mark { font-family: var(--f-display); font-size: 2rem; letter-spacing: .06em; line-height: 1; }
+.footer-sub { font-family: var(--f-data); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--graphite); }
+.footer-contact { font-style: normal; display: flex; flex-direction: column; gap: 2px; color: var(--graphite); font-size: var(--t-sm); user-select: text; }
+.footer-contact strong { color: var(--ink); font-weight: 600; }
+.footer-legal { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: flex-start; }
+.footer-link { background: none; border: 0; padding: 8px 0; font: 500 var(--t-sm)/1.2 var(--f-body); color: var(--ink); cursor: pointer; border-bottom: 1px solid var(--rule); min-height: 40px; transition: border-color .2s, color .2s; }
+.footer-link:hover { border-bottom-color: var(--brass); color: var(--brass); }
+
+.footer-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px 28px; border-top: 1px solid var(--rule); font-family: var(--f-data); font-size: var(--t-xs); color: var(--graphite); letter-spacing: .03em; }
+.footer-lang { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+
+.footer-dlg { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--paper); color: var(--ink); padding: 0; width: min(640px, calc(100vw - 32px)); max-height: min(82vh, 760px); box-shadow: var(--shadow); }
+.footer-dlg[open] { display: flex; flex-direction: column; }
+.footer-dlg::backdrop { background: rgba(10, 14, 17, .6); }
+.footer-dlg-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 28px; border-bottom: 1px solid var(--rule); flex: none; }
+.footer-dlg-head h2 { font-size: var(--t-xl); }
+.footer-dlg-x { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--rule); background: transparent; color: var(--ink); font-size: 1.5rem; line-height: 1; cursor: pointer; transition: border-color .2s; }
+.footer-dlg-x:hover { border-color: var(--brass); }
+.footer-dlg-body { padding: 24px 28px 32px; overflow-y: auto; font-size: var(--t-sm); color: var(--graphite); }
+.footer-dlg-body > div > * + * { margin-top: 12px; }
+.footer-dlg-body h3 { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--brass); margin-top: 24px; }
+.footer-dlg-body > div > h3:first-child { margin-top: 0; }
+
+@media (min-width: 900px) {
+  .footer-band-in { flex-direction: row; align-items: flex-end; justify-content: space-between; }
+  .footer-main { grid-template-columns: 1.2fr 1.5fr 1fr; align-items: start; }
+}
+@media (max-width: 719px) {
+  .footer-bottom { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
+.footer .btn, .footer button { box-sizing: border-box; }
+
+.footer-status { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .06em; color: var(--graphite); }
+.footer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: footer-ring 2.4s ease-out infinite; }
+@keyframes footer-ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); } 70%, 100% { box-shadow: 0 0 0 9px transparent; } }
+@media (prefers-reduced-motion: reduce) { .footer-dot { animation: none !important; } }
+
+</style>
+</head>
+<body>
+<!-- ==== nav ==== -->
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="nav-brand" href="#top" data-aria-de="KGC Automation, zum Seitenanfang" data-aria-en="KGC Automation, back to top">
+      <span class="nav-mark">KGC</span>
+      <span class="nav-sub">Automation · Schweiz</span>
+    </a>
+    <nav class="nav-links" data-aria-de="Hauptnavigation" data-aria-en="Main navigation">
+      <a href="#leistungen"><span data-l="de">Leistungen</span><span data-l="en">Services</span></a>
+      <a href="#pakete"><span data-l="de">Pakete</span><span data-l="en">Packages</span></a>
+      <a href="#rechner"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></a>
+      <a href="#ablauf"><span data-l="de">Ablauf</span><span data-l="en">Process</span></a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <div class="nav-lang" role="group" data-aria-de="Sprache" data-aria-en="Language">
+        <button type="button" data-set-lang="de" aria-pressed="true">DE</button>
+        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button type="button" class="nav-burger" id="navBurger" aria-expanded="false" aria-controls="navMenu" data-aria-de="Menü öffnen" data-aria-en="Open menu"><span></span><span></span></button>
+      <button type="button" class="btn btn-cta nav-cta" data-quote="">
+        <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+</header>
+<div class="nav-bar" id="navBar">
+  <button type="button" class="btn btn-cta" data-quote="">
+    <span data-l="de">Offerte in 60 Sekunden</span><span data-l="en">Your quote in 60 seconds</span>
+    <span class="arrow" aria-hidden="true">→</span>
+  </button>
+</div>
+<div class="nav-menu" id="navMenu" role="dialog" aria-modal="true" data-aria-de="Menü" data-aria-en="Menu" hidden>
+  <div class="wrap nav-menu-in">
+    <div class="nav-menu-top">
+      <span class="nav-mark">KGC</span>
+      <button type="button" class="nav-menu-x" id="navMenuX" data-aria-de="Menü schliessen" data-aria-en="Close menu"><span aria-hidden="true">×</span></button>
+    </div>
+    <nav class="nav-menu-links" data-aria-de="Hauptnavigation" data-aria-en="Main navigation">
+      <a href="#leistungen"><span data-l="de">Leistungen</span><span data-l="en">Services</span></a>
+      <a href="#pakete"><span data-l="de">Pakete</span><span data-l="en">Packages</span></a>
+      <a href="#rechner"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></a>
+      <a href="#ablauf"><span data-l="de">Ablauf</span><span data-l="en">Process</span></a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button type="button" class="btn btn-cta btn-lg" data-quote="" data-menu-close>
+      <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span><span class="arrow" aria-hidden="true">→</span>
+    </button>
+  </div>
+</div>
+
+<!-- ==== hero ==== -->
+<section id="top" class="section hero">
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <p class="eyebrow reveal"><span data-l="de">Automationen für Schweizer Unternehmen</span><span data-l="en">Automations for Swiss businesses</span></p>
+      <h1 class="hero-h1 reveal">
+        <span data-l="de">Ihr Betrieb läuft. <em class="it">Auch wenn Sie es nicht tun.</em></span>
+        <span data-l="en">Your business runs. <em class="it">Even when you don’t.</em></span>
+      </h1>
+      <p class="lede hero-lede reveal">
+        <span data-l="de">Buchungen, Bewertungen, Offerten und Rechnungen laufen leise im Hintergrund. Fixer Einrichtungspreis, monatliche Betreuung, persönlich betreut aus Brugg AG.</span>
+        <span data-l="en">Bookings, reviews, quotes and invoices run quietly in the background. Fixed setup price, monthly care, personally looked after from Brugg AG.</span>
+      </p>
+      <div class="hero-actions reveal">
+        <button type="button" class="btn btn-cta btn-lg" data-quote="">
+          <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span><span class="arrow" aria-hidden="true">→</span>
+        </button>
+        <a class="btn btn-ghost btn-lg" href="#demo"><span data-l="de">So funktioniert es</span><span data-l="en">See it work</span></a>
+      </div>
+      <p class="hero-trust reveal">
+        <span data-l="de">Fixpreis ab CHF 400</span><span data-l="en">Fixed price from CHF 400</span>
+        <i aria-hidden="true">·</i>
+        <span data-l="de">Daten in der Schweiz/EU</span><span data-l="en">Data in Switzerland/EU</span>
+        <i aria-hidden="true">·</i>
+        <span data-l="de">Kündbar nach 3 Monaten</span><span data-l="en">Cancel after 3 months</span>
+      </p>
+    </div>
+    <figure class="hero-fig">
+      <svg id="heroSvg" class="hero-svg" viewBox="0 0 400 400" role="group" data-aria-de="Uhrwerk mit neun Rubinen, je einer pro Automation" data-aria-en="Watch movement with nine jewels, one per automation">
+        <circle class="hero-plate" cx="200" cy="200" r="195"/>
+        <circle class="hero-line hero-fine" cx="200" cy="200" r="184"/>
+        <g id="heroTicks" class="hero-line hero-fine"></g>
+        <g id="heroGears"></g>
+        <g id="heroBalance" class="hero-balance"></g>
+        <g id="heroJewels"></g>
+      </svg>
+      <figcaption class="hero-cap" id="heroCap" aria-live="polite">
+        <span class="hero-cap-t" id="heroCapT"></span>
+        <span class="hero-cap-s" id="heroCapS"></span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ==== demo ==== -->
+<section id="demo" class="section demo" aria-labelledby="demo-h">
+  <div class="wrap">
+    <header class="demo-head">
+      <span class="eyebrow"><span data-l="de">Live-Ablauf</span><span data-l="en">Live sequence</span></span>
+      <h2 id="demo-h"><span data-l="de">Sehen Sie zu, wie es <em class="it">läuft.</em></span><span data-l="en">Watch it <em class="it">run.</em></span></h2>
+      <p class="lede">
+        <span data-l="de">Drei Situationen aus dem Alltag. Links sieht der Kunde, was ankommt. Rechts sehen Sie, was im Hintergrund geschieht.</span>
+        <span data-l="en">Three everyday situations. On the left, what your customer sees. On the right, what happens behind the scenes.</span>
+      </p>
+    </header>
+
+    <div class="demo-tabs" role="tablist" data-aria-de="Szenario wählen" data-aria-en="Choose a scenario" aria-label="Szenario wählen">
+      <button type="button" class="demo-tab" role="tab" id="demo-tab-missedcall" data-sc="missedcall" aria-controls="demo-panel" aria-selected="true"><span class="demo-tab-n num">01</span><span data-l="de">Verpasster Anruf</span><span data-l="en">Missed call</span></button>
+      <button type="button" class="demo-tab" role="tab" id="demo-tab-reviews" data-sc="reviews" aria-controls="demo-panel" aria-selected="false" tabindex="-1"><span class="demo-tab-n num">02</span><span data-l="de">Neue Google-Bewertung</span><span data-l="en">New Google review</span></button>
+      <button type="button" class="demo-tab" role="tab" id="demo-tab-leads" data-sc="leads" aria-controls="demo-panel" aria-selected="false" tabindex="-1"><span class="demo-tab-n num">03</span><span data-l="de">Anfrage über die Website</span><span data-l="en">Website enquiry</span></button>
+    </div>
+
+    <div class="demo-stage" id="demo-panel" role="tabpanel" aria-labelledby="demo-tab-missedcall">
+      <div class="demo-left">
+        <div class="demo-pane-label"><span data-l="de">Das sieht Ihr Kunde</span><span data-l="en">What your customer sees</span></div>
+        <div class="demo-phone">
+          <div class="demo-notch" aria-hidden="true"></div>
+          <div class="demo-phone-bar"><span class="demo-phone-app" id="demo-app"></span><span class="demo-phone-clock num">14:32</span></div>
+          <div class="demo-screen" id="demo-screen"></div>
+        </div>
+      </div>
+      <div class="demo-right">
+        <div class="demo-pane-label"><span data-l="de">Das geschieht im Hintergrund</span><span data-l="en">What happens behind the scenes</span></div>
+        <ol class="demo-log" id="demo-log" aria-live="off"></ol>
+        <div class="demo-stat" id="demo-stat"></div>
+      </div>
+    </div>
+
+    <div class="demo-controls">
+      <button type="button" class="btn btn-ghost demo-replay" id="demo-replay"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13 2v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-l="de">Nochmal abspielen</span><span data-l="en">Replay</span></button>
+      <button type="button" class="btn btn-ghost demo-branch" id="demo-branch" aria-pressed="false" hidden></button>
+    </div>
+
+    <div class="demo-cta">
+      <button type="button" class="btn btn-cta btn-lg" id="demo-cta" data-quote="missedcall"><span id="demo-cta-l">Das will ich: Rückruf-SMS</span> <span class="arrow" aria-hidden="true">→</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ==== offers ==== -->
+<section id="leistungen" class="section offers" aria-labelledby="offers-h">
+  <div class="wrap">
+    <header class="offers-head">
+      <span class="eyebrow"><span data-l="de">Leistungen</span><span data-l="en">Services</span></span>
+      <h2 id="offers-h"><span data-l="de">Neun Mechanismen. Wählen Sie, was Ihnen <em class="it">Zeit kostet.</em></span><span data-l="en">Nine mechanisms. Choose what <em class="it">costs you time.</em></span></h2>
+    </header>
+    <div class="offers-filter">
+      <div class="offers-pills" id="offers-pills" role="group" data-aria-de="Nach Branche filtern" data-aria-en="Filter by industry" aria-label="Nach Branche filtern"></div>
+      <p class="offers-count num" id="offers-count" aria-live="polite"></p>
+    </div>
+    <div class="offers-grid" id="offers-grid"></div>
+    <div class="offers-cta">
+      <button type="button" class="btn btn-cta btn-lg" data-quote=""><span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span> <span class="arrow" aria-hidden="true">→</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ==== roi ==== -->
+<section id="rechner" class="section roi">
+  <div class="wrap">
+    <header class="roi-head reveal">
+      <span class="eyebrow"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></span>
+      <h2><span data-l="de">Was Sie heute <em class="it">verlieren</em></span><span data-l="en">What slips <em class="it">through</em> today</span></h2>
+      <p class="lede">
+        <span data-l="de">Verpasste Anrufe und Büroarbeit kosten Geld, auch wenn es niemand verbucht. Stellen Sie Ihre Zahlen ein, die Rechnung läuft live mit.</span>
+        <span data-l="en">Missed calls and desk work cost money, even if nobody books it. Set your numbers and the sum updates live.</span>
+      </p>
+    </header>
+
+    <div class="roi-grid">
+      <div class="roi-inputs">
+        <div class="roi-field">
+          <div class="roi-fieldhead">
+            <label for="roi-calls"><span data-l="de">Verpasste Anrufe pro Woche</span><span data-l="en">Missed calls per week</span></label>
+            <output class="roi-val num" for="roi-calls" id="roi-calls-out">6</output>
+          </div>
+          <input type="range" id="roi-calls" min="0" max="30" step="1" value="6">
+          <div class="roi-scale num" aria-hidden="true"><span>0</span><span>30</span></div>
+        </div>
+
+        <div class="roi-field">
+          <div class="roi-fieldhead">
+            <label for="roi-job"><span data-l="de">Durchschnittlicher Auftragswert</span><span data-l="en">Average job value</span></label>
+            <output class="roi-val num" for="roi-job" id="roi-job-out">CHF 850</output>
+          </div>
+          <input type="range" id="roi-job" min="100" max="5000" step="50" value="850">
+          <div class="roi-scale num" aria-hidden="true"><span>CHF 100</span><span>CHF 5’000</span></div>
+        </div>
+
+        <div class="roi-field">
+          <div class="roi-fieldhead">
+            <label for="roi-hours"><span data-l="de">Stunden pro Woche für Offerten, Rechnungen und E-Mails</span><span data-l="en">Hours per week on quotes, invoices and email</span></label>
+            <output class="roi-val num" for="roi-hours" id="roi-hours-out">6 h</output>
+          </div>
+          <input type="range" id="roi-hours" min="0" max="20" step="1" value="6">
+          <div class="roi-scale num" aria-hidden="true"><span>0 h</span><span>20 h</span></div>
+        </div>
+
+        <div class="roi-field roi-rate">
+          <label for="roi-rate"><span data-l="de">Ihr Stundensatz</span><span data-l="en">Your hourly rate</span></label>
+          <select id="roi-rate">
+            <option value="80">CHF 80</option>
+            <option value="120" selected>CHF 120</option>
+            <option value="180">CHF 180</option>
+            <option value="250">CHF 250</option>
+          </select>
+        </div>
+
+        <p class="roi-foot">
+          <span data-l="de">Annahme: 35 % der Anrufer hätten gebucht, 60 % davon rufen danach die Konkurrenz an. Vom Büroaufwand lassen sich 60 % automatisieren. Eine Schätzung, kein Versprechen.</span>
+          <span data-l="en">Assumption: 35% of callers would have booked, and 60% of those then call a competitor. 60% of desk work can be automated. An estimate, not a promise.</span>
+        </p>
+      </div>
+
+      <div class="roi-result" id="roi-result">
+        <dl class="roi-lines">
+          <div class="roi-line">
+            <dt><span data-l="de">Umsatz, der pro Monat verloren geht</span><span data-l="en">Revenue lost per month</span></dt>
+            <dd class="num" id="roi-loss">CHF 0</dd>
+          </div>
+          <div class="roi-line">
+            <dt><span data-l="de">Zeitwert pro Monat</span><span data-l="en">Value of your time per month</span></dt>
+            <dd class="num" id="roi-time">CHF 0</dd>
+          </div>
+        </dl>
+
+        <div class="roi-total">
+          <span class="roi-total-label"><span data-l="de">Zusammen pro Monat</span><span data-l="en">Together per month</span></span>
+          <div class="roi-big" id="roi-total">CHF 0</div>
+          <p class="roi-cmp num"><span data-l="de">Growth-Paket: CHF 129/Mt.</span><span data-l="en">Growth package: CHF 129/mo.</span></p>
+          <p class="roi-msg" id="roi-msg" role="status"></p>
+        </div>
+
+        <div class="roi-bars" aria-hidden="true">
+          <div class="roi-bar-row">
+            <div class="roi-bar-top"><span><span data-l="de">Was Sie verlieren</span><span data-l="en">What you lose</span></span><span class="num" id="roi-bar-loss-v"></span></div>
+            <div class="roi-track"><div class="roi-bar roi-bar-loss" id="roi-bar-loss"></div></div>
+          </div>
+          <div class="roi-bar-row">
+            <div class="roi-bar-top"><span><span data-l="de">Growth pro Monat, Einrichtung auf 12 Monate verteilt</span><span data-l="en">Growth per month, setup spread over 12 months</span></span><span class="num">CHF 204</span></div>
+            <div class="roi-track"><div class="roi-bar roi-bar-cost" id="roi-bar-cost"></div></div>
+          </div>
+        </div>
+        <p class="roi-ratio num" id="roi-ratio"></p>
+        <span class="roi-sr" id="roi-sr" aria-live="polite"></span>
+
+        <a href="#offerte" class="btn btn-cta roi-cta" data-quote="growth">
+          <span data-l="de">Mit diesen Zahlen Offerte berechnen</span><span data-l="en">Get a quote with these numbers</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==== packages ==== -->
+<section id="pakete" class="section packages">
+  <div class="wrap">
+    <header class="packages-head reveal">
+      <span class="eyebrow"><span data-l="de">Pakete</span><span data-l="en">Packages</span></span>
+      <h2><span data-l="de">Drei Pakete, ein <em class="it">klarer</em> Preis</span><span data-l="en">Three packages, one <em class="it">clear</em> price</span></h2>
+      <p class="lede">
+        <span data-l="de">Einmal einrichten, danach läuft es. Die monatliche Pauschale deckt Betrieb, Anpassungen und einen kurzen Bericht.</span>
+        <span data-l="en">Set up once, then it runs. The monthly fee covers operation, adjustments and a short report.</span>
+      </p>
+    </header>
+    <div class="packages-toolbar">
+      <div class="packages-seg" role="group" id="packages-seg" data-aria-de="Preisansicht" data-aria-en="Price view"></div>
+    </div>
+    <div class="packages-grid" id="packages-grid"></div>
+    <p class="packages-note">
+      <span data-l="de">Alle Preise in CHF. Mindestlaufzeit 3 Monate, danach monatlich kündbar. Lizenzkosten Dritter (z. B. SMS) transparent nach Aufwand.</span>
+      <span data-l="en">All prices in CHF. Minimum term 3 months, then cancellable monthly. Third-party licence costs (e.g. SMS) are passed on transparently at cost.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ==== quote ==== -->
+<section id="offerte" class="section quote">
+  <div class="wrap">
+    <header class="quote-head reveal">
+      <span class="eyebrow"><span data-l="de">Offerte</span><span data-l="en">Quote</span></span>
+      <h2><span data-l="de">Ihre Offerte in <em class="it">60 Sekunden</em></span><span data-l="en">Your quote in <em class="it">60 seconds</em></span></h2>
+      <p class="lede">
+        <span data-l="de">Stellen Sie zusammen, was Sie brauchen. Der Preis rechnet sich bei jeder Auswahl sofort mit.</span>
+        <span data-l="en">Pick what you need. The price updates with every choice.</span>
+      </p>
+    </header>
+    <div id="quote-app" class="quote-app"></div>
+  </div>
+</section>
+
+<!-- ==== process ==== -->
+<section id="ablauf" class="section process">
+  <div class="wrap">
+    <header class="process-head reveal">
+      <p class="eyebrow"><span data-l="de">Ablauf</span><span data-l="en">Process</span></p>
+      <h2><span data-l="de">Vier Schritte. <em class="it">Kein Risiko im Dunkeln.</em></span><span data-l="en">Four steps. <em class="it">Nothing left to chance.</em></span></h2>
+    </header>
+    <ol class="process-list">
+      <li class="process-step">
+        <span class="process-node" aria-hidden="true"></span>
+        <span class="process-n num">01</span>
+        <h3><span data-l="de">Erstgespräch</span><span data-l="en">First conversation</span></h3>
+        <p class="process-meta"><span data-l="de">30 Min. · kostenlos</span><span data-l="en">30 min · free</span></p>
+        <p><span data-l="de">Wir klären, was bei Ihnen Zeit frisst. Vor Ort in der Region oder per Video.</span><span data-l="en">We work out what eats your time. On site in the region or by video call.</span></p>
+      </li>
+      <li class="process-step">
+        <span class="process-node" aria-hidden="true"></span>
+        <span class="process-n num">02</span>
+        <h3><span data-l="de">Konzept &amp; Fixpreis</span><span data-l="en">Concept &amp; fixed price</span></h3>
+        <p class="process-meta"><span data-l="de">Offerte innert 48 h</span><span data-l="en">Quote within 48 h</span></p>
+        <p><span data-l="de">Sie erhalten eine schriftliche Offerte mit Einrichtungspreis, Monatspreis und Umfang. Ohne Überraschungen.</span><span data-l="en">You receive a written quote with setup price, monthly price and scope. No surprises.</span></p>
+      </li>
+      <li class="process-step">
+        <span class="process-node" aria-hidden="true"></span>
+        <span class="process-n num">03</span>
+        <h3><span data-l="de">Aufbau &amp; Test</span><span data-l="en">Build &amp; test</span></h3>
+        <p class="process-meta"><span data-l="de">Typisch 1–2 Wochen</span><span data-l="en">Typically 1–2 weeks</span></p>
+        <p><span data-l="de">Ich baue und teste alles selbst, bevor etwas live geht. Sie geben frei, erst dann läuft es.</span><span data-l="en">I build and test everything myself before anything goes live. You approve, then it runs.</span></p>
+      </li>
+      <li class="process-step">
+        <span class="process-node" aria-hidden="true"></span>
+        <span class="process-n num">04</span>
+        <h3><span data-l="de">Betrieb &amp; Betreuung</span><span data-l="en">Operation &amp; care</span></h3>
+        <p class="process-meta"><span data-l="de">Mindestlaufzeit 3 Monate</span><span data-l="en">Minimum term 3 months</span></p>
+        <p><span data-l="de">Monatlicher Kurzbericht, Anpassungen inklusive. Danach jederzeit auf Monatsende kündbar.</span><span data-l="en">A short monthly report, adjustments included. After the minimum term, cancel at the end of any month.</span></p>
+      </li>
+    </ol>
+    <div class="process-cta reveal">
+      <button type="button" class="btn btn-cta btn-lg" data-quote="">
+        <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span><span class="arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ==== faq ==== -->
+<section id="faq" class="section faq">
+  <div class="wrap faq-grid">
+    <div class="faq-side reveal">
+      <p class="eyebrow">FAQ</p>
+      <h2><span data-l="de">Gut zu wissen, <em class="it">bevor Sie anfragen.</em></span><span data-l="en">Good to know <em class="it">before you ask.</em></span></h2>
+      <p class="lede"><span data-l="de">Die Fragen, die Inhaber am häufigsten stellen. Ihre fehlt? Fragen Sie im Erstgespräch.</span><span data-l="en">The questions owners ask most. Yours missing? Ask in the first conversation.</span></p>
+      <button type="button" class="btn btn-cta" data-quote="">
+        <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span><span class="arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+    <div class="faq-list reveal">
+      <details class="faq-item">
+        <summary><span class="faq-q"><span data-l="de">Was passiert, wenn ich kündige?</span><span data-l="en">What happens if I cancel?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p><span data-l="de">Die Automation läuft bis zum Ende der Laufzeit und wird dann abgeschaltet. Ihre Daten erhalten Sie als Export zurück. Es bleibt nichts bei uns zurück, das Sie brauchen.</span><span data-l="en">The automation runs until the end of the term and is then switched off. Your data is exported and handed back to you. Nothing you need stays with us.</span></p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="faq-q"><span data-l="de">Wo liegen meine Daten?</span><span data-l="en">Where is my data stored?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p><span data-l="de">Wo immer möglich bei Schweizer oder EU-Anbietern. Jede Offerte enthält eine schriftliche Notiz zur Datenbearbeitung nach nDSG/revDSG, mit Angabe, was wo gespeichert wird.</span><span data-l="en">With Swiss or EU providers wherever possible. Every quote includes a written data-processing note under the nDSG/revDSG, stating what is stored where.</span></p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="faq-q"><span data-l="de">Brauche ich technisches Wissen?</span><span data-l="en">Do I need technical knowledge?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p><span data-l="de">Nein. Ich richte alles ein, teste es und erkläre Ihnen in wenigen Minuten, was Sie sehen. Im Alltag tun Sie nichts Neues, die Abläufe laufen von selbst.</span><span data-l="en">No. I set everything up, test it and explain in a few minutes what you will see. In daily work you do nothing new; the processes simply run.</span></p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="faq-q"><span data-l="de">Was kostet mich das neben Ihrem Preis?</span><span data-l="en">What do I pay on top of your price?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p><span data-l="de">Lizenzkosten Dritter, etwa für SMS oder Google Workspace, geben wir transparent und ohne Aufschlag weiter. Sie stehen einzeln in der Offerte.</span><span data-l="en">Third-party licence costs, such as SMS or Google Workspace, are passed through transparently and without markup. They are listed separately in the quote.</span></p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="faq-q"><span data-l="de">Dürfen Kunden per SMS kontaktiert werden?</span><span data-l="en">Can customers be contacted by SMS?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p><span data-l="de">Nur Kunden, die ihre Nummer für diesen Zweck angegeben haben. Jede Nachricht enthält eine Möglichkeit, sich abzumelden.</span><span data-l="en">Only customers who gave you their number for that purpose. Every message includes a way to opt out.</span></p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="faq-q"><span data-l="de">Kaufen Sie Bewertungen?</span><span data-l="en">Do you buy reviews?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p><span data-l="de">Nein. Google verbietet Belohnungen für Bewertungen, und wir halten uns daran. Wir machen es Ihren zufriedenen Kunden nur leicht, eine zu schreiben.</span><span data-l="en">No. Google forbids rewards for reviews and we keep to that. We only make it easy for your satisfied customers to write one.</span></p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="faq-q"><span data-l="de">Wie schnell ist es live?</span><span data-l="en">How fast does it go live?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p><span data-l="de">In der Regel nach 1–2 Wochen, je nach Umfang. Den Termin nennen wir Ihnen in der Offerte.</span><span data-l="en">Usually within 1–2 weeks, depending on scope. The date is stated in your quote.</span></p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ==== footer ==== -->
+<footer id="kontakt" class="footer">
+  <div class="footer-band">
+    <div class="wrap footer-band-in">
+      <div class="footer-band-text">
+        <h2 class="footer-big"><span data-l="de">Bereit, <em class="it">Zeit zurückzugewinnen?</em></span><span data-l="en">Ready to <em class="it">win back your time?</em></span></h2>
+        <p class="lede"><span data-l="de">Rechnen Sie Ihre Offerte in 60 Sekunden selbst. Unverbindlich, mit Festpreis.</span><span data-l="en">Work out your quote yourself in 60 seconds. No obligation, fixed price.</span></p>
+      </div>
+      <button type="button" class="btn btn-cta btn-lg" data-quote="">
+        <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span><span class="arrow" aria-hidden="true">→</span>
+      </button>
+    </div>
+  </div>
+  <div class="wrap footer-main">
+    <div class="footer-brand">
+      <span class="footer-mark">KGC</span>
+      <span class="footer-sub">Automation · Schweiz</span>
+      <p class="footer-status"><i class="footer-dot" aria-hidden="true"></i><span data-l="de">Alle Systeme laufen</span><span data-l="en">All systems running</span></p>
+    </div>
+    <address class="footer-contact">
+      <strong>Khang Cung</strong>
+      <span>KGC Automation</span>
+      <span>Stahlrain 7</span>
+      <span>5200 Brugg AG, <span data-l="de">Schweiz</span><span data-l="en">Switzerland</span></span>
+      <span>khangcung196@gmail.com</span>
+      <span>+41 76 330 79 11</span>
+    </address>
+    <div class="footer-legal">
+      <button type="button" class="footer-link" data-dlg="footerImpressum"><span data-l="de">Impressum</span><span data-l="en">Legal notice</span></button>
+      <button type="button" class="footer-link" data-dlg="footerDatenschutz"><span data-l="de">Datenschutz</span><span data-l="en">Privacy</span></button>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <p>© 2026 KGC Automation · Brugg AG · Made in Switzerland</p>
+    <div class="footer-lang" role="group" data-aria-de="Sprache" data-aria-en="Language">
+      <button type="button" data-set-lang="de" aria-pressed="true">DE</button>
+      <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+
+  <dialog id="footerImpressum" class="footer-dlg" aria-labelledby="footerImpressumT">
+    <div class="footer-dlg-head">
+      <h2 id="footerImpressumT"><span data-l="de">Impressum</span><span data-l="en">Legal notice</span></h2>
+      <button type="button" class="footer-dlg-x" data-dlg-close data-aria-de="Schliessen" data-aria-en="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="footer-dlg-body">
+      <div data-l="de">
+        <h3>Betreiber</h3>
+        <p>Khang Cung<br>KGC Automation<br>Stahlrain 7<br>5200 Brugg AG<br>Schweiz</p>
+        <p>E-Mail: khangcung196@gmail.com</p>
+        <h3>Haftungsausschluss</h3>
+        <p>Die Inhalte dieser Website wurden sorgfältig erstellt. Für Richtigkeit, Vollständigkeit und Aktualität übernehmen wir keine Gewähr. Preisangaben sind Richtwerte; verbindlich ist allein die schriftliche Offerte.</p>
+        <p>Diese Website kann Links zu externen Seiten Dritter enthalten. Auf deren Inhalte haben wir keinen Einfluss; für sie ist ausschliesslich der jeweilige Anbieter verantwortlich.</p>
+      </div>
+      <div data-l="en">
+        <h3>Operator</h3>
+        <p>Khang Cung<br>KGC Automation<br>Stahlrain 7<br>5200 Brugg AG<br>Switzerland</p>
+        <p>Email: khangcung196@gmail.com</p>
+        <h3>Disclaimer</h3>
+        <p>The content of this website has been prepared with care. We give no guarantee of accuracy, completeness or currency. Prices shown are guidelines; only the written quote is binding.</p>
+        <p>This website may link to third-party sites. We have no influence over their content; the respective provider is solely responsible for it.</p>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="footerDatenschutz" class="footer-dlg" aria-labelledby="footerDatenschutzT">
+    <div class="footer-dlg-head">
+      <h2 id="footerDatenschutzT"><span data-l="de">Datenschutz</span><span data-l="en">Privacy notice</span></h2>
+      <button type="button" class="footer-dlg-x" data-dlg-close data-aria-de="Schliessen" data-aria-en="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="footer-dlg-body">
+      <div data-l="de">
+        <p>Diese Erklärung beschreibt, wie wir Personendaten nach dem schweizerischen Datenschutzgesetz (nDSG/revDSG) bearbeiten.</p>
+        <h3>Verantwortlich</h3>
+        <p>Khang Cung, KGC Automation, Stahlrain 7, 5200 Brugg AG, Schweiz. E-Mail: khangcung196@gmail.com</p>
+        <h3>Welche Daten wir erheben</h3>
+        <p>Über das Offertformular: Name, Firma, E-Mail-Adresse, Telefonnummer, gewählte Leistungen und Ihre Nachricht. Mehr erheben wir nicht.</p>
+        <h3>Zweck</h3>
+        <p>Die Daten dienen ausschliesslich dazu, Ihre Anfrage zu beantworten und Ihnen eine Offerte zu erstellen.</p>
+        <h3>Speicherort und Weitergabe</h3>
+        <p>Die Daten werden bei Anbietern in der Schweiz oder der EU gespeichert. Wir verkaufen keine Daten und geben sie nicht zu Werbezwecken an Dritte weiter.</p>
+        <h3>Aufbewahrung</h3>
+        <p>Anfragen ohne Auftrag löschen wir spätestens nach 12 Monaten. Bei einem Auftrag bewahren wir die Daten so lange auf, wie es der Vertrag und gesetzliche Aufbewahrungspflichten verlangen.</p>
+        <h3>Ihre Rechte</h3>
+        <p>Sie haben das Recht auf Auskunft, Berichtigung und Löschung Ihrer Daten sowie auf Herausgabe. Schreiben Sie uns an die oben genannte Adresse.</p>
+      </div>
+      <div data-l="en">
+        <p>This notice describes how we process personal data under the Swiss Federal Act on Data Protection (nDSG/revDSG).</p>
+        <h3>Controller</h3>
+        <p>Khang Cung, KGC Automation, Stahlrain 7, 5200 Brugg AG, Switzerland. Email: khangcung196@gmail.com</p>
+        <h3>Data we collect</h3>
+        <p>Through the quote form: name, company, email address, phone number, selected services and your message. We collect nothing else.</p>
+        <h3>Purpose</h3>
+        <p>The data is used only to answer your request and prepare a quote for you.</p>
+        <h3>Storage and disclosure</h3>
+        <p>Data is stored with providers in Switzerland or the EU. We do not sell data and do not pass it to third parties for advertising.</p>
+        <h3>Retention</h3>
+        <p>Requests that do not lead to an order are deleted after 12 months at the latest. For orders, we keep data for as long as the contract and statutory retention duties require.</p>
+        <h3>Your rights</h3>
+        <p>You have the right to access, correction and deletion of your data, and to receive a copy. Write to us at the address above.</p>
+      </div>
+    </div>
+  </dialog>
+</footer>
+
+<script>
+/* KGC core: shared data, i18n, formatting, events. Loaded before all section scripts. */
+(function () {
+  const root = document.documentElement;
+  const listeners = {};
+
+  const KGC = {
+    lang: 'de',
+    on(evt, fn) { (listeners[evt] = listeners[evt] || []).push(fn); },
+    emit(evt, data) { (listeners[evt] || []).forEach(fn => { try { fn(data); } catch (e) { console.error(e); } }); },
+
+    /* Pick a string for the current language: t({de:'…', en:'…'}) */
+    t(o) { return o == null ? '' : (typeof o === 'string' ? o : (o[KGC.lang] ?? o.de)); },
+
+    setLang(l) {
+      KGC.lang = l === 'en' ? 'en' : 'de';
+      root.setAttribute('data-lang', KGC.lang);
+      root.setAttribute('lang', KGC.lang === 'de' ? 'de-CH' : 'en');
+      document.querySelectorAll('[data-ph-de]').forEach(el => { el.placeholder = el.getAttribute('data-ph-' + KGC.lang) || ''; });
+      document.querySelectorAll('[data-aria-de]').forEach(el => { el.setAttribute('aria-label', el.getAttribute('data-aria-' + KGC.lang) || ''); });
+      try { localStorage.setItem('kgc-lang', KGC.lang); } catch (e) {}
+      KGC.emit('lang', KGC.lang);
+    },
+
+    /* Swiss number format: CHF 1'800 */
+    fmt(n) { return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '’'); },
+    chf(n) { return 'CHF ' + KGC.fmt(n); },
+    range(a, b) { return a === b ? KGC.chf(a) : 'CHF ' + KGC.fmt(a) + '–' + KGC.fmt(b); },
+
+    /* Open the quote configurator, optionally preselecting a package id or offer ids */
+    openQuote(preset) {
+      KGC.emit('quote:preset', preset || null);
+      const el = document.getElementById('offerte');
+      if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    },
+
+    reducedMotion: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
+
+    /* The nine automations. Prices: [min, max] in CHF. */
+    offers: [
+      { id: 'reviews', setup: [300, 600], monthly: [49, 99], industries: ['trade', 'repair', 'beauty', 'gastro'],
+        name: { de: 'Google-Bewertungs-Autopilot', en: 'Google review autopilot' },
+        short: { de: 'Mehr Bewertungen, jede beantwortet, schlechte nie öffentlich überrascht.', en: 'More reviews, every one answered, bad ones caught before they hurt.' },
+        steps: { de: ['Nach dem Auftrag: SMS mit direktem Bewertungslink', 'KI entwirft eine Antwort in Ihrem Ton', '4–5 Sterne: automatisch veröffentlicht. 1–3 Sterne: Alarm an Sie'],
+                 en: ['After the job: SMS with a direct review link', 'AI drafts a reply in your voice', '4–5 stars: posted automatically. 1–3 stars: alert to you'] } },
+      { id: 'leads', setup: [250, 500], monthly: [29, 59], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+        name: { de: 'Anfragen-Fänger für Ihre Website', en: 'Website lead catcher' },
+        short: { de: 'Keine Anfrage geht mehr verloren.', en: 'No enquiry ever gets lost again.' },
+        steps: { de: ['Sofortige Eingangsbestätigung an den Kunden', 'Anfrage landet in Ihrer Tabelle', 'WhatsApp an Sie, Erinnerung nach 24 h ohne Antwort'],
+                 en: ['Instant confirmation to the customer', 'Enquiry lands in your sheet', 'WhatsApp to you, reminder after 24 h without reply'] } },
+      { id: 'missedcall', setup: [400, 800], monthly: [59, 129], industries: ['trade'],
+        name: { de: 'Rückruf-SMS bei verpassten Anrufen', en: 'Missed-call text-back' },
+        short: { de: 'Wer anruft, während Sie arbeiten, bekommt innert einer Minute eine Antwort.', en: 'Callers you miss on the job get a reply within a minute.' },
+        steps: { de: ['Anruf verpasst', 'SMS innert 60 Sekunden mit Buchungslink', 'Antwort des Kunden geht direkt an Sie'],
+                 en: ['Call missed', 'SMS within 60 seconds with booking link', 'Customer reply goes straight to you'] } },
+      { id: 'booking', setup: [300, 700], monthly: [39, 89], industries: ['repair', 'beauty', 'office'],
+        name: { de: 'Online-Buchung mit Erinnerungen', en: 'Online booking + reminders' },
+        short: { de: 'Kunden buchen selbst, auch um 22 Uhr auf dem Sofa. Weniger Nichterscheinen.', en: 'Customers book themselves, even at 10 pm on the sofa. Fewer no-shows.' },
+        steps: { de: ['Kunde wählt einen freien Termin', 'Bestätigung sofort', 'Erinnerung 24 h vorher'],
+                 en: ['Customer picks a free slot', 'Instant confirmation', 'Reminder 24 h before'] } },
+      { id: 'repair', setup: [300, 600], monthly: [39, 79], industries: ['repair'],
+        name: { de: 'Reparatur-Statusmeldungen', en: 'Repair status updates' },
+        short: { de: 'Schluss mit «Ist mein Handy schon fertig?»', en: 'No more "is my phone ready yet?" calls.' },
+        steps: { de: ['Sie ändern den Status in einer einfachen Liste', 'Kunde erhält automatisch SMS oder WhatsApp', '«Abholbereit» inklusive Öffnungszeiten'],
+                 en: ['You change the status in a simple list', 'Customer gets an SMS or WhatsApp automatically', '"Ready for pickup" including opening hours'] } },
+      { id: 'quotes', setup: [800, 1500], monthly: [79, 149], industries: ['trade', 'office'],
+        name: { de: 'Offerten-Generator', en: 'Quote generator' },
+        short: { de: 'Offerten in 10 Minuten statt einem Abend am Schreibtisch.', en: 'Quotes in 10 minutes instead of an evening at the desk.' },
+        steps: { de: ['Kurzes Formular mit Fotos', 'KI schreibt eine saubere Offerte als PDF in Ihrem Design', 'Nachfassen nach 5 Tagen, automatisch'],
+                 en: ['Short form with photos', 'AI writes a clean, branded PDF quote', 'Follow-up after 5 days, automatically'] } },
+      { id: 'invoices', setup: [400, 800], monthly: [49, 99], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+        name: { de: 'Zahlungserinnerungen', en: 'Invoice reminders' },
+        short: { de: 'Sie haben die Arbeit gemacht. Das System kümmert sich ums Geld.', en: 'You did the work. The system chases the money.' },
+        steps: { de: ['Offene Rechnungen werden geprüft (z. B. bexio)', 'Höfliche Erinnerung nach 7, 14 und 30 Tagen', 'Danach Hinweis an Sie'],
+                 en: ['Open invoices are checked (e.g. bexio)', 'Polite reminders at 7, 14 and 30 days', 'Then a note to you'] } },
+      { id: 'inbox', setup: [500, 1000], monthly: [79, 149], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+        name: { de: 'KI-Posteingangs-Assistent', en: 'AI inbox assistant' },
+        short: { de: 'Mails sortiert, Antworten vorbereitet, auf Wunsch in Schweizerdeutsch.', en: 'Emails sorted, replies drafted, in Swiss German if you like.' },
+        steps: { de: ['Neue Mails werden sortiert: Offerte, Reklamation, Lieferant, Spam', 'KI legt einen Antwortentwurf an', 'Sie prüfen und senden'],
+                 en: ['New mail sorted: quote, complaint, supplier, spam', 'AI prepares a draft reply', 'You check and send'] } },
+      { id: 'workspace', setup: [150, 400], monthly: [20, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+        name: { de: 'E-Mail & Cloud mit Betreuung', en: 'Email + cloud with support' },
+        short: { de: 'Eine Ansprechperson für Website, E-Mail und Dateien.', en: 'One contact for website, email and files.' },
+        steps: { de: ['E-Mail-Adressen auf Ihrer Domain', 'Gemeinsame Ablage für Dokumente', 'Neue Benutzer, Passwörter, Änderungen: erledigt'],
+                 en: ['Email addresses on your domain', 'Shared document storage', 'New users, passwords, changes: handled'] } },
+    ],
+
+    industries: [
+      { id: 'all', name: { de: 'Alle', en: 'All' } },
+      { id: 'trade', name: { de: 'Handwerk', en: 'Trades' } },
+      { id: 'repair', name: { de: 'Reparatur & Retail', en: 'Repair & retail' } },
+      { id: 'beauty', name: { de: 'Beauty & Gesundheit', en: 'Beauty & health' } },
+      { id: 'gastro', name: { de: 'Gastronomie', en: 'Hospitality' } },
+      { id: 'office', name: { de: 'Büro & Beratung', en: 'Office & consulting' } },
+    ],
+
+    /* Packages. includes = offer ids; choice = pick-one groups */
+    packages: [
+      { id: 'starter', setup: 400, monthly: 49, includes: ['leads', 'workspace'], choice: [],
+        name: { de: 'Starter', en: 'Starter' },
+        tagline: { de: 'Das Fundament: nichts geht verloren.', en: 'The foundation: nothing gets lost.' } },
+      { id: 'growth', setup: 900, monthly: 129, includes: ['leads', 'workspace', 'reviews'], choice: [['booking', 'repair']], featured: true,
+        name: { de: 'Growth', en: 'Growth' },
+        tagline: { de: 'Mehr Bewertungen, weniger Telefon.', en: 'More reviews, fewer phone calls.' } },
+      { id: 'pro', setup: 1800, monthly: 249, includes: ['leads', 'workspace', 'reviews', 'missedcall'], choice: [['booking', 'repair'], ['quotes', 'invoices']],
+        name: { de: 'Pro', en: 'Pro' },
+        tagline: { de: 'Ihr Betrieb läuft, auch wenn Sie es nicht tun.', en: 'Your business runs, even when you don’t.' } },
+    ],
+
+    offer(id) { return KGC.offers.find(o => o.id === id); },
+  };
+
+  window.KGC = KGC;
+  root.classList.add('js');
+
+  let saved = null;
+  try { saved = localStorage.getItem('kgc-lang'); } catch (e) {}
+  root.setAttribute('data-lang', saved === 'en' ? 'en' : 'de');
+  KGC.lang = saved === 'en' ? 'en' : 'de';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    KGC.setLang(KGC.lang);
+
+    // [data-quote] anywhere opens the configurator; value = package id or comma list of offer ids
+    document.addEventListener('click', e => {
+      const a = e.target.closest('[data-quote]');
+      if (!a) return;
+      e.preventDefault();
+      const v = a.getAttribute('data-quote');
+      KGC.openQuote(v ? (v.includes(',') || KGC.offer(v) ? { offers: v.split(',') } : { package: v }) : null);
+    });
+    // In-text links to the legal notices open the footer dialogs
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href="#datenschutz"], a[href="#impressum"]');
+      if (!a) return;
+      const d = document.getElementById(a.getAttribute('href') === '#datenschutz' ? 'footerDatenschutz' : 'footerImpressum');
+      if (d && d.showModal) { e.preventDefault(); if (!d.open) d.showModal(); }
+    });
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-set-lang]');
+      if (b) KGC.setLang(b.getAttribute('data-set-lang'));
+    });
+
+    // Reveal on scroll; anything in view or after 1.2s is shown regardless
+    const els = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window && !KGC.reducedMotion()) {
+      const io = new IntersectionObserver(entries => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }), { rootMargin: '0px 0px -8% 0px' });
+      els.forEach(el => io.observe(el));
+      setTimeout(() => els.forEach(el => { const r = el.getBoundingClientRect(); if (r.top < innerHeight) el.classList.add('in'); }), 50);
+    } else els.forEach(el => el.classList.add('in'));
+  });
+})();
+
+;
+/* ==== nav ==== */
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    const nav = document.getElementById('nav');
+    const bar = document.getElementById('navBar');
+    if (!nav) return;
+    const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 8);
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+
+    const syncLang = () => document.querySelectorAll('[data-set-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute('data-set-lang') === KGC.lang)));
+    KGC.on('lang', syncLang);
+    syncLang();
+
+    const menu = document.getElementById('navMenu'), burger = document.getElementById('navBurger'), x = document.getElementById('navMenuX');
+    if (menu && burger) {
+      const foc = () => [...menu.querySelectorAll('a, button')].filter(e => e.offsetParent !== null);
+      const open = () => { menu.hidden = false; burger.setAttribute('aria-expanded', 'true'); document.documentElement.style.overflow = 'hidden'; x.focus(); };
+      const close = (back) => { menu.hidden = true; burger.setAttribute('aria-expanded', 'false'); document.documentElement.style.overflow = ''; if (back) burger.focus(); };
+      burger.addEventListener('click', open);
+      x.addEventListener('click', () => close(true));
+      menu.addEventListener('click', e => { if (e.target.closest('a, [data-menu-close]')) close(false); });
+      matchMedia('(min-width: 900px)').addEventListener('change', e => { if (e.matches && !menu.hidden) close(false); });
+      menu.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { close(true); return; }
+        if (e.key !== 'Tab') return;
+        const f = foc(), a = f[0], z = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+        else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+      });
+    }
+
+    if (bar && 'IntersectionObserver' in window) {
+      const seen = new Set();
+      const io = new IntersectionObserver(es => {
+        es.forEach(e => e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id));
+        bar.classList.toggle('is-hidden', seen.size > 0);
+      });
+      ['offerte', 'kontakt'].forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
+    }
+  });
+})();
+
+;
+/* ==== hero ==== */
+(function () {
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, parent) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  };
+  const rad = d => d * Math.PI / 180;
+  const f = n => +n.toFixed(2);
+
+  // Tooth outline: N teeth, pitch radius r, module m. Centred on (0,0), tooth 0 centred on angle 0.
+  function toothPath(N, m) {
+    const r = m * N / 2, ro = r + m * 0.85, ri = r - m * 1.05, p = 360 / N;
+    const pt = (rr, a) => f(rr * Math.cos(rad(a))) + ',' + f(rr * Math.sin(rad(a)));
+    let d = '';
+    for (let k = 0; k < N; k++) {
+      const c = k * p;
+      const s = [[ri, c - p * .30], [ro, c - p * .16], [ro, c + p * .16], [ri, c + p * .30]];
+      d += (k ? 'L' : 'M') + s.map(x => pt(x[0], x[1])).join('L');
+    }
+    return d + 'Z';
+  }
+
+  function build() {
+    const m = 4.4;
+    // gear definitions: parent index meshes with parent at angle theta (deg, from parent to child)
+    const defs = [
+      { N: 30, x: 150, y: 190 },
+      { N: 18, parent: 0, th: -30 },
+      { N: 12, parent: 1, th: 20 },
+      { N: 16, parent: 0, th: 100 },
+    ];
+    const gearsG = document.getElementById('heroGears');
+    const baseDur = 90; // seconds per revolution for 30-tooth gear
+    const phase = [0];
+    defs.forEach((g, i) => {
+      g.r = m * g.N / 2;
+      g.p = 360 / g.N;
+      if (i === 0) { g.a = 0; g.dir = 1; return; }
+      const P = defs[g.parent], dist = P.r + g.r;
+      g.x = P.x + dist * Math.cos(rad(g.th));
+      g.y = P.y + dist * Math.sin(rad(g.th));
+      g.dir = -P.dir;
+      // meshing phase: u (parent tooth fraction at contact) + v (this gear's) = 0.5
+      const u = (((g.th - P.a) / P.p) % 1 + 1) % 1;
+      g.a = g.th + 180 - g.p * (0.5 - u);
+    });
+    defs.forEach(g => {
+      const outer = el('g', { transform: `translate(${f(g.x)} ${f(g.y)})` }, gearsG);
+      const spin = el('g', { class: 'hero-spin' }, outer);
+      spin.style.setProperty('--dur', f(baseDur * g.N / 30) + 's');
+      spin.style.setProperty('--dir', g.dir > 0 ? 'normal' : 'reverse');
+      const rot = el('g', { transform: `rotate(${f(g.a)})` }, spin);
+      el('path', { class: 'hero-gear-body', d: toothPath(g.N, m) }, rot);
+      const rim = g.r - m * 1.05 - 3.5, hub = Math.max(4, g.r * .14);
+      el('circle', { class: 'hero-line', cx: 0, cy: 0, r: f(rim) }, rot);
+      const spokes = g.N >= 24 ? 5 : (g.N >= 16 ? 4 : 3);
+      for (let k = 0; k < spokes; k++) {
+        const a = rad(k * 360 / spokes + 12);
+        el('line', { class: 'hero-gear-spoke', x1: f(hub * Math.cos(a)), y1: f(hub * Math.sin(a)), x2: f(rim * Math.cos(a)), y2: f(rim * Math.sin(a)) }, rot);
+      }
+      el('circle', { class: 'hero-axle', cx: 0, cy: 0, r: f(hub) }, rot);
+      el('circle', { class: 'hero-line', cx: 0, cy: 0, r: 1.4 }, rot);
+    });
+
+    // balance wheel with hairspring
+    const bal = document.getElementById('heroBalance');
+    bal.setAttribute('transform', 'translate(262 278)');
+    el('circle', { class: 'hero-line hero-fine', cx: 0, cy: 0, r: 46 }, bal);
+    const swing = el('g', { class: 'hero-balance-swing' }, bal);
+    let sp = '';
+    for (let a = 0; a <= 720; a += 15) { const rr = 5 + a / 720 * 20; sp += (a ? 'L' : 'M') + f(rr * Math.cos(rad(a))) + ',' + f(rr * Math.sin(rad(a))); }
+    el('path', { class: 'hero-spring', d: sp }, swing);
+    el('circle', { class: 'hero-line', cx: 0, cy: 0, r: 34, 'stroke-width': 2.2 }, swing);
+    el('circle', { class: 'hero-line', cx: 0, cy: 0, r: 30 }, swing);
+    [0, 120, 240].forEach(a => {
+      const t = rad(a + 30);
+      el('line', { class: 'hero-gear-spoke', x1: 0, y1: 0, x2: f(32 * Math.cos(t)), y2: f(32 * Math.sin(t)), 'stroke-width': 1.6 }, swing);
+      el('circle', { class: 'hero-axle', cx: f(34 * Math.cos(rad(a))), cy: f(34 * Math.sin(rad(a))), r: 3 }, swing);
+    });
+    el('circle', { class: 'hero-axle', cx: 0, cy: 0, r: 4 }, swing);
+
+    // minute-track ticks
+    const ticks = document.getElementById('heroTicks');
+    for (let i = 0; i < 60; i++) {
+      const a = rad(i * 6), r2 = i % 5 === 0 ? 177 : 180.5;
+      el('line', { x1: f(184 * Math.cos(a) + 200), y1: f(184 * Math.sin(a) + 200), x2: f(r2 * Math.cos(a) + 200), y2: f(r2 * Math.sin(a) + 200) }, ticks);
+    }
+  }
+
+  function jewels() {
+    const g = document.getElementById('heroJewels');
+    const cap = document.getElementById('heroCap');
+    const capT = document.getElementById('heroCapT');
+    const capS = document.getElementById('heroCapS');
+    let active = null;
+    const noHover = matchMedia('(hover: none)');
+
+    const idle = () => {
+      cap.classList.add('is-hint');
+      capT.textContent = KGC.t({ de: '9 Mechanismen. Ein Uhrwerk.', en: '9 mechanisms. One movement.' });
+      capS.textContent = KGC.t({ de: 'Fahren Sie über einen Rubin, um den Baustein zu sehen.', en: 'Hover a jewel to see the building block.' });
+      if (noHover.matches) capS.textContent = KGC.t({ de: 'Tippen Sie auf einen Rubin, um den Baustein zu sehen.', en: 'Tap a jewel to see the building block.' });
+    };
+    const show = o => {
+      cap.classList.remove('is-hint');
+      capT.textContent = KGC.t(o.name);
+      capS.textContent = KGC.t(o.short);
+    };
+    const setActive = (id) => {
+      active = id;
+      g.querySelectorAll('.hero-jewel').forEach(j => j.classList.toggle('is-on', j.dataset.id === id));
+      id ? show(KGC.offer(id)) : idle();
+    };
+
+    KGC.offers.forEach((o, i) => {
+      const a = rad(-90 + i * 40 + 20), x = f(200 + 171 * Math.cos(a)), y = f(200 + 171 * Math.sin(a));
+      const j = el('g', { class: 'hero-jewel', tabindex: 0, role: 'button', transform: `translate(${x} ${y})` }, g);
+      j.dataset.id = o.id;
+      el('circle', { r: 17, fill: 'transparent' }, j);
+      el('circle', { class: 'hero-jewel-halo', r: 11 }, j);
+      el('circle', { class: 'hero-jewel-set', r: 9.5 }, j);
+      el('circle', { class: 'hero-jewel-stone', r: 5.6 }, j);
+      el('path', { class: 'hero-jewel-glint', d: 'M-2.6,-1.2 A3,3 0 0 1 -0.6,-3.2' }, j);
+      const label = () => j.setAttribute('aria-label', KGC.t(o.name) + '. ' + KGC.t({ de: 'In die Offerte übernehmen', en: 'Add to your quote' }));
+      label(); KGC.on('lang', label);
+      j.addEventListener('mouseenter', () => setActive(o.id));
+      j.addEventListener('mouseleave', () => { if (!noHover.matches) setActive(null); });
+      j.addEventListener('focus', () => setActive(o.id));
+      j.addEventListener('blur', () => setActive(null));
+      const go = () => KGC.openQuote({ offers: [o.id] });
+      j.addEventListener('click', () => {
+        if (noHover.matches && active !== o.id) { setActive(o.id); return; }
+        go();
+      });
+      j.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    });
+    KGC.on('lang', () => active ? show(KGC.offer(active)) : idle());
+    idle();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { build(); jewels(); });
+})();
+
+;
+/* ==== demo ==== */
+(function () {
+  const L = (de, en) => ({ de, en });
+  const BIZ = 'Meier Sanitär';
+  const SC = {
+    missedcall: {
+      app: L('Nachrichten', 'Messages'),
+      cta: L('Das will ich: Rückruf-SMS', 'I want this: missed-call text-back'),
+      phone: [
+        { at: 200, k: 'call', title: L('Anruf verpasst · 14:32', 'Missed call · 14:32'), sub: BIZ },
+        { at: 1500, k: 'in', from: BIZ, text: L('Grüezi, wir sind gerade auf einer Baustelle. Antworten Sie kurz, worum es geht, oder buchen Sie hier einen Termin: <span class="demo-lnk">kgc.link/termin</span>', 'Hello, we are on a job site right now. Reply with what you need, or book a time here: <span class="demo-lnk">kgc.link/termin</span>') },
+        { at: 3300, k: 'out', text: L('Boiler tropft, wäre morgen früh möglich?', 'Boiler is dripping, is tomorrow morning possible?') },
+      ],
+      log: [
+        { at: 200, time: '+0:00', text: L('Anruf verpasst erkannt', 'Missed call detected') },
+        { at: 1500, time: '+0:04', text: L('SMS an Kunde gesendet', 'Text sent to customer'), sub: L('mit Buchungslink', 'with booking link') },
+        { at: 3300, time: '+0:41', text: L('Antwort weitergeleitet an Sie (WhatsApp)', 'Reply forwarded to you (WhatsApp)') },
+        { at: 3900, time: '+0:41', text: L('Eintrag in Ihrer Kundenliste', 'Entry in your customer list') },
+      ],
+      stat: { at: 4500, big: L('41 Sekunden.', '41 seconds.'), small: L('Ohne dass Sie das Telefon angefasst haben.', 'Without you touching the phone.') },
+    },
+    reviews: {
+      app: L('Google Bewertungen', 'Google reviews'),
+      cta: L('Das will ich: Bewertungs-Autopilot', 'I want this: review autopilot'),
+      branches: {
+        hi: {
+          toggle: L('Was passiert bei 2 Sternen?', 'What happens at 2 stars?'),
+          phone: [
+            { at: 200, k: 'review', stars: 5, text: L('Sehr schnell und sauber gearbeitet.', 'Very fast and clean work.'), who: L('Daniela K. · vor 2 Min.', 'Daniela K. · 2 min ago') },
+            { at: 2800, k: 'reply', label: L('Antwort von ' + BIZ, 'Reply from ' + BIZ), text: L('Vielen Dank, Frau K. Es freut uns sehr, dass alles so reibungslos geklappt hat. Bis zum nächsten Mal.', 'Thank you, Ms K. We are delighted everything went so smoothly. See you next time.') },
+          ],
+          log: [
+            { at: 200, time: '+0:00', text: L('Neue Bewertung erkannt', 'New review detected'), sub: L('5 Sterne', '5 stars') },
+            { at: 1300, time: '+0:03', text: L('Antwort in Ihrem Ton entworfen', 'Reply drafted in your voice') },
+            { at: 2000, time: '+0:04', text: L('4–5 Sterne → Antwort veröffentlicht', '4–5 stars → reply published'), branch: true },
+            { at: 2800, time: '+0:06', text: L('Antwort ist auf Google sichtbar', 'Reply is live on Google') },
+            { at: 3400, time: '+0:06', text: L('Eintrag im Bewertungsprotokoll', 'Entry in the review log') },
+          ],
+          stat: { at: 4200, big: L('6 Sekunden.', '6 seconds.'), small: L('Beantwortet, ohne dass Sie etwas freigeben mussten.', 'Answered without you approving anything.') },
+        },
+        lo: {
+          toggle: L('Zurück zu 5 Sternen', 'Back to 5 stars'),
+          phone: [
+            { at: 200, k: 'review', stars: 2, text: L('Termin wurde verschoben, niemand hat Bescheid gesagt.', 'Appointment was moved and nobody told us.'), who: L('Thomas B. · vor 2 Min.', 'Thomas B. · 2 min ago') },
+            { at: 2000, k: 'note', text: L('Keine öffentliche Antwort. Ihr Betrieb meldet sich persönlich.', 'No public reply. Your business gets in touch personally.') },
+            { at: 3800, k: 'in', from: BIZ, text: L('Grüezi Herr B., das tut uns leid. Darf ich Sie heute noch zurückrufen? Marco Meier', 'Hello Mr B., we are sorry about that. May I call you back today? Marco Meier') },
+          ],
+          log: [
+            { at: 200, time: '+0:00', text: L('Neue Bewertung erkannt', 'New review detected'), sub: L('2 Sterne', '2 stars') },
+            { at: 1100, time: '+0:02', text: L('1–3 Sterne → keine öffentliche Antwort', '1–3 stars → no public reply'), branch: true },
+            { at: 2000, time: '+0:04', text: L('Alarm an Sie (WhatsApp)', 'Alert to you (WhatsApp)'), sub: L('mit Entwurf für eine persönliche Antwort', 'with a draft for a personal reply') },
+            { at: 3000, time: '+0:05', text: L('Bewertung als «offen» markiert', 'Review marked «open»') },
+            { at: 3800, time: '+12:10', text: L('Sie melden sich beim Kunden', 'You get in touch with the customer') },
+          ],
+          stat: { at: 4400, big: L('Nichts geht öffentlich raus.', 'Nothing goes out publicly.'), small: L('Bevor Sie es gesehen haben.', 'Until you have seen it.') },
+        },
+      },
+    },
+    leads: {
+      app: L('meiersanitaer.ch', 'meiersanitaer.ch'),
+      cta: L('Das will ich: Anfragen-Fänger', 'I want this: lead catcher'),
+      phone: [
+        { at: 200, k: 'form', fields: [[L('Name', 'Name'), 'Anna Keller'], [L('Anliegen', 'Request'), L('Neues Bad, Offerte bitte', 'New bathroom, quote please')]], btn: L('Anfrage senden', 'Send enquiry') },
+        { at: 1700, k: 'toast', text: L('Danke, Ihre Anfrage ist eingegangen.', 'Thank you, your enquiry has arrived.') },
+        { at: 2800, k: 'mail', subj: L('Wir haben Ihre Anfrage erhalten', 'We have received your enquiry'), text: L('Grüezi Frau Keller, wir melden uns bis morgen 12 Uhr bei Ihnen. Meier Sanitär', 'Hello Ms Keller, we will get back to you by 12 noon tomorrow. Meier Sanitär') },
+      ],
+      log: [
+        { at: 200, time: '+0:00', text: L('Anfrage über die Website eingegangen', 'Website enquiry received') },
+        { at: 1500, time: '+0:01', text: L('Eingangsbestätigung an Kunde (E-Mail)', 'Confirmation sent to customer (email)') },
+        { at: 2300, time: '+0:02', text: L('Eintrag in Ihrer Tabelle', 'Entry in your sheet') },
+        { at: 3100, time: '+0:03', text: L('WhatsApp an Sie', 'WhatsApp to you') },
+        { at: 3800, time: '+24 h', pending: true, text: L('Erinnerung an Sie, falls niemand geantwortet hat', 'Reminder to you if nobody has replied') },
+      ],
+      stat: { at: 4500, big: L('3 Sekunden.', '3 seconds.'), small: L('Keine Anfrage geht mehr verloren.', 'No enquiry gets lost any more.') },
+    },
+  };
+
+  const ICON_CALL = '<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M5 3h3l1.5 4-2 1.3a9 9 0 0 0 4.2 4.2L13 10.500l4 1.500v3a2 2 0 0 1-2 2A12 12 0 0 1 3 5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M13 3l4 4M17 3l-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+  const ICON_OK = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4.800 8.200l2.200 2.200 4.200-4.600" fill="none" stroke="currentColor" stroke-width="1.400" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  let root, screen, logEl, statEl, appEl, tabs, branchBtn, ctaL, ctaBtn, stage;
+  let cur = 'missedcall', branch = 'hi', timers = [], started = false;
+  const t = KGC.t;
+
+  function data() {
+    const s = SC[cur];
+    return s.branches ? s.branches[branch] : s;
+  }
+
+  function phoneItem(p) {
+    const at = ' data-at="' + p.at + '"';
+    switch (p.k) {
+      case 'call': return '<div class="demo-it demo-p-call on"' + at + '>' + ICON_CALL + '<div><b>' + t(p.title) + '</b><small>' + p.sub + '</small></div></div>';
+      case 'in': return '<div class="demo-it demo-bub demo-bub-in on"' + at + '><span class="demo-p-from">' + p.from + '</span>' + t(p.text) + '</div>';
+      case 'out': return '<div class="demo-it demo-bub demo-bub-out on"' + at + '>' + t(p.text) + '</div>';
+      case 'review': {
+        let st = ''; for (let i = 0; i < 5; i++) st += i < p.stars ? '★' : '<i>★</i>';
+        return '<div class="demo-it demo-card on"' + at + '><div class="demo-stars" role="img" aria-label="' + p.stars + ' ' + (KGC.lang === 'de' ? 'Sterne' : 'stars') + '">' + st + '</div><p>' + t(p.text) + '</p><span class="demo-p-from">' + t(p.who) + '</span></div>';
+      }
+      case 'reply': return '<div class="demo-it demo-card demo-reply on"' + at + '><span class="demo-p-from" style="margin:0 0 5px">' + t(p.label) + '</span><p>' + t(p.text) + '</p></div>';
+      case 'note': return '<div class="demo-it demo-note on"' + at + '>' + t(p.text) + '</div>';
+      case 'form': return '<div class="demo-it demo-card on"' + at + '>' + p.fields.map(f => '<span class="demo-field">' + t(f[0]) + '<span>' + t(f[1]) + '</span></span>').join('') + '<div class="demo-sendbtn">' + t(p.btn) + '</div></div>';
+      case 'toast': return '<div class="demo-it demo-toast on"' + at + '>' + ICON_OK + t(p.text) + '</div>';
+      case 'mail': return '<div class="demo-it demo-card demo-mail on"' + at + '><b>' + t(p.subj) + '</b><p>' + t(p.text) + '</p></div>';
+    }
+    return '';
+  }
+
+  function render() {
+    const s = SC[cur], d = data();
+    appEl.textContent = t(s.app);
+    screen.innerHTML = d.phone.map(phoneItem).join('');
+    logEl.innerHTML = d.log.map(l =>
+      '<li class="demo-lg on' + (l.pending ? ' pending' : '') + (l.branch ? ' branch' : '') + '" data-at="' + l.at + '"><span class="demo-lg-t">' + l.time + '</span><span class="demo-lg-d"><i></i></span><span class="demo-lg-x">' + t(l.text) + (l.sub ? '<small>' + t(l.sub) + '</small>' : '') + '</span></li>').join('');
+    statEl.innerHTML = '<b>' + t(d.stat.big) + '</b><span>' + t(d.stat.small) + '</span>';
+    statEl.dataset.at = d.stat.at;
+    statEl.classList.add('on');
+    ctaL.textContent = t(s.cta);
+    ctaBtn.setAttribute('data-quote', cur);
+    if (s.branches) {
+      branchBtn.hidden = false;
+      branchBtn.textContent = t(s.branches[branch].toggle);
+      branchBtn.setAttribute('aria-pressed', branch === 'lo' ? 'true' : 'false');
+    } else branchBtn.hidden = true;
+    tabs.forEach(b => {
+      const on = b.dataset.sc === cur;
+      b.setAttribute('aria-selected', on);
+      b.tabIndex = on ? 0 : -1;
+    });
+    stage.setAttribute('aria-labelledby', 'demo-tab-' + cur);
+  }
+
+  function clear() { timers.forEach(clearTimeout); timers = []; }
+
+  function play() {
+    clear();
+    const items = root.querySelectorAll('.demo-stage [data-at]');
+    if (KGC.reducedMotion()) { items.forEach(e => e.classList.add('on')); return; }
+    stage.classList.add('demo-noanim');
+    items.forEach(e => e.classList.remove('on'));
+    void stage.offsetWidth;
+    stage.classList.remove('demo-noanim');
+    items.forEach(e => timers.push(setTimeout(() => e.classList.add('on'), +e.dataset.at)));
+  }
+
+  function select(id, focus) {
+    if (id === cur) return;
+    cur = id; branch = 'hi';
+    render();
+    if (focus) tabs.find(b => b.dataset.sc === id).focus();
+    started ? play() : 0;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    root = document.getElementById('demo');
+    if (!root) return;
+    screen = document.getElementById('demo-screen');
+    logEl = document.getElementById('demo-log');
+    statEl = document.getElementById('demo-stat');
+    appEl = document.getElementById('demo-app');
+    branchBtn = document.getElementById('demo-branch');
+    ctaL = document.getElementById('demo-cta-l');
+    ctaBtn = document.getElementById('demo-cta');
+    stage = document.getElementById('demo-panel');
+    tabs = Array.from(root.querySelectorAll('.demo-tab'));
+
+    render();
+
+    tabs.forEach((b, i) => {
+      b.addEventListener('click', () => select(b.dataset.sc, false));
+      b.addEventListener('keydown', e => {
+        let n = null;
+        if (e.key === 'ArrowRight') n = (i + 1) % tabs.length;
+        else if (e.key === 'ArrowLeft') n = (i + tabs.length - 1) % tabs.length;
+        else if (e.key === 'Home') n = 0;
+        else if (e.key === 'End') n = tabs.length - 1;
+        if (n !== null) { e.preventDefault(); select(tabs[n].dataset.sc, true); }
+      });
+    });
+    document.getElementById('demo-replay').addEventListener('click', () => { started = true; play(); });
+    branchBtn.addEventListener('click', () => { branch = branch === 'hi' ? 'lo' : 'hi'; render(); started = true; play(); });
+
+    KGC.on('lang', () => { if (root) { render(); } });
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => {
+        if (es.some(e => e.isIntersecting)) { io.disconnect(); started = true; play(); }
+      }, { threshold: 0.3 });
+      io.observe(stage);
+    }
+  });
+})();
+
+;
+/* ==== offers ==== */
+(function () {
+  let ind = 'all';
+  const open = new Set();
+  let grid, pills, count;
+  const t = KGC.t;
+
+  function price(o) {
+    const de = KGC.lang === 'de';
+    return '<span>' + (de ? 'ab ' : 'from ') + KGC.chf(o.setup[0]) + (de ? ' einmalig' : ' one-time') + '</span>' +
+           '<span>' + (de ? 'ab ' : 'from ') + KGC.chf(o.monthly[0]) + (de ? '/Mt.' : '/mo') + '</span>';
+  }
+
+  function render() {
+    const de = KGC.lang === 'de';
+    pills.innerHTML = KGC.industries.map(i =>
+      '<button type="button" class="offers-pill" data-ind="' + i.id + '" aria-pressed="' + (i.id === ind) + '">' + t(i.name) + '</button>').join('');
+    grid.innerHTML = KGC.offers.map((o, n) => {
+      const match = ind === 'all' || o.industries.includes(ind);
+      const isOpen = open.has(o.id);
+      return '<article class="offers-cell' + (match ? '' : ' is-dim') + (isOpen ? ' open' : '') + '" data-id="' + o.id + '">' +
+        '<div class="offers-top"><span class="offers-idx">' + String(n + 1).padStart(2, '0') + '</span>' +
+        (o.id === 'reviews' ? '<span class="offers-tag">' + (de ? 'Meistgewählt' : 'Most chosen') + '</span>' : '') + '</div>' +
+        '<h3 class="offers-name">' + t(o.name) + '</h3>' +
+        '<p class="offers-short">' + t(o.short) + '</p>' +
+        '<div class="offers-price">' + price(o) + '</div>' +
+        '<div class="offers-acts"><button type="button" class="offers-more" aria-expanded="' + isOpen + '" aria-controls="offers-st-' + o.id + '"><span class="offers-pm" aria-hidden="true">+</span>' + (de ? 'Wie es funktioniert' : 'How it works') + '</button>' +
+        '<button type="button" class="offers-add">' + (de ? '+ Zur Offerte' : '+ Add to quote') + '</button></div>' +
+        '<div class="offers-steps-w" id="offers-st-' + o.id + '"><div><ol class="offers-steps">' + t(o.steps).map(s => '<li>' + s + '</li>').join('') + '</ol></div></div>' +
+        '</article>';
+    }).join('');
+    const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
+    const name = t(KGC.industries.find(i => i.id === ind).name);
+    count.textContent = ind === 'all' ? (de ? 'Alle 9 Mechanismen' : 'All 9 mechanisms')
+      : (de ? n + ' von 9 passen zu ' + name : n + ' of 9 fit ' + name);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    grid = document.getElementById('offers-grid');
+    pills = document.getElementById('offers-pills');
+    count = document.getElementById('offers-count');
+    if (!grid) return;
+    render();
+    pills.addEventListener('click', e => {
+      const b = e.target.closest('.offers-pill');
+      if (!b) return;
+      ind = b.dataset.ind;
+      // update in place so the transition animates
+      pills.querySelectorAll('.offers-pill').forEach(p => p.setAttribute('aria-pressed', p.dataset.ind === ind));
+      grid.querySelectorAll('.offers-cell').forEach(c => {
+        const o = KGC.offer(c.dataset.id);
+        c.classList.toggle('is-dim', !(ind === 'all' || o.industries.includes(ind)));
+      });
+      const de = KGC.lang === 'de';
+      const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
+      const name = t(KGC.industries.find(i => i.id === ind).name);
+      count.textContent = ind === 'all' ? (de ? 'Alle 9 Mechanismen' : 'All 9 mechanisms') : (de ? n + ' von 9 passen zu ' + name : n + ' of 9 fit ' + name);
+    });
+    grid.addEventListener('click', e => {
+      const cell = e.target.closest('.offers-cell');
+      if (!cell) return;
+      const id = cell.dataset.id;
+      if (e.target.closest('.offers-more')) {
+        const on = !cell.classList.contains('open');
+        cell.classList.toggle('open', on);
+        on ? open.add(id) : open.delete(id);
+        cell.querySelector('.offers-more').setAttribute('aria-expanded', on);
+      } else if (e.target.closest('.offers-add')) KGC.openQuote({ offers: [id] });
+    });
+    KGC.on('lang', render);
+  });
+})();
+
+;
+/* ==== roi ==== */
+(function () {
+  function init() {
+    const $ = id => document.getElementById(id);
+    const calls = $('roi-calls'), job = $('roi-job'), hours = $('roi-hours'), rate = $('roi-rate');
+    if (!calls || !window.KGC) return;
+    const K = KGC;
+    const COST = 900 / 12 + 129; // Growth per month incl. setup spread over 12 months
+    const els = { loss: $('roi-loss'), time: $('roi-time'), total: $('roi-total'), lossV: $('roi-bar-loss-v') };
+    const cur = {};
+    const raf = {};
+    let srTimer;
+
+    function tween(key, to, fmt) {
+      const el = els[key]; cancelAnimationFrame(raf[key]);
+      const from = cur[key];
+      if (from === undefined || K.reducedMotion() || from === to) { cur[key] = to; el.textContent = fmt(to); return; }
+      const t0 = performance.now(), dur = 900;
+      (function step(now) {
+        const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        cur[key] = from + (to - from) * e; el.textContent = fmt(cur[key]);
+        if (p < 1) raf[key] = requestAnimationFrame(step); else { cur[key] = to; el.textContent = fmt(to); }
+      })(t0);
+    }
+    const L = (de, en) => K.lang === 'en' ? en : de;
+
+    function setFill(inp) { inp.style.setProperty('--fill', ((inp.value - inp.min) / (inp.max - inp.min) * 100) + '%'); }
+
+    function update(instant) {
+      [calls, job, hours].forEach(setFill);
+      const c = +calls.value, j = +job.value, h = +hours.value, r = +rate.value;
+      $('roi-calls-out').textContent = c;
+      $('roi-job-out').textContent = K.chf(j);
+      $('roi-hours-out').textContent = h + ' h';
+      const loss = c * 4.33 * 0.35 * 0.6 * j;
+      const time = h * 4.33 * 0.6 * r;
+      const total = loss + time;
+      if (instant) cur.loss = cur.time = cur.total = undefined;
+      const f = n => K.chf(n);
+      tween('loss', loss, f); tween('time', time, f); tween('total', total, f);
+
+      const max = Math.max(total, COST, 1);
+      $('roi-bar-loss').style.width = (total > 0 ? Math.max(1.5, total / max * 100) : 0) + '%';
+      $('roi-bar-cost').style.width = Math.max(1.5, COST / max * 100) + '%';
+      els.lossV.textContent = K.chf(total);
+
+      let msg = '', ratio = '';
+      if (total < 1) msg = L('Mit diesen Angaben gibt es kaum etwas zu gewinnen. Verschieben Sie die Regler auf Ihre Situation.', 'With these numbers there is little to win. Move the sliders to match your situation.');
+      else if (loss < 1) msg = L('Kaum Verluste bei Anrufen. Dann lohnt sich vor allem der Zeitgewinn.', 'Hardly any loss from calls. Then the time saved is what counts.');
+      else if (time < 1) msg = L('Kein Büroaufwand angegeben. Dann geht es vor allem um die Anrufe, die heute verloren gehen.', 'No desk work entered. Then it is mainly about the calls that are lost today.');
+      else msg = L('So viel bleibt jeden Monat liegen, ohne dass es jemand bemerkt.', 'This is what is left on the table every month, unnoticed.');
+      if (total >= 1) {
+        const x = total / COST;
+        if (x >= 1.5) { const s = x >= 10 ? String(Math.round(x)) : x.toFixed(1); ratio = '≈ ' + (K.lang === 'en' ? s : s.replace('.', ',')) + L('× Ihr Monatsbeitrag', '× your monthly fee'); }
+        else ratio = L('Etwa so viel wie der Monatsbeitrag. Der Gewinn liegt dann in der Ruhe.', 'About the size of the monthly fee. The gain then is peace of mind.');
+      }
+      $('roi-msg').textContent = msg; $('roi-ratio').textContent = ratio;
+      clearTimeout(srTimer);
+      srTimer = setTimeout(() => { $('roi-sr').textContent = K.chf(total) + L(' pro Monat. ', ' per month. ') + ratio; }, 700);
+    }
+
+    [calls, job, hours].forEach(i => i.addEventListener('input', () => update()));
+    rate.addEventListener('change', () => update());
+    K.on('lang', () => update(true));
+    update(true);
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+
+;
+/* ==== packages ==== */
+(function () {
+  function init() {
+    const grid = document.getElementById('packages-grid'), seg = document.getElementById('packages-seg');
+    if (!grid || !window.KGC) return;
+    const K = KGC; let view = 'monthly';
+    const L = (de, en) => K.lang === 'en' ? en : de;
+
+    function saving(p) {
+      let sum = p.includes.reduce((a, id) => a + K.offer(id).setup[0], 0);
+      p.choice.forEach(g => { sum += K.offer(g[0]).setup[0]; });
+      return sum - p.setup;
+    }
+    function render() {
+      seg.innerHTML = [['monthly', L('Einmalig + monatlich', 'One-off + monthly')], ['year', L('Erstes Jahr total', 'First year total')]]
+        .map(([k, t]) => `<button type="button" data-view="${k}" aria-pressed="${view === k}">${t}</button>`).join('');
+      grid.innerHTML = K.packages.map(p => {
+        const feat = !!p.featured, sv = saving(p), year = p.setup + 12 * p.monthly, nm = K.t(p.name);
+        const price = view === 'monthly'
+          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${K.chf(p.setup)} ${L('einmalig', 'one-off')}</div>`
+          : `<div class="packages-big">${K.chf(year)}<small>${L('im 1. Jahr', 'in year 1')}</small></div><div class="packages-sub">${K.chf(p.setup)} + 12 × ${K.chf(p.monthly)}</div>`;
+        const items = p.includes.map(id => `<li>${K.t(K.offer(id).name)}</li>`).join('')
+          + p.choice.map(g => `<li class="is-choice">${g.map(id => K.t(K.offer(id).name)).join(` <em>${L('oder', 'or')}</em> `)}</li>`).join('');
+        return `<article class="packages-card${feat ? ' is-featured' : ''}" aria-labelledby="pk-${p.id}">
+          ${feat ? `<span class="packages-flag">${L('Empfohlen', 'Recommended')}</span>` : ''}
+          <div><h3 class="packages-name" id="pk-${p.id}">${nm}</h3><p class="packages-tag">${K.t(p.tagline)}</p></div>
+          <div class="packages-price">${price}</div>
+          <ul class="packages-list">${items}</ul>
+          <p class="packages-save">${sv > 0 ? L(`Sie sparen ${K.chf(sv)} gegenüber Einzelpreisen`, `You save ${K.chf(sv)} compared with single prices`) : ''}</p>
+          <button type="button" class="btn ${feat ? 'btn-cta' : 'btn-ghost'}" data-quote="${p.id}">${L(nm + ' wählen', 'Choose ' + nm)}</button>
+        </article>`;
+      }).join('');
+    }
+    seg.addEventListener('click', e => {
+      const b = e.target.closest('button[data-view]'); if (!b) return;
+      view = b.dataset.view; render();
+      const nb = seg.querySelector(`[data-view="${view}"]`); if (nb) nb.focus();
+    });
+    K.on('lang', render);
+    render();
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+
+;
+/* ==== quote ==== */
+(function () {
+  function init() {
+    const root = document.getElementById('quote-app');
+    if (!root || !window.KGC) return;
+    const K = KGC;
+    const L = (de, en) => (K.lang === 'en' ? en : de);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+    const CANTONS = [['AG', 'Aargau'], ['AR', 'Appenzell Ausserrhoden'], ['AI', 'Appenzell Innerrhoden'], ['BL', 'Basel-Landschaft'], ['BS', 'Basel-Stadt'], ['BE', 'Bern', 'Berne'],
+      ['FR', 'Freiburg', 'Fribourg'], ['GE', 'Genf', 'Geneva'], ['GL', 'Glarus'], ['GR', 'Graubünden', 'Grisons'], ['JU', 'Jura'], ['LU', 'Luzern', 'Lucerne'], ['NE', 'Neuenburg', 'Neuchâtel'],
+      ['NW', 'Nidwalden'], ['OW', 'Obwalden'], ['SH', 'Schaffhausen'], ['SZ', 'Schwyz'], ['SO', 'Solothurn'], ['SG', 'St. Gallen'], ['TI', 'Tessin', 'Ticino'], ['TG', 'Thurgau'], ['UR', 'Uri'],
+      ['VD', 'Waadt', 'Vaud'], ['VS', 'Wallis', 'Valais'], ['ZG', 'Zug'], ['ZH', 'Zürich', 'Zurich']];
+    const LANGS = [['gsw', 'Schweizerdeutsch', 'Swiss German'], ['de', 'Hochdeutsch', 'High German'], ['fr', 'Französisch', 'French'], ['it', 'Italienisch', 'Italian'], ['en', 'Englisch', 'English']];
+    const STAFF = [['1', '1 Person', '1 person'], ['2-5', '2–5 Mitarbeitende', '2–5 employees'], ['6-20', '6–20 Mitarbeitende', '6–20 employees'], ['20+', 'Über 20 Mitarbeitende', 'Over 20 employees']];
+    const STARTS = [['now', 'Sofort', 'Right away'], ['month', 'Innert 1 Monat', 'Within 1 month'], ['later', 'Später', 'Later']];
+    const FACTOR = { '1': 1, '2-5': 1, '6-20': 1.15, '20+': 1.3 };
+    const nm = id => K.t(K.offer(id).name);
+    const pkgOf = id => K.packages.find(p => p.id === id);
+    const order = ids => K.offers.map(o => o.id).filter(id => ids.includes(id));
+
+    function fresh() {
+      const choice = {};
+      K.packages.forEach(p => { choice[p.id] = p.choice.map(g => g[0]); });
+      return { pkg: 'growth', choice, picked: new Set(), extras: new Set(), industry: 'trade', staff: '2-5', canton: 'AG', langs: new Set(['gsw']), start: 'month',
+        step: 1, f: { name: '', firma: '', email: '', telefon: '', nachricht: '' }, consent: false, flash: new Set(), done: null, open: false };
+    }
+    let st = fresh();
+
+    /* ---------- pricing ---------- */
+    const r10 = n => Math.round(n / 10) * 10;
+    function po(o) { const f = FACTOR[st.staff]; return { s: [r10(o.setup[0] * f), r10(o.setup[1] * f)], m: [Math.round(o.monthly[0] * f), Math.round(o.monthly[1] * f)] }; }
+    function sel() {
+      if (st.pkg === 'custom') return { p: null, base: [], extras: order([...st.picked]) };
+      const p = pkgOf(st.pkg), base = order(p.includes.concat(st.choice[p.id]));
+      return { p, base, extras: order([...st.extras].filter(id => !base.includes(id))) };
+    }
+    function totals() {
+      const S = sel(); let s = [0, 0], m = [0, 0];
+      if (S.p) { s = [S.p.setup, S.p.setup]; m = [S.p.monthly, S.p.monthly]; }
+      S.extras.forEach(id => { const x = po(K.offer(id)); s[0] += x.s[0]; s[1] += x.s[1]; m[0] += x.m[0]; m[1] += x.m[1]; });
+      return { S, setup: s, monthly: m, year: [s[0] + 12 * m[0], s[1] + 12 * m[1]] };
+    }
+    // cheapest package that covers every picked offer (one per choice group)
+    function tip() {
+      if (st.pkg !== 'custom' || !st.picked.size) return null;
+      const ids = [...st.picked], minSetup = ids.reduce((a, id) => a + po(K.offer(id)).s[0], 0);
+      for (const p of K.packages) {
+        if (!(minSetup > p.setup)) continue;
+        const used = new Set(), choice = p.choice.map(g => g[0]); let ok = true;
+        ids.forEach(id => {
+          if (p.includes.includes(id)) return;
+          const gi = p.choice.findIndex(g => g.includes(id));
+          if (gi < 0 || used.has(gi)) { ok = false; return; }
+          used.add(gi); choice[gi] = id;
+        });
+        if (ok) return { p, choice, save: minSetup - p.setup };
+      }
+      return null;
+    }
+
+    /* ---------- number tween ---------- */
+    function setN(el, v, animate) {
+      cancelAnimationFrame(el._raf);
+      const from = el._v;
+      if (!animate || from === undefined || from === v || K.reducedMotion()) { el._v = v; el.textContent = K.fmt(v); return; }
+      const t0 = performance.now(), dur = 900;
+      (function step(now) {
+        const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3), cur = from + (v - from) * e;
+        el._v = cur; el.textContent = K.fmt(cur);
+        if (p < 1) el._raf = requestAnimationFrame(step); else { el._v = v; el.textContent = K.fmt(v); }
+      })(t0);
+    }
+    const money = k => `<span class="qm" data-m="${k}">CHF <span data-n="0"></span><span class="qd">–<span data-n="1"></span></span></span>`;
+    function updateMoney(animate) {
+      const T = totals();
+      root.querySelectorAll('[data-m]').forEach(el => {
+        const r = T[el.dataset.m], ns = el.querySelectorAll('[data-n]');
+        setN(ns[0], r[0], animate); setN(ns[1], r[1], animate);
+        el.querySelector('.qd').hidden = r[0] === r[1];
+      });
+    }
+
+    /* ---------- summary ---------- */
+    function itemsHtml(T) {
+      const S = T.S, li = (cls, a, b) => `<li class="${cls}"><span>${a}</span><span class="v">${b || ''}</span></li>`;
+      let h = '';
+      if (S.p) {
+        h += li('head', `${K.t(S.p.name)} ${L('Paket', 'package')}`, `${K.chf(S.p.setup)}`);
+        S.base.forEach(id => { h += li('sub', nm(id)); });
+        S.extras.forEach(id => { const x = po(K.offer(id)); h += li('', '+ ' + nm(id), K.range(x.s[0], x.s[1])); });
+      } else if (S.extras.length) {
+        S.extras.forEach(id => { const x = po(K.offer(id)); h += li('', nm(id), K.range(x.s[0], x.s[1])); });
+      } else h = `<li><span>${L('Noch nichts gewählt.', 'Nothing selected yet.')}</span></li>`;
+      return h;
+    }
+    function updateSummary(animate) {
+      const T = totals();
+      root.querySelector('#q-items').innerHTML = itemsHtml(T);
+      const t = tip(), tipEl = root.querySelector('#q-tip');
+      if (t) {
+        tipEl.hidden = false;
+        tipEl.innerHTML = `<span>${L(`Tipp: Das ${K.t(t.p.name)}-Paket deckt das ab und spart ${K.chf(t.save)}.`, `Tip: the ${K.t(t.p.name)} package covers this and saves ${K.chf(t.save)}.`)}</span>
+          <button type="button" class="btn btn-ghost" data-act="usetip">${L('Zum Paket wechseln', 'Switch to package')}</button>`;
+      } else { tipEl.hidden = true; tipEl.innerHTML = ''; }
+      const n20 = root.querySelector('#q-n20'), f = FACTOR[st.staff];
+      let note = '';
+      if (st.staff === '20+') note = st.pkg === 'custom' ? L('Inkl. Zuschlag von 30 % für die Betriebsgrösse. Wir bestätigen den Fixpreis im Erstgespräch.', 'Incl. a 30% surcharge for company size. We confirm the fixed price in the first call.') : L('Wir bestätigen den Fixpreis im Erstgespräch.', 'We confirm the fixed price in the first call.');
+      else if (f > 1 && (st.pkg === 'custom' || T.S.extras.length)) note = L('Inkl. Zuschlag von 15 % für die Betriebsgrösse.', 'Incl. a 15% surcharge for company size.');
+      n20.textContent = note; n20.hidden = !note;
+      updateMoney(animate);
+    }
+    function summaryHtml() {
+      return `<div class="quote-sum-bar">
+          <div class="col"><span>${L('Einrichtung', 'Setup')}</span><b>${money('setup')}</b></div>
+          <div class="col"><span>${L('Pro Monat', 'Per month')}</span><b>${money('monthly')}</b></div>
+          <button type="button" class="quote-sum-toggle" data-act="sumtoggle" aria-expanded="${st.open}" aria-controls="q-sumbody">${st.open ? L('Weniger', 'Less') : L('Details', 'Details')}</button>
+        </div>
+        <div class="quote-sum-body" id="q-sumbody">
+          <div class="quote-sum-title">${L('Ihre Auswahl', 'Your selection')}</div>
+          <ul class="quote-items" id="q-items"></ul>
+          <dl class="quote-tot">
+            <div class="big"><dt>${L('Einrichtung (einmalig)', 'Setup (one-off)')}</dt><dd>${money('setup')}</dd></div>
+            <div class="big"><dt>${L('Betreuung pro Monat', 'Care per month')}</dt><dd>${money('monthly')}</dd></div>
+            <div class="yr"><dt>${L('Erstes Jahr total', 'First year total')}</dt><dd>${money('year')}</dd></div>
+          </dl>
+          <div class="quote-tip" id="q-tip" hidden></div>
+          <p class="quote-fine n20" id="q-n20" hidden></p>
+          <p class="quote-fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch.', 'Indicative prices in CHF. Binding quote after the first call.')}</p>
+        </div>`;
+    }
+
+    /* ---------- step 1 ---------- */
+    function rowHtml(id, kind) {
+      const o = K.offer(id), x = po(o), on = kind === 'x' ? (st.pkg === 'custom' ? st.picked.has(id) : st.extras.has(id)) : false;
+      const price = st.pkg === 'custom'
+        ? `${L('ab', 'from')} ${K.chf(x.s[0])} · ${L('ab', 'from')} ${K.chf(x.m[0])}${L('/Mt.', '/mo.')}`
+        : `${K.range(x.s[0], x.s[1])} · ${K.range(x.m[0], x.m[1])}${L('/Mt.', '/mo.')}`;
+      return `<label class="quote-row${on ? ' is-on' : ''}" data-row="${id}" for="q-of-${id}"><input type="checkbox" id="q-of-${id}" data-offer="${id}"${on ? ' checked' : ''}>
+        <span><span class="t">${nm(id)}</span><span class="s">${K.t(o.short)}</span></span><span class="p">${price}</span></label>`;
+    }
+    function step1Html() {
+      const S = sel();
+      const pk = K.packages.map(p => `<label class="quote-pk${st.pkg === p.id ? ' is-on' : ''}" for="q-pkg-${p.id}"><input class="quote-sr" type="radio" name="q-pkg" id="q-pkg-${p.id}" value="${p.id}"${st.pkg === p.id ? ' checked' : ''}>
+        <b>${K.t(p.name)}</b><span>${K.chf(p.setup)} · ${K.chf(p.monthly)}${L('/Mt.', '/mo.')}</span></label>`).join('')
+        + `<label class="quote-pk${st.pkg === 'custom' ? ' is-on' : ''}" for="q-pkg-custom"><input class="quote-sr" type="radio" name="q-pkg" id="q-pkg-custom" value="custom"${st.pkg === 'custom' ? ' checked' : ''}>
+        <b>${L('Individuell', 'Custom')}</b><span>${L('Selbst zusammenstellen', 'Build your own')}</span></label>`;
+      let h = `<fieldset class="quote-fs"><legend>${L('Paket wählen', 'Choose a package')}</legend><div class="quote-pkgs">${pk}</div></fieldset>`;
+      if (S.p) {
+        const p = S.p;
+        h += `<fieldset class="quote-fs"><legend>${L('Im Paket enthalten', 'Included in the package')}</legend><div class="quote-rows">`
+          + p.includes.map(id => `<div class="quote-row is-inc"><span class="mark" aria-hidden="true">✓</span><span><span class="t">${nm(id)}</span><span class="s">${K.t(K.offer(id).short)}</span></span><span class="p">${L('inklusive', 'included')}</span></div>`).join('')
+          + `</div></fieldset>`;
+        p.choice.forEach((g, gi) => {
+          h += `<fieldset class="quote-fs"><legend>${L('Eine Wahl im Paket', 'One choice in the package')}</legend><div class="quote-rows">`
+            + g.map(id => `<label class="quote-row${st.choice[p.id][gi] === id ? ' is-on' : ''}" for="q-ch-${gi}-${id}" data-row="${id}"><input type="radio" name="q-ch-${gi}" id="q-ch-${gi}-${id}" data-choice="${gi}" value="${id}"${st.choice[p.id][gi] === id ? ' checked' : ''}>
+              <span><span class="t">${nm(id)}</span><span class="s">${K.t(K.offer(id).short)}</span></span><span class="p">${L('inklusive', 'included')}</span></label>`).join('')
+            + `</div></fieldset>`;
+        });
+      }
+      const rest = K.offers.map(o => o.id).filter(id => !S.base.includes(id));
+      h += `<fieldset class="quote-fs"><legend>${S.p ? L('Weitere Automationen dazu', 'Add more automations') : L('Automationen wählen', 'Choose automations')}</legend>
+        <p class="quote-sub">${S.p ? L('Optional. Jede Zusatzleistung wird mit ihrer Preisspanne zur Auswahl addiert.', 'Optional. Each extra adds its price range to your selection.') : L('Mehrfachauswahl. Die Preisspanne sehen Sie in Ihrer Auswahl.', 'Pick as many as you like. “From” prices; the full range shows in your selection.')}</p>
+        <div class="quote-rows">${rest.map(id => rowHtml(id, 'x')).join('')}</div></fieldset>`;
+      return h;
+    }
+    function renderStep1() {
+      const ae = document.activeElement, id = ae && ae.id && root.contains(ae) ? ae.id : null;
+      root.querySelector('#q-s1').innerHTML = step1Html();
+      if (id) { const n = document.getElementById(id); if (n) n.focus({ preventScroll: true }); }
+      if (st.flash.size) {
+        st.flash.forEach(f => { const r = root.querySelector(`[data-row="${f}"]`); if (r) r.classList.add('quote-flash'); });
+        const done = [...st.flash]; st.flash = new Set();
+        setTimeout(() => done.forEach(f => { const r = root.querySelector(`[data-row="${f}"]`); if (r) r.classList.remove('quote-flash'); }), 2000);
+      }
+    }
+
+    /* ---------- steps 2 and 3 ---------- */
+    function selectHtml(id, label, opts, val) {
+      return `<div class="quote-field"><label for="${id}">${label}</label><select id="${id}">${opts.map(o => `<option value="${o[0]}"${o[0] === val ? ' selected' : ''}>${esc(o[1])}</option>`).join('')}</select></div>`;
+    }
+    function step2Html() {
+      const ind = K.industries.filter(i => i.id !== 'all').map(i => [i.id, K.t(i.name)]);
+      return `<div class="quote-fields">
+        ${selectHtml('q-industry', L('Branche', 'Industry'), ind, st.industry)}
+        ${selectHtml('q-staff', L('Anzahl Mitarbeitende', 'Number of employees'), STAFF.map(s => [s[0], L(s[1], s[2])]), st.staff)}
+        ${selectHtml('q-canton', L('Standort (Kanton)', 'Location (canton)'), CANTONS.map(c => [c[0], L(c[1], c[2] || c[1])]), st.canton)}
+        ${selectHtml('q-start', L('Startwunsch', 'Preferred start'), STARTS.map(s => [s[0], L(s[1], s[2])]), st.start)}
+        <fieldset class="quote-field full quote-fs" style="margin:0"><legend class="quote-label" style="font-family:var(--f-body);font-size:var(--t-sm);letter-spacing:0;text-transform:none;color:var(--ink);font-weight:600;margin-bottom:6px">${L('Sprache der Kundenkommunikation', 'Language of customer communication')}</legend>
+          <div class="quote-checks">${LANGS.map(l => `<label class="quote-check"><input type="checkbox" data-lang-opt="${l[0]}"${st.langs.has(l[0]) ? ' checked' : ''}>${L(l[1], l[2])}</label>`).join('')}</div></fieldset>
+      </div>`;
+    }
+    function fieldHtml(name, label, type, opts) {
+      opts = opts || {};
+      const req = opts.req ? ' <span aria-hidden="true">*</span>' : '', common = `id="q-${name}" name="${name}"${opts.req ? ' required' : ''} aria-describedby="q-err-${name}"${opts.ac ? ` autocomplete="${opts.ac}"` : ''}`;
+      const ctl = type === 'textarea' ? `<textarea ${common} rows="4">${esc(st.f[name])}</textarea>` : `<input type="${type}" ${common} value="${esc(st.f[name])}"${type === 'email' ? ' inputmode="email"' : ''}>`;
+      return `<div class="quote-field${opts.full ? ' full' : ''}"><label for="q-${name}">${label}${req}</label>${ctl}<p class="quote-err" id="q-err-${name}"></p></div>`;
+    }
+    function step3Html() {
+      return `<div class="quote-fields">
+        ${fieldHtml('name', L('Name', 'Name'), 'text', { req: 1, ac: 'name' })}
+        ${fieldHtml('firma', L('Firma', 'Company'), 'text', { req: 1, ac: 'organization' })}
+        ${fieldHtml('email', L('E-Mail', 'Email'), 'email', { req: 1, ac: 'email' })}
+        ${fieldHtml('telefon', L('Telefon', 'Phone'), 'tel', { ac: 'tel' })}
+        ${fieldHtml('nachricht', L('Nachricht', 'Message'), 'textarea', { full: 1 })}
+      </div>
+      <div class="quote-field full"><label class="quote-consent" for="q-consent"><input type="checkbox" id="q-consent" name="consent" required aria-describedby="q-err-consent"${st.consent ? ' checked' : ''}>
+        <span>${L('Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage gespeichert werden (siehe <a href="#datenschutz">Datenschutz</a>).', 'I agree that my details are stored to process this request (see <a href="#datenschutz">privacy</a>).')} <span aria-hidden="true">*</span></span></label>
+        <p class="quote-err" id="q-err-consent"></p></div>`;
+    }
+    const TITLES = () => [L('Paket oder einzeln', 'Package or individual'), L('Ihr Betrieb', 'Your business'), L('Kontakt', 'Contact')];
+
+    /* ---------- build ---------- */
+    function build() {
+      const T = TITLES();
+      root.innerHTML = `<div class="quote-grid">
+        <aside class="quote-sum${st.open ? ' is-open' : ''}" id="q-sum" aria-label="${L('Live-Zusammenfassung', 'Live summary')}">${summaryHtml()}</aside>
+        <form class="quote-form" id="q-form" name="offerte" novalidate>
+          <p hidden><label>Bot <input name="_honey" tabindex="-1" autocomplete="off"></label></p>
+          <ol class="quote-steps">${T.map((t, i) => `<li><button type="button" data-step="${i + 1}"><span class="n">${i + 1}</span><span>${t}</span></button></li>`).join('')}</ol>
+          ${T.map((t, i) => `<div class="quote-panel" id="q-p${i + 1}" data-panel="${i + 1}"><h3 id="q-h${i + 1}" tabindex="-1">${t}</h3><div id="q-s${i + 1}"></div></div>`).join('')}
+          <div class="quote-nav">
+            <button type="button" class="btn btn-ghost" data-act="prev">${L('Zurück', 'Back')}</button>
+            <button type="button" class="btn quote-next" data-act="next">${L('Weiter', 'Next')}</button>
+            <button type="submit" class="btn btn-cta btn-lg" id="q-submit">${L('Offerte anfordern', 'Request my quote')} <span class="arrow" aria-hidden="true">→</span></button>
+          </div>
+        </form>
+      </div>`;
+      // form attributes: no action, no mailto
+      root.querySelector('#q-form').removeAttribute('action');
+      renderStep1();
+      root.querySelector('#q-s2').innerHTML = step2Html();
+      root.querySelector('#q-s3').innerHTML = step3Html();
+      updateSummary(false);
+      showStep(false);
+    }
+    function showStep(focus) {
+      root.querySelectorAll('.quote-panel').forEach(p => { p.hidden = +p.dataset.panel !== st.step; });
+      root.querySelectorAll('.quote-steps button').forEach(b => {
+        const n = +b.dataset.step;
+        if (n === st.step) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+        b.parentElement.classList.toggle('done', n < st.step);
+      });
+      const prev = root.querySelector('[data-act="prev"]'), next = root.querySelector('[data-act="next"]'), sub = root.querySelector('#q-submit');
+      prev.style.visibility = st.step === 1 ? 'hidden' : 'visible';
+      next.hidden = st.step === 3; sub.hidden = st.step !== 3;
+      if (focus) { const h = root.querySelector('#q-h' + st.step); if (h) h.focus(); }
+    }
+    function go(n, focus) { st.step = Math.max(1, Math.min(3, n)); showStep(focus !== false); }
+    function refresh() { renderStep1(); updateSummary(true); }
+
+    /* ---------- validation ---------- */
+    const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    function errFor(name) {
+      const v = (st.f[name] || '').trim();
+      if (name === 'name') return v ? '' : L('Bitte geben Sie Ihren Namen ein.', 'Please enter your name.');
+      if (name === 'firma') return v ? '' : L('Bitte geben Sie den Namen Ihrer Firma ein.', 'Please enter your company name.');
+      if (name === 'email') return !v ? L('Bitte geben Sie Ihre E-Mail-Adresse ein.', 'Please enter your email address.') : (EMAIL.test(v) ? '' : L('Bitte geben Sie eine gültige E-Mail-Adresse ein.', 'Please enter a valid email address.'));
+      if (name === 'consent') return st.consent ? '' : L('Bitte bestätigen Sie das Einverständnis, damit wir Ihre Anfrage bearbeiten dürfen.', 'Please confirm your consent so we can handle your request.');
+      return '';
+    }
+    function showErr(name) {
+      const e = errFor(name), box = root.querySelector('#q-err-' + name), inp = root.querySelector(name === 'consent' ? '#q-consent' : '#q-' + name);
+      if (box) box.textContent = e;
+      if (inp) { if (e) inp.setAttribute('aria-invalid', 'true'); else inp.removeAttribute('aria-invalid'); }
+      return e;
+    }
+
+    /* ---------- receipt ---------- */
+    function sections(lang) {
+      const l = (de, en) => (lang === 'en' ? en : de), T = totals(), S = T.S, name = id => K.offer(id).name[lang];
+      const ind = K.industries.find(i => i.id === st.industry), cn = CANTONS.find(c => c[0] === st.canton), stf = STAFF.find(s => s[0] === st.staff), start = STARTS.find(s => s[0] === st.start);
+      const rng = r => K.range(r[0], r[1]);
+      const choice = [];
+      if (S.p) {
+        choice.push([l('Paket', 'Package'), S.p.name[lang]]);
+        choice.push([l('Enthalten', 'Included'), S.base.map(name).join(', ')]);
+        if (S.extras.length) choice.push([l('Zusätzlich', 'Extras'), S.extras.map(name).join(', ')]);
+      } else choice.push([l('Individuell', 'Custom'), S.extras.length ? S.extras.map(name).join(', ') : '–']);
+      const f = st.f;
+      return [
+        { title: l('Auswahl', 'Selection'), rows: choice },
+        { title: l('Richtpreise', 'Indicative prices'), rows: [[l('Einrichtung (einmalig)', 'Setup (one-off)'), rng(T.setup)], [l('Betreuung pro Monat', 'Care per month'), rng(T.monthly)], [l('Erstes Jahr total', 'First year total'), rng(T.year), 'tot']] },
+        { title: l('Betrieb', 'Business'), rows: [[l('Branche', 'Industry'), ind ? ind.name[lang] : ''], [l('Mitarbeitende', 'Employees'), l(stf[1], stf[2])], [l('Kanton', 'Canton'), l(cn[1], cn[2] || cn[1])],
+          [l('Kundensprachen', 'Customer languages'), LANGS.filter(x => st.langs.has(x[0])).map(x => l(x[1], x[2])).join(', ') || '–'], [l('Start', 'Start'), l(start[1], start[2])]] },
+        { title: l('Kontakt', 'Contact'), rows: [[l('Name', 'Name'), f.name.trim()], [l('Firma', 'Company'), f.firma.trim()], [l('E-Mail', 'Email'), f.email.trim()]]
+          .concat(f.telefon.trim() ? [[l('Telefon', 'Phone'), f.telefon.trim()]] : []).concat(f.nachricht.trim() ? [[l('Nachricht', 'Message'), f.nachricht.trim()]] : []) },
+      ];
+    }
+    function textOf(lang) {
+      const l = (de, en) => (lang === 'en' ? en : de);
+      return l('KGC Offerte-Anfrage', 'KGC quote request') + ' ' + new Date().toLocaleDateString('de-CH') + '\n\n'
+        + sections(lang).map(s => s.title.toUpperCase() + '\n' + s.rows.map(r => r[0] + ': ' + r[1]).join('\n')).join('\n\n')
+        + '\n\n' + l('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch.', 'Indicative prices in CHF. Binding quote after the first call.');
+    }
+    function receiptHtml() {
+      return `<div class="quote-receipt" id="q-receipt"><h4><span>${L('Ihre Anfrage', 'Your request')}</span><span>${new Date().toLocaleDateString('de-CH')}</span></h4>`
+        + sections(K.lang).map(s => `<section><dl>${s.rows.map(r => `<div class="${r[2] || ''}"><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl></section>`).join('')
+        + `<p class="fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch.', 'Indicative prices in CHF. Binding quote after the first call.')}</p></div>`;
+    }
+    function renderDone() {
+      const first = st.f.name.trim().split(/\s+/)[0] || '';
+      const ok = st.done.ok;
+      root.innerHTML = `<div class="quote-done${ok ? '' : ' is-fail'}">
+        <div ${ok ? '' : 'class="quote-fail"'}>
+          <h3 id="q-done-h" tabindex="-1">${ok ? L(`Danke, ${esc(first)}. Ihre Anfrage ist eingegangen.`, `Thank you, ${esc(first)}. Your request has arrived.`) : L('Die Anfrage konnte nicht gesendet werden.', 'The request could not be sent.')}</h3>
+          <p class="lede" style="margin-top:12px">${ok ? L('Sie erhalten innert 24 Stunden (werktags) eine Antwort von Khang Cung.', 'You will get a reply from Khang Cung within 24 hours (working days).') : L('Bitte kopieren Sie die Zusammenfassung und senden Sie sie an khangcung196@gmail.com.', 'Please copy the summary and send it to khangcung196@gmail.com.')}</p>
+        </div>
+        ${receiptHtml()}
+        <div class="quote-actions">
+          <button type="button" class="btn btn-ghost" data-act="copy" id="q-copy">${L('Zusammenfassung kopieren', 'Copy summary')}</button>
+          ${ok ? '' : `<button type="button" class="btn btn-ghost" data-act="back">${L('Zurück zum Formular', 'Back to the form')}</button>`}
+          <button type="button" class="btn btn-ghost" data-act="reset">${L('Neue Offerte', 'New quote')}</button>
+        </div><p class="quote-fine" id="q-copied" role="status"></p></div>`;
+      const h = root.querySelector('#q-done-h'); if (h && st.done.focus) { h.focus(); st.done.focus = false; }
+    }
+    function selectReceipt() {
+      const el = root.querySelector('#q-receipt'); if (!el) return;
+      const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    }
+    function copy() {
+      const t = textOf(K.lang), msg = root.querySelector('#q-copied');
+      const done = ok => { msg.textContent = ok ? L('Zusammenfassung kopiert.', 'Summary copied.') : L('Text markiert. Bitte mit Strg+C / Cmd+C kopieren.', 'Text selected. Please copy with Ctrl+C / Cmd+C.'); };
+      try { navigator.clipboard.writeText(t).then(() => done(true)).catch(() => { selectReceipt(); done(false); }); }
+      catch (e) { selectReceipt(); done(false); }
+    }
+
+    /* ---------- submit ---------- */
+    function shouldPost() {
+      const h = location.hostname;
+      return !h.includes('claude') && /^https?:$/.test(location.protocol);
+    }
+    async function submit() {
+      const bad = ['name', 'firma', 'email', 'consent'].filter(n => showErr(n));
+      if (bad.length) {
+        go(3, false);
+        const el = root.querySelector(bad[0] === 'consent' ? '#q-consent' : '#q-' + bad[0]); if (el) el.focus();
+        return;
+      }
+      if (root.querySelector('[name="_honey"]').value) return;
+      const btn = root.querySelector('#q-submit'); btn.disabled = true; btn.setAttribute('aria-busy', 'true');
+      btn.innerHTML = '<span class="quote-spin" aria-hidden="true"></span>' + L('Wird gesendet…', 'Sending…');
+      let ok = true;
+      if (shouldPost()) {
+        try {
+          const payload = { _subject: 'Neue Offerten-Anfrage – KGC Automation', _template: 'table', _captcha: 'false', _honey: root.querySelector('[name="_honey"]').value, name: st.f.name.trim(), firma: st.f.firma.trim(), email: st.f.email.trim(), telefon: st.f.telefon.trim(), nachricht: st.f.nachricht.trim(), zusammenfassung: textOf('de') + (K.lang === 'en' ? '\n\n(Seitensprache: Englisch)' : '') };
+          const r = await fetch('https://formsubmit.co/ajax/khangcung196@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
+          let j = null; try { j = await r.json(); } catch (e) {}
+          ok = r.ok && !!j && (j.success === true || j.success === 'true');
+        } catch (e) { ok = false; }
+      }
+      st.done = { ok, focus: true };
+      renderDone();
+      root.scrollIntoView({ block: 'start' });
+    }
+
+    /* ---------- events ---------- */
+    function setPackage(id) {
+      if (id === 'custom' && st.pkg !== 'custom') { const S = sel(); st.picked = new Set(S.base.concat(S.extras)); }
+      st.pkg = id; refresh();
+    }
+    root.addEventListener('change', e => {
+      const t = e.target;
+      if (t.name === 'q-pkg') return setPackage(t.value);
+      if (t.dataset.choice !== undefined) { st.choice[st.pkg][+t.dataset.choice] = t.value; return refresh(); }
+      if (t.dataset.offer) {
+        const set = st.pkg === 'custom' ? st.picked : st.extras;
+        if (t.checked) set.add(t.dataset.offer); else set.delete(t.dataset.offer);
+        return refresh();
+      }
+      if (t.dataset.langOpt) { if (t.checked) st.langs.add(t.dataset.langOpt); else st.langs.delete(t.dataset.langOpt); return; }
+      if (t.id === 'q-industry') st.industry = t.value;
+      else if (t.id === 'q-staff') { st.staff = t.value; refresh(); }
+      else if (t.id === 'q-canton') st.canton = t.value;
+      else if (t.id === 'q-start') st.start = t.value;
+      else if (t.id === 'q-consent') { st.consent = t.checked; showErr('consent'); }
+    });
+    root.addEventListener('input', e => {
+      const t = e.target;
+      if (t.id && t.id.startsWith('q-') && t.name in st.f) { st.f[t.name] = t.value; if (t.getAttribute('aria-invalid')) showErr(t.name); }
+    });
+    root.addEventListener('focusout', e => {
+      const t = e.target;
+      if (t.id && t.name && ['name', 'firma', 'email'].includes(t.name) && t.id.startsWith('q-')) showErr(t.name);
+    });
+    root.addEventListener('click', e => {
+      const sb = e.target.closest('[data-step]'); if (sb) return go(+sb.dataset.step);
+      const a = e.target.closest('[data-act]'); if (!a) return;
+      const act = a.dataset.act;
+      if (act === 'next') go(st.step + 1);
+      else if (act === 'prev') go(st.step - 1);
+      else if (act === 'sumtoggle') { st.open = !st.open; const s = root.querySelector('#q-sum'); s.classList.toggle('is-open', st.open); a.setAttribute('aria-expanded', st.open); a.textContent = st.open ? L('Weniger', 'Less') : L('Details', 'Details'); }
+      else if (act === 'usetip') {
+        const t = tip(); if (!t) return;
+        st.pkg = t.p.id; st.choice[t.p.id] = t.choice; st.picked = new Set(); go(1, false); refresh();
+      }
+      else if (act === 'copy') copy();
+      else if (act === 'reset') { st = fresh(); build(); root.closest('section').scrollIntoView({ block: 'start' }); }
+      else if (act === 'back') { st.done = null; st.step = 3; build(); }
+    });
+    root.addEventListener('submit', e => {
+      e.preventDefault();
+      if (st.step < 3) go(st.step + 1); else submit();
+    });
+
+    K.on('lang', () => { if (st.done) { st.done.focus = false; renderDone(); } else build(); });
+    K.on('quote:preset', p => {
+      if (st.done) { st = fresh(); }
+      if (!p) { build(); return; }
+      if (p.package && pkgOf(p.package)) { st.pkg = p.package; st.step = 1; build(); return; }
+      if (p.offers && p.offers.length) {
+        const ids = p.offers.filter(id => K.offer(id)); st.step = 1;
+        if (st.pkg === 'custom') ids.forEach(id => { st.picked.add(id); st.flash.add(id); });
+        else {
+          const pk = pkgOf(st.pkg);
+          ids.forEach(id => {
+            const S = sel();
+            if (S.base.includes(id)) { st.flash.add(id); return; }
+            const gi = pk.choice.findIndex(g => g.includes(id));
+            if (gi >= 0) st.choice[pk.id][gi] = id; else st.extras.add(id);
+            st.flash.add(id);
+          });
+        }
+        build();
+      }
+    });
+    build();
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+
+;
+/* ==== process ==== */
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = [...document.querySelectorAll('.process-step')];
+    if (!cards.length) return;
+    cards.forEach((c, i) => c.style.setProperty('--i', i));
+    const mq = matchMedia('(min-width: 900px)');
+    let ticking = false;
+    const reset = () => cards.forEach(c => { c.style.transform = ''; c.style.opacity = ''; });
+    const update = () => {
+      ticking = false;
+      if (!mq.matches || KGC.reducedMotion()) { reset(); return; }
+      cards.forEach((c, i) => {
+        const n = cards[i + 1];
+        if (!n) return;
+        const h = c.offsetHeight, nTop = n.getBoundingClientRect().top;
+        const stuck = 96 + (i + 1) * 18;
+        const p = Math.min(1, Math.max(0, 1 - (nTop - stuck) / h));
+        c.style.transform = 'scale(' + (1 - 0.06 * p).toFixed(4) + ')';
+        c.style.opacity = (1 - 0.45 * p).toFixed(3);
+      });
+    };
+    const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    addEventListener('scroll', req, { passive: true });
+    addEventListener('resize', req);
+    mq.addEventListener('change', req);
+    update();
+  });
+})();
+
+;
+/* ==== faq ==== */
+
+;
+/* ==== footer ==== */
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    const root = document.documentElement;
+    const lock = () => { root.style.overflow = document.querySelector('.footer-dlg[open]') ? 'hidden' : ''; };
+    document.querySelectorAll('[data-dlg]').forEach(b => {
+      b.addEventListener('click', () => {
+        const d = document.getElementById(b.getAttribute('data-dlg'));
+        if (d && !d.open) { d.showModal(); lock(); d.querySelector('.footer-dlg-body').scrollTop = 0; }
+      });
+    });
+    document.querySelectorAll('.footer-dlg').forEach(d => {
+      d.addEventListener('close', lock);
+      d.addEventListener('click', e => {
+        if (e.target === d || e.target.closest('[data-dlg-close]')) d.close();
+      });
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

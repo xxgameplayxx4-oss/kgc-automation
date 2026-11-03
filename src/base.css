@@ -1,0 +1,131 @@
+/* Layout concept: a Swiss watch movement as metaphor — calm limestone ground, Bodoni display,
+   brass hairlines for structure, ruby (the jewel bearing) reserved for the call to action only. */
+:root {
+  --stone: #ECEDE8;      /* page ground, cool Jura limestone */
+  --paper: #F8F8F4;      /* raised surfaces */
+  --ink: #14191D;        /* text */
+  --graphite: #4D565C;   /* secondary text */
+  --rule: #CDD1CB;       /* hairlines */
+  --brass: #9A7740;      /* structure, labels, gears */
+  --brass-soft: #D9C8A6;
+  --ruby: #A3122E;       /* CTA only */
+  --ruby-hover: #870E25;
+  --on-ruby: #FFFFFF;
+  --ok: #2F6B4F;         /* semantic success */
+  --warn: #9A5B12;
+  --shadow: 0 1px 2px rgba(20,25,29,.06), 0 12px 32px -12px rgba(20,25,29,.18);
+
+  --f-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --f-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* type scale */
+  --t-xs: .75rem; --t-sm: .875rem; --t-md: 1rem; --t-lg: 1.25rem;
+  --t-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --t-2xl: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+  --t-3xl: clamp(2.6rem, 1.6rem + 4.6vw, 5.5rem);
+
+  --wrap: 1200px;
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --section-y: clamp(72px, 10vw, 140px);
+  --radius: 4px;
+  --ease: cubic-bezier(.2,.7,.2,1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --stone: #0E1418; --paper: #151D23; --ink: #E7E9E3; --graphite: #9AA4AA; --rule: #2A353D;
+    --brass: #C9A468; --brass-soft: #4A3F2C; --ruby: #D02A48; --ruby-hover: #E2455F; --on-ruby: #FFFFFF;
+    --ok: #6DBB93; --warn: #E0A458;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --stone: #0E1418; --paper: #151D23; --ink: #E7E9E3; --graphite: #9AA4AA; --rule: #2A353D;
+  --brass: #C9A468; --brass-soft: #4A3F2C; --ruby: #D02A48; --ruby-hover: #E2455F; --on-ruby: #FFFFFF;
+  --ok: #6DBB93; --warn: #E0A458;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+body {
+  background: var(--stone); color: var(--ink);
+  font-family: var(--f-body); font-size: var(--t-md); line-height: 1.6;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--stone); }
+
+/* i18n: paired spans; inactive language hidden */
+html[data-lang="de"] [data-l="en"], html[data-lang="en"] [data-l="de"] { display: none !important; }
+
+.wrap { max-width: var(--wrap); margin-inline: auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
+.section { padding-block: var(--section-y); }
+
+h1, h2, h3 { font-family: var(--f-display); font-weight: 400; line-height: 1.05; letter-spacing: -.01em; text-wrap: balance; margin: 0; }
+h2 { font-size: var(--t-2xl); }
+h3 { font-size: var(--t-xl); }
+p { margin: 0; text-wrap: pretty; }
+em.it { font-style: italic; }
+
+.eyebrow {
+  font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--brass); display: inline-flex; align-items: center; gap: .6em;
+}
+.eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; }
+.lede { font-size: var(--t-lg); color: var(--graphite); max-width: 58ch; }
+.num, .chf { font-family: var(--f-data); font-variant-numeric: tabular-nums; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55em;
+  font: 600 var(--t-md)/1 var(--f-body); letter-spacing: .01em;
+  padding: 1em 1.5em; border-radius: var(--radius); border: 1px solid transparent;
+  cursor: pointer; text-decoration: none; transition: background .2s var(--ease), transform .2s var(--ease), border-color .2s, color .2s;
+  min-height: 48px;
+}
+.btn-cta { background: var(--ruby); color: var(--on-ruby); box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--ruby) 70%, transparent); }
+.btn-cta:hover { background: var(--ruby-hover); transform: translateY(-1px); }
+.btn-cta .arrow { transition: transform .2s var(--ease); }
+.btn-cta:hover .arrow { transform: translateX(3px); }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
+.btn-ghost:hover { border-color: var(--ink); }
+.btn-lg { padding: 1.15em 1.8em; font-size: var(--t-lg); }
+
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 2px; }
+::selection { background: var(--brass-soft); color: var(--ink); }
+
+.reveal { transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.js .reveal:not(.in) { opacity: .001; transform: translateY(18px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .js .reveal:not(.in) { opacity: 1; transform: none; }
+}
+
+/* ---- Premium primitives (from KGC's build-premium-website skill, adapted) ---- */
+/* Fine paper grain over the whole page */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: .05; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body::after { mix-blend-mode: screen; opacity: .035; } }
+:root[data-theme="dark"] body::after { mix-blend-mode: screen; opacity: .035; }
+
+/* CTA shimmer: a brass-tinted light sweep on hover */
+.btn-cta { position: relative; overflow: hidden; isolation: isolate; }
+.btn-cta::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.22) 50%, transparent 70%);
+  transform: translateX(-110%); transition: transform .7s var(--ease);
+}
+.btn-cta:hover::before { transform: translateX(110%); }
+.btn-cta:active { transform: scale(.98); }
+
+/* Thin brass scrollbar */
+html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--stone); }
+::-webkit-scrollbar-thumb { background: var(--brass); border-radius: 10px; border: 3px solid var(--stone); }

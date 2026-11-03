@@ -1,0 +1,96 @@
+<section id="rechner" class="section roi">
+  <div class="wrap">
+    <header class="roi-head reveal">
+      <span class="eyebrow"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></span>
+      <h2><span data-l="de">Was Sie heute <em class="it">verlieren</em></span><span data-l="en">What slips <em class="it">through</em> today</span></h2>
+      <p class="lede">
+        <span data-l="de">Verpasste Anrufe und Büroarbeit kosten Geld, auch wenn es niemand verbucht. Stellen Sie Ihre Zahlen ein, die Rechnung läuft live mit.</span>
+        <span data-l="en">Missed calls and desk work cost money, even if nobody books it. Set your numbers and the sum updates live.</span>
+      </p>
+    </header>
+
+    <div class="roi-grid">
+      <div class="roi-inputs">
+        <div class="roi-field">
+          <div class="roi-fieldhead">
+            <label for="roi-calls"><span data-l="de">Verpasste Anrufe pro Woche</span><span data-l="en">Missed calls per week</span></label>
+            <output class="roi-val num" for="roi-calls" id="roi-calls-out">6</output>
+          </div>
+          <input type="range" id="roi-calls" min="0" max="30" step="1" value="6">
+          <div class="roi-scale num" aria-hidden="true"><span>0</span><span>30</span></div>
+        </div>
+
+        <div class="roi-field">
+          <div class="roi-fieldhead">
+            <label for="roi-job"><span data-l="de">Durchschnittlicher Auftragswert</span><span data-l="en">Average job value</span></label>
+            <output class="roi-val num" for="roi-job" id="roi-job-out">CHF 850</output>
+          </div>
+          <input type="range" id="roi-job" min="100" max="5000" step="50" value="850">
+          <div class="roi-scale num" aria-hidden="true"><span>CHF 100</span><span>CHF 5’000</span></div>
+        </div>
+
+        <div class="roi-field">
+          <div class="roi-fieldhead">
+            <label for="roi-hours"><span data-l="de">Stunden pro Woche für Offerten, Rechnungen und E-Mails</span><span data-l="en">Hours per week on quotes, invoices and email</span></label>
+            <output class="roi-val num" for="roi-hours" id="roi-hours-out">6 h</output>
+          </div>
+          <input type="range" id="roi-hours" min="0" max="20" step="1" value="6">
+          <div class="roi-scale num" aria-hidden="true"><span>0 h</span><span>20 h</span></div>
+        </div>
+
+        <div class="roi-field roi-rate">
+          <label for="roi-rate"><span data-l="de">Ihr Stundensatz</span><span data-l="en">Your hourly rate</span></label>
+          <select id="roi-rate">
+            <option value="80">CHF 80</option>
+            <option value="120" selected>CHF 120</option>
+            <option value="180">CHF 180</option>
+            <option value="250">CHF 250</option>
+          </select>
+        </div>
+
+        <p class="roi-foot">
+          <span data-l="de">Annahme: 35 % der Anrufer hätten gebucht, 60 % davon rufen danach die Konkurrenz an. Vom Büroaufwand lassen sich 60 % automatisieren. Eine Schätzung, kein Versprechen.</span>
+          <span data-l="en">Assumption: 35% of callers would have booked, and 60% of those then call a competitor. 60% of desk work can be automated. An estimate, not a promise.</span>
+        </p>
+      </div>
+
+      <div class="roi-result" id="roi-result">
+        <dl class="roi-lines">
+          <div class="roi-line">
+            <dt><span data-l="de">Umsatz, der pro Monat verloren geht</span><span data-l="en">Revenue lost per month</span></dt>
+            <dd class="num" id="roi-loss">CHF 0</dd>
+          </div>
+          <div class="roi-line">
+            <dt><span data-l="de">Zeitwert pro Monat</span><span data-l="en">Value of your time per month</span></dt>
+            <dd class="num" id="roi-time">CHF 0</dd>
+          </div>
+        </dl>
+
+        <div class="roi-total">
+          <span class="roi-total-label"><span data-l="de">Zusammen pro Monat</span><span data-l="en">Together per month</span></span>
+          <div class="roi-big" id="roi-total">CHF 0</div>
+          <p class="roi-cmp num"><span data-l="de">Growth-Paket: CHF 129/Mt.</span><span data-l="en">Growth package: CHF 129/mo.</span></p>
+          <p class="roi-msg" id="roi-msg" role="status"></p>
+        </div>
+
+        <div class="roi-bars" aria-hidden="true">
+          <div class="roi-bar-row">
+            <div class="roi-bar-top"><span><span data-l="de">Was Sie verlieren</span><span data-l="en">What you lose</span></span><span class="num" id="roi-bar-loss-v"></span></div>
+            <div class="roi-track"><div class="roi-bar roi-bar-loss" id="roi-bar-loss"></div></div>
+          </div>
+          <div class="roi-bar-row">
+            <div class="roi-bar-top"><span><span data-l="de">Growth pro Monat, Einrichtung auf 12 Monate verteilt</span><span data-l="en">Growth per month, setup spread over 12 months</span></span><span class="num">CHF 204</span></div>
+            <div class="roi-track"><div class="roi-bar roi-bar-cost" id="roi-bar-cost"></div></div>
+          </div>
+        </div>
+        <p class="roi-ratio num" id="roi-ratio"></p>
+        <span class="roi-sr" id="roi-sr" aria-live="polite"></span>
+
+        <a href="#offerte" class="btn btn-cta roi-cta" data-quote="growth">
+          <span data-l="de">Mit diesen Zahlen Offerte berechnen</span><span data-l="en">Get a quote with these numbers</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

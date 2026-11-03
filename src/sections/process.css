@@ -1,0 +1,23 @@
+.process-head { display: flex; flex-direction: column; gap: 16px; margin-bottom: clamp(40px, 6vw, 72px); max-width: 40rem; }
+.process-head .it { color: var(--brass); }
+.process-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 36px; position: relative; }
+.process-step { position: relative; display: flex; flex-direction: column; gap: 10px; padding-left: 40px; }
+.process-step::before { content: ""; position: absolute; left: 5px; top: 18px; bottom: -36px; width: 1px; background: var(--brass); opacity: .6; }
+.process-step:last-child::before { display: none; }
+.process-node { position: absolute; left: 0; top: 8px; width: 11px; height: 11px; border-radius: 50%; background: var(--stone); border: 1px solid var(--brass); }
+.process-n { font-size: var(--t-xs); letter-spacing: .14em; color: var(--brass); }
+.process-step h3 { font-size: var(--t-xl); }
+.process-meta { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .06em; color: var(--ink); text-transform: uppercase; }
+.process-step p:last-child { color: var(--graphite); font-size: var(--t-sm); max-width: 38ch; }
+.process-cta { margin-top: clamp(40px, 6vw, 64px); }
+
+@media (min-width: 900px) {
+  .process-list { display: block; }
+  .process-step { position: sticky; top: calc(96px + var(--i, 0) * 18px); display: grid; grid-template-columns: minmax(120px, 200px) 1fr; grid-template-areas: "n h" "n m" "n p"; column-gap: 40px; row-gap: 12px; align-content: center; align-items: start; min-height: min(52vh, 380px); margin-bottom: 24px; padding: 48px clamp(28px, 4vw, 64px); background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); transform-origin: 50% 0; will-change: transform, opacity; box-sizing: border-box; }
+  .process-step::before, .process-node { display: none; }
+  .process-n { grid-area: n; font-family: var(--f-display); font-size: clamp(5rem, 9vw, 8.5rem); line-height: .9; letter-spacing: -.02em; color: var(--brass); }
+  .process-step h3 { grid-area: h; font-size: var(--t-2xl); }
+  .process-meta { grid-area: m; }
+  .process-step p:last-child { grid-area: p; font-size: var(--t-md); max-width: 52ch; }
+}
+.process .btn { box-sizing: border-box; }

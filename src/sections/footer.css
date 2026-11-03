@@ -1,0 +1,47 @@
+.footer { border-top: 1px solid var(--rule); background: var(--stone); }
+.todo { border-bottom: 1px dashed var(--brass); padding-bottom: 1px; }
+
+.footer-band { background: var(--paper); border-bottom: 1px solid var(--rule); padding-block: clamp(56px, 8vw, 104px); }
+.footer-band-in { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
+.footer-band-text { display: flex; flex-direction: column; gap: 18px; }
+.footer-big { font-size: var(--t-2xl); max-width: 16ch; }
+.footer-big .it { color: var(--brass); }
+
+.footer-main { display: grid; grid-template-columns: 1fr; gap: 32px; padding-block: 48px; }
+.footer-brand { display: flex; flex-direction: column; gap: 6px; }
+.footer-mark { font-family: var(--f-display); font-size: 2rem; letter-spacing: .06em; line-height: 1; }
+.footer-sub { font-family: var(--f-data); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--graphite); }
+.footer-contact { font-style: normal; display: flex; flex-direction: column; gap: 2px; color: var(--graphite); font-size: var(--t-sm); user-select: text; }
+.footer-contact strong { color: var(--ink); font-weight: 600; }
+.footer-legal { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: flex-start; }
+.footer-link { background: none; border: 0; padding: 8px 0; font: 500 var(--t-sm)/1.2 var(--f-body); color: var(--ink); cursor: pointer; border-bottom: 1px solid var(--rule); min-height: 40px; transition: border-color .2s, color .2s; }
+.footer-link:hover { border-bottom-color: var(--brass); color: var(--brass); }
+
+.footer-bottom { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px 28px; border-top: 1px solid var(--rule); font-family: var(--f-data); font-size: var(--t-xs); color: var(--graphite); letter-spacing: .03em; }
+.footer-lang { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+
+.footer-dlg { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--paper); color: var(--ink); padding: 0; width: min(640px, calc(100vw - 32px)); max-height: min(82vh, 760px); box-shadow: var(--shadow); }
+.footer-dlg[open] { display: flex; flex-direction: column; }
+.footer-dlg::backdrop { background: rgba(10, 14, 17, .6); }
+.footer-dlg-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 28px; border-bottom: 1px solid var(--rule); flex: none; }
+.footer-dlg-head h2 { font-size: var(--t-xl); }
+.footer-dlg-x { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--rule); background: transparent; color: var(--ink); font-size: 1.5rem; line-height: 1; cursor: pointer; transition: border-color .2s; }
+.footer-dlg-x:hover { border-color: var(--brass); }
+.footer-dlg-body { padding: 24px 28px 32px; overflow-y: auto; font-size: var(--t-sm); color: var(--graphite); }
+.footer-dlg-body > div > * + * { margin-top: 12px; }
+.footer-dlg-body h3 { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .12em; text-transform: uppercase; color: var(--brass); margin-top: 24px; }
+.footer-dlg-body > div > h3:first-child { margin-top: 0; }
+
+@media (min-width: 900px) {
+  .footer-band-in { flex-direction: row; align-items: flex-end; justify-content: space-between; }
+  .footer-main { grid-template-columns: 1.2fr 1.5fr 1fr; align-items: start; }
+}
+@media (max-width: 719px) {
+  .footer-bottom { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
+.footer .btn, .footer button { box-sizing: border-box; }
+
+.footer-status { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .06em; color: var(--graphite); }
+.footer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: footer-ring 2.4s ease-out infinite; }
+@keyframes footer-ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); } 70%, 100% { box-shadow: 0 0 0 9px transparent; } }
+@media (prefers-reduced-motion: reduce) { .footer-dot { animation: none !important; } }
