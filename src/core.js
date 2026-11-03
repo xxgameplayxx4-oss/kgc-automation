@@ -96,7 +96,7 @@
         short: { de: 'Eigene Seiten für Leistungen, Team und Kontakt, mit Navigation.', en: 'Separate pages for services, team and contact, with navigation.' },
         points: { de: ['Mehrere Seiten mit Menü und eigener Struktur', 'Impressum und Datenschutzerklärung inklusive', 'Umfang und Fixpreis legen wir im Erstgespräch fest'],
                   en: ['Several pages with a menu and your own structure', 'Legal notice and privacy policy included', 'We fix scope and price in the first call'] } },
-      { id: 'redesign', price: 500, from: true,
+      { id: 'redesign', price: 300, from: false,
         name: { de: 'Website modernisieren', en: 'Website redesign' },
         short: { de: 'Ihre Website wirkt veraltet? Wir bauen sie neu, modern und schnell, mit Ihren Inhalten.', en: 'Your website looks dated? We rebuild it, modern and fast, with your content.' },
         points: { de: ['Neues Design, Ihre bestehenden Texte und Bilder übernommen', 'Optimiert für Handy, Ladezeit und Google', 'Impressum und Datenschutz auf aktuellem Stand (nDSG)'],

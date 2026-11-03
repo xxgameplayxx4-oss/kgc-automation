@@ -108,9 +108,7 @@
       let note = '';
       if (st.staff === '20+') note = st.pkg === 'custom' ? L('Inkl. Zuschlag von 30 % für die Betriebsgrösse. Wir bestätigen den Fixpreis im Erstgespräch.', 'Incl. a 30% surcharge for company size. We confirm the fixed price in the first call.') : L('Wir bestätigen den Fixpreis im Erstgespräch.', 'We confirm the fixed price in the first call.');
       else if (f > 1 && (st.pkg === 'custom' || T.S.extras.length)) note = L('Inkl. Zuschlag von 15 % für die Betriebsgrösse.', 'Incl. a 15% surcharge for company size.');
-      if (T.W && T.W.from) note = (note ? note + ' ' : '') + (T.W.id === 'redesign'
-        ? L('Die Modernisierung ist mit dem Startpreis von CHF 500 eingerechnet. Der Endpreis hängt vom Umfang Ihrer heutigen Website ab.', 'The redesign is counted at its starting price of CHF 500. The final price depends on the size of your current website.')
-        : L('Die mehrseitige Website ist mit dem Startpreis von CHF 1’000 eingerechnet. Der Endpreis hängt von der Anzahl Seiten ab.', 'The multi-page website is counted at its starting price of CHF 1’000. The final price depends on the number of pages.'));
+      if (T.W && T.W.from) note = (note ? note + ' ' : '') + (L('Die mehrseitige Website ist mit dem Startpreis von CHF 1’000 eingerechnet. Der Endpreis hängt von der Anzahl Seiten ab.', 'The multi-page website is counted at its starting price of CHF 1’000. The final price depends on the number of pages.'));
       n20.textContent = note; n20.hidden = !note;
       updateMoney(animate);
     }
