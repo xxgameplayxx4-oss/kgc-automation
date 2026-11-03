@@ -4,7 +4,7 @@
 .faq-side .lede { font-size: var(--t-md); }
 .faq-list { border-top: 1px solid var(--rule); }
 .faq-item { border-bottom: 1px solid var(--rule); }
-.faq-item summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 0; cursor: pointer; min-height: 48px; }
+.faq-item summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px 0; cursor: pointer; min-height: 48px; }
 .faq-item summary::-webkit-details-marker { display: none; }
 .faq-q { font-family: var(--f-display); font-size: var(--t-lg); line-height: 1.25; transition: color .2s; }
 .faq-item summary:hover .faq-q { color: var(--brass); }

@@ -28,7 +28,7 @@
   --wrap: 1200px;
   --gutter: max(16px, env(safe-area-inset-left, 0px));
   --gutter-r: max(16px, env(safe-area-inset-right, 0px));
-  --section-y: clamp(72px, 10vw, 140px);
+  --section-y: clamp(64px, 8vw, 112px);
   --radius: 4px;
   --ease: cubic-bezier(.2,.7,.2,1);
 }
@@ -73,7 +73,7 @@ em.it { font-style: italic; }
 
 .eyebrow {
   font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .14em; text-transform: uppercase;
-  color: var(--brass); display: inline-flex; align-items: center; gap: .6em;
+  color: var(--brass); display: inline-flex; align-items: center; gap: 8px;
 }
 .eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; }
 .lede { font-size: var(--t-lg); color: var(--graphite); max-width: 58ch; }
@@ -81,9 +81,9 @@ em.it { font-style: italic; }
 
 /* Buttons */
 .btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: .55em;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   font: 600 var(--t-md)/1 var(--f-body); letter-spacing: .01em;
-  padding: 1em 1.5em; border-radius: var(--radius); border: 1px solid transparent;
+  padding: 12px 24px; border-radius: var(--radius); border: 1px solid transparent;
   cursor: pointer; text-decoration: none; transition: background .2s var(--ease), transform .2s var(--ease), border-color .2s, color .2s;
   min-height: 48px;
 }
@@ -93,7 +93,7 @@ em.it { font-style: italic; }
 .btn-cta:hover .arrow { transform: translateX(3px); }
 .btn-ghost { background: transparent; color: var(--ink); border-color: var(--rule); }
 .btn-ghost:hover { border-color: var(--ink); }
-.btn-lg { padding: 1.15em 1.8em; font-size: var(--t-lg); }
+.btn-lg { padding: 16px 32px; min-height: 56px; font-size: var(--t-lg); }
 
 :focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 2px; }
 ::selection { background: var(--brass-soft); color: var(--ink); }
