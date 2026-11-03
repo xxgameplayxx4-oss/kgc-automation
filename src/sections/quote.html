@@ -1,4 +1,8 @@
 <section id="offerte" class="section quote">
+  <!-- Static copy of the quote form so Netlify Forms detects it at deploy time; the real form is built by quote.js -->
+  <form name="offerte-anfrage" data-netlify="true" netlify-honeypot="bot-field" hidden aria-hidden="true">
+    <input name="bot-field"><input name="name"><input name="firma"><input type="email" name="email"><input name="telefon"><textarea name="nachricht"></textarea><textarea name="zusammenfassung"></textarea>
+  </form>
   <div class="wrap">
     <header class="quote-head reveal">
       <span class="eyebrow"><span data-l="de">Offerte</span><span data-l="en">Quote</span></span>

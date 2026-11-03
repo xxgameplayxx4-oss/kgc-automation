@@ -21,7 +21,7 @@
     function fresh() {
       const choice = {};
       K.packages.forEach(p => { choice[p.id] = p.choice.map(g => g[0]); });
-      return { pkg: 'growth', web: 'none', choice, picked: new Set(), extras: new Set(), industry: 'trade', staff: '2-5', canton: 'AG', langs: new Set(['gsw']), start: 'month',
+      return { pkg: 'growth', web: 'none', choice, picked: new Set(), extras: new Set(), industry: 'trade', industryOther: '', staff: '2-5', canton: 'AG', langs: new Set(['gsw']), start: 'month',
         step: 1, f: { name: '', firma: '', email: '', telefon: '', nachricht: '' }, consent: false, flash: new Set(), done: null, open: false };
     }
     let st = fresh();
@@ -187,9 +187,10 @@
       return `<div class="quote-field"><label for="${id}">${label}</label><select id="${id}">${opts.map(o => `<option value="${o[0]}"${o[0] === val ? ' selected' : ''}>${esc(o[1])}</option>`).join('')}</select></div>`;
     }
     function step2Html() {
-      const ind = K.industries.filter(i => i.id !== 'all').map(i => [i.id, K.t(i.name)]);
+      const ind = K.industries.filter(i => i.id !== 'all').map(i => [i.id, K.t(i.name)]).concat([['other', L('Andere Branche …', 'Other industry …')]]);
       return `<div class="quote-fields">
-        ${selectHtml('q-industry', L('Branche', 'Industry'), ind, st.industry)}
+        <div class="quote-field"><label for="q-industry">${L('Branche', 'Industry')}</label><select id="q-industry">${ind.map(o => `<option value="${o[0]}"${o[0] === st.industry ? ' selected' : ''}>${esc(o[1])}</option>`).join('')}</select>
+          <input type="text" id="q-industry-other" class="quote-other" maxlength="80" autocomplete="off" aria-label="${L('Ihre Branche', 'Your industry')}" placeholder="${L('Ihre Branche, z. B. Treuhand', 'Your industry, e.g. accounting')}" value="${esc(st.industryOther)}"${st.industry === 'other' ? '' : ' hidden'}></div>
         ${selectHtml('q-staff', L('Anzahl Mitarbeitende', 'Number of employees'), STAFF.map(s => [s[0], L(s[1], s[2])]), st.staff)}
         ${selectHtml('q-canton', L('Standort (Kanton)', 'Location (canton)'), CANTONS.map(c => [c[0], L(c[1], c[2] || c[1])]), st.canton)}
         ${selectHtml('q-start', L('Startwunsch', 'Preferred start'), STARTS.map(s => [s[0], L(s[1], s[2])]), st.start)}
@@ -289,7 +290,7 @@
       return [
         { title: l('Auswahl', 'Selection'), rows: choice },
         { title: l('Richtpreise', 'Indicative prices'), rows: [[l('Einrichtung (einmalig)', 'Setup (one-off)'), rng(T.setup)], [l('Betreuung pro Monat', 'Care per month'), rng(T.monthly)], [l('Erstes Jahr total', 'First year total'), rng(T.year), 'tot']] },
-        { title: l('Betrieb', 'Business'), rows: [[l('Branche', 'Industry'), ind ? ind.name[lang] : ''], [l('Mitarbeitende', 'Employees'), l(stf[1], stf[2])], [l('Kanton', 'Canton'), l(cn[1], cn[2] || cn[1])],
+        { title: l('Betrieb', 'Business'), rows: [[l('Branche', 'Industry'), st.industry === 'other' ? (st.industryOther.trim() || l('Andere', 'Other')) : (ind ? ind.name[lang] : '')], [l('Mitarbeitende', 'Employees'), l(stf[1], stf[2])], [l('Kanton', 'Canton'), l(cn[1], cn[2] || cn[1])],
           [l('Kundensprachen', 'Customer languages'), LANGS.filter(x => st.langs.has(x[0])).map(x => l(x[1], x[2])).join(', ') || '–'], [l('Start', 'Start'), l(start[1], start[2])]] },
         { title: l('Kontakt', 'Contact'), rows: [[l('Name', 'Name'), f.name.trim()], [l('Firma', 'Company'), f.firma.trim()], [l('E-Mail', 'Email'), f.email.trim()]]
           .concat(f.telefon.trim() ? [[l('Telefon', 'Phone'), f.telefon.trim()]] : []).concat(f.nachricht.trim() ? [[l('Nachricht', 'Message'), f.nachricht.trim()]] : []) },
@@ -350,12 +351,15 @@
       btn.innerHTML = '<span class="quote-spin" aria-hidden="true"></span>' + L('Wird gesendet…', 'Sending…');
       let ok = true;
       if (shouldPost()) {
-        try {
-          const payload = { _subject: 'Neue Offerten-Anfrage – KGC Automation', _template: 'table', _captcha: 'false', _honey: root.querySelector('[name="_honey"]').value, name: st.f.name.trim(), firma: st.f.firma.trim(), email: st.f.email.trim(), telefon: st.f.telefon.trim(), nachricht: st.f.nachricht.trim(), zusammenfassung: textOf('de') + (K.lang === 'en' ? '\n\n(Seitensprache: Englisch)' : '') };
-          const r = await fetch('https://formsubmit.co/ajax/khangcung196@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) });
-          let j = null; try { j = await r.json(); } catch (e) {}
-          ok = r.ok && !!j && (j.success === true || j.success === 'true');
-        } catch (e) { ok = false; }
+        const fields = { name: st.f.name.trim(), firma: st.f.firma.trim(), email: st.f.email.trim(), telefon: st.f.telefon.trim(), nachricht: st.f.nachricht.trim(), zusammenfassung: textOf('de') + (K.lang === 'en' ? '\n\n(Seitensprache: Englisch)' : '') };
+        /* 1) FormSubmit e-mails the request straight to KGC. 2) Netlify Forms keeps a copy in the Netlify dashboard (only works when hosted on Netlify). */
+        const viaMail = fetch('https://formsubmit.co/ajax/khangcung196@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(Object.assign({ _subject: 'Neue Offerten-Anfrage – KGC Automation', _template: 'table', _captcha: 'false', _replyto: fields.email, _honey: root.querySelector('[name="_honey"]').value }, fields)) })
+          .then(async r => { let j = null; try { j = await r.json(); } catch (e) {} return r.ok && !!j && (j.success === true || j.success === 'true'); }).catch(() => false);
+        const viaNetlify = fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(Object.assign({ 'form-name': 'offerte-anfrage', 'bot-field': '' }, fields)).toString() })
+          .then(r => r.ok).catch(() => false);
+        const [a, b] = await Promise.all([viaMail, viaNetlify]);
+        ok = a || b;
       }
       st.done = { ok, focus: true };
       renderDone();
@@ -378,7 +382,11 @@
         return refresh();
       }
       if (t.dataset.langOpt) { if (t.checked) st.langs.add(t.dataset.langOpt); else st.langs.delete(t.dataset.langOpt); return; }
-      if (t.id === 'q-industry') st.industry = t.value;
+      if (t.id === 'q-industry') {
+        st.industry = t.value;
+        const o = root.querySelector('#q-industry-other');
+        if (o) { o.hidden = t.value !== 'other'; if (!o.hidden) o.focus(); }
+      }
       else if (t.id === 'q-staff') { st.staff = t.value; refresh(); }
       else if (t.id === 'q-canton') st.canton = t.value;
       else if (t.id === 'q-start') st.start = t.value;
@@ -386,6 +394,7 @@
     });
     root.addEventListener('input', e => {
       const t = e.target;
+      if (t.id === 'q-industry-other') { st.industryOther = t.value; return; }
       if (t.id && t.id.startsWith('q-') && t.name in st.f) { st.f[t.name] = t.value; if (t.getAttribute('aria-invalid')) showErr(t.name); }
     });
     root.addEventListener('focusout', e => {

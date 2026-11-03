@@ -135,3 +135,5 @@
 .quote-spin { width: 1em; height: 1em; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: quote-spin .8s linear infinite; }
 @keyframes quote-spin { to { transform: rotate(360deg); } }
 .quote-nav .btn:disabled { opacity: .85; cursor: progress; }
+.quote-other { margin-top: 4px; }
+.quote-other[hidden] { display: none; }
