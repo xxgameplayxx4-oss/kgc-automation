@@ -242,6 +242,32 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 }
 .hero .btn, .hero-cap, .hero-trust { box-sizing: border-box; }
 
+/* ==== film ==== */
+/* Full-bleed film band: always dark so the footage reads the same in both themes */
+.film { position: relative; isolation: isolate; overflow: hidden; background: #0c0f12; color: #F2EFE8; min-height: clamp(460px, 62vw, 760px); display: grid; align-items: end; }
+.film-media, .film-shade { position: absolute; inset: 0; z-index: -1; }
+.film-poster, .film-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.film-video { opacity: 0; transition: opacity 1.2s var(--ease); }
+.film-video.is-on { opacity: 1; }
+.film-shade { z-index: 0; background: linear-gradient(90deg, rgba(10,12,14,.9) 0%, rgba(10,12,14,.78) 35%, rgba(10,12,14,.35) 62%, rgba(10,12,14,0) 85%), linear-gradient(0deg, rgba(10,12,14,.6) 0%, rgba(10,12,14,0) 45%); }
+.film-in { position: relative; z-index: 1; display: grid; gap: 20px; justify-items: start; padding-block: clamp(56px, 8vw, 112px); }
+.film-in h2 { font-size: var(--t-3xl); max-width: 12ch; color: #F7F4EC; }
+.film-in .it { color: #D8B878; }
+.film-in .eyebrow { color: #D8B878; }
+.film-in p { max-width: 44ch; color: rgba(242,239,232,.82); font-size: var(--t-lg); }
+.film-toggle { position: absolute; z-index: 2; right: max(16px, env(safe-area-inset-right, 0px)); bottom: 24px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(242,239,232,.35); background: rgba(10,12,14,.35); color: #F2EFE8; cursor: pointer; display: grid; place-items: center; backdrop-filter: blur(6px); }
+.film-ic { width: 12px; height: 14px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; }
+.film-toggle.is-paused .film-ic { width: 0; height: 0; border: 0; border-left: 12px solid currentColor; border-top: 7px solid transparent; border-bottom: 7px solid transparent; margin-left: 3px; }
+@media (max-width: 720px) {
+  .film { min-height: 0; align-items: end; aspect-ratio: auto; }
+  .film-media { position: relative; inset: auto; height: 78vh; max-height: 680px; }
+  .film { display: block; }
+  .film-shade { background: linear-gradient(0deg, rgba(10,12,14,1) 0%, rgba(10,12,14,.82) 42%, rgba(10,12,14,0) 72%); }
+  .film-in { margin-top: -38vh; padding-block: 0 56px; }
+  .film-toggle { top: 16px; bottom: auto; }
+  .film-in h2 { max-width: none; }
+}
+
 /* ==== demo ==== */
 .demo-head { display: grid; gap: 18px; margin-bottom: clamp(32px, 5vw, 56px); }
 .demo-head .lede { margin-top: 2px; }
@@ -785,6 +811,9 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 @keyframes footer-ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); } 70%, 100% { box-shadow: 0 0 0 9px transparent; } }
 @media (prefers-reduced-motion: reduce) { .footer-dot { animation: none !important; } }
 
+.footer-ruby { width: clamp(96px, 14vw, 168px); height: auto; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: var(--shadow); flex: none; }
+@media (min-width: 720px) { .footer-band-in { align-items: center !important; } .footer-band-text { flex: 1; } }
+
 </style>
 </head>
 <body>
@@ -883,6 +912,22 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         <span class="hero-cap-s" id="heroCapS"></span>
       </figcaption>
     </figure>
+  </div>
+</section>
+
+<!-- ==== film ==== -->
+<section class="film" aria-labelledby="film-h">
+  <div class="film-media" aria-hidden="true">
+    <img class="film-poster" src="assets/media/film-16x9.webp" alt="" width="1600" height="900">
+    <video class="film-video" muted loop playsinline preload="none" poster="assets/media/film-16x9.webp"></video>
+  </div>
+  <div class="film-shade" aria-hidden="true"></div>
+  <button type="button" class="film-toggle" id="film-toggle" hidden data-aria-de="Video pausieren" data-aria-en="Pause video" aria-label="Video pausieren"><span class="film-ic" aria-hidden="true"></span></button>
+  <div class="wrap film-in">
+    <span class="eyebrow"><span data-l="de">Schweizer Präzision</span><span data-l="en">Swiss precision</span></span>
+    <h2 id="film-h"><span data-l="de">Kleine Mechanismen. <em class="it">Grosse Wirkung.</em></span><span data-l="en">Small mechanisms. <em class="it">Big impact.</em></span></h2>
+    <p><span data-l="de">Wie in einem Uhrwerk hat jedes Teil eine Aufgabe. Zusammen laufen sie still und zuverlässig, Tag und Nacht. So bauen wir Ihre Automationen.</span><span data-l="en">As in a watch movement, every part has one job. Together they run quietly and reliably, day and night. That is how we build your automations.</span></p>
+    <button type="button" class="btn btn-cta btn-lg" data-quote=""><span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span> <span class="arrow" aria-hidden="true">→</span></button>
   </div>
 </section>
 
@@ -1203,6 +1248,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 <footer id="kontakt" class="footer">
   <div class="footer-band">
     <div class="wrap footer-band-in">
+      <img class="footer-ruby" src="assets/media/ruby.webp" alt="" width="720" height="720" loading="lazy">
       <div class="footer-band-text">
         <h2 class="footer-big"><span data-l="de">Bereit, <em class="it">Zeit zurückzugewinnen?</em></span><span data-l="en">Ready to <em class="it">win back your time?</em></span></h2>
         <p class="lede"><span data-l="de">Rechnen Sie Ihre Offerte in 60 Sekunden selbst. Unverbindlich, mit Festpreis.</span><span data-l="en">Work out your quote yourself in 60 seconds. No obligation, fixed price.</span></p>
@@ -1661,6 +1707,36 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   }
 
   document.addEventListener('DOMContentLoaded', () => { build(); jewels(); });
+})();
+
+;
+/* ==== film ==== */
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    const sec = document.querySelector('.film');
+    if (!sec || !window.KGC) return;
+    const v = sec.querySelector('.film-video'), img = sec.querySelector('.film-poster'), btn = document.getElementById('film-toggle');
+    const narrow = matchMedia('(max-width: 720px)').matches;
+    const poster = narrow ? 'assets/media/film-9x16.webp' : 'assets/media/film-16x9.webp';
+    if (narrow) { img.src = poster; v.poster = poster; }
+    if (KGC.reducedMotion()) return; // poster only
+    v.src = narrow ? 'assets/media/film-9x16.mp4' : 'assets/media/film-16x9.mp4';
+    let userPaused = false;
+    v.addEventListener('playing', () => v.classList.add('is-on'));
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting && !userPaused) v.play().catch(() => {}); else v.pause();
+    }), { threshold: .15 });
+    io.observe(sec);
+    btn.hidden = false;
+    const label = () => {
+      const p = v.paused; btn.classList.toggle('is-paused', p);
+      btn.setAttribute('data-aria-de', p ? 'Video abspielen' : 'Video pausieren');
+      btn.setAttribute('data-aria-en', p ? 'Play video' : 'Pause video');
+      btn.setAttribute('aria-label', btn.getAttribute('data-aria-' + KGC.lang));
+    };
+    v.addEventListener('play', label); v.addEventListener('pause', label);
+    btn.addEventListener('click', () => { if (v.paused) { userPaused = false; v.play().catch(() => {}); } else { userPaused = true; v.pause(); } });
+  });
 })();
 
 ;

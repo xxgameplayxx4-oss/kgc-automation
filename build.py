@@ -7,7 +7,7 @@ import base64, re
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
 SEC = SRC / "sections"
-ORDER = ["nav", "hero", "demo", "offers", "work", "roi", "packages", "quote", "process", "faq", "footer"]
+ORDER = ["nav", "hero", "film", "demo", "offers", "work", "roi", "packages", "quote", "process", "faq", "footer"]
 
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
          '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
@@ -38,7 +38,7 @@ def main():
     def inline(m):
         f = ROOT / m.group(0)
         return "data:image/webp;base64," + base64.b64encode(f.read_bytes()).decode() if f.exists() else m.group(0)
-    artifact = re.sub(r"assets/work/[\w.-]+\.webp", inline, artifact)
+    artifact = re.sub(r"assets/(?:work|media)/[\w.-]+\.webp", inline, artifact)
     (ROOT / "dist" / "artifact.html").write_text(artifact, encoding="utf-8")
 
     full = (f'<!doctype html>\n<html lang="de-CH" data-lang="de">\n<head>\n<meta charset="utf-8">\n'

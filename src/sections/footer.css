@@ -45,3 +45,6 @@
 .footer-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: footer-ring 2.4s ease-out infinite; }
 @keyframes footer-ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); } 70%, 100% { box-shadow: 0 0 0 9px transparent; } }
 @media (prefers-reduced-motion: reduce) { .footer-dot { animation: none !important; } }
+
+.footer-ruby { width: clamp(96px, 14vw, 168px); height: auto; aspect-ratio: 1; border-radius: 50%; object-fit: cover; box-shadow: var(--shadow); flex: none; }
+@media (min-width: 720px) { .footer-band-in { align-items: center !important; } .footer-band-text { flex: 1; } }
