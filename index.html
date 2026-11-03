@@ -414,6 +414,33 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 @media (max-width: 900px) { .offers-web { grid-template-columns: 1fr; } }
 @media (max-width: 620px) { .offers-web-grid { grid-template-columns: 1fr; } .offers-web-grid .offers-webcell + .offers-webcell { border-left: 0; border-top: 1px solid var(--rule); } }
 
+/* ==== work ==== */
+.work-head { display: grid; gap: 18px; max-width: 44rem; margin-bottom: clamp(32px, 5vw, 56px); }
+.work-rail {
+  display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 640px); gap: clamp(16px, 2.5vw, 32px);
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  padding-block: 8px 24px;
+  padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
+  padding-right: max(var(--gutter-r), calc((100vw - var(--wrap)) / 2 + var(--gutter-r)));
+  scroll-padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
+  scrollbar-width: none;
+}
+.work-rail::-webkit-scrollbar { display: none; }
+.work-card { scroll-snap-align: start; display: grid; gap: 16px; margin: 0; min-width: 0; }
+.work-frame { border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--paper); box-shadow: var(--shadow); transition: transform .5s var(--ease); }
+.work-card:hover .work-frame { transform: translateY(-4px); }
+.work-bar { display: flex; align-items: center; gap: 6px; height: 28px; padding-inline: 12px; border-bottom: 1px solid var(--rule); }
+.work-bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--rule); }
+.work-shot { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; background: var(--stone); }
+.work-cap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+.work-name { font-family: var(--f-display); font-size: var(--t-xl); line-height: 1.1; }
+.work-kind { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--brass); white-space: nowrap; }
+.work-foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+.work-nav { display: flex; gap: 8px; }
+.work-btn { width: 48px; height: 48px; border: 1px solid var(--rule); border-radius: 50%; background: transparent; color: var(--ink); font-size: 1.1rem; cursor: pointer; transition: border-color .2s, background .2s; }
+.work-btn:hover { border-color: var(--ink); background: var(--paper); }
+.work-btn:disabled { opacity: .35; cursor: default; }
+
 /* ==== roi ==== */
 .roi-head { max-width: 760px; display: grid; gap: 18px; margin-bottom: clamp(36px, 5vw, 64px); }
 .roi-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
@@ -770,6 +797,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     </a>
     <nav class="nav-links" data-aria-de="Hauptnavigation" data-aria-en="Main navigation">
       <a href="#leistungen"><span data-l="de">Leistungen</span><span data-l="en">Services</span></a>
+      <a href="#arbeiten"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></a>
       <a href="#pakete"><span data-l="de">Pakete</span><span data-l="en">Packages</span></a>
       <a href="#rechner"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></a>
       <a href="#ablauf"><span data-l="de">Ablauf</span><span data-l="en">Process</span></a>
@@ -802,6 +830,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     </div>
     <nav class="nav-menu-links" data-aria-de="Hauptnavigation" data-aria-en="Main navigation">
       <a href="#leistungen"><span data-l="de">Leistungen</span><span data-l="en">Services</span></a>
+      <a href="#arbeiten"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></a>
       <a href="#pakete"><span data-l="de">Pakete</span><span data-l="en">Packages</span></a>
       <a href="#rechner"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></a>
       <a href="#ablauf"><span data-l="de">Ablauf</span><span data-l="en">Process</span></a>
@@ -924,6 +953,25 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     <div class="offers-cta">
       <button type="button" class="btn btn-cta btn-lg" data-quote=""><span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span> <span class="arrow" aria-hidden="true">→</span></button>
     </div>
+  </div>
+</section>
+
+<!-- ==== work ==== -->
+<section id="arbeiten" class="section work" aria-labelledby="work-h">
+  <div class="wrap">
+    <header class="work-head">
+      <span class="eyebrow"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></span>
+      <h2 id="work-h"><span data-l="de">Websites, die <em class="it">für sich sprechen.</em></span><span data-l="en">Websites that <em class="it">speak for themselves.</em></span></h2>
+      <p class="lede"><span data-l="de">Eine Auswahl von Websites für Betriebe in der Region. Jede gebaut für Handy und Desktop, jede bereit für Automationen.</span><span data-l="en">A selection of websites for local businesses. Each built for phone and desktop, each ready for automations.</span></p>
+    </header>
+  </div>
+  <div class="work-rail" id="work-rail" tabindex="0" data-aria-de="Arbeiten, horizontal scrollbar" data-aria-en="Work, scrolls horizontally" aria-label="Arbeiten, horizontal scrollbar"></div>
+  <div class="wrap work-foot">
+    <div class="work-nav">
+      <button type="button" class="work-btn" id="work-prev" data-aria-de="Zurück" data-aria-en="Previous" aria-label="Zurück">←</button>
+      <button type="button" class="work-btn" id="work-next" data-aria-de="Weiter" data-aria-en="Next" aria-label="Weiter">→</button>
+    </div>
+    <button type="button" class="btn btn-cta" data-quote="web:one"><span data-l="de">Website anfragen</span><span data-l="en">Request a website</span> <span class="arrow" aria-hidden="true">→</span></button>
   </div>
 </section>
 
@@ -1889,6 +1937,44 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       } else if (e.target.closest('.offers-add')) KGC.openQuote({ offers: [id] });
     });
     KGC.on('lang', render);
+  });
+})();
+
+;
+/* ==== work ==== */
+(function () {
+  /* Portfolio: names and categories only, no links (owner's request). Images live in assets/work/. */
+  const W = (img, name, de, en) => ({ img: 'assets/work/' + img + '.webp', name, kind: { de, en }, alt: { de: 'Startseite der Website von ' + name, en: 'Homepage of the ' + name + ' website' } });
+  const WORK = [
+    W('souperbe', 'souperbe', 'Café & Restaurant · Brugg', 'Café & restaurant · Brugg'),
+    W('boxschule', 'Boxschule Gebenstorf', 'Boxclub · Gebenstorf', 'Boxing club · Gebenstorf'),
+    W('brugg-barber', 'Brugg Barber Shop', 'Barbier · Brugg', 'Barber · Brugg'),
+    W('halimi', 'R. Halimi Reinigungen', 'Reinigung · Aarau', 'Cleaning · Aarau'),
+    W('dd-informatic', 'D&D Informatic', 'Kassensysteme & IT · Brugg', 'POS & IT · Brugg'),
+    W('iservice24', 'i-Service24', 'Handyreparatur · Wildegg', 'Phone repair · Wildegg'),
+    W('freestar', 'Freestar-Informatik', 'IT-Dienstleistungen', 'IT services'),
+    W('reve', 'ReVe Hauswartung', 'Hauswartung · Brugg', 'Facility care · Brugg'),
+    W('swisstech', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'Precision manufacturing'),
+  ];
+  document.addEventListener('DOMContentLoaded', () => {
+    const rail = document.getElementById('work-rail');
+    if (!rail || !window.KGC) return;
+    const sec = rail.closest('section');
+    if (!WORK.length) { sec.hidden = true; return; }
+    const render = () => {
+      rail.innerHTML = WORK.map(w => '<figure class="work-card"><div class="work-frame"><div class="work-bar" aria-hidden="true"><i></i><i></i><i></i></div>' +
+        '<img class="work-shot" src="' + w.img + '" alt="' + KGC.t(w.alt).replace(/&/g, '&amp;') + '" loading="lazy" width="1280" height="800"></div>' +
+        '<figcaption class="work-cap"><span class="work-name">' + w.name + '</span><span class="work-kind">' + KGC.t(w.kind) + '</span></figcaption></figure>').join('');
+      upd();
+    };
+    const prev = document.getElementById('work-prev'), next = document.getElementById('work-next');
+    const step = () => (rail.querySelector('.work-card') || rail).getBoundingClientRect().width + 24;
+    function upd() { prev.disabled = rail.scrollLeft < 8; next.disabled = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 8; }
+    prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: KGC.reducedMotion() ? 'auto' : 'smooth' }));
+    next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: KGC.reducedMotion() ? 'auto' : 'smooth' }));
+    rail.addEventListener('scroll', () => requestAnimationFrame(upd), { passive: true });
+    addEventListener('resize', upd);
+    render(); KGC.on('lang', render);
   });
 })();
 

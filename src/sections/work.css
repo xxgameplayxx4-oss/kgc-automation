@@ -1,0 +1,25 @@
+.work-head { display: grid; gap: 18px; max-width: 44rem; margin-bottom: clamp(32px, 5vw, 56px); }
+.work-rail {
+  display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 640px); gap: clamp(16px, 2.5vw, 32px);
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  padding-block: 8px 24px;
+  padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
+  padding-right: max(var(--gutter-r), calc((100vw - var(--wrap)) / 2 + var(--gutter-r)));
+  scroll-padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
+  scrollbar-width: none;
+}
+.work-rail::-webkit-scrollbar { display: none; }
+.work-card { scroll-snap-align: start; display: grid; gap: 16px; margin: 0; min-width: 0; }
+.work-frame { border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--paper); box-shadow: var(--shadow); transition: transform .5s var(--ease); }
+.work-card:hover .work-frame { transform: translateY(-4px); }
+.work-bar { display: flex; align-items: center; gap: 6px; height: 28px; padding-inline: 12px; border-bottom: 1px solid var(--rule); }
+.work-bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--rule); }
+.work-shot { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; background: var(--stone); }
+.work-cap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+.work-name { font-family: var(--f-display); font-size: var(--t-xl); line-height: 1.1; }
+.work-kind { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--brass); white-space: nowrap; }
+.work-foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+.work-nav { display: flex; gap: 8px; }
+.work-btn { width: 48px; height: 48px; border: 1px solid var(--rule); border-radius: 50%; background: transparent; color: var(--ink); font-size: 1.1rem; cursor: pointer; transition: border-color .2s, background .2s; }
+.work-btn:hover { border-color: var(--ink); background: var(--paper); }
+.work-btn:disabled { opacity: .35; cursor: default; }
