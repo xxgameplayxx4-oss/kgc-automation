@@ -19,6 +19,7 @@ def read(p):
     return p.read_text(encoding="utf-8") if p.exists() else ""
 
 def main():
+    (ROOT / "dist").mkdir(exist_ok=True)
     css = [read(SRC / "base.css")]
     html, js = [], [read(SRC / "core.js")]
     for name in ORDER:
