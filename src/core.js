@@ -35,7 +35,7 @@
 
     reducedMotion: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
 
-    /* The nine automations. Prices: [min, max] in CHF. */
+    /* The ten automations. Prices: [min, max] in CHF. */
     offers: [
       { id: 'reviews', setup: [300, 600], monthly: [49, 99], industries: ['trade', 'repair', 'beauty', 'gastro'],
         name: { de: 'Google-Bewertungs-Autopilot', en: 'Google review autopilot' },
@@ -82,10 +82,20 @@
         short: { de: 'Eine Ansprechperson für Website, E-Mail und Dateien.', en: 'One contact for website, email and files.' },
         steps: { de: ['E-Mail-Adressen auf Ihrer Domain', 'Gemeinsame Ablage für Dokumente', 'Neue Benutzer, Passwörter, Änderungen: erledigt'],
                  en: ['Email addresses on your domain', 'Shared document storage', 'New users, passwords, changes: handled'] } },
+      { id: 'crm', setup: [1200, 2500], monthly: [49, 99], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+        name: { de: 'Eigenes CRM für Ihren Betrieb', en: 'Your own CRM' },
+        short: { de: 'Kunden, Anfragen, Offerten und Termine an einem Ort, gebaut nach Ihren Abläufen.', en: 'Customers, enquiries, quotes and appointments in one place, built around how you work.' },
+        steps: { de: ['Alle Kunden und Kontakte mit Verlauf an einem Ort', 'Anfragen und Offerten laufen automatisch ein', 'Übersicht über offene Aufgaben, mit Login für Ihr Team'],
+                 en: ['Every customer and contact with full history', 'Enquiries and quotes flow in automatically', 'Overview of open tasks, with logins for your team'] } },
     ],
 
     /* Websites: one-time price, no monthly fee. from=true means "ab" (scope set in the first call) */
     websites: [
+      { id: 'redesign', price: 300, from: false,
+        name: { de: 'Website modernisieren', en: 'Website redesign' },
+        short: { de: 'Ihre Website wirkt veraltet? Wir bauen sie neu, modern und schnell, mit Ihren Inhalten.', en: 'Your website looks dated? We rebuild it, modern and fast, with your content.' },
+        points: { de: ['Neues Design, Ihre bestehenden Texte und Bilder übernommen', 'Optimiert für Handy, Ladezeit und Google', 'Impressum und Datenschutz auf aktuellem Stand (nDSG)'],
+                  en: ['New design, your existing text and images carried over', 'Optimised for phones, speed and Google', 'Legal notice and privacy policy brought up to date (nDSG)'] } },
       { id: 'one', price: 650, from: false,
         name: { de: 'One-Pager Website', en: 'One-page website' },
         short: { de: 'Eine elegante Seite mit allem Wichtigen. Impressum und Datenschutz inklusive.', en: 'One elegant page with everything that matters. Legal notice and privacy policy included.' },
@@ -96,11 +106,6 @@
         short: { de: 'Eigene Seiten für Leistungen, Team und Kontakt, mit Navigation.', en: 'Separate pages for services, team and contact, with navigation.' },
         points: { de: ['Mehrere Seiten mit Menü und eigener Struktur', 'Impressum und Datenschutzerklärung inklusive', 'Umfang und Fixpreis legen wir im Erstgespräch fest'],
                   en: ['Several pages with a menu and your own structure', 'Legal notice and privacy policy included', 'We fix scope and price in the first call'] } },
-      { id: 'redesign', price: 300, from: false,
-        name: { de: 'Website modernisieren', en: 'Website redesign' },
-        short: { de: 'Ihre Website wirkt veraltet? Wir bauen sie neu, modern und schnell, mit Ihren Inhalten.', en: 'Your website looks dated? We rebuild it, modern and fast, with your content.' },
-        points: { de: ['Neues Design, Ihre bestehenden Texte und Bilder übernommen', 'Optimiert für Handy, Ladezeit und Google', 'Impressum und Datenschutz auf aktuellem Stand (nDSG)'],
-                  en: ['New design, your existing text and images carried over', 'Optimised for phones, speed and Google', 'Legal notice and privacy policy brought up to date (nDSG)'] } },
     ],
     website(id) { return KGC.websites.find(w => w.id === id); },
 

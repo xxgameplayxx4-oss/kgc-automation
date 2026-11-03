@@ -70,3 +70,9 @@
 @media (max-width: 900px) { .offers-web { grid-template-columns: 1fr; } }
 @media (max-width: 900px) { .offers-web-grid { grid-template-columns: 1fr; } .offers-web-grid .offers-webcell + .offers-webcell { border-left: 0; border-top: 1px solid var(--rule); } }
 .offers-webcell .offers-name { font-size: clamp(1.3rem, .95rem + .7vw, 1.6rem); overflow-wrap: break-word; }
+@media (min-width: 961px) {
+  .offers-cell[data-id="crm"] { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 48px; align-content: start; }
+  .offers-cell[data-id="crm"] > .offers-top, .offers-cell[data-id="crm"] > .offers-name { grid-column: 1; }
+  .offers-cell[data-id="crm"] > .offers-short, .offers-cell[data-id="crm"] > .offers-price, .offers-cell[data-id="crm"] > .offers-acts, .offers-cell[data-id="crm"] > .offers-steps-w { grid-column: 2; }
+  .offers-cell[data-id="crm"] > .offers-name { grid-row: 2 / span 3; }
+}

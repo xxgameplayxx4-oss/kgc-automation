@@ -28,7 +28,7 @@
       const isOpen = open.has(o.id);
       return '<article class="offers-cell' + (match ? '' : ' is-dim') + (isOpen ? ' open' : '') + '" data-id="' + o.id + '">' +
         '<div class="offers-top"><span class="offers-idx">' + String(n + 1).padStart(2, '0') + '</span>' +
-        (o.id === 'reviews' ? '<span class="offers-tag">' + (de ? 'Meistgewählt' : 'Most chosen') + '</span>' : '') + '</div>' +
+        (o.id === 'reviews' ? '<span class="offers-tag">' + (de ? 'Meistgewählt' : 'Most chosen') + '</span>' : o.id === 'crm' ? '<span class="offers-tag">' + (de ? 'Neu' : 'New') + '</span>' : '') + '</div>' +
         '<h3 class="offers-name">' + t(o.name) + '</h3>' +
         '<p class="offers-short">' + t(o.short) + '</p>' +
         '<div class="offers-price">' + price(o) + '</div>' +
@@ -39,8 +39,8 @@
     }).join('');
     const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
     const name = t(KGC.industries.find(i => i.id === ind).name);
-    count.textContent = ind === 'all' ? (de ? 'Alle 9 Mechanismen' : 'All 9 mechanisms')
-      : (de ? n + ' von 9 passen zu ' + name : n + ' of 9 fit ' + name);
+    count.textContent = ind === 'all' ? (de ? 'Alle 10 Mechanismen' : 'All 10 mechanisms')
+      : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -62,7 +62,7 @@
       const de = KGC.lang === 'de';
       const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
       const name = t(KGC.industries.find(i => i.id === ind).name);
-      count.textContent = ind === 'all' ? (de ? 'Alle 9 Mechanismen' : 'All 9 mechanisms') : (de ? n + ' von 9 passen zu ' + name : n + ' of 9 fit ' + name);
+      count.textContent = ind === 'all' ? (de ? 'Alle 10 Mechanismen' : 'All 10 mechanisms') : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
     });
     grid.addEventListener('click', e => {
       const cell = e.target.closest('.offers-cell');

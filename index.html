@@ -387,6 +387,12 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 @media (max-width: 900px) { .offers-web { grid-template-columns: 1fr; } }
 @media (max-width: 900px) { .offers-web-grid { grid-template-columns: 1fr; } .offers-web-grid .offers-webcell + .offers-webcell { border-left: 0; border-top: 1px solid var(--rule); } }
 .offers-webcell .offers-name { font-size: clamp(1.3rem, .95rem + .7vw, 1.6rem); overflow-wrap: break-word; }
+@media (min-width: 961px) {
+  .offers-cell[data-id="crm"] { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 48px; align-content: start; }
+  .offers-cell[data-id="crm"] > .offers-top, .offers-cell[data-id="crm"] > .offers-name { grid-column: 1; }
+  .offers-cell[data-id="crm"] > .offers-short, .offers-cell[data-id="crm"] > .offers-price, .offers-cell[data-id="crm"] > .offers-acts, .offers-cell[data-id="crm"] > .offers-steps-w { grid-column: 2; }
+  .offers-cell[data-id="crm"] > .offers-name { grid-row: 2 / span 3; }
+}
 
 /* ==== work ==== */
 .work-head { display: grid; gap: 18px; max-width: 44rem; margin-bottom: clamp(32px, 5vw, 56px); }
@@ -907,7 +913,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   <div class="wrap">
     <header class="offers-head">
       <span class="eyebrow"><span data-l="de">Leistungen</span><span data-l="en">Services</span></span>
-      <h2 id="offers-h"><span data-l="de">Neun Mechanismen. Wählen Sie, was Ihnen <em class="it">Zeit kostet.</em></span><span data-l="en">Nine mechanisms. Choose what <em class="it">costs you time.</em></span></h2>
+      <h2 id="offers-h"><span data-l="de">Zehn Mechanismen. Wählen Sie, was Ihnen <em class="it">Zeit kostet.</em></span><span data-l="en">Ten mechanisms. Choose what <em class="it">costs you time.</em></span></h2>
     </header>
     <div class="offers-filter">
       <div class="offers-pills" id="offers-pills" role="group" data-aria-de="Nach Branche filtern" data-aria-en="Filter by industry" aria-label="Nach Branche filtern"></div>
@@ -1314,7 +1320,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 
     reducedMotion: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
 
-    /* The nine automations. Prices: [min, max] in CHF. */
+    /* The ten automations. Prices: [min, max] in CHF. */
     offers: [
       { id: 'reviews', setup: [300, 600], monthly: [49, 99], industries: ['trade', 'repair', 'beauty', 'gastro'],
         name: { de: 'Google-Bewertungs-Autopilot', en: 'Google review autopilot' },
@@ -1361,10 +1367,20 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         short: { de: 'Eine Ansprechperson für Website, E-Mail und Dateien.', en: 'One contact for website, email and files.' },
         steps: { de: ['E-Mail-Adressen auf Ihrer Domain', 'Gemeinsame Ablage für Dokumente', 'Neue Benutzer, Passwörter, Änderungen: erledigt'],
                  en: ['Email addresses on your domain', 'Shared document storage', 'New users, passwords, changes: handled'] } },
+      { id: 'crm', setup: [1200, 2500], monthly: [49, 99], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+        name: { de: 'Eigenes CRM für Ihren Betrieb', en: 'Your own CRM' },
+        short: { de: 'Kunden, Anfragen, Offerten und Termine an einem Ort, gebaut nach Ihren Abläufen.', en: 'Customers, enquiries, quotes and appointments in one place, built around how you work.' },
+        steps: { de: ['Alle Kunden und Kontakte mit Verlauf an einem Ort', 'Anfragen und Offerten laufen automatisch ein', 'Übersicht über offene Aufgaben, mit Login für Ihr Team'],
+                 en: ['Every customer and contact with full history', 'Enquiries and quotes flow in automatically', 'Overview of open tasks, with logins for your team'] } },
     ],
 
     /* Websites: one-time price, no monthly fee. from=true means "ab" (scope set in the first call) */
     websites: [
+      { id: 'redesign', price: 300, from: false,
+        name: { de: 'Website modernisieren', en: 'Website redesign' },
+        short: { de: 'Ihre Website wirkt veraltet? Wir bauen sie neu, modern und schnell, mit Ihren Inhalten.', en: 'Your website looks dated? We rebuild it, modern and fast, with your content.' },
+        points: { de: ['Neues Design, Ihre bestehenden Texte und Bilder übernommen', 'Optimiert für Handy, Ladezeit und Google', 'Impressum und Datenschutz auf aktuellem Stand (nDSG)'],
+                  en: ['New design, your existing text and images carried over', 'Optimised for phones, speed and Google', 'Legal notice and privacy policy brought up to date (nDSG)'] } },
       { id: 'one', price: 650, from: false,
         name: { de: 'One-Pager Website', en: 'One-page website' },
         short: { de: 'Eine elegante Seite mit allem Wichtigen. Impressum und Datenschutz inklusive.', en: 'One elegant page with everything that matters. Legal notice and privacy policy included.' },
@@ -1375,11 +1391,6 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         short: { de: 'Eigene Seiten für Leistungen, Team und Kontakt, mit Navigation.', en: 'Separate pages for services, team and contact, with navigation.' },
         points: { de: ['Mehrere Seiten mit Menü und eigener Struktur', 'Impressum und Datenschutzerklärung inklusive', 'Umfang und Fixpreis legen wir im Erstgespräch fest'],
                   en: ['Several pages with a menu and your own structure', 'Legal notice and privacy policy included', 'We fix scope and price in the first call'] } },
-      { id: 'redesign', price: 300, from: false,
-        name: { de: 'Website modernisieren', en: 'Website redesign' },
-        short: { de: 'Ihre Website wirkt veraltet? Wir bauen sie neu, modern und schnell, mit Ihren Inhalten.', en: 'Your website looks dated? We rebuild it, modern and fast, with your content.' },
-        points: { de: ['Neues Design, Ihre bestehenden Texte und Bilder übernommen', 'Optimiert für Handy, Ladezeit und Google', 'Impressum und Datenschutz auf aktuellem Stand (nDSG)'],
-                  en: ['New design, your existing text and images carried over', 'Optimised for phones, speed and Google', 'Legal notice and privacy policy brought up to date (nDSG)'] } },
     ],
     website(id) { return KGC.websites.find(w => w.id === id); },
 
@@ -1749,7 +1760,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       const isOpen = open.has(o.id);
       return '<article class="offers-cell' + (match ? '' : ' is-dim') + (isOpen ? ' open' : '') + '" data-id="' + o.id + '">' +
         '<div class="offers-top"><span class="offers-idx">' + String(n + 1).padStart(2, '0') + '</span>' +
-        (o.id === 'reviews' ? '<span class="offers-tag">' + (de ? 'Meistgewählt' : 'Most chosen') + '</span>' : '') + '</div>' +
+        (o.id === 'reviews' ? '<span class="offers-tag">' + (de ? 'Meistgewählt' : 'Most chosen') + '</span>' : o.id === 'crm' ? '<span class="offers-tag">' + (de ? 'Neu' : 'New') + '</span>' : '') + '</div>' +
         '<h3 class="offers-name">' + t(o.name) + '</h3>' +
         '<p class="offers-short">' + t(o.short) + '</p>' +
         '<div class="offers-price">' + price(o) + '</div>' +
@@ -1760,8 +1771,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     }).join('');
     const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
     const name = t(KGC.industries.find(i => i.id === ind).name);
-    count.textContent = ind === 'all' ? (de ? 'Alle 9 Mechanismen' : 'All 9 mechanisms')
-      : (de ? n + ' von 9 passen zu ' + name : n + ' of 9 fit ' + name);
+    count.textContent = ind === 'all' ? (de ? 'Alle 10 Mechanismen' : 'All 10 mechanisms')
+      : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -1783,7 +1794,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       const de = KGC.lang === 'de';
       const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
       const name = t(KGC.industries.find(i => i.id === ind).name);
-      count.textContent = ind === 'all' ? (de ? 'Alle 9 Mechanismen' : 'All 9 mechanisms') : (de ? n + ' von 9 passen zu ' + name : n + ' of 9 fit ' + name);
+      count.textContent = ind === 'all' ? (de ? 'Alle 10 Mechanismen' : 'All 10 mechanisms') : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
     });
     grid.addEventListener('click', e => {
       const cell = e.target.closest('.offers-cell');
