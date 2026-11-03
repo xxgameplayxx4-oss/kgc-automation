@@ -7,7 +7,7 @@ import base64, re
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
 SEC = SRC / "sections"
-ORDER = ["nav", "hero", "demo", "process", "offers", "work", "roi", "packages", "quote", "faq", "footer"]
+ORDER = ["nav", "hero", "vsl", "demo", "process", "offers", "work", "roi", "packages", "quote", "faq", "footer"]
 
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
          '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'

@@ -230,6 +230,28 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   .hero-trust i { display: none; }
 }
 
+/* ==== vsl ==== */
+.vsl-wrap { display: grid; gap: 24px; }
+.vsl-head { display: grid; gap: 8px; }
+.vsl-h2 { font-family: var(--f-display); font-weight: 500; font-size: var(--t-2xl); line-height: 1.1; }
+.vsl-frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; background: #0c0f12; border: 1px solid var(--rule); }
+.vsl-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #0c0f12; }
+.vsl-play { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 16px; border: 0; cursor: pointer; color: #F2EFE8; background: linear-gradient(0deg, rgba(10,12,14,.55), rgba(10,12,14,.15)); font: inherit; }
+.vsl-play-ic { width: 88px; height: 88px; border-radius: 50%; border: 1px solid rgba(242,239,232,.6); background: rgba(10,12,14,.35); backdrop-filter: blur(6px); position: relative; transition: transform .3s var(--ease), border-color .3s var(--ease); }
+.vsl-play-ic::after { content: ""; position: absolute; left: 50%; top: 50%; margin: -12px 0 0 -7px; border-left: 22px solid #D8B878; border-top: 12px solid transparent; border-bottom: 12px solid transparent; }
+.vsl-play:hover .vsl-play-ic { transform: scale(1.06); border-color: #D8B878; }
+.vsl-play-t { font-family: var(--f-data); font-size: var(--t-sm); letter-spacing: .08em; text-transform: uppercase; display: flex; gap: 12px; }
+.vsl-len { color: #D8B878; }
+.vsl-frame.is-playing .vsl-play { display: none; }
+.vsl-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.vsl-note { color: var(--graphite); margin: 0; }
+@media (max-width: 720px) {
+  .vsl-play-ic { width: 64px; height: 64px; }
+  .vsl-play-ic::after { margin: -9px 0 0 -5px; border-left-width: 16px; border-top-width: 9px; border-bottom-width: 9px; }
+  .vsl-foot .btn { flex: 1 1 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .vsl-play-ic { transition: none; } }
+
 /* ==== demo ==== */
 .demo-head { display: grid; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
 .demo-head .lede { margin-top: 0; }
@@ -893,6 +915,28 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         <i aria-hidden="true">·</i>
         <span data-l="de">Kündbar nach 3 Monaten</span><span data-l="en">Cancel after 3 months</span>
       </p>
+    </div>
+  </div>
+</section>
+
+<!-- ==== vsl ==== -->
+<section id="video" class="section vsl" aria-labelledby="vsl-h">
+  <div class="wrap vsl-wrap">
+    <div class="vsl-head">
+      <p class="eyebrow"><span data-l="de">In 90 Sekunden erklärt</span><span data-l="en">Explained in 90 seconds</span></p>
+      <h2 id="vsl-h" class="vsl-h2"><span data-l="de">Was wir für Ihren Betrieb bauen</span><span data-l="en">What we build for your business</span></h2>
+    </div>
+    <div class="vsl-frame">
+      <video class="vsl-video" id="vsl-video" preload="none" playsinline poster="assets/media/vsl-poster.webp" width="1920" height="1080"
+        data-aria-de="Video: KGC Automation in 90 Sekunden" data-aria-en="Video: KGC Automation in 90 seconds" aria-label="Video: KGC Automation in 90 Sekunden"></video>
+      <button type="button" class="vsl-play" id="vsl-play" data-aria-de="Video abspielen" data-aria-en="Play video" aria-label="Video abspielen">
+        <span class="vsl-play-ic" aria-hidden="true"></span>
+        <span class="vsl-play-t"><span data-l="de">Video ansehen</span><span data-l="en">Watch the video</span><span class="vsl-len">1:30</span></span>
+      </button>
+    </div>
+    <div class="vsl-foot">
+      <p class="vsl-note"><span data-l="de">Mit Ton und Untertiteln. Danach berechnen Sie Ihre Offerte direkt hier.</span><span data-l="en">With sound and subtitles. Then get your quote right here.</span></p>
+      <button type="button" class="btn btn-cta" data-quote=""><span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span> →</button>
     </div>
   </div>
 </section>
@@ -1613,6 +1657,37 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     };
     v.addEventListener('play', label); v.addEventListener('pause', label);
     btn.addEventListener('click', () => { if (v.paused) { userPaused = false; v.play().catch(() => {}); } else { userPaused = true; v.pause(); } });
+  });
+})();
+
+;
+/* ==== vsl ==== */
+(function () {
+  /* VSL: nothing loads until the visitor presses play. Source and subtitles follow the DE/EN toggle. */
+  document.addEventListener('DOMContentLoaded', () => {
+    const v = document.getElementById('vsl-video'), btn = document.getElementById('vsl-play');
+    if (!v || !btn) return;
+    const frame = v.parentElement;
+    const setSrc = () => {
+      const l = KGC.lang === 'en' ? 'en' : 'de';
+      if (v.dataset.l === l) return;
+      const wasPlaying = !v.paused;
+      v.dataset.l = l;
+      v.src = 'assets/media/vsl-' + l + '.mp4';
+      v.querySelectorAll('track').forEach(t => t.remove());
+      const tr = document.createElement('track');
+      tr.kind = 'subtitles'; tr.srclang = l; tr.label = l === 'de' ? 'Deutsch' : 'English';
+      tr.src = 'assets/media/vsl-' + l + '.vtt'; tr.default = true;
+      v.appendChild(tr);
+      if (wasPlaying) v.play();
+    };
+    btn.addEventListener('click', () => {
+      setSrc();
+      v.controls = true;
+      frame.classList.add('is-playing');
+      const p = v.play(); if (p && p.catch) p.catch(() => {});
+    });
+    KGC.on('lang', () => { if (v.dataset.l) setSrc(); });
   });
 })();
 
