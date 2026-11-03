@@ -28,7 +28,7 @@
   --wrap: 1200px;
   --gutter: max(16px, env(safe-area-inset-left, 0px));
   --gutter-r: max(16px, env(safe-area-inset-right, 0px));
-  --section-y: clamp(64px, 8vw, 112px);
+  --section-y: clamp(32px, 4vw, 56px);
   --radius: 4px;
   --ease: cubic-bezier(.2,.7,.2,1);
 }
