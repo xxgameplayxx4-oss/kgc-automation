@@ -35,7 +35,7 @@
         es.forEach(e => e.isIntersecting ? seen.add(e.target.id) : seen.delete(e.target.id));
         bar.classList.toggle('is-hidden', seen.size > 0);
       });
-      ['offerte', 'kontakt'].forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
+      ['hero-actions', 'offerte', 'kontakt'].forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
     }
   });
 })();

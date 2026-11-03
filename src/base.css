@@ -52,6 +52,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 88px; }
 body {
+  margin: 0;
   background: var(--stone); color: var(--ink);
   font-family: var(--f-body); font-size: var(--t-md); line-height: 1.6;
   -webkit-font-smoothing: antialiased; overflow-x: hidden;
