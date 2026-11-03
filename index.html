@@ -21,6 +21,9 @@
   --ruby-hover: #870E25;
   --on-ruby: #FFFFFF;
   --ok: #2F6B4F;         /* semantic success */
+  --steel: #33618F; --steel-soft: #E3EAF2;   /* blued-steel accent for icons */
+  --sage: #2F6B4F; --sage-soft: #E2ECE5;
+  --brass-tint: #F2EADB;
   --warn: #9A5B12;
   --shadow: 0 1px 2px rgba(20,25,29,.06), 0 12px 32px -12px rgba(20,25,29,.18);
 
@@ -45,7 +48,7 @@
   :root:not([data-theme="light"]) {
     --stone: #0E1418; --paper: #151D23; --ink: #E7E9E3; --graphite: #9AA4AA; --rule: #2A353D;
     --brass: #C9A468; --brass-soft: #4A3F2C; --ruby: #D02A48; --ruby-hover: #E2455F; --on-ruby: #FFFFFF;
-    --ok: #6DBB93; --warn: #E0A458;
+    --ok: #6DBB93; --warn: #E0A458; --steel: #8FB4DA; --steel-soft: #18242F; --sage: #7CC29E; --sage-soft: #16241C; --brass-tint: #262016;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
     color-scheme: dark;
   }
@@ -53,7 +56,7 @@
 :root[data-theme="dark"] {
   --stone: #0E1418; --paper: #151D23; --ink: #E7E9E3; --graphite: #9AA4AA; --rule: #2A353D;
   --brass: #C9A468; --brass-soft: #4A3F2C; --ruby: #D02A48; --ruby-hover: #E2455F; --on-ruby: #FFFFFF;
-  --ok: #6DBB93; --warn: #E0A458;
+  --ok: #6DBB93; --warn: #E0A458; --steel: #8FB4DA; --steel-soft: #18242F; --sage: #7CC29E; --sage-soft: #16241C; --brass-tint: #262016;
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
   color-scheme: dark;
 }
@@ -131,6 +134,13 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--stone); }
 ::-webkit-scrollbar-thumb { background: var(--brass); border-radius: 10px; border: 3px solid var(--stone); }
+
+/* Icon chips: a tinted square with a line icon. Tone = meaning: steel for customer-facing, brass for office work, sage for infrastructure and websites */
+.tone-steel { --tone: var(--steel); --tone-bg: var(--steel-soft); }
+.tone-brass { --tone: var(--brass); --tone-bg: var(--brass-tint); }
+.tone-sage { --tone: var(--sage); --tone-bg: var(--sage-soft); }
+.ico-chip { display: inline-grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 10px; background: var(--tone-bg); color: var(--tone); }
+.ico-chip svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ==== nav ==== */
 .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: var(--stone); border-bottom: 1px solid transparent; transition: border-color .25s var(--ease); }
@@ -365,14 +375,16 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 }
 .offers-cell.is-dim { opacity: .28; }
 .offers-cell:hover, .offers-cell:focus-within { opacity: 1; background: var(--paper); }
-.offers-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; min-height: 1.4em; }
+.offers-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 1.4em; }
 .offers-idx { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; color: var(--brass); }
 .offers-tag { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--brass); border: 1px solid var(--brass); padding: 4px 8px; border-radius: 2px; }
 .offers-name { font-family: var(--f-display); font-weight: 400; font-size: var(--t-xl); line-height: 1.12; letter-spacing: -.01em; text-wrap: balance; margin: 0; }
 .offers-short { color: var(--graphite); }
-.offers-price { font-family: var(--f-data); font-size: var(--t-xs); line-height: 1.7; color: var(--ink); margin-top: auto; padding-top: 8px; border-top: 1px solid var(--rule); letter-spacing: .01em; }
-.offers-price span { white-space: nowrap; }
-.offers-price span + span::before { content: " · "; white-space: pre; color: var(--brass); }
+.offers-price { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--rule); }
+.offers-price > div { display: grid; gap: 4px; }
+.offers-plbl { font-size: var(--t-xs); color: var(--graphite); }
+.offers-pval { font-family: var(--f-data); font-size: var(--t-md); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.offers-id { display: inline-flex; align-items: center; gap: 12px; }
 .offers-acts { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 16px; }
 .offers-more, .offers-add {
   appearance: none; background: none; border: 0; cursor: pointer; font: 500 var(--t-sm)/1.2 var(--f-body); color: var(--ink);
@@ -559,6 +571,12 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   .packages-seg button { flex: 1; padding: 0 8px; }
 }
 @media (min-width: 900px) { .packages-tag { min-height: calc(2 * 1.6em); } }
+
+.packages-how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 32px; }
+.packages-how-item { display: flex; gap: 16px; align-items: flex-start; padding: 20px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; }
+.packages-how-item h3 { font-family: var(--f-body); font-size: var(--t-md); font-weight: 600; line-height: 1.3; letter-spacing: 0; margin-bottom: 4px; }
+.packages-how-item p { font-size: var(--t-sm); color: var(--graphite); }
+@media (max-width: 900px) { .packages-how { grid-template-columns: 1fr; gap: 12px; } }
 
 /* ==== quote ==== */
 .quote-head { max-width: 760px; display: grid; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
@@ -851,8 +869,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         <span data-l="en">Your business runs. <em class="it">Even when you don’t.</em></span>
       </h1>
       <p class="lede hero-lede">
-        <span data-l="de">Buchungen, Bewertungen, Offerten und Rechnungen laufen leise im Hintergrund. Fixer Einrichtungspreis, monatliche Betreuung, persönlich betreut aus Brugg AG.</span>
-        <span data-l="en">Bookings, reviews, quotes and invoices run quietly in the background. Fixed setup price, monthly care, personally looked after from Brugg AG.</span>
+        <span data-l="de">Wir bauen keine Uhren, sondern Abläufe, die so präzise laufen wie eine: Buchungen, Bewertungen, Offerten und Rechnungen erledigen sich von selbst.</span>
+        <span data-l="en">We don’t make watches. We build workflows that run just as precisely: bookings, reviews, quotes and invoices take care of themselves.</span>
       </p>
       <div class="hero-actions" id="hero-actions">
         <button type="button" class="btn btn-cta btn-lg" data-quote="">
@@ -878,8 +896,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <span class="eyebrow"><span data-l="de">Live-Ablauf</span><span data-l="en">Live sequence</span></span>
       <h2 id="demo-h"><span data-l="de">Sehen Sie zu, wie es <em class="it">läuft.</em></span><span data-l="en">Watch it <em class="it">run.</em></span></h2>
       <p class="lede">
-        <span data-l="de">Drei Situationen aus dem Alltag. Links sieht der Kunde, was ankommt. Rechts sehen Sie, was im Hintergrund geschieht.</span>
-        <span data-l="en">Three everyday situations. On the left, what your customer sees. On the right, what happens behind the scenes.</span>
+        <span data-l="de">Links sieht Ihr Kunde, rechts was im Hintergrund passiert.</span>
+        <span data-l="en">On the left, what your customer sees. On the right, what happens behind the scenes.</span>
       </p>
     </header>
 
@@ -976,7 +994,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     <div class="offers-web" aria-labelledby="offers-web-h">
       <div class="offers-web-head">
         <h3 id="offers-web-h"><span data-l="de">Und die Website <em class="it">dazu.</em></span><span data-l="en">And the website <em class="it">to go with it.</em></span></h3>
-        <p><span data-l="de">Neue Website oder Neugestaltung, einmal bezahlt: 50 % bei Auftrag, 50 % nach Fertigstellung. Die Automationen lassen sich direkt anbinden.</span><span data-l="en">A new website or a redesign, paid once: 50% on order, 50% on completion. The automations plug straight in.</span></p>
+        <p><span data-l="de">Neu oder modernisiert. Einmal bezahlt, ohne Monatsgebühr.</span><span data-l="en">New or modernised. Paid once, no monthly fee.</span></p>
       </div>
       <div class="offers-web-grid" id="offers-web-grid"></div>
     </div>
@@ -992,7 +1010,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     <header class="work-head">
       <span class="eyebrow"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></span>
       <h2 id="work-h"><span data-l="de">Websites, die <em class="it">für sich sprechen.</em></span><span data-l="en">Websites that <em class="it">speak for themselves.</em></span></h2>
-      <p class="lede"><span data-l="de">Live-Projekte für Kunden und Konzeptentwürfe für verschiedene Branchen. Jede Seite gebaut für Handy und Desktop, jede bereit für Automationen.</span><span data-l="en">Live client projects and concept drafts for different industries. Each built for phone and desktop, each ready for automations.</span></p>
+      <p class="lede"><span data-l="de">Zwei Kundenprojekte, live. Dazu Entwürfe aus weiteren Branchen. Alle für Handy gebaut.</span><span data-l="en">Two client projects, live. Plus drafts from other industries. All built for phones.</span></p>
     </header>
   </div>
   <div class="work-rail" id="work-rail" tabindex="0" data-aria-de="Arbeiten, horizontal scrollbar" data-aria-en="Work, scrolls horizontally" aria-label="Arbeiten, horizontal scrollbar"></div>
@@ -1012,8 +1030,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <span class="eyebrow"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></span>
       <h2><span data-l="de">Was Sie heute <em class="it">verlieren</em></span><span data-l="en">What slips <em class="it">through</em> today</span></h2>
       <p class="lede">
-        <span data-l="de">Verpasste Anrufe und Büroarbeit kosten Geld, auch wenn es niemand verbucht. Stellen Sie Ihre Zahlen ein, die Rechnung läuft live mit.</span>
-        <span data-l="en">Missed calls and desk work cost money, even if nobody books it. Set your numbers and the sum updates live.</span>
+        <span data-l="de">Verpasste Anrufe und Büroarbeit kosten Geld. Stellen Sie Ihre Zahlen ein.</span>
+        <span data-l="en">Missed calls and desk work cost money. Set your numbers.</span>
       </p>
     </header>
 
@@ -1110,17 +1128,22 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <span class="eyebrow"><span data-l="de">Pakete</span><span data-l="en">Packages</span></span>
       <h2><span data-l="de">Drei Pakete, ein <em class="it">klarer</em> Preis</span><span data-l="en">Three packages, one <em class="it">clear</em> price</span></h2>
       <p class="lede">
-        <span data-l="de">Einmal einrichten, danach läuft es. Die monatliche Pauschale deckt Betrieb, Anpassungen und einen kurzen Bericht.</span>
-        <span data-l="en">Set up once, then it runs. The monthly fee covers operation, adjustments and a short report.</span>
+        <span data-l="de">Einmal einrichten, danach läuft es.</span>
+        <span data-l="en">Set up once, then it runs.</span>
       </p>
     </header>
+    <div class="packages-how reveal">
+      <div class="packages-how-item"><span class="ico-chip tone-brass" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-8.6 8.6a2.1 2.1 0 0 1-3-3l8.6-8.6"/><path d="M14.7 6.3A4 4 0 0 1 19.4 3l-2.5 2.5.8 1.8 1.8.8 2.5-2.5a4 4 0 0 1-3.3 4.7"/></svg></span><div><h3><span data-l="de">Einmalig: Einrichtung</span><span data-l="en">One-time: setup</span></h3><p><span data-l="de">50 % bei Auftrag, 50 % nach Fertigstellung.</span><span data-l="en">50% on order, 50% on completion.</span></p></div></div>
+      <div class="packages-how-item"><span class="ico-chip tone-steel" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 11A7.5 7.5 0 0 0 6 6.5L4.5 8M4.5 13A7.5 7.5 0 0 0 18 17.5L19.5 16"/><path d="M4.5 4v4h4M19.5 20v-4h-4"/></svg></span><div><h3><span data-l="de">Monatlich: Betreuung</span><span data-l="en">Monthly: care</span></h3><p><span data-l="de">Betrieb, Anpassungen, Kurzbericht. Ab 3 Monaten monatlich kündbar.</span><span data-l="en">Operation, changes, a short report. Cancel monthly after 3 months.</span></p></div></div>
+      <div class="packages-how-item"><span class="ico-chip tone-sage" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><div><h3><span data-l="de">Website: einmalig</span><span data-l="en">Website: one-time</span></h3><p><span data-l="de">Ab CHF 300, ohne Monatsgebühr.</span><span data-l="en">From CHF 300, no monthly fee.</span></p></div></div>
+    </div>
     <div class="packages-toolbar">
       <div class="packages-seg" role="group" id="packages-seg" data-aria-de="Preisansicht" data-aria-en="Price view"></div>
     </div>
     <div class="packages-grid" id="packages-grid"></div>
     <p class="packages-note">
-      <span data-l="de">Alle Preise in CHF. Einmalige Kosten: 50 % bei Auftrag, 50 % nach Fertigstellung. Mindestlaufzeit 3 Monate, danach monatlich kündbar. Lizenzkosten Dritter (z. B. SMS) transparent nach Aufwand.</span>
-      <span data-l="en">All prices in CHF. One-time costs: 50% on order, 50% on completion. Minimum term 3 months, then cancellable monthly. Third-party licence costs (e.g. SMS) are passed on transparently at cost.</span>
+      <span data-l="de">Alle Preise in CHF. Lizenzkosten Dritter (z. B. SMS) zum Selbstkostenpreis.</span>
+      <span data-l="en">All prices in CHF. Third-party licence costs (e.g. SMS) at cost.</span>
     </p>
   </div>
 </section>
@@ -1136,8 +1159,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <span class="eyebrow"><span data-l="de">Offerte</span><span data-l="en">Quote</span></span>
       <h2><span data-l="de">Ihre Offerte in <em class="it">60 Sekunden</em></span><span data-l="en">Your quote in <em class="it">60 seconds</em></span></h2>
       <p class="lede">
-        <span data-l="de">Stellen Sie zusammen, was Sie brauchen. Der Preis rechnet sich bei jeder Auswahl sofort mit.</span>
-        <span data-l="en">Pick what you need. The price updates with every choice.</span>
+        <span data-l="de">Wählen Sie aus, der Preis rechnet live mit.</span>
+        <span data-l="en">Pick what you need, the price updates live.</span>
       </p>
     </header>
     <div id="quote-app" class="quote-app"></div>
@@ -1150,7 +1173,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     <div class="faq-side reveal">
       <p class="eyebrow">FAQ</p>
       <h2><span data-l="de">Gut zu wissen, <em class="it">bevor Sie anfragen.</em></span><span data-l="en">Good to know <em class="it">before you ask.</em></span></h2>
-      <p class="lede"><span data-l="de">Die Fragen, die Inhaber am häufigsten stellen. Ihre fehlt? Fragen Sie im Erstgespräch.</span><span data-l="en">The questions owners ask most. Yours missing? Ask in the first conversation.</span></p>
+      <p class="lede"><span data-l="de">Die häufigsten Fragen. Ihre fehlt? Fragen Sie im Erstgespräch.</span><span data-l="en">The most common questions. Yours missing? Ask in the first call.</span></p>
       <button type="button" class="btn btn-cta" data-quote="">
         <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span><span class="arrow" aria-hidden="true">→</span>
       </button>
@@ -1334,56 +1357,73 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     },
 
+    /* Line icons (24px grid, 1.5 stroke) */
+    icons: {
+      star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z"/>',
+      inbox: '<path d="M3.5 13h4.5l1.5 3h5l1.5-3h4.5"/><path d="M6 5h12l2.5 8v5.5a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1V13z"/>',
+      phone: '<path d="M15 3.5l5.5 5.5M20.5 3.5L15 9"/><path d="M5.5 4h3l1.5 4-2 1.3a10 10 0 0 0 5 5l1.2-2 4 1.5v3a2 2 0 0 1-2 2A14.5 14.5 0 0 1 3.5 6a2 2 0 0 1 2-2z"/>',
+      calendar: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M8 3v4M16 3v4M3.5 10h17M9 15l2 2 4-4"/>',
+      wrench: '<path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-8.6 8.6a2.1 2.1 0 0 1-3-3l8.6-8.6"/><path d="M14.7 6.3A4 4 0 0 1 19.4 3l-2.5 2.5.8 1.8 1.8.8 2.5-2.5a4 4 0 0 1-3.3 4.7"/>',
+      file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+      receipt: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+      mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5L12 13l8.5-6.5"/>',
+      cloud: '<path d="M7 18.5h10a4 4 0 0 0 .6-8 6 6 0 0 0-11.4 1.3A3.4 3.4 0 0 0 7 18.5z"/>',
+      users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.7a3.5 3.5 0 0 1 0 6.6M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/>',
+      monitor: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+      repeat: '<path d="M19.5 11A7.5 7.5 0 0 0 6 6.5L4.5 8M4.5 13A7.5 7.5 0 0 0 18 17.5L19.5 16"/><path d="M4.5 4v4h4M19.5 20v-4h-4"/>',
+    },
+    icon(name, tone) { return '<span class="ico-chip tone-' + tone + '" aria-hidden="true"><svg viewBox="0 0 24 24">' + (KGC.icons[name] || '') + '</svg></span>'; },
+
     reducedMotion: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
 
     /* The ten automations. Prices: [min, max] in CHF. */
     offers: [
-      { id: 'reviews', setup: [300, 300], monthly: [49, 49], industries: ['trade', 'repair', 'beauty', 'gastro'],
+      { id: 'reviews', icon: 'star', tone: 'steel', setup: [300, 300], monthly: [49, 49], industries: ['trade', 'repair', 'beauty', 'gastro'],
         name: { de: 'Google-Bewertungs-Autopilot', en: 'Google review autopilot' },
         short: { de: 'Mehr Bewertungen, jede beantwortet, schlechte nie öffentlich überrascht.', en: 'More reviews, every one answered, bad ones caught before they hurt.' },
         steps: { de: ['Nach dem Auftrag: SMS mit direktem Bewertungslink', 'KI entwirft eine Antwort in Ihrem Ton', '4–5 Sterne: automatisch veröffentlicht. 1–3 Sterne: Alarm an Sie'],
                  en: ['After the job: SMS with a direct review link', 'AI drafts a reply in your voice', '4–5 stars: posted automatically. 1–3 stars: alert to you'] } },
-      { id: 'leads', setup: [250, 250], monthly: [29, 29], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+      { id: 'leads', icon: 'inbox', tone: 'steel', setup: [250, 250], monthly: [29, 29], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
         name: { de: 'Anfragen-Fänger für Ihre Website', en: 'Website lead catcher' },
         short: { de: 'Keine Anfrage geht mehr verloren.', en: 'No enquiry ever gets lost again.' },
         steps: { de: ['Sofortige Eingangsbestätigung an den Kunden', 'Anfrage landet in Ihrer Tabelle', 'WhatsApp an Sie, Erinnerung nach 24 h ohne Antwort'],
                  en: ['Instant confirmation to the customer', 'Enquiry lands in your sheet', 'WhatsApp to you, reminder after 24 h without reply'] } },
-      { id: 'missedcall', setup: [400, 400], monthly: [60, 60], industries: ['trade'],
+      { id: 'missedcall', icon: 'phone', tone: 'steel', setup: [400, 400], monthly: [60, 60], industries: ['trade'],
         name: { de: 'Rückruf-SMS bei verpassten Anrufen', en: 'Missed-call text-back' },
         short: { de: 'Wer anruft, während Sie arbeiten, bekommt innert einer Minute eine Antwort.', en: 'Callers you miss on the job get a reply within a minute.' },
         steps: { de: ['Anruf verpasst', 'SMS innert 60 Sekunden mit Buchungslink', 'Antwort des Kunden geht direkt an Sie'],
                  en: ['Call missed', 'SMS within 60 seconds with booking link', 'Customer reply goes straight to you'] } },
-      { id: 'booking', setup: [300, 300], monthly: [39, 39], industries: ['repair', 'beauty', 'office'],
+      { id: 'booking', icon: 'calendar', tone: 'steel', setup: [300, 300], monthly: [39, 39], industries: ['repair', 'beauty', 'office'],
         name: { de: 'Online-Buchung mit Erinnerungen', en: 'Online booking + reminders' },
         short: { de: 'Kunden buchen selbst, auch um 22 Uhr auf dem Sofa. Weniger Nichterscheinen.', en: 'Customers book themselves, even at 10 pm on the sofa. Fewer no-shows.' },
         steps: { de: ['Kunde wählt einen freien Termin', 'Bestätigung sofort', 'Erinnerung 24 h vorher'],
                  en: ['Customer picks a free slot', 'Instant confirmation', 'Reminder 24 h before'] } },
-      { id: 'repair', setup: [200, 200], monthly: [30, 30], industries: ['repair'],
+      { id: 'repair', icon: 'wrench', tone: 'steel', setup: [200, 200], monthly: [30, 30], industries: ['repair'],
         name: { de: 'Reparatur-Statusmeldungen', en: 'Repair status updates' },
         short: { de: 'Schluss mit «Ist mein Handy schon fertig?»', en: 'No more "is my phone ready yet?" calls.' },
         steps: { de: ['Sie ändern den Status in einer einfachen Liste', 'Kunde erhält automatisch SMS oder WhatsApp', '«Abholbereit» inklusive Öffnungszeiten'],
                  en: ['You change the status in a simple list', 'Customer gets an SMS or WhatsApp automatically', '"Ready for pickup" including opening hours'] } },
-      { id: 'quotes', setup: [400, 400], monthly: [60, 60], industries: ['trade', 'office'],
+      { id: 'quotes', icon: 'file', tone: 'brass', setup: [400, 400], monthly: [60, 60], industries: ['trade', 'office'],
         name: { de: 'Offerten-Generator', en: 'Quote generator' },
         short: { de: 'Offerten in 10 Minuten statt einem Abend am Schreibtisch.', en: 'Quotes in 10 minutes instead of an evening at the desk.' },
         steps: { de: ['Kurzes Formular mit Fotos', 'KI schreibt eine saubere Offerte als PDF in Ihrem Design', 'Nachfassen nach 5 Tagen, automatisch'],
                  en: ['Short form with photos', 'AI writes a clean, branded PDF quote', 'Follow-up after 5 days, automatically'] } },
-      { id: 'invoices', setup: [400, 400], monthly: [50, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+      { id: 'invoices', icon: 'receipt', tone: 'brass', setup: [400, 400], monthly: [50, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
         name: { de: 'Zahlungserinnerungen', en: 'Invoice reminders' },
         short: { de: 'Sie haben die Arbeit gemacht. Das System kümmert sich ums Geld.', en: 'You did the work. The system chases the money.' },
         steps: { de: ['Offene Rechnungen werden geprüft (z. B. bexio)', 'Höfliche Erinnerung nach 7, 14 und 30 Tagen', 'Danach Hinweis an Sie'],
                  en: ['Open invoices are checked (e.g. bexio)', 'Polite reminders at 7, 14 and 30 days', 'Then a note to you'] } },
-      { id: 'inbox', setup: [400, 400], monthly: [50, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+      { id: 'inbox', icon: 'mail', tone: 'brass', setup: [400, 400], monthly: [50, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
         name: { de: 'KI-Posteingangs-Assistent', en: 'AI inbox assistant' },
         short: { de: 'Mails sortiert, Antworten vorbereitet, auf Wunsch in Schweizerdeutsch.', en: 'Emails sorted, replies drafted, in Swiss German if you like.' },
         steps: { de: ['Neue Mails werden sortiert: Offerte, Reklamation, Lieferant, Spam', 'KI legt einen Antwortentwurf an', 'Sie prüfen und senden'],
                  en: ['New mail sorted: quote, complaint, supplier, spam', 'AI prepares a draft reply', 'You check and send'] } },
-      { id: 'workspace', setup: [150, 150], monthly: [20, 20], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+      { id: 'workspace', icon: 'cloud', tone: 'sage', setup: [150, 150], monthly: [20, 20], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
         name: { de: 'E-Mail & Cloud mit Betreuung', en: 'Email + cloud with support' },
         short: { de: 'Eine Ansprechperson für Website, E-Mail und Dateien.', en: 'One contact for website, email and files.' },
         steps: { de: ['E-Mail-Adressen auf Ihrer Domain', 'Gemeinsame Ablage für Dokumente', 'Neue Benutzer, Passwörter, Änderungen: erledigt'],
                  en: ['Email addresses on your domain', 'Shared document storage', 'New users, passwords, changes: handled'] } },
-      { id: 'crm', setup: [800, 800], monthly: [50, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+      { id: 'crm', icon: 'users', tone: 'sage', setup: [800, 800], monthly: [50, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
         name: { de: 'Eigenes CRM für Ihren Betrieb', en: 'Your own CRM' },
         short: { de: 'Kunden, Anfragen, Offerten und Termine an einem Ort, gebaut nach Ihren Abläufen.', en: 'Customers, enquiries, quotes and appointments in one place, built around how you work.' },
         steps: { de: ['Alle Kunden und Kontakte mit Verlauf an einem Ort', 'Anfragen und Offerten laufen automatisch ein', 'Übersicht über offene Aufgaben, mit Login für Ihr Team'],
@@ -1786,8 +1826,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   function price(o) {
     const de = KGC.lang === 'de';
     const ab = r => r[0] === r[1] ? '' : (de ? 'ab ' : 'from ');
-    return '<span>' + ab(o.setup) + KGC.chf(o.setup[0]) + (de ? ' einmalig' : ' one-time') + '</span>' +
-           '<span>' + ab(o.monthly) + KGC.chf(o.monthly[0]) + (de ? '/Mt.' : '/mo') + '</span>';
+    return '<div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + ab(o.setup) + KGC.chf(o.setup[0]) + '</span></div>' +
+           '<div><span class="offers-plbl">' + (de ? 'Monatlich' : 'Monthly') + '</span><span class="offers-pval">' + ab(o.monthly) + KGC.chf(o.monthly[0]) + '</span></div>';
   }
 
   function render() {
@@ -1797,17 +1837,18 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     const wg = document.getElementById('offers-web-grid');
     if (wg) wg.innerHTML = KGC.websites.map(w =>
       '<article class="offers-cell offers-webcell">' +
+        '<div class="offers-top">' + KGC.icon(w.id === 'redesign' ? 'repeat' : 'monitor', 'sage') + '</div>' +
         '<h3 class="offers-name">' + t(w.name) + '</h3>' +
         '<p class="offers-short">' + t(w.short) + '</p>' +
         '<ul class="offers-web-pts">' + t(w.points).map(x => '<li>' + x + '</li>').join('') + '</ul>' +
-        '<div class="offers-price"><span>' + (w.from ? (de ? 'ab ' : 'from ') : '') + KGC.chf(w.price) + (de ? ' einmalig' : ' one-time') + '</span></div>' +
+        '<div class="offers-price"><div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + (w.from ? (de ? 'ab ' : 'from ') : '') + KGC.chf(w.price) + '</span></div></div>' +
         '<div class="offers-acts"><button type="button" class="offers-add" data-quote="web:' + w.id + '">' + (de ? '+ Zur Offerte' : '+ Add to quote') + '</button></div>' +
       '</article>').join('');
     grid.innerHTML = KGC.offers.map((o, n) => {
       const match = ind === 'all' || o.industries.includes(ind);
       const isOpen = open.has(o.id);
       return '<article class="offers-cell' + (match ? '' : ' is-dim') + (isOpen ? ' open' : '') + '" data-id="' + o.id + '">' +
-        '<div class="offers-top"><span class="offers-idx">' + String(n + 1).padStart(2, '0') + '</span>' +
+        '<div class="offers-top"><span class="offers-id">' + KGC.icon(o.icon, o.tone) + '<span class="offers-idx">' + String(n + 1).padStart(2, '0') + '</span></span>' +
         (o.id === 'reviews' ? '<span class="offers-tag">' + (de ? 'Meistgewählt' : 'Most chosen') + '</span>' : o.id === 'crm' ? '<span class="offers-tag">' + (de ? 'Neu' : 'New') + '</span>' : '') + '</div>' +
         '<h3 class="offers-name">' + t(o.name) + '</h3>' +
         '<p class="offers-short">' + t(o.short) + '</p>' +

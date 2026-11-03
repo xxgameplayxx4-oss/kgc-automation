@@ -40,3 +40,9 @@
   .packages-seg button { flex: 1; padding: 0 8px; }
 }
 @media (min-width: 900px) { .packages-tag { min-height: calc(2 * 1.6em); } }
+
+.packages-how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 32px; }
+.packages-how-item { display: flex; gap: 16px; align-items: flex-start; padding: 20px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; }
+.packages-how-item h3 { font-family: var(--f-body); font-size: var(--t-md); font-weight: 600; line-height: 1.3; letter-spacing: 0; margin-bottom: 4px; }
+.packages-how-item p { font-size: var(--t-sm); color: var(--graphite); }
+@media (max-width: 900px) { .packages-how { grid-template-columns: 1fr; gap: 12px; } }

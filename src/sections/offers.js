@@ -7,8 +7,8 @@
   function price(o) {
     const de = KGC.lang === 'de';
     const ab = r => r[0] === r[1] ? '' : (de ? 'ab ' : 'from ');
-    return '<span>' + ab(o.setup) + KGC.chf(o.setup[0]) + (de ? ' einmalig' : ' one-time') + '</span>' +
-           '<span>' + ab(o.monthly) + KGC.chf(o.monthly[0]) + (de ? '/Mt.' : '/mo') + '</span>';
+    return '<div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + ab(o.setup) + KGC.chf(o.setup[0]) + '</span></div>' +
+           '<div><span class="offers-plbl">' + (de ? 'Monatlich' : 'Monthly') + '</span><span class="offers-pval">' + ab(o.monthly) + KGC.chf(o.monthly[0]) + '</span></div>';
   }
 
   function render() {
@@ -18,17 +18,18 @@
     const wg = document.getElementById('offers-web-grid');
     if (wg) wg.innerHTML = KGC.websites.map(w =>
       '<article class="offers-cell offers-webcell">' +
+        '<div class="offers-top">' + KGC.icon(w.id === 'redesign' ? 'repeat' : 'monitor', 'sage') + '</div>' +
         '<h3 class="offers-name">' + t(w.name) + '</h3>' +
         '<p class="offers-short">' + t(w.short) + '</p>' +
         '<ul class="offers-web-pts">' + t(w.points).map(x => '<li>' + x + '</li>').join('') + '</ul>' +
-        '<div class="offers-price"><span>' + (w.from ? (de ? 'ab ' : 'from ') : '') + KGC.chf(w.price) + (de ? ' einmalig' : ' one-time') + '</span></div>' +
+        '<div class="offers-price"><div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + (w.from ? (de ? 'ab ' : 'from ') : '') + KGC.chf(w.price) + '</span></div></div>' +
         '<div class="offers-acts"><button type="button" class="offers-add" data-quote="web:' + w.id + '">' + (de ? '+ Zur Offerte' : '+ Add to quote') + '</button></div>' +
       '</article>').join('');
     grid.innerHTML = KGC.offers.map((o, n) => {
       const match = ind === 'all' || o.industries.includes(ind);
       const isOpen = open.has(o.id);
       return '<article class="offers-cell' + (match ? '' : ' is-dim') + (isOpen ? ' open' : '') + '" data-id="' + o.id + '">' +
-        '<div class="offers-top"><span class="offers-idx">' + String(n + 1).padStart(2, '0') + '</span>' +
+        '<div class="offers-top"><span class="offers-id">' + KGC.icon(o.icon, o.tone) + '<span class="offers-idx">' + String(n + 1).padStart(2, '0') + '</span></span>' +
         (o.id === 'reviews' ? '<span class="offers-tag">' + (de ? 'Meistgewählt' : 'Most chosen') + '</span>' : o.id === 'crm' ? '<span class="offers-tag">' + (de ? 'Neu' : 'New') + '</span>' : '') + '</div>' +
         '<h3 class="offers-name">' + t(o.name) + '</h3>' +
         '<p class="offers-short">' + t(o.short) + '</p>' +

@@ -12,6 +12,9 @@
   --ruby-hover: #870E25;
   --on-ruby: #FFFFFF;
   --ok: #2F6B4F;         /* semantic success */
+  --steel: #33618F; --steel-soft: #E3EAF2;   /* blued-steel accent for icons */
+  --sage: #2F6B4F; --sage-soft: #E2ECE5;
+  --brass-tint: #F2EADB;
   --warn: #9A5B12;
   --shadow: 0 1px 2px rgba(20,25,29,.06), 0 12px 32px -12px rgba(20,25,29,.18);
 
@@ -36,7 +39,7 @@
   :root:not([data-theme="light"]) {
     --stone: #0E1418; --paper: #151D23; --ink: #E7E9E3; --graphite: #9AA4AA; --rule: #2A353D;
     --brass: #C9A468; --brass-soft: #4A3F2C; --ruby: #D02A48; --ruby-hover: #E2455F; --on-ruby: #FFFFFF;
-    --ok: #6DBB93; --warn: #E0A458;
+    --ok: #6DBB93; --warn: #E0A458; --steel: #8FB4DA; --steel-soft: #18242F; --sage: #7CC29E; --sage-soft: #16241C; --brass-tint: #262016;
     --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
     color-scheme: dark;
   }
@@ -44,7 +47,7 @@
 :root[data-theme="dark"] {
   --stone: #0E1418; --paper: #151D23; --ink: #E7E9E3; --graphite: #9AA4AA; --rule: #2A353D;
   --brass: #C9A468; --brass-soft: #4A3F2C; --ruby: #D02A48; --ruby-hover: #E2455F; --on-ruby: #FFFFFF;
-  --ok: #6DBB93; --warn: #E0A458;
+  --ok: #6DBB93; --warn: #E0A458; --steel: #8FB4DA; --steel-soft: #18242F; --sage: #7CC29E; --sage-soft: #16241C; --brass-tint: #262016;
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 16px 40px -16px rgba(0,0,0,.6);
   color-scheme: dark;
 }
@@ -122,3 +125,10 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--stone); }
 ::-webkit-scrollbar-thumb { background: var(--brass); border-radius: 10px; border: 3px solid var(--stone); }
+
+/* Icon chips: a tinted square with a line icon. Tone = meaning: steel for customer-facing, brass for office work, sage for infrastructure and websites */
+.tone-steel { --tone: var(--steel); --tone-bg: var(--steel-soft); }
+.tone-brass { --tone: var(--brass); --tone-bg: var(--brass-tint); }
+.tone-sage { --tone: var(--sage); --tone-bg: var(--sage-soft); }
+.ico-chip { display: inline-grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 10px; background: var(--tone-bg); color: var(--tone); }
+.ico-chip svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
