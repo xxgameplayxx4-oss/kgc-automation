@@ -386,6 +386,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 .offers-web-pts li::before { content: ""; flex: none; width: 10px; height: 1px; background: var(--brass); margin-top: .75em; }
 @media (max-width: 900px) { .offers-web { grid-template-columns: 1fr; } }
 @media (max-width: 900px) { .offers-web-grid { grid-template-columns: 1fr; } .offers-web-grid .offers-webcell + .offers-webcell { border-left: 0; border-top: 1px solid var(--rule); } }
+.offers-webcell .offers-name { font-size: clamp(1.3rem, .95rem + .7vw, 1.6rem); overflow-wrap: break-word; }
 
 /* ==== work ==== */
 .work-head { display: grid; gap: 18px; max-width: 44rem; margin-bottom: clamp(32px, 5vw, 56px); }
