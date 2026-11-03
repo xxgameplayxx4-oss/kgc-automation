@@ -21,7 +21,7 @@
     function fresh() {
       const choice = {};
       K.packages.forEach(p => { choice[p.id] = p.choice.map(g => g[0]); });
-      return { pkg: 'growth', choice, picked: new Set(), extras: new Set(), industry: 'trade', staff: '2-5', canton: 'AG', langs: new Set(['gsw']), start: 'month',
+      return { pkg: 'growth', web: 'none', choice, picked: new Set(), extras: new Set(), industry: 'trade', staff: '2-5', canton: 'AG', langs: new Set(['gsw']), start: 'month',
         step: 1, f: { name: '', firma: '', email: '', telefon: '', nachricht: '' }, consent: false, flash: new Set(), done: null, open: false };
     }
     let st = fresh();
@@ -38,7 +38,8 @@
       const S = sel(); let s = [0, 0], m = [0, 0];
       if (S.p) { s = [S.p.setup, S.p.setup]; m = [S.p.monthly, S.p.monthly]; }
       S.extras.forEach(id => { const x = po(K.offer(id)); s[0] += x.s[0]; s[1] += x.s[1]; m[0] += x.m[0]; m[1] += x.m[1]; });
-      return { S, setup: s, monthly: m, year: [s[0] + 12 * m[0], s[1] + 12 * m[1]] };
+      const W = K.website(st.web); if (W) { s[0] += W.price; s[1] += W.price; }
+      return { S, W, setup: s, monthly: m, year: [s[0] + 12 * m[0], s[1] + 12 * m[1]] };
     }
     // cheapest package that covers every picked offer (one per choice group)
     function tip() {
@@ -90,7 +91,8 @@
         S.extras.forEach(id => { const x = po(K.offer(id)); h += li('', '+ ' + nm(id), K.range(x.s[0], x.s[1])); });
       } else if (S.extras.length) {
         S.extras.forEach(id => { const x = po(K.offer(id)); h += li('', nm(id), K.range(x.s[0], x.s[1])); });
-      } else h = `<li><span>${L('Noch nichts gewählt.', 'Nothing selected yet.')}</span></li>`;
+      } else if (!T.W) h = `<li><span>${L('Noch nichts gewählt.', 'Nothing selected yet.')}</span></li>`;
+      if (T.W) h += li('', (S.p || S.extras.length ? '+ ' : '') + K.t(T.W.name), (T.W.from ? L('ab ', 'from ') : '') + K.chf(T.W.price));
       return h;
     }
     function updateSummary(animate) {
@@ -106,6 +108,7 @@
       let note = '';
       if (st.staff === '20+') note = st.pkg === 'custom' ? L('Inkl. Zuschlag von 30 % für die Betriebsgrösse. Wir bestätigen den Fixpreis im Erstgespräch.', 'Incl. a 30% surcharge for company size. We confirm the fixed price in the first call.') : L('Wir bestätigen den Fixpreis im Erstgespräch.', 'We confirm the fixed price in the first call.');
       else if (f > 1 && (st.pkg === 'custom' || T.S.extras.length)) note = L('Inkl. Zuschlag von 15 % für die Betriebsgrösse.', 'Incl. a 15% surcharge for company size.');
+      if (T.W && T.W.from) note = (note ? note + ' ' : '') + L('Die mehrseitige Website ist mit dem Startpreis von CHF 1’000 eingerechnet. Der Endpreis hängt von der Anzahl Seiten ab.', 'The multi-page website is counted at its starting price of CHF 1’000. The final price depends on the number of pages.');
       n20.textContent = note; n20.hidden = !note;
       updateMoney(animate);
     }
@@ -161,6 +164,11 @@
       h += `<fieldset class="quote-fs"><legend>${S.p ? L('Weitere Automationen dazu', 'Add more automations') : L('Automationen wählen', 'Choose automations')}</legend>
         <p class="quote-sub">${S.p ? L('Optional. Jede Zusatzleistung wird mit ihrer Preisspanne zur Auswahl addiert.', 'Optional. Each extra adds its price range to your selection.') : L('Mehrfachauswahl. Die Preisspanne sehen Sie in Ihrer Auswahl.', 'Pick as many as you like. “From” prices; the full range shows in your selection.')}</p>
         <div class="quote-rows">${rest.map(id => rowHtml(id, 'x')).join('')}</div></fieldset>`;
+      const wopts = [{ id: 'none', name: { de: 'Keine Website, ich habe schon eine', en: 'No website, I already have one' }, short: { de: 'Die Automationen werden an Ihre bestehende Seite angebunden.', en: 'The automations connect to your existing site.' } }].concat(K.websites);
+      h += `<fieldset class="quote-fs"><legend>${L('Website dazu', 'Add a website')}</legend><div class="quote-rows">`
+        + wopts.map(w => `<label class="quote-row${st.web === w.id ? ' is-on' : ''}" for="q-web-${w.id}" data-row="web-${w.id}"><input type="radio" name="q-web" id="q-web-${w.id}" value="${w.id}"${st.web === w.id ? ' checked' : ''}>
+          <span><span class="t">${K.t(w.name)}</span><span class="s">${K.t(w.short)}</span></span><span class="p">${w.price ? (w.from ? L('ab ', 'from ') : '') + K.chf(w.price) + L(' einmalig', ' one-off') : ''}</span></label>`).join('')
+        + `</div></fieldset>`;
       return h;
     }
     function renderStep1() {
@@ -276,6 +284,7 @@
         choice.push([l('Enthalten', 'Included'), S.base.map(name).join(', ')]);
         if (S.extras.length) choice.push([l('Zusätzlich', 'Extras'), S.extras.map(name).join(', ')]);
       } else choice.push([l('Individuell', 'Custom'), S.extras.length ? S.extras.map(name).join(', ') : '–']);
+      if (T.W) choice.push([l('Website', 'Website'), T.W.name[lang] + ' (' + (T.W.from ? l('ab ', 'from ') : '') + K.chf(T.W.price) + ')']);
       const f = st.f;
       return [
         { title: l('Auswahl', 'Selection'), rows: choice },
@@ -361,6 +370,7 @@
     root.addEventListener('change', e => {
       const t = e.target;
       if (t.name === 'q-pkg') return setPackage(t.value);
+      if (t.name === 'q-web') { st.web = t.value; return refresh(); }
       if (t.dataset.choice !== undefined) { st.choice[st.pkg][+t.dataset.choice] = t.value; return refresh(); }
       if (t.dataset.offer) {
         const set = st.pkg === 'custom' ? st.picked : st.extras;
@@ -406,6 +416,7 @@
     K.on('quote:preset', p => {
       if (st.done) { st = fresh(); }
       if (!p) { build(); return; }
+      if (p.web && K.website(p.web)) { st.web = p.web; st.step = 1; st.flash.add('web-' + p.web); build(); return; }
       if (p.package && pkgOf(p.package)) { st.pkg = p.package; st.step = 1; build(); return; }
       if (p.offers && p.offers.length) {
         const ids = p.offers.filter(id => K.offer(id)); st.step = 1;

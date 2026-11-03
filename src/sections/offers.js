@@ -14,6 +14,15 @@
     const de = KGC.lang === 'de';
     pills.innerHTML = KGC.industries.map(i =>
       '<button type="button" class="offers-pill" data-ind="' + i.id + '" aria-pressed="' + (i.id === ind) + '">' + t(i.name) + '</button>').join('');
+    const wg = document.getElementById('offers-web-grid');
+    if (wg) wg.innerHTML = KGC.websites.map(w =>
+      '<article class="offers-cell offers-webcell">' +
+        '<h3 class="offers-name">' + t(w.name) + '</h3>' +
+        '<p class="offers-short">' + t(w.short) + '</p>' +
+        '<ul class="offers-web-pts">' + t(w.points).map(x => '<li>' + x + '</li>').join('') + '</ul>' +
+        '<div class="offers-price"><span>' + (w.from ? (de ? 'ab ' : 'from ') : '') + KGC.chf(w.price) + (de ? ' einmalig' : ' one-time') + '</span></div>' +
+        '<div class="offers-acts"><button type="button" class="offers-add" data-quote="web:' + w.id + '">' + (de ? '+ Zur Offerte' : '+ Add to quote') + '</button></div>' +
+      '</article>').join('');
     grid.innerHTML = KGC.offers.map((o, n) => {
       const match = ind === 'all' || o.industries.includes(ind);
       const isOpen = open.has(o.id);

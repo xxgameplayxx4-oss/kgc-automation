@@ -84,6 +84,21 @@
                  en: ['Email addresses on your domain', 'Shared document storage', 'New users, passwords, changes: handled'] } },
     ],
 
+    /* Websites: one-time price, no monthly fee. from=true means "ab" (scope set in the first call) */
+    websites: [
+      { id: 'one', price: 650, from: false,
+        name: { de: 'One-Pager Website', en: 'One-page website' },
+        short: { de: 'Eine elegante Seite mit allem Wichtigen. Impressum und Datenschutz inklusive.', en: 'One elegant page with everything that matters. Legal notice and privacy policy included.' },
+        points: { de: ['Design nach Ihrem Betrieb, für Handy und Desktop', 'Kontaktformular, Impressum und Datenschutzerklärung (nDSG)', 'Einmalpreis, keine monatliche Gebühr'],
+                  en: ['Designed for your business, phone and desktop', 'Contact form, legal notice and privacy policy (nDSG)', 'One-time price, no monthly fee'] } },
+      { id: 'multi', price: 1000, from: true,
+        name: { de: 'Website mit mehreren Seiten', en: 'Multi-page website' },
+        short: { de: 'Eigene Seiten für Leistungen, Team und Kontakt, mit Navigation.', en: 'Separate pages for services, team and contact, with navigation.' },
+        points: { de: ['Mehrere Seiten mit Menü und eigener Struktur', 'Impressum und Datenschutzerklärung inklusive', 'Umfang und Fixpreis legen wir im Erstgespräch fest'],
+                  en: ['Several pages with a menu and your own structure', 'Legal notice and privacy policy included', 'We fix scope and price in the first call'] } },
+    ],
+    website(id) { return KGC.websites.find(w => w.id === id); },
+
     industries: [
       { id: 'all', name: { de: 'Alle', en: 'All' } },
       { id: 'trade', name: { de: 'Handwerk', en: 'Trades' } },
@@ -126,7 +141,7 @@
       if (!a) return;
       e.preventDefault();
       const v = a.getAttribute('data-quote');
-      KGC.openQuote(v ? (v.includes(',') || KGC.offer(v) ? { offers: v.split(',') } : { package: v }) : null);
+      KGC.openQuote(v ? (v.startsWith('web:') ? { web: v.slice(4) } : v.includes(',') || KGC.offer(v) ? { offers: v.split(',') } : { package: v }) : null);
     });
     // In-text links to the legal notices open the footer dialogs
     document.addEventListener('click', e => {
