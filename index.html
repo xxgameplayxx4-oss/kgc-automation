@@ -976,7 +976,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     <div class="offers-web" aria-labelledby="offers-web-h">
       <div class="offers-web-head">
         <h3 id="offers-web-h"><span data-l="de">Und die Website <em class="it">dazu.</em></span><span data-l="en">And the website <em class="it">to go with it.</em></span></h3>
-        <p><span data-l="de">Neue Website oder Neugestaltung, einmal bezahlt. Die Automationen lassen sich direkt anbinden.</span><span data-l="en">A new website or a redesign, paid once. The automations plug straight in.</span></p>
+        <p><span data-l="de">Neue Website oder Neugestaltung, einmal bezahlt: 50 % bei Auftrag, 50 % nach Fertigstellung. Die Automationen lassen sich direkt anbinden.</span><span data-l="en">A new website or a redesign, paid once: 50% on order, 50% on completion. The automations plug straight in.</span></p>
       </div>
       <div class="offers-web-grid" id="offers-web-grid"></div>
     </div>
@@ -1119,8 +1119,8 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     </div>
     <div class="packages-grid" id="packages-grid"></div>
     <p class="packages-note">
-      <span data-l="de">Alle Preise in CHF. Mindestlaufzeit 3 Monate, danach monatlich kündbar. Lizenzkosten Dritter (z. B. SMS) transparent nach Aufwand.</span>
-      <span data-l="en">All prices in CHF. Minimum term 3 months, then cancellable monthly. Third-party licence costs (e.g. SMS) are passed on transparently at cost.</span>
+      <span data-l="de">Alle Preise in CHF. Einmalige Kosten: 50 % bei Auftrag, 50 % nach Fertigstellung. Mindestlaufzeit 3 Monate, danach monatlich kündbar. Lizenzkosten Dritter (z. B. SMS) transparent nach Aufwand.</span>
+      <span data-l="en">All prices in CHF. One-time costs: 50% on order, 50% on completion. Minimum term 3 months, then cancellable monthly. Third-party licence costs (e.g. SMS) are passed on transparently at cost.</span>
     </p>
   </div>
 </section>
@@ -1171,6 +1171,10 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <details class="faq-item">
         <summary><span class="faq-q"><span data-l="de">Was kostet mich das neben Ihrem Preis?</span><span data-l="en">What do I pay on top of your price?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
         <div class="faq-a"><p><span data-l="de">Lizenzkosten Dritter, etwa für SMS oder Google Workspace, geben wir transparent und ohne Aufschlag weiter. Sie stehen einzeln in der Offerte.</span><span data-l="en">Third-party licence costs, such as SMS or Google Workspace, are passed through transparently and without markup. They are listed separately in the quote.</span></p></div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="faq-q"><span data-l="de">Wann bezahle ich die einmaligen Kosten?</span><span data-l="en">When do I pay the one-time cost?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
+        <div class="faq-a"><p><span data-l="de">50 % bei Auftrag, damit ich mit dem Aufbau starten kann, und 50 % nach Fertigstellung, wenn alles läuft.</span><span data-l="en">50% on order so I can start building, and 50% on completion once everything runs.</span></p></div>
       </details>
       <details class="faq-item">
         <summary><span class="faq-q"><span data-l="de">Dürfen Kunden per SMS kontaktiert werden?</span><span data-l="en">Can customers be contacted by SMS?</span></span><span class="faq-mark" aria-hidden="true"></span></summary>
@@ -2145,7 +2149,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
           </dl>
           <div class="quote-tip" id="q-tip" hidden></div>
           <p class="quote-fine n20" id="q-n20" hidden></p>
-          <p class="quote-fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch.', 'Indicative prices in CHF. Binding quote after the first call.')}</p>
+          <p class="quote-fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch. 50 % der einmaligen Kosten sind bei Auftrag fällig, 50 % nach Fertigstellung.', 'Indicative prices in CHF. Binding quote after the first call. 50% of the one-time cost is due on order, 50% on completion.')}</p>
         </div>`;
     }
 
@@ -2317,12 +2321,12 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       const l = (de, en) => (lang === 'en' ? en : de);
       return l('KGC Offerte-Anfrage', 'KGC quote request') + ' ' + new Date().toLocaleDateString('de-CH') + '\n\n'
         + sections(lang).map(s => s.title.toUpperCase() + '\n' + s.rows.map(r => r[0] + ': ' + r[1]).join('\n')).join('\n\n')
-        + '\n\n' + l('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch.', 'Indicative prices in CHF. Binding quote after the first call.');
+        + '\n\n' + l('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch. 50 % der einmaligen Kosten sind bei Auftrag fällig, 50 % nach Fertigstellung.', 'Indicative prices in CHF. Binding quote after the first call. 50% of the one-time cost is due on order, 50% on completion.');
     }
     function receiptHtml() {
       return `<div class="quote-receipt" id="q-receipt"><h4><span>${L('Ihre Anfrage', 'Your request')}</span><span>${new Date().toLocaleDateString('de-CH')}</span></h4>`
         + sections(K.lang).map(s => `<section><dl>${s.rows.map(r => `<div class="${r[2] || ''}"><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl></section>`).join('')
-        + `<p class="fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch.', 'Indicative prices in CHF. Binding quote after the first call.')}</p></div>`;
+        + `<p class="fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch. 50 % der einmaligen Kosten sind bei Auftrag fällig, 50 % nach Fertigstellung.', 'Indicative prices in CHF. Binding quote after the first call. 50% of the one-time cost is due on order, 50% on completion.')}</p></div>`;
     }
     function renderDone() {
       const first = st.f.name.trim().split(/\s+/)[0] || '';

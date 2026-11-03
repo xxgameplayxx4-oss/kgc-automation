@@ -128,7 +128,7 @@
           </dl>
           <div class="quote-tip" id="q-tip" hidden></div>
           <p class="quote-fine n20" id="q-n20" hidden></p>
-          <p class="quote-fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch.', 'Indicative prices in CHF. Binding quote after the first call.')}</p>
+          <p class="quote-fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch. 50 % der einmaligen Kosten sind bei Auftrag fällig, 50 % nach Fertigstellung.', 'Indicative prices in CHF. Binding quote after the first call. 50% of the one-time cost is due on order, 50% on completion.')}</p>
         </div>`;
     }
 
@@ -300,12 +300,12 @@
       const l = (de, en) => (lang === 'en' ? en : de);
       return l('KGC Offerte-Anfrage', 'KGC quote request') + ' ' + new Date().toLocaleDateString('de-CH') + '\n\n'
         + sections(lang).map(s => s.title.toUpperCase() + '\n' + s.rows.map(r => r[0] + ': ' + r[1]).join('\n')).join('\n\n')
-        + '\n\n' + l('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch.', 'Indicative prices in CHF. Binding quote after the first call.');
+        + '\n\n' + l('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch. 50 % der einmaligen Kosten sind bei Auftrag fällig, 50 % nach Fertigstellung.', 'Indicative prices in CHF. Binding quote after the first call. 50% of the one-time cost is due on order, 50% on completion.');
     }
     function receiptHtml() {
       return `<div class="quote-receipt" id="q-receipt"><h4><span>${L('Ihre Anfrage', 'Your request')}</span><span>${new Date().toLocaleDateString('de-CH')}</span></h4>`
         + sections(K.lang).map(s => `<section><dl>${s.rows.map(r => `<div class="${r[2] || ''}"><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl></section>`).join('')
-        + `<p class="fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch.', 'Indicative prices in CHF. Binding quote after the first call.')}</p></div>`;
+        + `<p class="fine">${L('Richtpreise in CHF. Verbindliche Offerte nach dem Erstgespräch. 50 % der einmaligen Kosten sind bei Auftrag fällig, 50 % nach Fertigstellung.', 'Indicative prices in CHF. Binding quote after the first call. 50% of the one-time cost is due on order, 50% on completion.')}</p></div>`;
     }
     function renderDone() {
       const first = st.f.name.trim().split(/\s+/)[0] || '';
