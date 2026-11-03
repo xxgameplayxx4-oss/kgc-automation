@@ -1,4 +1,4 @@
-/* Layout concept: a Swiss watch movement as metaphor — calm limestone ground, Bodoni display,
+/* Layout concept: a Swiss watch movement as metaphor — calm limestone ground, Fraunces display,
    brass hairlines for structure, ruby (the jewel bearing) reserved for the call to action only. */
 :root {
   --stone: #ECEDE8;      /* page ground, cool Jura limestone */
@@ -18,7 +18,7 @@
   --warn: #9A5B12;
   --shadow: 0 1px 2px rgba(20,25,29,.06), 0 12px 32px -12px rgba(20,25,29,.18);
 
-  --f-display: "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --f-display: "Fraunces", Georgia, "Times New Roman", serif;
   --f-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
   --f-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 

@@ -7,11 +7,11 @@ import base64, re
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
 SEC = SRC / "sections"
-ORDER = ["nav", "hero", "demo", "process", "offers", "work", "roi", "packages", "quote", "faq", "footer"]
+ORDER = ["nav", "hero", "demo", "process", "showcase", "offers", "work", "roi", "packages", "quote", "faq", "footer"]
 
 FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
          '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-         '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">')
+         '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">')
 TITLE = "<title>KGC Automation</title>"
 META = ('<meta name="claude:viewport-fit-sides" content="cover">'
         '<meta name="description" content="Massgeschneiderte Automationen für Schweizer Unternehmen: Bewertungen, Anfragen, Buchungen, Offerten und Rechnungen laufen von selbst.">')

@@ -3,11 +3,11 @@
      (logos, names and addresses blurred in the image) and show only the industry. Images live in assets/work/. */
   const LIVE = { de: 'Kundenprojekt · Live', en: 'Client project · live' };
   const DRAFT = { de: 'Konzeptentwurf', en: 'Concept draft' };
-  const C = (img, name, de, en) => ({ img, name: { de: name, en: name }, kind: LIVE, alt: { de: 'Startseite der Website von ' + name + ' (' + de + ')', en: 'Homepage of the ' + name + ' website (' + en + ')' } });
+  const C = (img, name, de, en, url) => ({ img, url, name: { de: name, en: name }, kind: LIVE, alt: { de: 'Startseite der Website von ' + name + ' (' + de + ')', en: 'Homepage of the ' + name + ' website (' + en + ')' } });
   const D = (img, de, en) => ({ img, name: { de, en }, kind: DRAFT, alt: { de: 'Konzeptentwurf einer Website: ' + de, en: 'Website concept draft: ' + en } });
   const WORK = [
-    C('assets/work/precision.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'precision manufacturing'),
-    C('assets/work/boxing.webp', 'Boxschule Gebenstorf', 'Boxclub', 'boxing club'),
+    C('assets/work/precision.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'precision manufacturing', 'https://www.stps.ch'),
+    C('assets/work/boxing.webp', 'Boxschule Gebenstorf', 'Boxclub', 'boxing club', 'https://boxschule-gebenstorf.ch'),
     D('assets/work/restaurant.webp', 'Café & Restaurant', 'Café & restaurant'),
     D('assets/work/barber.webp', 'Barbier', 'Barbershop'),
     D('assets/work/cleaning.webp', 'Reinigungsfirma', 'Cleaning company'),
@@ -24,7 +24,7 @@
     const render = () => {
       rail.innerHTML = WORK.map(w => '<figure class="work-card"><div class="work-frame"><div class="work-bar" aria-hidden="true"><i></i><i></i><i></i></div>' +
         '<img class="work-shot" src="' + w.img + '" alt="' + KGC.t(w.alt).replace(/&/g, '&amp;') + '" loading="lazy" width="1280" height="800"></div>' +
-        '<figcaption class="work-cap"><span class="work-name">' + KGC.t(w.name).replace(/&/g, '&amp;') + '</span><span class="work-kind' + (w.kind === LIVE ? ' is-live' : '') + '">' + KGC.t(w.kind) + '</span></figcaption></figure>').join('');
+        '<figcaption class="work-cap"><span class="work-name">' + KGC.t(w.name).replace(/&/g, '&amp;') + '</span><span class="work-kind' + (w.kind === LIVE ? ' is-live' : '') + '">' + KGC.t(w.kind) + '</span>' + (w.url ? '<a class="work-link" href="' + w.url + '" target="_blank" rel="noopener">' + KGC.t({ de: 'Website ansehen', en: 'Visit website' }) + ' <span aria-hidden="true">↗</span></a>' : '') + '</figcaption></figure>').join('');
       upd();
     };
     const prev = document.getElementById('work-prev'), next = document.getElementById('work-next');

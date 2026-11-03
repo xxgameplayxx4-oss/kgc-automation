@@ -65,7 +65,7 @@
     offers: [
       { id: 'reviews', icon: 'star', tone: 'steel', setup: [300, 300], monthly: [49, 49], industries: ['trade', 'repair', 'beauty', 'gastro'],
         name: { de: 'Google-Bewertungs-Autopilot', en: 'Google review autopilot' },
-        short: { de: 'Mehr Bewertungen, jede beantwortet, schlechte fangen wir ab, bevor sie schaden.', en: 'More reviews, every one answered, bad ones caught before they hurt.' },
+        short: { de: 'Mehr Bewertungen, jede beantwortet. Schlechte fangen wir ab, bevor sie schaden.', en: 'More reviews, every one answered. Bad ones are caught before they hurt.' },
         steps: { de: ['Nach dem Auftrag: SMS mit direktem Bewertungslink', 'KI entwirft eine Antwort in Ihrem Ton', '4–5 Sterne: automatisch veröffentlicht. 1–3 Sterne: Alarm an Sie'],
                  en: ['After the job: SMS with a direct review link', 'AI drafts a reply in your voice', '4–5 stars: posted automatically. 1–3 stars: alert to you'] } },
       { id: 'leads', icon: 'inbox', tone: 'steel', setup: [250, 250], monthly: [29, 29], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
@@ -106,7 +106,7 @@
       { id: 'workspace', icon: 'cloud', tone: 'sage', setup: [200, 200], monthly: [20, 20], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
         name: { de: 'Domain & E-Mail mit Google Workspace', en: 'Domain & email with Google Workspace' },
         short: { de: 'Eigene Domain und E-Mail-Adressen, direkt in Gmail. Ich richte alles ein und betreue Ihr Google Workspace.', en: 'Your own domain and email addresses, right in Gmail. I set it all up and manage your Google Workspace.' },
-        steps: { de: ['Domain und E-Mail-Adressen einrichten', 'E-Mails in Gmail verknüpft, auf allen Geräten', 'Google Workspace inklusive: Benutzer, Passwörter, Änderungen erledigt'],
+        steps: { de: ['Domain und E-Mail-Adressen einrichten', 'E-Mails in Gmail verknüpft, auf allen Geräten', 'Google Workspace inklusive: Benutzer, Passwörter und Änderungen erledigt'],
                  en: ['Domain and email addresses set up', 'Email linked to Gmail, on every device', 'Google Workspace included: users, passwords, changes handled'] } },
       { id: 'crm', icon: 'users', tone: 'sage', setup: [800, 800], monthly: [50, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
         name: { de: 'Eigenes CRM für Ihren Betrieb', en: 'Your own CRM' },

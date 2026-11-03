@@ -25,3 +25,5 @@
 .work-btn:disabled { opacity: .35; cursor: default; }
 .work-kind.is-live { color: var(--ok); }
 .work-kind.is-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: .5em; vertical-align: .1em; }
+.work-link { flex-basis: 100%; font-size: var(--t-sm); font-weight: 600; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--brass); justify-self: start; width: max-content; }
+.work-link:hover { color: var(--brass); }

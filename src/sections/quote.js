@@ -126,7 +126,7 @@
           <button type="button" class="quote-sum-toggle" data-act="sumtoggle" aria-expanded="${st.open}" aria-controls="q-sumbody">${st.open ? L('Weniger', 'Less') : L('Details', 'Details')}</button>
         </div>
         <div class="quote-sum-body" id="q-sumbody">
-          <div class="quote-sum-title">${L('Ihre Auswahl', 'Your selection')}</div>
+          <div class="quote-sum-title"><span>${L('Ihre Auswahl', 'Your selection')}</span><button type="button" class="quote-sum-close" data-act="sumtoggle" aria-label="${L('Schliessen', 'Close')}">&times;</button></div>
           <ul class="quote-items" id="q-items"></ul>
           <dl class="quote-tot">
             <div class="big"><dt>${L('Einrichtung (einmalig)', 'Setup (one-time)')}</dt><dd>${money('setup')}</dd></div>
@@ -408,13 +408,31 @@
       const t = e.target;
       if (t.id && t.name && ['name', 'firma', 'email'].includes(t.name) && t.id.startsWith('q-')) showErr(t.name);
     });
+    const mqSheet = window.matchMedia('(max-width: 1040px)');
+    function setSum(open) {
+      st.open = !!open;
+      const s = root.querySelector('#q-sum'); if (!s) return;
+      s.classList.toggle('is-open', st.open);
+      const a = s.querySelector('.quote-sum-toggle');
+      if (a) { a.setAttribute('aria-expanded', st.open); a.textContent = st.open ? L('Weniger', 'Less') : L('Details', 'Details'); }
+      document.documentElement.classList.toggle('quote-sheet-lock', st.open && mqSheet.matches);
+    }
+    document.addEventListener('pointerdown', e => {
+      if (st.open && mqSheet.matches && !e.target.closest('#q-sum')) setSum(false);
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && st.open && mqSheet.matches) { setSum(false); const b = root.querySelector('.quote-sum-toggle'); if (b) b.focus(); }
+    });
+    const onMq = () => { if (!mqSheet.matches) document.documentElement.classList.remove('quote-sheet-lock'); else if (st.open) document.documentElement.classList.add('quote-sheet-lock'); };
+    if (mqSheet.addEventListener) mqSheet.addEventListener('change', onMq); else mqSheet.addListener(onMq);
+    window.addEventListener('resize', () => { if (!mqSheet.matches && st.open) setSum(false); });
     root.addEventListener('click', e => {
       const sb = e.target.closest('[data-step]'); if (sb) return go(+sb.dataset.step);
       const a = e.target.closest('[data-act]'); if (!a) return;
       const act = a.dataset.act;
       if (act === 'next') go(st.step + 1);
       else if (act === 'prev') go(st.step - 1);
-      else if (act === 'sumtoggle') { st.open = !st.open; const s = root.querySelector('#q-sum'); s.classList.toggle('is-open', st.open); a.setAttribute('aria-expanded', st.open); a.textContent = st.open ? L('Weniger', 'Less') : L('Details', 'Details'); }
+      else if (act === 'sumtoggle') setSum(!st.open);
       else if (act === 'usetip') {
         const t = tip(); if (!t) return;
         st.pkg = t.p.id; st.choice[t.p.id] = t.choice; st.picked = new Set(); go(1, false); refresh();

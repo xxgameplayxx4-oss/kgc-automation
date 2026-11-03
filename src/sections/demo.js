@@ -4,7 +4,7 @@
   const SC = {
     missedcall: {
       app: L('Nachrichten', 'Messages'),
-      cta: L('Das will ich: Rückruf-SMS', 'I want this: missed-call text-back'),
+      cta: L('Rückruf-SMS anfragen', 'Request missed-call text-back'),
       phone: [
         { at: 200, k: 'call', title: L('Anruf verpasst · 14:32', 'Missed call · 14:32'), sub: BIZ },
         { at: 1500, k: 'in', from: BIZ, text: L('Grüezi, wir sind gerade auf einer Baustelle. Antworten Sie kurz, worum es geht, oder buchen Sie hier einen Termin: <span class="demo-lnk">kgc.link/termin</span>', 'Hello, we are on a job site right now. Reply with what you need, or book a time here: <span class="demo-lnk">kgc.link/termin</span>') },
@@ -20,7 +20,7 @@
     },
     reviews: {
       app: L('Google-Bewertungen', 'Google reviews'),
-      cta: L('Das will ich: Bewertungs-Autopilot', 'I want this: review autopilot'),
+      cta: L('Bewertungs-Autopilot anfragen', 'Request review autopilot'),
       branches: {
         hi: {
           toggle: L('Was passiert bei 2 Sternen?', 'What happens at 2 stars?'),
@@ -57,7 +57,7 @@
     },
     leads: {
       app: L('meiersanitaer.ch', 'meiersanitaer.ch'),
-      cta: L('Das will ich: Anfragen-Fänger', 'I want this: lead catcher'),
+      cta: L('Anfragen-Fänger einrichten', 'Request lead catcher'),
       phone: [
         { at: 200, k: 'form', fields: [[L('Name', 'Name'), 'Anna Keller'], [L('Anliegen', 'Request'), L('Neues Bad, Offerte bitte', 'New bathroom, quote please')]], btn: L('Anfrage senden', 'Send enquiry') },
         { at: 1700, k: 'toast', text: L('Danke, Ihre Anfrage ist eingegangen.', 'Thank you, your enquiry has arrived.') },
