@@ -37,12 +37,12 @@
 
     /* The ten automations. Prices: [min, max] in CHF. */
     offers: [
-      { id: 'reviews', setup: [300, 600], monthly: [49, 99], industries: ['trade', 'repair', 'beauty', 'gastro'],
+      { id: 'reviews', setup: [300, 300], monthly: [49, 49], industries: ['trade', 'repair', 'beauty', 'gastro'],
         name: { de: 'Google-Bewertungs-Autopilot', en: 'Google review autopilot' },
         short: { de: 'Mehr Bewertungen, jede beantwortet, schlechte nie öffentlich überrascht.', en: 'More reviews, every one answered, bad ones caught before they hurt.' },
         steps: { de: ['Nach dem Auftrag: SMS mit direktem Bewertungslink', 'KI entwirft eine Antwort in Ihrem Ton', '4–5 Sterne: automatisch veröffentlicht. 1–3 Sterne: Alarm an Sie'],
                  en: ['After the job: SMS with a direct review link', 'AI drafts a reply in your voice', '4–5 stars: posted automatically. 1–3 stars: alert to you'] } },
-      { id: 'leads', setup: [250, 500], monthly: [29, 59], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+      { id: 'leads', setup: [250, 250], monthly: [29, 29], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
         name: { de: 'Anfragen-Fänger für Ihre Website', en: 'Website lead catcher' },
         short: { de: 'Keine Anfrage geht mehr verloren.', en: 'No enquiry ever gets lost again.' },
         steps: { de: ['Sofortige Eingangsbestätigung an den Kunden', 'Anfrage landet in Ihrer Tabelle', 'WhatsApp an Sie, Erinnerung nach 24 h ohne Antwort'],
@@ -52,7 +52,7 @@
         short: { de: 'Wer anruft, während Sie arbeiten, bekommt innert einer Minute eine Antwort.', en: 'Callers you miss on the job get a reply within a minute.' },
         steps: { de: ['Anruf verpasst', 'SMS innert 60 Sekunden mit Buchungslink', 'Antwort des Kunden geht direkt an Sie'],
                  en: ['Call missed', 'SMS within 60 seconds with booking link', 'Customer reply goes straight to you'] } },
-      { id: 'booking', setup: [300, 700], monthly: [39, 89], industries: ['repair', 'beauty', 'office'],
+      { id: 'booking', setup: [300, 300], monthly: [39, 39], industries: ['repair', 'beauty', 'office'],
         name: { de: 'Online-Buchung mit Erinnerungen', en: 'Online booking + reminders' },
         short: { de: 'Kunden buchen selbst, auch um 22 Uhr auf dem Sofa. Weniger Nichterscheinen.', en: 'Customers book themselves, even at 10 pm on the sofa. Fewer no-shows.' },
         steps: { de: ['Kunde wählt einen freien Termin', 'Bestätigung sofort', 'Erinnerung 24 h vorher'],
@@ -77,7 +77,7 @@
         short: { de: 'Mails sortiert, Antworten vorbereitet, auf Wunsch in Schweizerdeutsch.', en: 'Emails sorted, replies drafted, in Swiss German if you like.' },
         steps: { de: ['Neue Mails werden sortiert: Offerte, Reklamation, Lieferant, Spam', 'KI legt einen Antwortentwurf an', 'Sie prüfen und senden'],
                  en: ['New mail sorted: quote, complaint, supplier, spam', 'AI prepares a draft reply', 'You check and send'] } },
-      { id: 'workspace', setup: [150, 400], monthly: [20, 50], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
+      { id: 'workspace', setup: [150, 150], monthly: [20, 20], industries: ['trade', 'repair', 'beauty', 'gastro', 'office'],
         name: { de: 'E-Mail & Cloud mit Betreuung', en: 'Email + cloud with support' },
         short: { de: 'Eine Ansprechperson für Website, E-Mail und Dateien.', en: 'One contact for website, email and files.' },
         steps: { de: ['E-Mail-Adressen auf Ihrer Domain', 'Gemeinsame Ablage für Dokumente', 'Neue Benutzer, Passwörter, Änderungen: erledigt'],
