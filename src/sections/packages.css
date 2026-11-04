@@ -47,3 +47,4 @@
 .packages-how-item p { font-size: var(--t-sm); color: var(--graphite); }
 @media (max-width: 900px) { .packages-how { grid-template-columns: 1fr; gap: 12px; } }
 .packages-sub s { color: var(--graphite); opacity: .7; margin-right: 4px; }
+.packages-sup { font-size: var(--t-xs, 0.8125rem); color: var(--sage); font-weight: 600; margin-top: 4px; }

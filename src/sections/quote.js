@@ -130,7 +130,7 @@
           <ul class="quote-items" id="q-items"></ul>
           <dl class="quote-tot">
             <div class="big"><dt>${L('Einrichtung (einmalig)', 'Setup (one-time)')}</dt><dd>${money('setup')}</dd></div>
-            <div class="big"><dt>${L('Betreuung pro Monat', 'Care per month')}</dt><dd>${money('monthly')}</dd></div>
+            <div class="big"><dt>${L('Betreuung pro Monat', 'Care per month')}<small class="q-sup">${L('inkl. Support und 1 Gratis-Support-Anruf', 'incl. support and 1 free support call')}</small></dt><dd>${money('monthly')}</dd></div>
             <div class="yr"><dt>${L('Erstes Jahr total', 'First year total')}</dt><dd>${money('year')}</dd></div>
           </dl>
           <div class="quote-tip" id="q-tip" hidden></div>

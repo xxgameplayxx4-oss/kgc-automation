@@ -8,7 +8,7 @@
     const de = KGC.lang === 'de';
     const ab = r => r[0] === r[1] ? '' : (de ? 'ab ' : 'from ');
     return '<div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + ab(o.setup) + KGC.chf(o.setup[0]) + '</span></div>' +
-           '<div><span class="offers-plbl">' + (de ? 'Monatlich' : 'Monthly') + '</span><span class="offers-pval">' + ab(o.monthly) + KGC.chf(o.monthly[0]) + '</span></div>';
+           '<div><span class="offers-plbl">' + (de ? 'Monatlich, inkl. Support' : 'Monthly, incl. support') + '</span><span class="offers-pval">' + ab(o.monthly) + KGC.chf(o.monthly[0]) + '</span></div>';
   }
 
   function render() {

@@ -144,3 +144,4 @@
 .quote-other { margin-top: 4px; }
 .quote-other[hidden] { display: none; }
 .quote-items li.disc { color: var(--ok); font-weight: 600; }
+.q-sup { display: block; font-size: var(--t-xs, 0.75rem); font-weight: 500; color: var(--sage); letter-spacing: 0; text-transform: none; }

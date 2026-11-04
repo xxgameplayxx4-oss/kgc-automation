@@ -20,7 +20,7 @@
       grid.innerHTML = K.packages.map(p => {
         const feat = !!p.featured, sv = saving(p), ps = pset(p), was = ps < p.setup ? `<s>${K.chf(p.setup)}</s> ` : '', year = ps + 12 * p.monthly, nm = K.t(p.name);
         const price = view === 'monthly'
-          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${was}${K.chf(ps)} ${L('einmalig', 'one-time')}</div>`
+          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${was}${K.chf(ps)} ${L('einmalig', 'one-time')}</div><div class="packages-sup">${L('Monatlich inkl. Support und 1 Gratis-Support-Anruf', 'Monthly incl. support and 1 free support call')}</div>`
           : `<div class="packages-big">${K.chf(year)}<small>${L('im 1. Jahr', 'in year 1')}</small></div><div class="packages-sub">${K.chf(ps)} + 12 × ${K.chf(p.monthly)}</div>`;
         const items = p.includes.map(id => `<li>${K.t(K.offer(id).name)}</li>`).join('')
           + p.choice.map(g => `<li class="is-choice">${g.map(id => K.t(K.offer(id).name)).join(` <em>${L('oder', 'or')}</em> `)}</li>`).join('');

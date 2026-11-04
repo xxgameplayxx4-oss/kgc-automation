@@ -482,6 +482,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 .offers-disc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: var(--t-sm); color: var(--graphite); }
 .offers-disc li { display: inline-flex; gap: 6px; align-items: baseline; }
 .offers-disc b { font-family: var(--f-data); font-weight: 500; color: var(--sage); }
+.offers-supnote { margin: 0 0 16px; font-size: var(--t-sm); color: var(--graphite); }
 
 /* ==== work ==== */
 .work-head { display: grid; gap: 16px; max-width: 44rem; margin-bottom: clamp(32px, 4vw, 56px); }
@@ -627,6 +628,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 .packages-how-item p { font-size: var(--t-sm); color: var(--graphite); }
 @media (max-width: 900px) { .packages-how { grid-template-columns: 1fr; gap: 12px; } }
 .packages-sub s { color: var(--graphite); opacity: .7; margin-right: 4px; }
+.packages-sup { font-size: var(--t-xs, 0.8125rem); color: var(--sage); font-weight: 600; margin-top: 4px; }
 
 /* ==== quote ==== */
 .quote-head { max-width: 760px; display: grid; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
@@ -775,6 +777,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 .quote-other { margin-top: 4px; }
 .quote-other[hidden] { display: none; }
 .quote-items li.disc { color: var(--ok); font-weight: 600; }
+.q-sup { display: block; font-size: var(--t-xs, 0.75rem); font-weight: 500; color: var(--sage); letter-spacing: 0; text-transform: none; }
 
 /* ==== faq ==== */
 .faq-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start; }
@@ -1094,6 +1097,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         <li><b>40 %</b><span data-l="de">ab 6 Automationen</span><span data-l="en">from 6 automations</span></li>
       </ul>
     </div>
+    <p class="offers-supnote"><span data-l="de">Alle Monatspreise enthalten Support, inklusive 1 kostenlosem Support-Anruf pro Monat.</span><span data-l="en">All monthly prices include support, with 1 free support call per month.</span></p>
     <div class="offers-grid" id="offers-grid"></div>
     <div class="offers-web" aria-labelledby="offers-web-h">
       <div class="offers-web-head">
@@ -1238,7 +1242,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     </header>
     <div class="packages-how reveal">
       <div class="packages-how-item"><span class="ico-chip tone-brass" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-8.6 8.6a2.1 2.1 0 0 1-3-3l8.6-8.6"/><path d="M14.7 6.3A4 4 0 0 1 19.4 3l-2.5 2.5.8 1.8 1.8.8 2.5-2.5a4 4 0 0 1-3.3 4.7"/></svg></span><div><h3><span data-l="de">Einmalig: Einrichtung</span><span data-l="en">One-time: setup</span></h3><p><span data-l="de">Bezahlt in zwei Teilen: die Hälfte bei Auftrag, der Rest nach Fertigstellung. Mit einem Paket sparen Sie mindestens 25 %.</span><span data-l="en">Paid in two parts: half on order, the rest on completion. With a package you save at least 25%.</span></p></div></div>
-      <div class="packages-how-item"><span class="ico-chip tone-steel" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 11A7.5 7.5 0 0 0 6 6.5L4.5 8M4.5 13A7.5 7.5 0 0 0 18 17.5L19.5 16"/><path d="M4.5 4v4h4M19.5 20v-4h-4"/></svg></span><div><h3><span data-l="de">Monatlich: Betreuung</span><span data-l="en">Monthly: care</span></h3><p><span data-l="de">Betrieb, Anpassungen, Kurzbericht. Nach 3 Monaten auf Monatsende kündbar.</span><span data-l="en">Operation, changes, a short report. After 3 months, cancel at the end of any month.</span></p></div></div>
+      <div class="packages-how-item"><span class="ico-chip tone-steel" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 11A7.5 7.5 0 0 0 6 6.5L4.5 8M4.5 13A7.5 7.5 0 0 0 18 17.5L19.5 16"/><path d="M4.5 4v4h4M19.5 20v-4h-4"/></svg></span><div><h3><span data-l="de">Monatlich: Betreuung</span><span data-l="en">Monthly: care</span></h3><p><span data-l="de">Inklusive Support mit 1 kostenlosen Support-Anruf pro Monat. Dazu Betrieb, Anpassungen und Kurzbericht. Nach 3 Monaten auf Monatsende kündbar.</span><span data-l="en">Support included, with 1 free support call per month. Plus operation, changes and a short report. After 3 months, cancel at the end of any month.</span></p></div></div>
       <div class="packages-how-item"><span class="ico-chip tone-sage" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><div><h3><span data-l="de">Website: einmalig</span><span data-l="en">Website: one-time</span></h3><p><span data-l="de">Ab CHF 300, ohne Monatsgebühr.</span><span data-l="en">From CHF 300, no monthly fee.</span></p></div></div>
     </div>
     <div class="packages-toolbar">
@@ -1975,7 +1979,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     const de = KGC.lang === 'de';
     const ab = r => r[0] === r[1] ? '' : (de ? 'ab ' : 'from ');
     return '<div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + ab(o.setup) + KGC.chf(o.setup[0]) + '</span></div>' +
-           '<div><span class="offers-plbl">' + (de ? 'Monatlich' : 'Monthly') + '</span><span class="offers-pval">' + ab(o.monthly) + KGC.chf(o.monthly[0]) + '</span></div>';
+           '<div><span class="offers-plbl">' + (de ? 'Monatlich, inkl. Support' : 'Monthly, incl. support') + '</span><span class="offers-pval">' + ab(o.monthly) + KGC.chf(o.monthly[0]) + '</span></div>';
   }
 
   function render() {
@@ -2184,7 +2188,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       grid.innerHTML = K.packages.map(p => {
         const feat = !!p.featured, sv = saving(p), ps = pset(p), was = ps < p.setup ? `<s>${K.chf(p.setup)}</s> ` : '', year = ps + 12 * p.monthly, nm = K.t(p.name);
         const price = view === 'monthly'
-          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${was}${K.chf(ps)} ${L('einmalig', 'one-time')}</div>`
+          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${was}${K.chf(ps)} ${L('einmalig', 'one-time')}</div><div class="packages-sup">${L('Monatlich inkl. Support und 1 Gratis-Support-Anruf', 'Monthly incl. support and 1 free support call')}</div>`
           : `<div class="packages-big">${K.chf(year)}<small>${L('im 1. Jahr', 'in year 1')}</small></div><div class="packages-sub">${K.chf(ps)} + 12 × ${K.chf(p.monthly)}</div>`;
         const items = p.includes.map(id => `<li>${K.t(K.offer(id).name)}</li>`).join('')
           + p.choice.map(g => `<li class="is-choice">${g.map(id => K.t(K.offer(id).name)).join(` <em>${L('oder', 'or')}</em> `)}</li>`).join('');
@@ -2343,7 +2347,7 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
           <ul class="quote-items" id="q-items"></ul>
           <dl class="quote-tot">
             <div class="big"><dt>${L('Einrichtung (einmalig)', 'Setup (one-time)')}</dt><dd>${money('setup')}</dd></div>
-            <div class="big"><dt>${L('Betreuung pro Monat', 'Care per month')}</dt><dd>${money('monthly')}</dd></div>
+            <div class="big"><dt>${L('Betreuung pro Monat', 'Care per month')}<small class="q-sup">${L('inkl. Support und 1 Gratis-Support-Anruf', 'incl. support and 1 free support call')}</small></dt><dd>${money('monthly')}</dd></div>
             <div class="yr"><dt>${L('Erstes Jahr total', 'First year total')}</dt><dd>${money('year')}</dd></div>
           </dl>
           <div class="quote-tip" id="q-tip" hidden></div>
