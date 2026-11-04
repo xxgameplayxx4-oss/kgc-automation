@@ -51,9 +51,9 @@
     icon(name, tone) { return '<span class="ico-chip tone-' + tone + '" aria-hidden="true"><svg viewBox="0 0 24 24">' + (KGC.icons[name] || '') + '</svg></span>'; },
 
     r5: n => Math.round(n / 5) * 5,
-    /* One-time discount on automations: package 25 %; 4 automations 30 %, 5 = 40 %, 6+ = 50 %. The higher rate wins. */
+    /* One-time discount on automations: package 25 %; 4 automations 30 %, 5 = 35 %, 6+ = 40 % (max 40 %). The higher rate wins. */
     discount(n, isPackage) {
-      const tier = n >= 6 ? 0.5 : n === 5 ? 0.4 : n === 4 ? 0.3 : 0, pk = isPackage ? 0.25 : 0;
+      const tier = n >= 6 ? 0.4 : n === 5 ? 0.35 : n === 4 ? 0.3 : 0, pk = isPackage ? 0.25 : 0;
       return tier >= pk
         ? { rate: tier, label: { de: 'Mengenrabatt', en: 'Volume discount' } }
         : { rate: pk, label: { de: 'Paketrabatt', en: 'Package discount' } };

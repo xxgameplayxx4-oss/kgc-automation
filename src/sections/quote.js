@@ -38,7 +38,7 @@
       const S = sel(); let s = [0, 0], m = [0, 0];
       if (S.p) { s = [S.p.setup, S.p.setup]; m = [S.p.monthly, S.p.monthly]; }
       S.extras.forEach(id => { const x = po(K.offer(id)); s[0] += x.s[0]; s[1] += x.s[1]; m[0] += x.m[0]; m[1] += x.m[1]; });
-      /* Discount on the one-time cost of the automations (not the website): package 25 %, or by count 4/5/6+ = 30/40/50 %; the higher one applies */
+      /* Discount on the one-time cost of the automations (not the website): package 25 %, or by count 4/5/6+ = 30/35/40 %; the higher one applies */
       const n = S.base.length + S.extras.length, D = K.discount(n, !!S.p);
       const off = [K.r5(s[0] * D.rate), K.r5(s[1] * D.rate)];
       s = [s[0] - off[0], s[1] - off[1]];
