@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>KGC Automation</title>
-<meta name="claude:viewport-fit-sides" content="cover"><meta name="description" content="Massgeschneiderte Automationen für Schweizer Unternehmen: Bewertungen, Anfragen, Buchungen, Offerten und Rechnungen laufen von selbst.">
+<meta name="claude:viewport-fit-sides" content="cover"><meta name="description" content="Websites und Automationen für Schweizer KMU: moderne Website plus automatische Anfragen, Termine, Bewertungen, Offerten und Rechnungen. Fixpreise.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout concept: a Swiss watch movement as metaphor — calm limestone ground, Fraunces display,
@@ -193,41 +193,93 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 @media (max-width: 899px) { .nav-burger { display: inline-block; } }
 @media (min-width: 900px) { .nav-menu { display: none !important; } }
 @media (max-width: 480px) { .nav-burger { width: 40px; height: 40px; } .nav-burger span:first-child { top: 16px; } .nav-burger span:last-child { top: 23px; } }
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after { transform: scaleX(1); }
+.nav-menu-links a.is-current { color: var(--brass); }
+.page[hidden] { display: none !important; }
+.page > :first-child h1:focus, .page h2:focus { outline: none; }
 
 /* ==== hero ==== */
-/* One cinematic hero: Seedance watch-movement film behind the headline. Always dark so the footage reads the same in both themes. */
-.hero { position: relative; isolation: isolate; overflow: hidden; background: #0c0f12; color: #F2EFE8; min-height: min(92vh, 860px); display: grid; align-items: center; }
-.hero-media, .hero-shade { position: absolute; inset: 0; }
-.hero-media { z-index: -2; }
-.hero-poster, .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.hero-video { opacity: 0; transition: opacity 1.2s var(--ease); }
-.hero-video.is-on { opacity: 1; }
-.hero-shade { z-index: -1; background: linear-gradient(90deg, rgba(10,12,14,.92) 0%, rgba(10,12,14,.8) 38%, rgba(10,12,14,.35) 66%, rgba(10,12,14,.05) 88%), linear-gradient(0deg, rgba(10,12,14,.65) 0%, rgba(10,12,14,0) 40%); }
-.hero-grid { width: 100%; padding-block: clamp(72px, 10vw, 140px); }
-.hero-text { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; max-width: 780px; }
-.hero .eyebrow { color: #D8B878; }
-.hero-h1 { font-size: var(--t-3xl); color: #F7F4EC; }
-.hero-h1 .it { color: #D8B878; display: block; }
-.hero-lede { max-width: 50ch; color: rgba(242,239,232,.84); }
+/* Hero: text left, HTML/CSS mockup (website + automation cards) right. Follows light/dark tokens. */
+.hero { position: relative; isolation: isolate; overflow: hidden; background: var(--stone); color: var(--ink); display: grid; align-items: center; }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(ellipse 60% 70% at 78% 40%, var(--brass-soft), transparent 70%); opacity: .55; }
+.hero-grid { width: 100%; padding-block: clamp(56px, 8vw, 112px); display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+.hero-text { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; min-width: 0; }
+.hero-h1 { font-size: var(--t-3xl); }
+.hero-h1 .it { color: var(--brass); display: block; }
+.hero-lede { max-width: 50ch; color: var(--graphite); }
+.hero-ghost { background: transparent; color: var(--ink); border: 1px solid var(--rule); }
+.hero-ghost:hover { border-color: var(--ink); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
-.hero-ghost { background: rgba(10,12,14,.25); color: #F2EFE8; border-color: rgba(242,239,232,.4); backdrop-filter: blur(6px); }
-.hero-ghost:hover { border-color: #F2EFE8; }
-.hero-trust { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .04em; color: rgba(242,239,232,.72); display: flex; flex-wrap: wrap; gap: 8px 12px; padding-top: 20px; border-top: 1px solid rgba(242,239,232,.22); width: 100%; max-width: 560px; margin: 0; }
-.hero-trust i { font-style: normal; color: #D8B878; }
-.hero-toggle { position: absolute; z-index: 2; right: max(16px, env(safe-area-inset-right, 0px)); bottom: 24px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(242,239,232,.35); background: rgba(10,12,14,.35); color: #F2EFE8; cursor: pointer; display: grid; place-items: center; backdrop-filter: blur(6px); }
-.hero-ic { width: 12px; height: 14px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; }
-.hero-toggle.is-paused .hero-ic { width: 0; height: 0; border: 0; border-left: 12px solid currentColor; border-top: 7px solid transparent; border-bottom: 7px solid transparent; margin-left: 4px; }
-@media (max-width: 720px) {
-  .hero { display: block; min-height: 0; }
-  .hero-media { position: relative; inset: auto; height: 62vh; max-height: 560px; z-index: -2; }
-  .hero-shade { background: linear-gradient(0deg, rgba(10,12,14,1) 0%, rgba(10,12,14,.9) 45%, rgba(10,12,14,.35) 72%, rgba(10,12,14,.1) 90%); }
-  .hero-grid { margin-top: -30vh; padding-block: 0 56px; position: relative; }
-  .hero-toggle { top: 16px; bottom: auto; }
+.hero-trust { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .04em; color: var(--graphite); display: flex; flex-wrap: wrap; gap: 8px 12px; padding-top: 20px; border-top: 1px solid var(--rule); width: 100%; max-width: 560px; margin: 0; }
+.hero-trust i { font-style: normal; color: var(--brass); }
+
+/* visual */
+.hero-visual { min-width: 0; }
+.hv-stage { position: relative; width: 100%; max-width: 560px; margin-inline: auto; padding: 0 28px 44px 0; }
+.hv-browser { background: var(--paper); border: 1px solid var(--rule); border-radius: 14px; box-shadow: 0 30px 60px -28px rgba(0,0,0,.35), 0 2px 6px rgba(0,0,0,.06); overflow: hidden; }
+.hv-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--rule); background: var(--stone); }
+.hv-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--rule); }
+.hv-url { margin-left: 10px; flex: 1; font-family: var(--f-data); font-size: 11px; color: var(--graphite); background: var(--paper); border: 1px solid var(--rule); border-radius: 99px; padding: 3px 12px; }
+.hv-site { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 18px; }
+.hv-nav { display: flex; gap: 14px; align-items: center; font-size: 11px; color: var(--graphite); }
+.hv-logo { margin-right: auto; font-family: var(--f-display); font-size: 14px; color: var(--ink); font-weight: 600; }
+.hv-hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; align-items: center; }
+.hv-h { font-family: var(--f-display); font-size: clamp(20px, 2.4vw, 28px); line-height: 1.1; color: var(--ink); }
+.hv-p { font-size: 11.5px; color: var(--graphite); margin: 8px 0 14px; }
+.hv-btn { display: inline-block; background: var(--brass); color: #fff; font-size: 12px; font-weight: 600; padding: 8px 14px; border-radius: 8px; }
+.hv-img { aspect-ratio: 1; border-radius: 10px; background: var(--steel-soft); position: relative; overflow: hidden; }
+.hv-img span:nth-child(1) { position: absolute; inset: 14% 14% 40% 14%; background: var(--sage-soft); border-radius: 6px; }
+.hv-img span:nth-child(2) { position: absolute; left: 14%; right: 38%; bottom: 14%; height: 20%; background: var(--brass-soft); border-radius: 6px; }
+.hv-img span:nth-child(3) { position: absolute; right: 14%; bottom: 14%; width: 20%; height: 20%; background: var(--steel); opacity: .6; border-radius: 50%; }
+.hv-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.hv-tiles span { height: 38px; border-radius: 8px; background: var(--stone); border: 1px solid var(--rule); }
+
+.hv-card { position: absolute; display: flex; align-items: center; gap: 10px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 9px 14px 9px 9px; box-shadow: 0 16px 32px -14px rgba(0,0,0,.4); white-space: nowrap; }
+.hv-card .ico-chip { width: 34px; height: 34px; border-radius: 9px; }
+.hv-card .ico-chip svg { width: 17px; height: 17px; }
+.hv-t { display: flex; flex-direction: column; line-height: 1.25; }
+.hv-t b { font-size: 12.5px; color: var(--ink); font-weight: 600; }
+.hv-t small { font-size: 11px; color: var(--graphite); }
+.hv-stars { color: var(--brass); font-size: 13px; letter-spacing: 1px; padding-left: 5px; }
+.hv-c1 { right: 0; top: 18%; }
+.hv-c2 { right: 8%; top: 41%; }
+.hv-c3 { right: 0; top: 64%; }
+.hv-c4 { left: 4%; bottom: 0; }
+.hv-c1::after, .hv-c2::after { content: ""; position: absolute; left: 50%; top: 100%; height: 14px; border-left: 2px dashed var(--brass); opacity: .7; }
+
+/* entrance */
+.hv-browser, .hv-card { opacity: 0; transform: translateY(14px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.hero-visual.is-in .hv-browser, .hero-visual.is-in .hv-card { opacity: 1; transform: none; }
+.hero-visual.is-in .hv-c1 { transition-delay: .35s; }
+.hero-visual.is-in .hv-c2 { transition-delay: .65s; }
+.hero-visual.is-in .hv-c3 { transition-delay: .95s; }
+.hero-visual.is-in .hv-c4 { transition-delay: 1.25s; }
+@media (prefers-reduced-motion: reduce) {
+  .hv-browser, .hv-card { opacity: 1; transform: none; transition: none; }
+}
+
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
   .hero-actions .btn { flex: 1 1 100%; }
   .hero-trust { flex-direction: column; gap: 4px; }
   .hero-trust i { display: none; }
+  .hv-stage { padding: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .hv-browser { width: 100%; }
+  .hv-card { position: static; margin: 0; }
+  .hv-card::after { display: none; }
+  .hv-c1 { margin-top: -26px; margin-right: 8px; }
+  .hv-c2 { margin-right: 28px; }
+  .hv-c3 { margin-right: 8px; }
+  .hv-c4 { align-self: flex-start; margin-left: 8px; }
+  .hv-site { padding: 12px; gap: 12px; }
+  .hv-nav span { display: none; }
+  .hv-card { padding: 7px 11px 7px 7px; gap: 8px; }
+  .hv-card .ico-chip { width: 28px; height: 28px; }
+  .hv-t b { font-size: 11px; }
+  .hv-t small { font-size: 10px; }
 }
 
 /* ==== vsl ==== */
@@ -251,6 +303,151 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   .vsl-foot .btn { flex: 1 1 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .vsl-play-ic { transition: none; } }
+
+/* ==== process ==== */
+.process-head { display: flex; flex-direction: column; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); max-width: 40rem; }
+.process-head .it { color: var(--brass); }
+.process-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 36px; position: relative; }
+.process-step { position: relative; display: flex; flex-direction: column; gap: 12px; padding-left: 40px; }
+.process-step::before { content: ""; position: absolute; left: 5px; top: 18px; bottom: -36px; width: 1px; background: var(--brass); opacity: .6; }
+.process-step:last-child::before { display: none; }
+.process-node { position: absolute; left: 0; top: 8px; width: 11px; height: 11px; border-radius: 50%; background: var(--stone); border: 1px solid var(--brass); }
+.process-n { font-size: var(--t-xs); letter-spacing: .14em; color: var(--brass); }
+.process-step h3 { font-size: var(--t-xl); }
+.process-meta { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .06em; color: var(--ink); text-transform: uppercase; }
+.process-step p:last-child { color: var(--graphite); font-size: var(--t-sm); max-width: 38ch; }
+.process-cta { margin-top: clamp(32px, 4vw, 56px); }
+
+@media (min-width: 900px) {
+  .process-list { display: block; }
+  .process-step { position: sticky; top: calc(96px + var(--i, 0) * 16px); display: grid; grid-template-columns: minmax(120px, 200px) 1fr; grid-template-areas: "n h" "n m" "n p"; column-gap: 40px; row-gap: 12px; align-content: center; align-items: start; min-height: min(44vh, 320px); margin-bottom: 24px; padding: 40px clamp(24px, 4vw, 64px); background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); transform-origin: 50% 0; will-change: transform, opacity; box-sizing: border-box; }
+  .process-step::before, .process-node { display: none; }
+  .process-n { grid-area: n; font-family: var(--f-display); font-size: clamp(5rem, 9vw, 8.5rem); line-height: .9; letter-spacing: -.02em; color: var(--brass); }
+  .process-step h3 { grid-area: h; font-size: var(--t-2xl); }
+  .process-meta { grid-area: m; }
+  .process-step p:last-child { grid-area: p; font-size: var(--t-md); max-width: 52ch; }
+}
+.process .btn { box-sizing: border-box; }
+
+/* ==== showcase ==== */
+.showcase { background: #0E1418; color: #EEF0EA; padding-block: clamp(48px, 6vw, 80px); overflow: hidden; }
+.showcase-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+.showcase-text { display: grid; gap: 16px; max-width: 30rem; }
+.showcase .eyebrow { color: #D8B878; }
+.showcase h2 { color: #F4F1EA; }
+.showcase h2 .it { color: #D8B878; }
+.showcase-text p { color: rgba(238,240,234,.78); font-size: var(--t-lg); }
+.showcase-more { color: #F4F1EA; font-weight: 600; text-decoration: none; border-bottom: 1px solid #D8B878; width: max-content; padding-bottom: 2px; }
+.showcase-more:hover { color: #D8B878; }
+.showcase-phones { position: relative; display: flex; justify-content: center; gap: 24px; }
+.showcase-phone { display: block; width: min(240px, 42%); border-radius: 28px; padding: 8px; background: #1C252C; box-shadow: 0 24px 48px -16px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.08); transition: transform .3s var(--ease); }
+.showcase-phone img { display: block; width: 100%; height: auto; border-radius: 20px; }
+.showcase-phone.p1 { transform: rotate(-4deg) translateY(12px); }
+.showcase-phone.p2 { transform: rotate(4deg) translateY(-12px); }
+.showcase-phone:hover { transform: rotate(0) translateY(0); }
+@media (max-width: 820px) { .showcase-in { grid-template-columns: 1fr; gap: 32px; } }
+@media (prefers-reduced-motion: reduce) { .showcase-phone { transition: none; } }
+
+/* ==== paths ==== */
+.paths-head { display: grid; gap: 12px; margin-bottom: 24px; }
+.paths-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.paths-card { display: grid; align-content: start; gap: 8px; padding: 20px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); color: var(--ink); text-decoration: none; transition: border-color .2s, transform .2s var(--ease); }
+.paths-card b { font-family: var(--f-display); font-weight: 500; font-size: var(--t-lg); margin-top: 4px; }
+.paths-card b::after { content: " →"; color: var(--brass); }
+.paths-card > span:last-child { color: var(--graphite); font-size: var(--t-sm); }
+.paths-card:hover { border-color: var(--brass); transform: translateY(-2px); }
+@media (max-width: 900px) { .paths-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .paths-grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .paths-card { transition: none; } }
+
+/* ==== offers ==== */
+.offers-head { display: grid; gap: 16px; max-width: 44rem; margin-bottom: clamp(32px, 4vw, 56px); }
+.offers-filter { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; margin-bottom: 24px; }
+.offers-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.offers-pill {
+  appearance: none; font: 500 var(--t-sm)/1 var(--f-body); color: var(--graphite); background: transparent;
+  border: 1px solid var(--rule); border-radius: 999px; padding: 12px 16px; min-height: 40px; cursor: pointer;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.offers-pill:hover { border-color: var(--brass); color: var(--ink); }
+.offers-pill[aria-pressed="true"] { background: var(--ink); color: var(--stone); border-color: var(--ink); }
+.offers-count { font-size: var(--t-sm); color: var(--graphite); margin: 0; }
+
+.offers-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+.offers-cell {
+  position: relative; display: flex; flex-direction: column; gap: 16px; padding: clamp(24px, 2.6vw, 36px);
+  border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  transition: opacity .45s var(--ease), background .3s;
+}
+.offers-cell.is-dim { opacity: .28; }
+.offers-cell:hover, .offers-cell:focus-within { opacity: 1; background: var(--paper); }
+.offers-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 1.4em; }
+.offers-idx { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; color: var(--brass); }
+.offers-tag { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--brass); border: 1px solid var(--brass); padding: 4px 8px; border-radius: 2px; }
+.offers-name { font-family: var(--f-display); font-weight: 400; font-size: var(--t-xl); line-height: 1.12; letter-spacing: -.01em; text-wrap: balance; margin: 0; }
+.offers-short { color: var(--graphite); }
+.offers-price { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--rule); }
+.offers-price > div { display: grid; gap: 4px; }
+.offers-plbl { font-size: var(--t-xs); color: var(--graphite); }
+.offers-pval { font-family: var(--f-data); font-size: var(--t-md); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.offers-id { display: inline-flex; align-items: center; gap: 12px; }
+.offers-acts { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 16px; }
+.offers-more, .offers-add {
+  appearance: none; background: none; border: 0; cursor: pointer; font: 500 var(--t-sm)/1.2 var(--f-body); color: var(--ink);
+  padding: 12px 0; min-height: 44px; display: inline-flex; align-items: center; gap: .5em;
+}
+.offers-more .offers-pm { font-family: var(--f-data); color: var(--brass); width: 1em; text-align: center; transition: transform .3s var(--ease); display: inline-block; }
+.offers-more[aria-expanded="true"] .offers-pm { transform: rotate(45deg); }
+.offers-add { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 1.5px; text-underline-offset: 6px; }
+.offers-add:hover, .offers-more:hover { color: var(--brass); }
+.offers-steps-w { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease); margin-top: -16px; }
+.offers-steps-w > div { overflow: hidden; visibility: hidden; transition: visibility .4s; }
+.offers-cell.open .offers-steps-w { grid-template-rows: 1fr; margin-top: -4px; }
+.offers-cell.open .offers-steps-w > div { visibility: visible; }
+.offers-steps { list-style: none; margin: 0; padding: 4px 0 4px; display: grid; gap: 12px; counter-reset: s; }
+.offers-steps li { display: grid; grid-template-columns: 24px 1fr; gap: 8px; font-size: var(--t-sm); line-height: 1.45; counter-increment: s; }
+.offers-steps li::before { content: counter(s); font-family: var(--f-data); font-size: var(--t-xs); color: var(--brass); border: 1px solid var(--brass); border-radius: 50%; width: 20px; height: 20px; display: grid; place-items: center; margin-top: 1px; }
+.offers-cta { display: flex; justify-content: center; margin-top: clamp(32px, 4vw, 56px); }
+
+@media (max-width: 960px) { .offers-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) {
+  .offers-grid { grid-template-columns: 1fr; }
+  .offers-cta .btn { width: 100%; }
+}
+
+/* hover: brass hairline grows across the top, name lifts */
+.offers-cell::before { content: ""; position: absolute; top: -1px; left: 0; height: 1px; width: 100%; background: var(--brass); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); pointer-events: none; }
+.offers-cell:hover::before, .offers-cell:focus-within::before { transform: scaleX(1); }
+.offers-name { transition: transform .35s var(--ease); }
+.offers-cell:hover .offers-name, .offers-cell:focus-within .offers-name { transform: translateY(-2px); }
+
+/* Websites block */
+.offers-web { margin-top: clamp(48px, 7vw, 88px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.offers-web-head { display: grid; gap: 16px; }
+.offers-web-head h3 { font-size: var(--t-2xl); }
+.offers-web-head p { color: var(--graphite); max-width: 36ch; }
+.offers-web-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--rule); }
+.offers-web-grid .offers-webcell + .offers-webcell { border-left: 1px solid var(--rule); }
+.offers-webcell { border: 0 !important; }
+.offers-web-pts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: var(--t-sm); color: var(--graphite); }
+.offers-web-pts li { display: flex; gap: 12px; }
+.offers-web-pts li::before { content: ""; flex: none; width: 10px; height: 1px; background: var(--brass); margin-top: .75em; }
+@media (max-width: 900px) { .offers-web { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .offers-web-grid { grid-template-columns: 1fr; } .offers-web-grid .offers-webcell + .offers-webcell { border-left: 0; border-top: 1px solid var(--rule); } }
+.offers-webcell .offers-name { font-size: clamp(1.3rem, .95rem + .7vw, 1.6rem); overflow-wrap: break-word; }
+@media (min-width: 961px) {
+  .offers-cell[data-id="crm"] { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 48px; align-content: start; }
+  .offers-cell[data-id="crm"] > .offers-top, .offers-cell[data-id="crm"] > .offers-name { grid-column: 1; }
+  .offers-cell[data-id="crm"] > .offers-short, .offers-cell[data-id="crm"] > .offers-price, .offers-cell[data-id="crm"] > .offers-acts, .offers-cell[data-id="crm"] > .offers-steps-w { grid-column: 2; }
+  .offers-cell[data-id="crm"] > .offers-name { grid-row: 2 / span 3; }
+}
+
+.offers-disc { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-bottom: 16px; padding: 16px 20px; border-radius: 12px; background: var(--sage-soft); color: var(--ink); }
+.offers-disc-t { font-weight: 600; font-size: var(--t-sm); }
+.offers-disc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: var(--t-sm); color: var(--graphite); }
+.offers-disc li { display: inline-flex; gap: 6px; align-items: baseline; }
+.offers-disc b { font-family: var(--f-data); font-weight: 500; color: var(--sage); }
+.offers-supnote { margin: 0 0 16px; font-size: var(--t-sm); color: var(--graphite); }
 
 /* ==== demo ==== */
 .demo-head { display: grid; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
@@ -351,169 +548,57 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   .demo-tab { padding-right: 16px; margin-right: 16px; }
 }
 
-/* ==== process ==== */
-.process-head { display: flex; flex-direction: column; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); max-width: 40rem; }
-.process-head .it { color: var(--brass); }
-.process-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 36px; position: relative; }
-.process-step { position: relative; display: flex; flex-direction: column; gap: 12px; padding-left: 40px; }
-.process-step::before { content: ""; position: absolute; left: 5px; top: 18px; bottom: -36px; width: 1px; background: var(--brass); opacity: .6; }
-.process-step:last-child::before { display: none; }
-.process-node { position: absolute; left: 0; top: 8px; width: 11px; height: 11px; border-radius: 50%; background: var(--stone); border: 1px solid var(--brass); }
-.process-n { font-size: var(--t-xs); letter-spacing: .14em; color: var(--brass); }
-.process-step h3 { font-size: var(--t-xl); }
-.process-meta { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .06em; color: var(--ink); text-transform: uppercase; }
-.process-step p:last-child { color: var(--graphite); font-size: var(--t-sm); max-width: 38ch; }
-.process-cta { margin-top: clamp(32px, 4vw, 56px); }
-
-@media (min-width: 900px) {
-  .process-list { display: block; }
-  .process-step { position: sticky; top: calc(96px + var(--i, 0) * 16px); display: grid; grid-template-columns: minmax(120px, 200px) 1fr; grid-template-areas: "n h" "n m" "n p"; column-gap: 40px; row-gap: 12px; align-content: center; align-items: start; min-height: min(44vh, 320px); margin-bottom: 24px; padding: 40px clamp(24px, 4vw, 64px); background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); transform-origin: 50% 0; will-change: transform, opacity; box-sizing: border-box; }
-  .process-step::before, .process-node { display: none; }
-  .process-n { grid-area: n; font-family: var(--f-display); font-size: clamp(5rem, 9vw, 8.5rem); line-height: .9; letter-spacing: -.02em; color: var(--brass); }
-  .process-step h3 { grid-area: h; font-size: var(--t-2xl); }
-  .process-meta { grid-area: m; }
-  .process-step p:last-child { grid-area: p; font-size: var(--t-md); max-width: 52ch; }
+/* ==== packages ==== */
+.packages-head { max-width: 760px; display: grid; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
+.packages-toolbar { display: flex; margin-bottom: 28px; }
+.packages-seg { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); padding: 4px; background: var(--paper); max-width: 100%; }
+.packages-seg button {
+  font: 600 var(--t-sm)/1.2 var(--f-body); color: var(--graphite); background: transparent; border: 0; border-radius: 2px;
+  padding: 0 20px; min-height: 44px; cursor: pointer; transition: background .2s, color .2s;
 }
-.process .btn { box-sizing: border-box; }
+.packages-seg button[aria-pressed="true"] { background: var(--ink); color: var(--stone); }
+.packages-seg button:not([aria-pressed="true"]):hover { color: var(--ink); }
 
-/* ==== showcase ==== */
-.showcase { background: #0E1418; color: #EEF0EA; padding-block: clamp(48px, 6vw, 80px); overflow: hidden; }
-.showcase-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
-.showcase-text { display: grid; gap: 16px; max-width: 30rem; }
-.showcase .eyebrow { color: #D8B878; }
-.showcase h2 { color: #F4F1EA; }
-.showcase h2 .it { color: #D8B878; }
-.showcase-text p { color: rgba(238,240,234,.78); font-size: var(--t-lg); }
-.showcase-more { color: #F4F1EA; font-weight: 600; text-decoration: none; border-bottom: 1px solid #D8B878; width: max-content; padding-bottom: 2px; }
-.showcase-more:hover { color: #D8B878; }
-.showcase-phones { position: relative; display: flex; justify-content: center; gap: 24px; }
-.showcase-phone { display: block; width: min(240px, 42%); border-radius: 28px; padding: 8px; background: #1C252C; box-shadow: 0 24px 48px -16px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.08); transition: transform .3s var(--ease); }
-.showcase-phone img { display: block; width: 100%; height: auto; border-radius: 20px; }
-.showcase-phone.p1 { transform: rotate(-4deg) translateY(12px); }
-.showcase-phone.p2 { transform: rotate(4deg) translateY(-12px); }
-.showcase-phone:hover { transform: rotate(0) translateY(0); }
-@media (max-width: 820px) { .showcase-in { grid-template-columns: 1fr; gap: 32px; } }
-@media (prefers-reduced-motion: reduce) { .showcase-phone { transition: none; } }
-
-/* ==== offers ==== */
-.offers-head { display: grid; gap: 16px; max-width: 44rem; margin-bottom: clamp(32px, 4vw, 56px); }
-.offers-filter { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; margin-bottom: 24px; }
-.offers-pills { display: flex; flex-wrap: wrap; gap: 8px; }
-.offers-pill {
-  appearance: none; font: 500 var(--t-sm)/1 var(--f-body); color: var(--graphite); background: transparent;
-  border: 1px solid var(--rule); border-radius: 999px; padding: 12px 16px; min-height: 40px; cursor: pointer;
-  transition: color .2s, border-color .2s, background .2s;
+.packages-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+.packages-card {
+  position: relative; display: flex; flex-direction: column; gap: 24px; padding: clamp(24px, 2.4vw, 36px);
+  border: 1px solid var(--rule); border-radius: var(--radius); background: transparent;
 }
-.offers-pill:hover { border-color: var(--brass); color: var(--ink); }
-.offers-pill[aria-pressed="true"] { background: var(--ink); color: var(--stone); border-color: var(--ink); }
-.offers-count { font-size: var(--t-sm); color: var(--graphite); margin: 0; }
+.packages-card.is-featured { background: var(--paper); border-color: var(--brass-soft); border-top: 3px solid var(--brass); box-shadow: var(--shadow); }
+.packages-flag { position: absolute; top: -1px; right: 24px; transform: translateY(-50%); background: var(--stone); padding: 0 12px; font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+.packages-card.is-featured .packages-flag { background: var(--paper); top: 0; }
+.packages-name { font-size: var(--t-2xl); }
+.packages-tag { color: var(--graphite); margin-top: 8px; }
+.packages-price { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 20px 0; display: grid; gap: 4px; }
+.packages-big { font-family: var(--f-data); font-size: clamp(2rem, 1.5rem + 1.6vw, 2.7rem); line-height: 1.1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.packages-big small { font-size: var(--t-sm); color: var(--graphite); letter-spacing: 0; margin-left: .35em; }
+.packages-sub { font-family: var(--f-data); font-size: var(--t-sm); color: var(--graphite); }
+.packages-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; flex: 1; align-content: start; }
+.packages-list li { position: relative; padding-left: 24px; line-height: 1.45; }
+.packages-list li::before { content: ""; position: absolute; left: 3px; top: .5em; width: 10px; height: 5px; border-left: 1.5px solid var(--brass); border-bottom: 1.5px solid var(--brass); transform: rotate(-45deg); }
+.packages-list li.is-choice::before { border: 1.5px solid var(--brass); width: 8px; height: 8px; transform: none; border-radius: 50%; top: .5em; left: 2px; }
+.packages-list em { font-style: italic; font-family: var(--f-display); color: var(--brass); padding: 0 .15em; }
+.packages-save { font-family: var(--f-data); font-size: var(--t-sm); color: var(--ok); min-height: 1.4em; }
+.packages-card .btn { width: 100%; }
+.packages-note { margin-top: 28px; font-size: var(--t-sm); color: var(--graphite); max-width: 78ch; }
 
-.offers-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
-.offers-cell {
-  position: relative; display: flex; flex-direction: column; gap: 16px; padding: clamp(24px, 2.6vw, 36px);
-  border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
-  transition: opacity .45s var(--ease), background .3s;
+@media (max-width: 960px) {
+  .packages-grid { grid-template-columns: minmax(0, 1fr); max-width: 560px; }
+  .packages-card.is-featured { order: -1; }
 }
-.offers-cell.is-dim { opacity: .28; }
-.offers-cell:hover, .offers-cell:focus-within { opacity: 1; background: var(--paper); }
-.offers-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 1.4em; }
-.offers-idx { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; color: var(--brass); }
-.offers-tag { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--brass); border: 1px solid var(--brass); padding: 4px 8px; border-radius: 2px; }
-.offers-name { font-family: var(--f-display); font-weight: 400; font-size: var(--t-xl); line-height: 1.12; letter-spacing: -.01em; text-wrap: balance; margin: 0; }
-.offers-short { color: var(--graphite); }
-.offers-price { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--rule); }
-.offers-price > div { display: grid; gap: 4px; }
-.offers-plbl { font-size: var(--t-xs); color: var(--graphite); }
-.offers-pval { font-family: var(--f-data); font-size: var(--t-md); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
-.offers-id { display: inline-flex; align-items: center; gap: 12px; }
-.offers-acts { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 16px; }
-.offers-more, .offers-add {
-  appearance: none; background: none; border: 0; cursor: pointer; font: 500 var(--t-sm)/1.2 var(--f-body); color: var(--ink);
-  padding: 12px 0; min-height: 44px; display: inline-flex; align-items: center; gap: .5em;
+@media (max-width: 480px) {
+  .packages-seg { width: 100%; }
+  .packages-seg button { flex: 1; padding: 0 8px; }
 }
-.offers-more .offers-pm { font-family: var(--f-data); color: var(--brass); width: 1em; text-align: center; transition: transform .3s var(--ease); display: inline-block; }
-.offers-more[aria-expanded="true"] .offers-pm { transform: rotate(45deg); }
-.offers-add { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: 1.5px; text-underline-offset: 6px; }
-.offers-add:hover, .offers-more:hover { color: var(--brass); }
-.offers-steps-w { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease); margin-top: -16px; }
-.offers-steps-w > div { overflow: hidden; visibility: hidden; transition: visibility .4s; }
-.offers-cell.open .offers-steps-w { grid-template-rows: 1fr; margin-top: -4px; }
-.offers-cell.open .offers-steps-w > div { visibility: visible; }
-.offers-steps { list-style: none; margin: 0; padding: 4px 0 4px; display: grid; gap: 12px; counter-reset: s; }
-.offers-steps li { display: grid; grid-template-columns: 24px 1fr; gap: 8px; font-size: var(--t-sm); line-height: 1.45; counter-increment: s; }
-.offers-steps li::before { content: counter(s); font-family: var(--f-data); font-size: var(--t-xs); color: var(--brass); border: 1px solid var(--brass); border-radius: 50%; width: 20px; height: 20px; display: grid; place-items: center; margin-top: 1px; }
-.offers-cta { display: flex; justify-content: center; margin-top: clamp(32px, 4vw, 56px); }
+@media (min-width: 900px) { .packages-tag { min-height: calc(2 * 1.6em); } }
 
-@media (max-width: 960px) { .offers-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 620px) {
-  .offers-grid { grid-template-columns: 1fr; }
-  .offers-cta .btn { width: 100%; }
-}
-
-/* hover: brass hairline grows across the top, name lifts */
-.offers-cell::before { content: ""; position: absolute; top: -1px; left: 0; height: 1px; width: 100%; background: var(--brass); transform: scaleX(0); transform-origin: left; transition: transform .5s var(--ease); pointer-events: none; }
-.offers-cell:hover::before, .offers-cell:focus-within::before { transform: scaleX(1); }
-.offers-name { transition: transform .35s var(--ease); }
-.offers-cell:hover .offers-name, .offers-cell:focus-within .offers-name { transform: translateY(-2px); }
-
-/* Websites block */
-.offers-web { margin-top: clamp(48px, 7vw, 88px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
-.offers-web-head { display: grid; gap: 16px; }
-.offers-web-head h3 { font-size: var(--t-2xl); }
-.offers-web-head p { color: var(--graphite); max-width: 36ch; }
-.offers-web-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--rule); }
-.offers-web-grid .offers-webcell + .offers-webcell { border-left: 1px solid var(--rule); }
-.offers-webcell { border: 0 !important; }
-.offers-web-pts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: var(--t-sm); color: var(--graphite); }
-.offers-web-pts li { display: flex; gap: 12px; }
-.offers-web-pts li::before { content: ""; flex: none; width: 10px; height: 1px; background: var(--brass); margin-top: .75em; }
-@media (max-width: 900px) { .offers-web { grid-template-columns: 1fr; } }
-@media (max-width: 900px) { .offers-web-grid { grid-template-columns: 1fr; } .offers-web-grid .offers-webcell + .offers-webcell { border-left: 0; border-top: 1px solid var(--rule); } }
-.offers-webcell .offers-name { font-size: clamp(1.3rem, .95rem + .7vw, 1.6rem); overflow-wrap: break-word; }
-@media (min-width: 961px) {
-  .offers-cell[data-id="crm"] { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 48px; align-content: start; }
-  .offers-cell[data-id="crm"] > .offers-top, .offers-cell[data-id="crm"] > .offers-name { grid-column: 1; }
-  .offers-cell[data-id="crm"] > .offers-short, .offers-cell[data-id="crm"] > .offers-price, .offers-cell[data-id="crm"] > .offers-acts, .offers-cell[data-id="crm"] > .offers-steps-w { grid-column: 2; }
-  .offers-cell[data-id="crm"] > .offers-name { grid-row: 2 / span 3; }
-}
-
-.offers-disc { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-bottom: 16px; padding: 16px 20px; border-radius: 12px; background: var(--sage-soft); color: var(--ink); }
-.offers-disc-t { font-weight: 600; font-size: var(--t-sm); }
-.offers-disc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: var(--t-sm); color: var(--graphite); }
-.offers-disc li { display: inline-flex; gap: 6px; align-items: baseline; }
-.offers-disc b { font-family: var(--f-data); font-weight: 500; color: var(--sage); }
-.offers-supnote { margin: 0 0 16px; font-size: var(--t-sm); color: var(--graphite); }
-
-/* ==== work ==== */
-.work-head { display: grid; gap: 16px; max-width: 44rem; margin-bottom: clamp(32px, 4vw, 56px); }
-.work-rail {
-  display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 640px); gap: clamp(16px, 2.5vw, 32px);
-  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
-  padding-block: 8px 24px;
-  padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
-  padding-right: max(var(--gutter-r), calc((100vw - var(--wrap)) / 2 + var(--gutter-r)));
-  scroll-padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
-  scrollbar-width: none;
-}
-.work-rail::-webkit-scrollbar { display: none; }
-.work-card { scroll-snap-align: start; display: grid; gap: 16px; margin: 0; min-width: 0; }
-.work-frame { border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--paper); box-shadow: var(--shadow); transition: transform .5s var(--ease); }
-.work-card:hover .work-frame { transform: translateY(-4px); }
-.work-bar { display: flex; align-items: center; gap: 8px; height: 28px; padding-inline: 12px; border-bottom: 1px solid var(--rule); }
-.work-bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--rule); }
-.work-shot { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; background: var(--stone); }
-.work-cap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
-.work-name { font-family: var(--f-display); font-size: var(--t-xl); line-height: 1.1; }
-.work-kind { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--brass); white-space: nowrap; }
-.work-foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
-.work-nav { display: flex; gap: 8px; }
-.work-btn { width: 48px; height: 48px; border: 1px solid var(--rule); border-radius: 50%; background: transparent; color: var(--ink); font-size: 1.1rem; cursor: pointer; transition: border-color .2s, background .2s; }
-.work-btn:hover { border-color: var(--ink); background: var(--paper); }
-.work-btn:disabled { opacity: .35; cursor: default; }
-.work-kind.is-live { color: var(--ok); }
-.work-kind.is-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: .5em; vertical-align: .1em; }
-.work-link { flex-basis: 100%; font-size: var(--t-sm); font-weight: 600; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--brass); justify-self: start; width: max-content; }
-.work-link:hover { color: var(--brass); }
+.packages-how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 32px; }
+.packages-how-item { display: flex; gap: 16px; align-items: flex-start; padding: 20px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; }
+.packages-how-item h3 { font-family: var(--f-body); font-size: var(--t-md); font-weight: 600; line-height: 1.3; letter-spacing: 0; margin-bottom: 4px; }
+.packages-how-item p { font-size: var(--t-sm); color: var(--graphite); }
+@media (max-width: 900px) { .packages-how { grid-template-columns: 1fr; gap: 12px; } }
+.packages-sub s { color: var(--graphite); opacity: .7; margin-right: 4px; }
+.packages-sup { font-size: var(--t-xs, 0.8125rem); color: var(--sage); font-weight: 600; margin-top: 4px; }
 
 /* ==== roi ==== */
 .roi-head { max-width: 760px; display: grid; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
@@ -578,57 +663,61 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   .roi-line { flex-direction: column; gap: 2px; }
 }
 
-/* ==== packages ==== */
-.packages-head { max-width: 760px; display: grid; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
-.packages-toolbar { display: flex; margin-bottom: 28px; }
-.packages-seg { display: inline-flex; border: 1px solid var(--rule); border-radius: var(--radius); padding: 4px; background: var(--paper); max-width: 100%; }
-.packages-seg button {
-  font: 600 var(--t-sm)/1.2 var(--f-body); color: var(--graphite); background: transparent; border: 0; border-radius: 2px;
-  padding: 0 20px; min-height: 44px; cursor: pointer; transition: background .2s, color .2s;
+/* ==== work ==== */
+.work-head { display: grid; gap: 16px; max-width: 44rem; margin-bottom: clamp(32px, 4vw, 56px); }
+.work-rail {
+  display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 640px); gap: clamp(16px, 2.5vw, 32px);
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  padding-block: 8px 24px;
+  padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
+  padding-right: max(var(--gutter-r), calc((100vw - var(--wrap)) / 2 + var(--gutter-r)));
+  scroll-padding-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
+  scrollbar-width: none;
 }
-.packages-seg button[aria-pressed="true"] { background: var(--ink); color: var(--stone); }
-.packages-seg button:not([aria-pressed="true"]):hover { color: var(--ink); }
+.work-rail::-webkit-scrollbar { display: none; }
+.work-card { scroll-snap-align: start; display: grid; gap: 16px; margin: 0; min-width: 0; }
+.work-frame { border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--paper); box-shadow: var(--shadow); transition: transform .5s var(--ease); }
+.work-card:hover .work-frame { transform: translateY(-4px); }
+.work-bar { display: flex; align-items: center; gap: 8px; height: 28px; padding-inline: 12px; border-bottom: 1px solid var(--rule); }
+.work-bar i { width: 7px; height: 7px; border-radius: 50%; background: var(--rule); }
+.work-shot { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; background: var(--stone); }
+.work-cap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+.work-name { font-family: var(--f-display); font-size: var(--t-xl); line-height: 1.1; }
+.work-kind { font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--brass); white-space: nowrap; }
+.work-foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+.work-nav { display: flex; gap: 8px; }
+.work-btn { width: 48px; height: 48px; border: 1px solid var(--rule); border-radius: 50%; background: transparent; color: var(--ink); font-size: 1.1rem; cursor: pointer; transition: border-color .2s, background .2s; }
+.work-btn:hover { border-color: var(--ink); background: var(--paper); }
+.work-btn:disabled { opacity: .35; cursor: default; }
+.work-kind.is-live { color: var(--ok); }
+.work-kind.is-live::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: .5em; vertical-align: .1em; }
+.work-link { flex-basis: 100%; font-size: var(--t-sm); font-weight: 600; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--brass); justify-self: start; width: max-content; }
+.work-link:hover { color: var(--brass); }
 
-.packages-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
-.packages-card {
-  position: relative; display: flex; flex-direction: column; gap: 24px; padding: clamp(24px, 2.4vw, 36px);
-  border: 1px solid var(--rule); border-radius: var(--radius); background: transparent;
+/* ==== faq ==== */
+.faq-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start; }
+.faq-side { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.faq-side .it { color: var(--brass); }
+.faq-side .lede { font-size: var(--t-md); }
+.faq-list { border-top: 1px solid var(--rule); }
+.faq-item { border-bottom: 1px solid var(--rule); }
+.faq-item summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px 0; cursor: pointer; min-height: 48px; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-q { font-family: var(--f-display); font-size: var(--t-lg); line-height: 1.25; transition: color .2s; }
+.faq-item summary:hover .faq-q { color: var(--brass); }
+.faq-mark { position: relative; flex: none; width: 28px; height: 28px; border: 1px solid var(--rule); border-radius: 50%; transition: border-color .2s, background .2s; }
+.faq-mark::before, .faq-mark::after { content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 1px; background: var(--brass); transform: translate(-50%, -50%); transition: transform .3s var(--ease); }
+.faq-mark::after { transform: translate(-50%, -50%) rotate(90deg); }
+.faq-item[open] .faq-mark { border-color: var(--brass); }
+.faq-item[open] .faq-mark::after { transform: translate(-50%, -50%) rotate(0); }
+.faq-a { padding: 0 48px 24px 0; color: var(--graphite); max-width: 60ch; }
+.faq-item[open] .faq-a { animation: faq-in .35s var(--ease); }
+@keyframes faq-in { from { opacity: 0; transform: translateY(-4px); } }
+@media (min-width: 900px) {
+  .faq-grid { grid-template-columns: 5fr 7fr; gap: clamp(40px, 6vw, 96px); }
+  .faq-side { position: sticky; top: 108px; }
 }
-.packages-card.is-featured { background: var(--paper); border-color: var(--brass-soft); border-top: 3px solid var(--brass); box-shadow: var(--shadow); }
-.packages-flag { position: absolute; top: -1px; right: 24px; transform: translateY(-50%); background: var(--stone); padding: 0 12px; font-family: var(--f-data); font-size: var(--t-xs); letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
-.packages-card.is-featured .packages-flag { background: var(--paper); top: 0; }
-.packages-name { font-size: var(--t-2xl); }
-.packages-tag { color: var(--graphite); margin-top: 8px; }
-.packages-price { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 20px 0; display: grid; gap: 4px; }
-.packages-big { font-family: var(--f-data); font-size: clamp(2rem, 1.5rem + 1.6vw, 2.7rem); line-height: 1.1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.packages-big small { font-size: var(--t-sm); color: var(--graphite); letter-spacing: 0; margin-left: .35em; }
-.packages-sub { font-family: var(--f-data); font-size: var(--t-sm); color: var(--graphite); }
-.packages-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; flex: 1; align-content: start; }
-.packages-list li { position: relative; padding-left: 24px; line-height: 1.45; }
-.packages-list li::before { content: ""; position: absolute; left: 3px; top: .5em; width: 10px; height: 5px; border-left: 1.5px solid var(--brass); border-bottom: 1.5px solid var(--brass); transform: rotate(-45deg); }
-.packages-list li.is-choice::before { border: 1.5px solid var(--brass); width: 8px; height: 8px; transform: none; border-radius: 50%; top: .5em; left: 2px; }
-.packages-list em { font-style: italic; font-family: var(--f-display); color: var(--brass); padding: 0 .15em; }
-.packages-save { font-family: var(--f-data); font-size: var(--t-sm); color: var(--ok); min-height: 1.4em; }
-.packages-card .btn { width: 100%; }
-.packages-note { margin-top: 28px; font-size: var(--t-sm); color: var(--graphite); max-width: 78ch; }
-
-@media (max-width: 960px) {
-  .packages-grid { grid-template-columns: minmax(0, 1fr); max-width: 560px; }
-  .packages-card.is-featured { order: -1; }
-}
-@media (max-width: 480px) {
-  .packages-seg { width: 100%; }
-  .packages-seg button { flex: 1; padding: 0 8px; }
-}
-@media (min-width: 900px) { .packages-tag { min-height: calc(2 * 1.6em); } }
-
-.packages-how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 32px; }
-.packages-how-item { display: flex; gap: 16px; align-items: flex-start; padding: 20px; background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; }
-.packages-how-item h3 { font-family: var(--f-body); font-size: var(--t-md); font-weight: 600; line-height: 1.3; letter-spacing: 0; margin-bottom: 4px; }
-.packages-how-item p { font-size: var(--t-sm); color: var(--graphite); }
-@media (max-width: 900px) { .packages-how { grid-template-columns: 1fr; gap: 12px; } }
-.packages-sub s { color: var(--graphite); opacity: .7; margin-right: 4px; }
-.packages-sup { font-size: var(--t-xs, 0.8125rem); color: var(--sage); font-weight: 600; margin-top: 4px; }
+.faq .btn { box-sizing: border-box; }
 
 /* ==== quote ==== */
 .quote-head { max-width: 760px; display: grid; gap: 16px; margin-bottom: clamp(32px, 4vw, 56px); }
@@ -779,31 +868,6 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 .quote-items li.disc { color: var(--ok); font-weight: 600; }
 .q-sup { display: block; font-size: var(--t-xs, 0.75rem); font-weight: 500; color: var(--sage); letter-spacing: 0; text-transform: none; }
 
-/* ==== faq ==== */
-.faq-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: start; }
-.faq-side { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
-.faq-side .it { color: var(--brass); }
-.faq-side .lede { font-size: var(--t-md); }
-.faq-list { border-top: 1px solid var(--rule); }
-.faq-item { border-bottom: 1px solid var(--rule); }
-.faq-item summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 24px 0; cursor: pointer; min-height: 48px; }
-.faq-item summary::-webkit-details-marker { display: none; }
-.faq-q { font-family: var(--f-display); font-size: var(--t-lg); line-height: 1.25; transition: color .2s; }
-.faq-item summary:hover .faq-q { color: var(--brass); }
-.faq-mark { position: relative; flex: none; width: 28px; height: 28px; border: 1px solid var(--rule); border-radius: 50%; transition: border-color .2s, background .2s; }
-.faq-mark::before, .faq-mark::after { content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 1px; background: var(--brass); transform: translate(-50%, -50%); transition: transform .3s var(--ease); }
-.faq-mark::after { transform: translate(-50%, -50%) rotate(90deg); }
-.faq-item[open] .faq-mark { border-color: var(--brass); }
-.faq-item[open] .faq-mark::after { transform: translate(-50%, -50%) rotate(0); }
-.faq-a { padding: 0 48px 24px 0; color: var(--graphite); max-width: 60ch; }
-.faq-item[open] .faq-a { animation: faq-in .35s var(--ease); }
-@keyframes faq-in { from { opacity: 0; transform: translateY(-4px); } }
-@media (min-width: 900px) {
-  .faq-grid { grid-template-columns: 5fr 7fr; gap: clamp(40px, 6vw, 96px); }
-  .faq-side { position: sticky; top: 108px; }
-}
-.faq .btn { box-sizing: border-box; }
-
 /* ==== footer ==== */
 .footer { border-top: 1px solid var(--rule); background: var(--stone); }
 .todo { border-bottom: 1px dashed var(--brass); padding-bottom: 1px; }
@@ -867,12 +931,11 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <span class="nav-sub">Automation · Schweiz</span>
     </a>
     <nav class="nav-links" data-aria-de="Hauptnavigation" data-aria-en="Main navigation">
-      <a href="#ablauf"><span data-l="de">Ablauf</span><span data-l="en">Process</span></a>
-      <a href="#leistungen"><span data-l="de">Leistungen</span><span data-l="en">Services</span></a>
-      <a href="#arbeiten"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></a>
-      <a href="#rechner"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></a>
-      <a href="#pakete"><span data-l="de">Pakete</span><span data-l="en">Packages</span></a>
-      <a href="#faq">FAQ</a>
+      <a href="#leistungen" data-nav="leistungen"><span data-l="de">Leistungen</span><span data-l="en">Services</span></a>
+      <a href="#pakete" data-nav="pakete"><span data-l="de">Pakete</span><span data-l="en">Packages</span></a>
+      <a href="#arbeiten" data-nav="arbeiten"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></a>
+      <a href="#rechner" data-nav="rechner"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></a>
+      <a href="#faq" data-nav="faq">FAQ</a>
     </nav>
     <div class="nav-right">
       <div class="nav-lang" role="group" data-aria-de="Sprache" data-aria-en="Language">
@@ -900,12 +963,12 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       <button type="button" class="nav-menu-x" id="navMenuX" data-aria-de="Menü schliessen" data-aria-en="Close menu"><span aria-hidden="true">×</span></button>
     </div>
     <nav class="nav-menu-links" data-aria-de="Hauptnavigation" data-aria-en="Main navigation">
-      <a href="#ablauf"><span data-l="de">Ablauf</span><span data-l="en">Process</span></a>
-      <a href="#leistungen"><span data-l="de">Leistungen</span><span data-l="en">Services</span></a>
-      <a href="#arbeiten"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></a>
-      <a href="#rechner"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></a>
-      <a href="#pakete"><span data-l="de">Pakete</span><span data-l="en">Packages</span></a>
-      <a href="#faq">FAQ</a>
+      <a href="#top" data-nav="top"><span data-l="de">Start</span><span data-l="en">Home</span></a>
+      <a href="#leistungen" data-nav="leistungen"><span data-l="de">Leistungen</span><span data-l="en">Services</span></a>
+      <a href="#pakete" data-nav="pakete"><span data-l="de">Pakete</span><span data-l="en">Packages</span></a>
+      <a href="#arbeiten" data-nav="arbeiten"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></a>
+      <a href="#rechner" data-nav="rechner"><span data-l="de">Rechner</span><span data-l="en">Calculator</span></a>
+      <a href="#faq" data-nav="faq">FAQ</a>
     </nav>
     <button type="button" class="btn btn-cta btn-lg" data-quote="" data-menu-close>
       <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span><span class="arrow" aria-hidden="true">→</span>
@@ -913,30 +976,25 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   </div>
 </div>
 
+<main class="page" data-page="top">
 <!-- ==== hero ==== -->
 <section id="top" class="hero" aria-labelledby="hero-h1">
-  <div class="hero-media" aria-hidden="true">
-    <img class="hero-poster" src="assets/media/film-16x9.webp" alt="" width="1600" height="900" fetchpriority="high">
-    <video class="hero-video" muted loop playsinline preload="none" poster="assets/media/film-16x9.webp"></video>
-  </div>
-  <div class="hero-shade" aria-hidden="true"></div>
-  <button type="button" class="hero-toggle" id="hero-toggle" hidden data-aria-de="Video pausieren" data-aria-en="Pause video" aria-label="Video pausieren"><span class="hero-ic" aria-hidden="true"></span></button>
   <div class="wrap hero-grid">
     <div class="hero-text">
-      <p class="eyebrow"><span data-l="de">Automationen für Schweizer Unternehmen</span><span data-l="en">Automations for Swiss businesses</span></p>
+      <p class="eyebrow"><span data-l="de">Websites &amp; Automationen für KMU</span><span data-l="en">Websites &amp; automations for small businesses</span></p>
       <h1 class="hero-h1" id="hero-h1">
-        <span data-l="de">Ihr Betrieb läuft. <em class="it">Auch wenn Sie es nicht tun.</em></span>
-        <span data-l="en">Your business runs. <em class="it">Even when you don’t.</em></span>
+        <span data-l="de">Ihre Website. <em class="it">Und alles, was dahinter läuft.</em></span>
+        <span data-l="en">Your website. <em class="it">And everything that runs behind it.</em></span>
       </h1>
       <p class="lede hero-lede">
-        <span data-l="de">Wir bauen keine Uhren. Wir bauen Abläufe, die genauso präzise laufen: Buchungen, Bewertungen, Offerten und Rechnungen erledigen sich von selbst.</span>
-        <span data-l="en">We don’t make watches. We build workflows that run just as precisely: bookings, reviews, quotes and invoices take care of themselves.</span>
+        <span data-l="de">Ich baue Ihnen eine moderne Website und automatisiere die Arbeit dahinter: Anfragen, Termine, Bewertungen, Offerten und Rechnungen. Fixpreise, alles aus einer Hand.</span>
+        <span data-l="en">I build you a modern website and automate the work behind it: enquiries, appointments, reviews, quotes and invoices. Fixed prices, everything from one source.</span>
       </p>
       <div class="hero-actions" id="hero-actions">
         <button type="button" class="btn btn-cta btn-lg" data-quote="">
           <span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span><span class="arrow" aria-hidden="true">→</span>
         </button>
-        <a class="btn btn-lg hero-ghost" href="#demo"><span data-l="de">So funktioniert es</span><span data-l="en">See it work</span></a>
+        <a class="btn btn-lg hero-ghost" href="#leistungen"><span data-l="de">Leistungen ansehen</span><span data-l="en">See services</span></a>
       </div>
       <p class="hero-trust">
         <span data-l="de">Fixpreise ab CHF 200</span><span data-l="en">Fixed prices from CHF 200</span>
@@ -945,6 +1003,49 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
         <i aria-hidden="true">·</i>
         <span data-l="de">Kündbar nach 3 Monaten</span><span data-l="en">Cancel after 3 months</span>
       </p>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="hv-stage">
+        <div class="hv-browser">
+          <div class="hv-bar">
+            <i></i><i></i><i></i>
+            <span class="hv-url">malerei-muster.ch</span>
+          </div>
+          <div class="hv-site">
+            <div class="hv-nav">
+              <b class="hv-logo">Malerei Muster</b>
+              <span>Leistungen</span><span>Galerie</span><span>Kontakt</span>
+            </div>
+            <div class="hv-hero">
+              <div class="hv-copy">
+                <div class="hv-h">Farbe für Ihr Zuhause.</div>
+                <div class="hv-p">Innen- und Fassadenmalerei in Zürich</div>
+                <span class="hv-btn">Termin buchen</span>
+              </div>
+              <div class="hv-img"><span></span><span></span><span></span></div>
+            </div>
+            <div class="hv-tiles"><span></span><span></span><span></span></div>
+          </div>
+        </div>
+
+        <div class="hv-card hv-c1">
+          <span class="ico-chip tone-steel"><svg viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg></span>
+          <span class="hv-t"><b><span data-l="de">Neue Anfrage</span><span data-l="en">New enquiry</span></b><small><span data-l="de">über die Website</span><span data-l="en">via the website</span></small></span>
+        </div>
+        <div class="hv-card hv-c2">
+          <span class="ico-chip tone-brass"><svg viewBox="0 0 24 24"><path d="M5 5h14v10H9l-4 4z"/></svg></span>
+          <span class="hv-t"><b><span data-l="de">SMS-Bestätigung gesendet</span><span data-l="en">SMS confirmation sent</span></b><small><span data-l="de">automatisch, 3 Sek.</span><span data-l="en">automatic, 3 sec.</span></small></span>
+        </div>
+        <div class="hv-card hv-c3">
+          <span class="ico-chip tone-sage"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4M9 15l2 2 4-4"/></svg></span>
+          <span class="hv-t"><b><span data-l="de">Termin im Kalender</span><span data-l="en">Added to calendar</span></b><small><span data-l="de">Do., 14:00 Uhr</span><span data-l="en">Thu, 2:00 pm</span></small></span>
+        </div>
+        <div class="hv-card hv-c4">
+          <span class="hv-stars">★★★★★</span>
+          <span class="hv-t"><b><span data-l="de">Neue Google-Bewertung</span><span data-l="en">New Google review</span></b></span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -967,51 +1068,6 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     <div class="vsl-foot">
       <p class="vsl-note"><span data-l="de">Mit Ton, Untertitel zuschaltbar. Danach berechnen Sie Ihre Offerte direkt hier.</span><span data-l="en">With sound, subtitles available. Then get your quote right here.</span></p>
       <button type="button" class="btn btn-cta" data-quote=""><span data-l="de">Offerte berechnen</span><span data-l="en">Get your quote</span> →</button>
-    </div>
-  </div>
-</section>
-
-<!-- ==== demo ==== -->
-<section id="demo" class="section demo" aria-labelledby="demo-h">
-  <div class="wrap">
-    <header class="demo-head">
-      <span class="eyebrow"><span data-l="de">Live-Ablauf</span><span data-l="en">Live sequence</span></span>
-      <h2 id="demo-h"><span data-l="de">Sehen Sie zu, wie es <em class="it">läuft.</em></span><span data-l="en">Watch it <em class="it">run.</em></span></h2>
-      <p class="lede">
-        <span data-l="de">Links sehen Sie, was Ihr Kunde erlebt, rechts, was im Hintergrund passiert.</span>
-        <span data-l="en">On the left, what your customer sees. On the right, what happens behind the scenes.</span>
-      </p>
-    </header>
-
-    <div class="demo-tabs" role="tablist" data-aria-de="Szenario wählen" data-aria-en="Choose a scenario" aria-label="Szenario wählen">
-      <button type="button" class="demo-tab" role="tab" id="demo-tab-missedcall" data-sc="missedcall" aria-controls="demo-panel" aria-selected="true"><span class="demo-tab-n num">01</span><span data-l="de">Verpasster Anruf</span><span data-l="en">Missed call</span></button>
-      <button type="button" class="demo-tab" role="tab" id="demo-tab-reviews" data-sc="reviews" aria-controls="demo-panel" aria-selected="false" tabindex="-1"><span class="demo-tab-n num">02</span><span data-l="de">Neue Google-Bewertung</span><span data-l="en">New Google review</span></button>
-      <button type="button" class="demo-tab" role="tab" id="demo-tab-leads" data-sc="leads" aria-controls="demo-panel" aria-selected="false" tabindex="-1"><span class="demo-tab-n num">03</span><span data-l="de">Anfrage über die Website</span><span data-l="en">Website enquiry</span></button>
-    </div>
-
-    <div class="demo-stage" id="demo-panel" role="tabpanel" aria-labelledby="demo-tab-missedcall">
-      <div class="demo-left">
-        <div class="demo-pane-label"><span data-l="de">Das sieht Ihr Kunde</span><span data-l="en">What your customer sees</span></div>
-        <div class="demo-phone">
-          <div class="demo-notch" aria-hidden="true"></div>
-          <div class="demo-phone-bar"><span class="demo-phone-app" id="demo-app"></span><span class="demo-phone-clock num">14:32</span></div>
-          <div class="demo-screen" id="demo-screen"></div>
-        </div>
-      </div>
-      <div class="demo-right">
-        <div class="demo-pane-label"><span data-l="de">Das geschieht im Hintergrund</span><span data-l="en">What happens behind the scenes</span></div>
-        <ol class="demo-log" id="demo-log" aria-live="off"></ol>
-        <div class="demo-stat" id="demo-stat"></div>
-      </div>
-    </div>
-
-    <div class="demo-controls">
-      <button type="button" class="btn btn-ghost demo-replay" id="demo-replay"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13 2v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-l="de">Nochmal abspielen</span><span data-l="en">Replay</span></button>
-      <button type="button" class="btn btn-ghost demo-branch" id="demo-branch" aria-pressed="false" hidden></button>
-    </div>
-
-    <div class="demo-cta">
-      <button type="button" class="btn btn-cta btn-lg" id="demo-cta" data-quote="missedcall"><span id="demo-cta-l">Rückruf-SMS anfragen</span> <span class="arrow" aria-hidden="true">→</span></button>
     </div>
   </div>
 </section>
@@ -1077,6 +1133,40 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   </div>
 </section>
 
+<!-- ==== paths ==== -->
+<section class="section paths" aria-labelledby="paths-h">
+  <div class="wrap">
+    <header class="paths-head reveal">
+      <p class="eyebrow"><span data-l="de">Weiter</span><span data-l="en">Next</span></p>
+      <h2 id="paths-h"><span data-l="de">Wo möchten Sie <em class="it">anfangen?</em></span><span data-l="en">Where would you like <em class="it">to start?</em></span></h2>
+    </header>
+    <div class="paths-grid">
+      <a class="paths-card reveal" href="#leistungen">
+        <span class="ico-chip tone-steel" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 9h17M8 13.5h8M8 16.5h5"/></svg></span>
+        <b><span data-l="de">Leistungen</span><span data-l="en">Services</span></b>
+        <span><span data-l="de">Websites und alle Automationen mit Fixpreisen.</span><span data-l="en">Websites and every automation, at fixed prices.</span></span>
+      </a>
+      <a class="paths-card reveal" href="#pakete">
+        <span class="ico-chip tone-brass" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg></span>
+        <b><span data-l="de">Pakete</span><span data-l="en">Packages</span></b>
+        <span><span data-l="de">Drei fertige Kombinationen, mindestens 25 % günstiger.</span><span data-l="en">Three ready-made bundles, at least 25% off setup.</span></span>
+      </a>
+      <a class="paths-card reveal" href="#rechner">
+        <span class="ico-chip tone-sage" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8 7.5h8M8.5 12h1M11.5 12h1M14.5 12h1M8.5 15.5h1M11.5 15.5h1M14.5 15.5h1"/></svg></span>
+        <b><span data-l="de">Rechner</span><span data-l="en">Calculator</span></b>
+        <span><span data-l="de">Was Sie heute an Zeit und Umsatz verlieren.</span><span data-l="en">What you lose in time and revenue today.</span></span>
+      </a>
+      <a class="paths-card reveal" href="#arbeiten">
+        <span class="ico-chip tone-steel" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg></span>
+        <b><span data-l="de">Arbeiten</span><span data-l="en">Work</span></b>
+        <span><span data-l="de">Websites, die ich für Betriebe gebaut habe.</span><span data-l="en">Websites I have built for businesses.</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</main>
+<main class="page" data-page="leistungen" hidden>
 <!-- ==== offers ==== -->
 <section id="leistungen" class="section offers" aria-labelledby="offers-h">
   <div class="wrap">
@@ -1112,25 +1202,82 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   </div>
 </section>
 
-<!-- ==== work ==== -->
-<section id="arbeiten" class="section work" aria-labelledby="work-h">
+<!-- ==== demo ==== -->
+<section id="demo" class="section demo" aria-labelledby="demo-h">
   <div class="wrap">
-    <header class="work-head">
-      <span class="eyebrow"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></span>
-      <h2 id="work-h"><span data-l="de">Websites, die <em class="it">für sich sprechen.</em></span><span data-l="en">Websites that <em class="it">speak for themselves.</em></span></h2>
-      <p class="lede"><span data-l="de">Zwei Kundenprojekte live, dazu Entwürfe aus weiteren Branchen. Alle fürs Handy gebaut.</span><span data-l="en">Two client projects, live. Plus drafts from other industries. All built for phones.</span></p>
+    <header class="demo-head">
+      <span class="eyebrow"><span data-l="de">Live-Ablauf</span><span data-l="en">Live sequence</span></span>
+      <h2 id="demo-h"><span data-l="de">Sehen Sie zu, wie es <em class="it">läuft.</em></span><span data-l="en">Watch it <em class="it">run.</em></span></h2>
+      <p class="lede">
+        <span data-l="de">Links sehen Sie, was Ihr Kunde erlebt, rechts, was im Hintergrund passiert.</span>
+        <span data-l="en">On the left, what your customer sees. On the right, what happens behind the scenes.</span>
+      </p>
     </header>
-  </div>
-  <div class="work-rail" id="work-rail" tabindex="0" data-aria-de="Arbeiten, seitlich scrollbar" data-aria-en="Work, scrolls horizontally" aria-label="Arbeiten, seitlich scrollbar"></div>
-  <div class="wrap work-foot">
-    <div class="work-nav">
-      <button type="button" class="work-btn" id="work-prev" data-aria-de="Zurück" data-aria-en="Previous" aria-label="Zurück">←</button>
-      <button type="button" class="work-btn" id="work-next" data-aria-de="Weiter" data-aria-en="Next" aria-label="Weiter">→</button>
+
+    <div class="demo-tabs" role="tablist" data-aria-de="Szenario wählen" data-aria-en="Choose a scenario" aria-label="Szenario wählen">
+      <button type="button" class="demo-tab" role="tab" id="demo-tab-missedcall" data-sc="missedcall" aria-controls="demo-panel" aria-selected="true"><span class="demo-tab-n num">01</span><span data-l="de">Verpasster Anruf</span><span data-l="en">Missed call</span></button>
+      <button type="button" class="demo-tab" role="tab" id="demo-tab-reviews" data-sc="reviews" aria-controls="demo-panel" aria-selected="false" tabindex="-1"><span class="demo-tab-n num">02</span><span data-l="de">Neue Google-Bewertung</span><span data-l="en">New Google review</span></button>
+      <button type="button" class="demo-tab" role="tab" id="demo-tab-leads" data-sc="leads" aria-controls="demo-panel" aria-selected="false" tabindex="-1"><span class="demo-tab-n num">03</span><span data-l="de">Anfrage über die Website</span><span data-l="en">Website enquiry</span></button>
     </div>
-    <button type="button" class="btn btn-cta" data-quote="web:one"><span data-l="de">Website anfragen</span><span data-l="en">Request a website</span> <span class="arrow" aria-hidden="true">→</span></button>
+
+    <div class="demo-stage" id="demo-panel" role="tabpanel" aria-labelledby="demo-tab-missedcall">
+      <div class="demo-left">
+        <div class="demo-pane-label"><span data-l="de">Das sieht Ihr Kunde</span><span data-l="en">What your customer sees</span></div>
+        <div class="demo-phone">
+          <div class="demo-notch" aria-hidden="true"></div>
+          <div class="demo-phone-bar"><span class="demo-phone-app" id="demo-app"></span><span class="demo-phone-clock num">14:32</span></div>
+          <div class="demo-screen" id="demo-screen"></div>
+        </div>
+      </div>
+      <div class="demo-right">
+        <div class="demo-pane-label"><span data-l="de">Das geschieht im Hintergrund</span><span data-l="en">What happens behind the scenes</span></div>
+        <ol class="demo-log" id="demo-log" aria-live="off"></ol>
+        <div class="demo-stat" id="demo-stat"></div>
+      </div>
+    </div>
+
+    <div class="demo-controls">
+      <button type="button" class="btn btn-ghost demo-replay" id="demo-replay"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13 2v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-l="de">Nochmal abspielen</span><span data-l="en">Replay</span></button>
+      <button type="button" class="btn btn-ghost demo-branch" id="demo-branch" aria-pressed="false" hidden></button>
+    </div>
+
+    <div class="demo-cta">
+      <button type="button" class="btn btn-cta btn-lg" id="demo-cta" data-quote="missedcall"><span id="demo-cta-l">Rückruf-SMS anfragen</span> <span class="arrow" aria-hidden="true">→</span></button>
+    </div>
   </div>
 </section>
 
+</main>
+<main class="page" data-page="pakete" hidden>
+<!-- ==== packages ==== -->
+<section id="pakete" class="section packages">
+  <div class="wrap">
+    <header class="packages-head reveal">
+      <span class="eyebrow"><span data-l="de">Pakete</span><span data-l="en">Packages</span></span>
+      <h2><span data-l="de">Drei Pakete, ein <em class="it">klarer</em> Preis</span><span data-l="en">Three packages, one <em class="it">clear</em> price</span></h2>
+      <p class="lede">
+        <span data-l="de">Einmal einrichten, danach läuft es.</span>
+        <span data-l="en">Set up once, then it runs.</span>
+      </p>
+    </header>
+    <div class="packages-how reveal">
+      <div class="packages-how-item"><span class="ico-chip tone-brass" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-8.6 8.6a2.1 2.1 0 0 1-3-3l8.6-8.6"/><path d="M14.7 6.3A4 4 0 0 1 19.4 3l-2.5 2.5.8 1.8 1.8.8 2.5-2.5a4 4 0 0 1-3.3 4.7"/></svg></span><div><h3><span data-l="de">Einmalig: Einrichtung</span><span data-l="en">One-time: setup</span></h3><p><span data-l="de">Bezahlt in zwei Teilen: die Hälfte bei Auftrag, der Rest nach Fertigstellung. Mit einem Paket sparen Sie mindestens 25 %.</span><span data-l="en">Paid in two parts: half on order, the rest on completion. With a package you save at least 25%.</span></p></div></div>
+      <div class="packages-how-item"><span class="ico-chip tone-steel" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 11A7.5 7.5 0 0 0 6 6.5L4.5 8M4.5 13A7.5 7.5 0 0 0 18 17.5L19.5 16"/><path d="M4.5 4v4h4M19.5 20v-4h-4"/></svg></span><div><h3><span data-l="de">Monatlich: Betreuung</span><span data-l="en">Monthly: care</span></h3><p><span data-l="de">Inklusive Support mit 1 kostenlosen Support-Anruf pro Monat. Dazu Betrieb, Anpassungen und Kurzbericht. Nach 3 Monaten auf Monatsende kündbar.</span><span data-l="en">Support included, with 1 free support call per month. Plus operation, changes and a short report. After 3 months, cancel at the end of any month.</span></p></div></div>
+      <div class="packages-how-item"><span class="ico-chip tone-sage" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><div><h3><span data-l="de">Website: einmalig</span><span data-l="en">Website: one-time</span></h3><p><span data-l="de">Ab CHF 300, ohne Monatsgebühr.</span><span data-l="en">From CHF 300, no monthly fee.</span></p></div></div>
+    </div>
+    <div class="packages-toolbar">
+      <div class="packages-seg" role="group" id="packages-seg" data-aria-de="Preisansicht" data-aria-en="Price view"></div>
+    </div>
+    <div class="packages-grid" id="packages-grid"></div>
+    <p class="packages-note">
+      <span data-l="de">Alle Preise in CHF. Lizenzkosten Dritter (z. B. SMS) zum Selbstkostenpreis.</span>
+      <span data-l="en">All prices in CHF. Third-party licence costs (e.g. SMS) at cost.</span>
+    </p>
+  </div>
+</section>
+
+</main>
+<main class="page" data-page="rechner" hidden>
 <!-- ==== roi ==== -->
 <section id="rechner" class="section roi">
   <div class="wrap">
@@ -1229,52 +1376,29 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   </div>
 </section>
 
-<!-- ==== packages ==== -->
-<section id="pakete" class="section packages">
+</main>
+<main class="page" data-page="arbeiten" hidden>
+<!-- ==== work ==== -->
+<section id="arbeiten" class="section work" aria-labelledby="work-h">
   <div class="wrap">
-    <header class="packages-head reveal">
-      <span class="eyebrow"><span data-l="de">Pakete</span><span data-l="en">Packages</span></span>
-      <h2><span data-l="de">Drei Pakete, ein <em class="it">klarer</em> Preis</span><span data-l="en">Three packages, one <em class="it">clear</em> price</span></h2>
-      <p class="lede">
-        <span data-l="de">Einmal einrichten, danach läuft es.</span>
-        <span data-l="en">Set up once, then it runs.</span>
-      </p>
+    <header class="work-head">
+      <span class="eyebrow"><span data-l="de">Arbeiten</span><span data-l="en">Work</span></span>
+      <h2 id="work-h"><span data-l="de">Websites, die <em class="it">für sich sprechen.</em></span><span data-l="en">Websites that <em class="it">speak for themselves.</em></span></h2>
+      <p class="lede"><span data-l="de">Zwei Kundenprojekte live, dazu Entwürfe aus weiteren Branchen. Alle fürs Handy gebaut.</span><span data-l="en">Two client projects, live. Plus drafts from other industries. All built for phones.</span></p>
     </header>
-    <div class="packages-how reveal">
-      <div class="packages-how-item"><span class="ico-chip tone-brass" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5.2 5.2l-8.6 8.6a2.1 2.1 0 0 1-3-3l8.6-8.6"/><path d="M14.7 6.3A4 4 0 0 1 19.4 3l-2.5 2.5.8 1.8 1.8.8 2.5-2.5a4 4 0 0 1-3.3 4.7"/></svg></span><div><h3><span data-l="de">Einmalig: Einrichtung</span><span data-l="en">One-time: setup</span></h3><p><span data-l="de">Bezahlt in zwei Teilen: die Hälfte bei Auftrag, der Rest nach Fertigstellung. Mit einem Paket sparen Sie mindestens 25 %.</span><span data-l="en">Paid in two parts: half on order, the rest on completion. With a package you save at least 25%.</span></p></div></div>
-      <div class="packages-how-item"><span class="ico-chip tone-steel" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 11A7.5 7.5 0 0 0 6 6.5L4.5 8M4.5 13A7.5 7.5 0 0 0 18 17.5L19.5 16"/><path d="M4.5 4v4h4M19.5 20v-4h-4"/></svg></span><div><h3><span data-l="de">Monatlich: Betreuung</span><span data-l="en">Monthly: care</span></h3><p><span data-l="de">Inklusive Support mit 1 kostenlosen Support-Anruf pro Monat. Dazu Betrieb, Anpassungen und Kurzbericht. Nach 3 Monaten auf Monatsende kündbar.</span><span data-l="en">Support included, with 1 free support call per month. Plus operation, changes and a short report. After 3 months, cancel at the end of any month.</span></p></div></div>
-      <div class="packages-how-item"><span class="ico-chip tone-sage" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><div><h3><span data-l="de">Website: einmalig</span><span data-l="en">Website: one-time</span></h3><p><span data-l="de">Ab CHF 300, ohne Monatsgebühr.</span><span data-l="en">From CHF 300, no monthly fee.</span></p></div></div>
+  </div>
+  <div class="work-rail" id="work-rail" tabindex="0" data-aria-de="Arbeiten, seitlich scrollbar" data-aria-en="Work, scrolls horizontally" aria-label="Arbeiten, seitlich scrollbar"></div>
+  <div class="wrap work-foot">
+    <div class="work-nav">
+      <button type="button" class="work-btn" id="work-prev" data-aria-de="Zurück" data-aria-en="Previous" aria-label="Zurück">←</button>
+      <button type="button" class="work-btn" id="work-next" data-aria-de="Weiter" data-aria-en="Next" aria-label="Weiter">→</button>
     </div>
-    <div class="packages-toolbar">
-      <div class="packages-seg" role="group" id="packages-seg" data-aria-de="Preisansicht" data-aria-en="Price view"></div>
-    </div>
-    <div class="packages-grid" id="packages-grid"></div>
-    <p class="packages-note">
-      <span data-l="de">Alle Preise in CHF. Lizenzkosten Dritter (z. B. SMS) zum Selbstkostenpreis.</span>
-      <span data-l="en">All prices in CHF. Third-party licence costs (e.g. SMS) at cost.</span>
-    </p>
+    <button type="button" class="btn btn-cta" data-quote="web:one"><span data-l="de">Website anfragen</span><span data-l="en">Request a website</span> <span class="arrow" aria-hidden="true">→</span></button>
   </div>
 </section>
 
-<!-- ==== quote ==== -->
-<section id="offerte" class="section quote">
-  <!-- Static copy of the quote form so Netlify Forms detects it at deploy time; the real form is built by quote.js -->
-  <form name="offerte-anfrage" data-netlify="true" netlify-honeypot="bot-field" hidden aria-hidden="true">
-    <input name="bot-field"><input name="name"><input name="firma"><input type="email" name="email"><input name="telefon"><textarea name="nachricht"></textarea><textarea name="zusammenfassung"></textarea>
-  </form>
-  <div class="wrap">
-    <header class="quote-head reveal">
-      <span class="eyebrow"><span data-l="de">Offerte</span><span data-l="en">Quote</span></span>
-      <h2><span data-l="de">Ihre Offerte in <em class="it">60 Sekunden</em></span><span data-l="en">Your quote in <em class="it">60 seconds</em></span></h2>
-      <p class="lede">
-        <span data-l="de">Wählen Sie aus. Der Preis wird live berechnet.</span>
-        <span data-l="en">Pick what you need. The price updates live.</span>
-      </p>
-    </header>
-    <div id="quote-app" class="quote-app"></div>
-  </div>
-</section>
-
+</main>
+<main class="page" data-page="faq" hidden>
 <!-- ==== faq ==== -->
 <section id="faq" class="section faq">
   <div class="wrap faq-grid">
@@ -1323,6 +1447,28 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   </div>
 </section>
 
+</main>
+<main class="page" data-page="offerte" hidden>
+<!-- ==== quote ==== -->
+<section id="offerte" class="section quote">
+  <!-- Static copy of the quote form so Netlify Forms detects it at deploy time; the real form is built by quote.js -->
+  <form name="offerte-anfrage" data-netlify="true" netlify-honeypot="bot-field" hidden aria-hidden="true">
+    <input name="bot-field"><input name="name"><input name="firma"><input type="email" name="email"><input name="telefon"><textarea name="nachricht"></textarea><textarea name="zusammenfassung"></textarea>
+  </form>
+  <div class="wrap">
+    <header class="quote-head reveal">
+      <span class="eyebrow"><span data-l="de">Offerte</span><span data-l="en">Quote</span></span>
+      <h2><span data-l="de">Ihre Offerte in <em class="it">60 Sekunden</em></span><span data-l="en">Your quote in <em class="it">60 seconds</em></span></h2>
+      <p class="lede">
+        <span data-l="de">Wählen Sie aus. Der Preis wird live berechnet.</span>
+        <span data-l="en">Pick what you need. The price updates live.</span>
+      </p>
+    </header>
+    <div id="quote-app" class="quote-app"></div>
+  </div>
+</section>
+
+</main>
 <!-- ==== footer ==== -->
 <footer id="kontakt" class="footer">
   <div class="footer-band">
@@ -1461,8 +1607,34 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
     /* Open the quote configurator, optionally preselecting a package id or offer ids */
     openQuote(preset) {
       KGC.emit('quote:preset', preset || null);
-      const el = document.getElementById('offerte');
-      if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      KGC.go('offerte', true);
+    },
+
+    /* Pages: one <main data-page> is visible at a time. go(id) accepts a page id or any element id inside a page. */
+    go(id, push) {
+      const pages = [...document.querySelectorAll('[data-page]')];
+      if (!pages.length) return;
+      let el = id && document.getElementById(id);
+      let page = el ? el.closest('[data-page]') : null;
+      if (!page) { page = pages[0]; el = null; }
+      const pid = page.getAttribute('data-page'), changed = page.hidden;
+      pages.forEach(p => { p.hidden = p !== page; });
+      document.querySelectorAll('[data-nav]').forEach(a => {
+        const on = a.getAttribute('data-nav') === pid;
+        a.classList.toggle('is-current', on);
+        if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      });
+      const hash = '#' + (id && el ? id : pid);
+      if (push && location.hash !== hash) { try { history.pushState(null, '', hash); } catch (e) {} }
+      const first = page.firstElementChild;
+      const target = el && el !== page && el !== first && !(first && first.id === id) ? el : null;
+      if (target) requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+      else window.scrollTo(0, 0);
+      if (changed) {
+        page.querySelectorAll('.reveal:not(.in)').forEach(r => { const b = r.getBoundingClientRect(); if (b.top < innerHeight) r.classList.add('in'); });
+        const h = page.querySelector('h1, h2'); if (h && changed && pid !== 'top') { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+        KGC.emit('page', pid);
+      }
     },
 
     /* Line icons (24px grid, 1.5 stroke) */
@@ -1603,6 +1775,19 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   document.addEventListener('DOMContentLoaded', () => {
     KGC.setLang(KGC.lang);
 
+    // Hash links switch pages instead of scrolling one long page
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a || a.matches('a[href="#datenschutz"], a[href="#impressum"], [data-quote]') || e.defaultPrevented) return;
+      const id = a.getAttribute('href').slice(1);
+      if (!id || !document.getElementById(id)) return;
+      e.preventDefault();
+      KGC.go(id, true);
+    });
+    addEventListener('popstate', () => KGC.go(location.hash.slice(1)));
+    addEventListener('hashchange', () => KGC.go(location.hash.slice(1)));
+    if (location.hash.length > 1) KGC.go(location.hash.slice(1));
+
     // [data-quote] anywhere opens the configurator; value = package id or comma list of offer ids
     document.addEventListener('click', e => {
       const a = e.target.closest('[data-quote]');
@@ -1681,29 +1866,11 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 /* ==== hero ==== */
 (function () {
   document.addEventListener('DOMContentLoaded', () => {
-    const sec = document.querySelector('.hero');
-    if (!sec || !window.KGC) return;
-    const v = sec.querySelector('.hero-video'), img = sec.querySelector('.hero-poster'), btn = document.getElementById('hero-toggle');
-    const narrow = matchMedia('(max-width: 720px)').matches;
-    const poster = narrow ? 'assets/media/film-9x16.webp' : 'assets/media/film-16x9.webp';
-    if (narrow) { img.src = poster; v.poster = poster; }
-    if (KGC.reducedMotion()) return; // poster only
-    v.src = narrow ? 'assets/media/film-9x16.mp4' : 'assets/media/film-16x9.mp4';
-    let userPaused = false;
-    v.addEventListener('playing', () => v.classList.add('is-on'));
-    const io = new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting && !userPaused) v.play().catch(() => {}); else v.pause();
-    }), { threshold: .15 });
-    io.observe(sec);
-    btn.hidden = false;
-    const label = () => {
-      const p = v.paused; btn.classList.toggle('is-paused', p);
-      btn.setAttribute('data-aria-de', p ? 'Video abspielen' : 'Video pausieren');
-      btn.setAttribute('data-aria-en', p ? 'Play video' : 'Pause video');
-      btn.setAttribute('aria-label', btn.getAttribute('data-aria-' + KGC.lang));
-    };
-    v.addEventListener('play', label); v.addEventListener('pause', label);
-    btn.addEventListener('click', () => { if (v.paused) { userPaused = false; v.play().catch(() => {}); } else { userPaused = true; v.pause(); } });
+    const v = document.querySelector('.hero-visual');
+    if (!v) return;
+    if (!('IntersectionObserver' in window) || (window.KGC && KGC.reducedMotion && KGC.reducedMotion())) { v.classList.add('is-in'); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { v.classList.add('is-in'); io.disconnect(); } }), { threshold: .1 });
+    io.observe(v);
   });
 })();
 
@@ -1736,6 +1903,128 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
       const p = v.play(); if (p && p.catch) p.catch(() => {});
     });
     KGC.on('lang', () => { if (v.dataset.l) setSrc(); });
+  });
+})();
+
+;
+/* ==== process ==== */
+(function () {
+  document.addEventListener('DOMContentLoaded', () => {
+    const cards = [...document.querySelectorAll('.process-step')];
+    if (!cards.length) return;
+    cards.forEach((c, i) => c.style.setProperty('--i', i));
+    const mq = matchMedia('(min-width: 900px)');
+    let ticking = false;
+    const reset = () => cards.forEach(c => { c.style.transform = ''; c.style.opacity = ''; });
+    const update = () => {
+      ticking = false;
+      if (!mq.matches || KGC.reducedMotion()) { reset(); return; }
+      cards.forEach((c, i) => {
+        const n = cards[i + 1];
+        if (!n) return;
+        const h = c.offsetHeight, nTop = n.getBoundingClientRect().top;
+        const stuck = 96 + (i + 1) * 18;
+        const p = Math.min(1, Math.max(0, 1 - (nTop - stuck) / h));
+        c.style.transform = 'scale(' + (1 - 0.06 * p).toFixed(4) + ')';
+        c.style.opacity = (1 - 0.45 * p).toFixed(3);
+      });
+    };
+    const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    addEventListener('scroll', req, { passive: true });
+    addEventListener('resize', req);
+    mq.addEventListener('change', req);
+    update();
+  });
+})();
+
+;
+/* ==== showcase ==== */
+
+;
+/* ==== paths ==== */
+
+;
+/* ==== offers ==== */
+(function () {
+  let ind = 'all';
+  const open = new Set();
+  let grid, pills, count;
+  const t = KGC.t;
+
+  function price(o) {
+    const de = KGC.lang === 'de';
+    const ab = r => r[0] === r[1] ? '' : (de ? 'ab ' : 'from ');
+    return '<div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + ab(o.setup) + KGC.chf(o.setup[0]) + '</span></div>' +
+           '<div><span class="offers-plbl">' + (de ? 'Monatlich, inkl. Support' : 'Monthly, incl. support') + '</span><span class="offers-pval">' + ab(o.monthly) + KGC.chf(o.monthly[0]) + '</span></div>';
+  }
+
+  function render() {
+    const de = KGC.lang === 'de';
+    pills.innerHTML = KGC.industries.map(i =>
+      '<button type="button" class="offers-pill" data-ind="' + i.id + '" aria-pressed="' + (i.id === ind) + '">' + t(i.name) + '</button>').join('');
+    const wg = document.getElementById('offers-web-grid');
+    if (wg) wg.innerHTML = KGC.websites.map(w =>
+      '<article class="offers-cell offers-webcell">' +
+        '<div class="offers-top">' + KGC.icon(w.id === 'redesign' ? 'repeat' : 'monitor', 'sage') + '</div>' +
+        '<h3 class="offers-name">' + t(w.name) + '</h3>' +
+        '<p class="offers-short">' + t(w.short) + '</p>' +
+        '<ul class="offers-web-pts">' + t(w.points).map(x => '<li>' + x + '</li>').join('') + '</ul>' +
+        '<div class="offers-price"><div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + (w.from ? (de ? 'ab ' : 'from ') : '') + KGC.chf(w.price) + '</span></div></div>' +
+        '<div class="offers-acts"><button type="button" class="offers-add" data-quote="web:' + w.id + '">' + (de ? '+ Zur Offerte' : '+ Add to quote') + '</button></div>' +
+      '</article>').join('');
+    grid.innerHTML = KGC.offers.map((o, n) => {
+      const match = ind === 'all' || o.industries.includes(ind);
+      const isOpen = open.has(o.id);
+      return '<article class="offers-cell' + (match ? '' : ' is-dim') + (isOpen ? ' open' : '') + '" data-id="' + o.id + '">' +
+        '<div class="offers-top"><span class="offers-id">' + KGC.icon(o.icon, o.tone) + '<span class="offers-idx">' + String(n + 1).padStart(2, '0') + '</span></span>' +
+        (o.id === 'reviews' ? '<span class="offers-tag">' + (de ? 'Meistgewählt' : 'Most chosen') + '</span>' : o.id === 'crm' ? '<span class="offers-tag">' + (de ? 'Neu' : 'New') + '</span>' : '') + '</div>' +
+        '<h3 class="offers-name">' + t(o.name) + '</h3>' +
+        '<p class="offers-short">' + t(o.short) + '</p>' +
+        '<div class="offers-price">' + price(o) + '</div>' +
+        '<div class="offers-acts"><button type="button" class="offers-more" aria-expanded="' + isOpen + '" aria-controls="offers-st-' + o.id + '"><span class="offers-pm" aria-hidden="true">+</span>' + (de ? 'Wie es funktioniert' : 'How it works') + '</button>' +
+        '<button type="button" class="offers-add">' + (de ? '+ Zur Offerte' : '+ Add to quote') + '</button></div>' +
+        '<div class="offers-steps-w" id="offers-st-' + o.id + '"><div><ol class="offers-steps">' + t(o.steps).map(s => '<li>' + s + '</li>').join('') + '</ol></div></div>' +
+        '</article>';
+    }).join('');
+    const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
+    const name = t(KGC.industries.find(i => i.id === ind).name);
+    count.textContent = ind === 'all' ? (de ? 'Alle 10 Automationen' : 'All 10 automations')
+      : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    grid = document.getElementById('offers-grid');
+    pills = document.getElementById('offers-pills');
+    count = document.getElementById('offers-count');
+    if (!grid) return;
+    render();
+    pills.addEventListener('click', e => {
+      const b = e.target.closest('.offers-pill');
+      if (!b) return;
+      ind = b.dataset.ind;
+      // update in place so the transition animates
+      pills.querySelectorAll('.offers-pill').forEach(p => p.setAttribute('aria-pressed', p.dataset.ind === ind));
+      grid.querySelectorAll('.offers-cell').forEach(c => {
+        const o = KGC.offer(c.dataset.id);
+        c.classList.toggle('is-dim', !(ind === 'all' || o.industries.includes(ind)));
+      });
+      const de = KGC.lang === 'de';
+      const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
+      const name = t(KGC.industries.find(i => i.id === ind).name);
+      count.textContent = ind === 'all' ? (de ? 'Alle 10 Automationen' : 'All 10 automations') : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
+    });
+    grid.addEventListener('click', e => {
+      const cell = e.target.closest('.offers-cell');
+      if (!cell) return;
+      const id = cell.dataset.id;
+      if (e.target.closest('.offers-more')) {
+        const on = !cell.classList.contains('open');
+        cell.classList.toggle('open', on);
+        on ? open.add(id) : open.delete(id);
+        cell.querySelector('.offers-more').setAttribute('aria-expanded', on);
+      } else if (e.target.closest('.offers-add')) KGC.openQuote({ offers: [id] });
+    });
+    KGC.on('lang', render);
   });
 })();
 
@@ -1934,164 +2223,52 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 })();
 
 ;
-/* ==== process ==== */
+/* ==== packages ==== */
 (function () {
-  document.addEventListener('DOMContentLoaded', () => {
-    const cards = [...document.querySelectorAll('.process-step')];
-    if (!cards.length) return;
-    cards.forEach((c, i) => c.style.setProperty('--i', i));
-    const mq = matchMedia('(min-width: 900px)');
-    let ticking = false;
-    const reset = () => cards.forEach(c => { c.style.transform = ''; c.style.opacity = ''; });
-    const update = () => {
-      ticking = false;
-      if (!mq.matches || KGC.reducedMotion()) { reset(); return; }
-      cards.forEach((c, i) => {
-        const n = cards[i + 1];
-        if (!n) return;
-        const h = c.offsetHeight, nTop = n.getBoundingClientRect().top;
-        const stuck = 96 + (i + 1) * 18;
-        const p = Math.min(1, Math.max(0, 1 - (nTop - stuck) / h));
-        c.style.transform = 'scale(' + (1 - 0.06 * p).toFixed(4) + ')';
-        c.style.opacity = (1 - 0.45 * p).toFixed(3);
-      });
-    };
-    const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
-    addEventListener('scroll', req, { passive: true });
-    addEventListener('resize', req);
-    mq.addEventListener('change', req);
-    update();
-  });
-})();
+  function init() {
+    const grid = document.getElementById('packages-grid'), seg = document.getElementById('packages-seg');
+    if (!grid || !window.KGC) return;
+    const K = KGC; let view = 'monthly';
+    const L = (de, en) => K.lang === 'en' ? en : de;
 
-;
-/* ==== showcase ==== */
-
-;
-/* ==== offers ==== */
-(function () {
-  let ind = 'all';
-  const open = new Set();
-  let grid, pills, count;
-  const t = KGC.t;
-
-  function price(o) {
-    const de = KGC.lang === 'de';
-    const ab = r => r[0] === r[1] ? '' : (de ? 'ab ' : 'from ');
-    return '<div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + ab(o.setup) + KGC.chf(o.setup[0]) + '</span></div>' +
-           '<div><span class="offers-plbl">' + (de ? 'Monatlich, inkl. Support' : 'Monthly, incl. support') + '</span><span class="offers-pval">' + ab(o.monthly) + KGC.chf(o.monthly[0]) + '</span></div>';
-  }
-
-  function render() {
-    const de = KGC.lang === 'de';
-    pills.innerHTML = KGC.industries.map(i =>
-      '<button type="button" class="offers-pill" data-ind="' + i.id + '" aria-pressed="' + (i.id === ind) + '">' + t(i.name) + '</button>').join('');
-    const wg = document.getElementById('offers-web-grid');
-    if (wg) wg.innerHTML = KGC.websites.map(w =>
-      '<article class="offers-cell offers-webcell">' +
-        '<div class="offers-top">' + KGC.icon(w.id === 'redesign' ? 'repeat' : 'monitor', 'sage') + '</div>' +
-        '<h3 class="offers-name">' + t(w.name) + '</h3>' +
-        '<p class="offers-short">' + t(w.short) + '</p>' +
-        '<ul class="offers-web-pts">' + t(w.points).map(x => '<li>' + x + '</li>').join('') + '</ul>' +
-        '<div class="offers-price"><div><span class="offers-plbl">' + (de ? 'Einmalig' : 'One-time') + '</span><span class="offers-pval">' + (w.from ? (de ? 'ab ' : 'from ') : '') + KGC.chf(w.price) + '</span></div></div>' +
-        '<div class="offers-acts"><button type="button" class="offers-add" data-quote="web:' + w.id + '">' + (de ? '+ Zur Offerte' : '+ Add to quote') + '</button></div>' +
-      '</article>').join('');
-    grid.innerHTML = KGC.offers.map((o, n) => {
-      const match = ind === 'all' || o.industries.includes(ind);
-      const isOpen = open.has(o.id);
-      return '<article class="offers-cell' + (match ? '' : ' is-dim') + (isOpen ? ' open' : '') + '" data-id="' + o.id + '">' +
-        '<div class="offers-top"><span class="offers-id">' + KGC.icon(o.icon, o.tone) + '<span class="offers-idx">' + String(n + 1).padStart(2, '0') + '</span></span>' +
-        (o.id === 'reviews' ? '<span class="offers-tag">' + (de ? 'Meistgewählt' : 'Most chosen') + '</span>' : o.id === 'crm' ? '<span class="offers-tag">' + (de ? 'Neu' : 'New') + '</span>' : '') + '</div>' +
-        '<h3 class="offers-name">' + t(o.name) + '</h3>' +
-        '<p class="offers-short">' + t(o.short) + '</p>' +
-        '<div class="offers-price">' + price(o) + '</div>' +
-        '<div class="offers-acts"><button type="button" class="offers-more" aria-expanded="' + isOpen + '" aria-controls="offers-st-' + o.id + '"><span class="offers-pm" aria-hidden="true">+</span>' + (de ? 'Wie es funktioniert' : 'How it works') + '</button>' +
-        '<button type="button" class="offers-add">' + (de ? '+ Zur Offerte' : '+ Add to quote') + '</button></div>' +
-        '<div class="offers-steps-w" id="offers-st-' + o.id + '"><div><ol class="offers-steps">' + t(o.steps).map(s => '<li>' + s + '</li>').join('') + '</ol></div></div>' +
-        '</article>';
-    }).join('');
-    const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
-    const name = t(KGC.industries.find(i => i.id === ind).name);
-    count.textContent = ind === 'all' ? (de ? 'Alle 10 Automationen' : 'All 10 automations')
-      : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    grid = document.getElementById('offers-grid');
-    pills = document.getElementById('offers-pills');
-    count = document.getElementById('offers-count');
-    if (!grid) return;
+    /* Saving over the first year (setup + 12 months) versus booking the same automations singly at their lowest price */
+    /* Package one-time price after its discount (see KGC.discount) */
+    function pset(p) { const n = p.includes.length + p.choice.length; return p.setup - K.r5(p.setup * K.discount(n, true).rate); }
+    function saving(p) {
+      const ids = p.includes.concat(p.choice.map(g => g[0]));
+      const s = ids.reduce((a, id) => a + K.offer(id).setup[0], 0), m = ids.reduce((a, id) => a + K.offer(id).monthly[0], 0);
+      const single = s - K.r5(s * K.discount(ids.length, false).rate) + 12 * m;
+      return Math.floor((single - pset(p) - 12 * p.monthly) / 10) * 10;
+    }
+    function render() {
+      seg.innerHTML = [['monthly', L('Einmalig + monatlich', 'One-time + monthly')], ['year', L('Erstes Jahr total', 'First year total')]]
+        .map(([k, t]) => `<button type="button" data-view="${k}" aria-pressed="${view === k}">${t}</button>`).join('');
+      grid.innerHTML = K.packages.map(p => {
+        const feat = !!p.featured, sv = saving(p), ps = pset(p), was = ps < p.setup ? `<s>${K.chf(p.setup)}</s> ` : '', year = ps + 12 * p.monthly, nm = K.t(p.name);
+        const price = view === 'monthly'
+          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${was}${K.chf(ps)} ${L('einmalig', 'one-time')}</div><div class="packages-sup">${L('Monatlich inkl. Support und 1 Gratis-Support-Anruf', 'Monthly incl. support and 1 free support call')}</div>`
+          : `<div class="packages-big">${K.chf(year)}<small>${L('im 1. Jahr', 'in year 1')}</small></div><div class="packages-sub">${K.chf(ps)} + 12 × ${K.chf(p.monthly)}</div>`;
+        const items = p.includes.map(id => `<li>${K.t(K.offer(id).name)}</li>`).join('')
+          + p.choice.map(g => `<li class="is-choice">${g.map(id => K.t(K.offer(id).name)).join(` <em>${L('oder', 'or')}</em> `)}</li>`).join('');
+        return `<article class="packages-card${feat ? ' is-featured' : ''}" aria-labelledby="pk-${p.id}">
+          ${feat ? `<span class="packages-flag">${L('Empfohlen', 'Recommended')}</span>` : ''}
+          <div><h3 class="packages-name" id="pk-${p.id}">${nm}</h3><p class="packages-tag">${K.t(p.tagline)}</p></div>
+          <div class="packages-price">${price}</div>
+          <ul class="packages-list">${items}</ul>
+          <p class="packages-save">${sv > 0 ? L(`Sie sparen ${K.chf(sv)} im ersten Jahr gegenüber Einzelpreisen`, `You save ${K.chf(sv)} in the first year compared with single prices`) : ''}</p>
+          <button type="button" class="btn ${feat ? 'btn-cta' : 'btn-ghost'}" data-quote="${p.id}">${L(nm + ' wählen', 'Choose ' + nm)}</button>
+        </article>`;
+      }).join('');
+    }
+    seg.addEventListener('click', e => {
+      const b = e.target.closest('button[data-view]'); if (!b) return;
+      view = b.dataset.view; render();
+      const nb = seg.querySelector(`[data-view="${view}"]`); if (nb) nb.focus();
+    });
+    K.on('lang', render);
     render();
-    pills.addEventListener('click', e => {
-      const b = e.target.closest('.offers-pill');
-      if (!b) return;
-      ind = b.dataset.ind;
-      // update in place so the transition animates
-      pills.querySelectorAll('.offers-pill').forEach(p => p.setAttribute('aria-pressed', p.dataset.ind === ind));
-      grid.querySelectorAll('.offers-cell').forEach(c => {
-        const o = KGC.offer(c.dataset.id);
-        c.classList.toggle('is-dim', !(ind === 'all' || o.industries.includes(ind)));
-      });
-      const de = KGC.lang === 'de';
-      const n = KGC.offers.filter(o => ind === 'all' || o.industries.includes(ind)).length;
-      const name = t(KGC.industries.find(i => i.id === ind).name);
-      count.textContent = ind === 'all' ? (de ? 'Alle 10 Automationen' : 'All 10 automations') : (de ? n + ' von 10 passen zu ' + name : n + ' of 10 fit ' + name);
-    });
-    grid.addEventListener('click', e => {
-      const cell = e.target.closest('.offers-cell');
-      if (!cell) return;
-      const id = cell.dataset.id;
-      if (e.target.closest('.offers-more')) {
-        const on = !cell.classList.contains('open');
-        cell.classList.toggle('open', on);
-        on ? open.add(id) : open.delete(id);
-        cell.querySelector('.offers-more').setAttribute('aria-expanded', on);
-      } else if (e.target.closest('.offers-add')) KGC.openQuote({ offers: [id] });
-    });
-    KGC.on('lang', render);
-  });
-})();
-
-;
-/* ==== work ==== */
-(function () {
-  /* Portfolio, no links (owner's request). Live client sites show their name; drafts are anonymised
-     (logos, names and addresses blurred in the image) and show only the industry. Images live in assets/work/. */
-  const LIVE = { de: 'Kundenprojekt · Live', en: 'Client project · live' };
-  const DRAFT = { de: 'Konzeptentwurf', en: 'Concept draft' };
-  const C = (img, name, de, en, url) => ({ img, url, name: { de: name, en: name }, kind: LIVE, alt: { de: 'Startseite der Website von ' + name + ' (' + de + ')', en: 'Homepage of the ' + name + ' website (' + en + ')' } });
-  const D = (img, de, en) => ({ img, name: { de, en }, kind: DRAFT, alt: { de: 'Konzeptentwurf einer Website: ' + de, en: 'Website concept draft: ' + en } });
-  const WORK = [
-    C('assets/work/precision.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'precision manufacturing', 'https://www.stps.ch'),
-    C('assets/work/boxing.webp', 'Boxschule Gebenstorf', 'Boxclub', 'boxing club', 'https://boxschule-gebenstorf.ch'),
-    D('assets/work/restaurant.webp', 'Café & Restaurant', 'Café & restaurant'),
-    D('assets/work/barber.webp', 'Barbier', 'Barbershop'),
-    D('assets/work/cleaning.webp', 'Reinigungsfirma', 'Cleaning company'),
-    D('assets/work/pos-it.webp', 'Kassensysteme & IT', 'POS & IT'),
-    D('assets/work/phone-repair.webp', 'Handyreparatur', 'Phone repair'),
-    D('assets/work/it-services.webp', 'IT-Dienstleister', 'IT services'),
-    D('assets/work/facility.webp', 'Hauswartung', 'Building maintenance'),
-  ];
-  document.addEventListener('DOMContentLoaded', () => {
-    const rail = document.getElementById('work-rail');
-    if (!rail || !window.KGC) return;
-    const sec = rail.closest('section');
-    if (!WORK.length) { sec.hidden = true; return; }
-    const render = () => {
-      rail.innerHTML = WORK.map(w => '<figure class="work-card"><div class="work-frame"><div class="work-bar" aria-hidden="true"><i></i><i></i><i></i></div>' +
-        '<img class="work-shot" src="' + w.img + '" alt="' + KGC.t(w.alt).replace(/&/g, '&amp;') + '" loading="lazy" width="1280" height="800"></div>' +
-        '<figcaption class="work-cap"><span class="work-name">' + KGC.t(w.name).replace(/&/g, '&amp;') + '</span><span class="work-kind' + (w.kind === LIVE ? ' is-live' : '') + '">' + KGC.t(w.kind) + '</span>' + (w.url ? '<a class="work-link" href="' + w.url + '" target="_blank" rel="noopener">' + KGC.t({ de: 'Website ansehen', en: 'Visit website' }) + ' <span aria-hidden="true">↗</span></a>' : '') + '</figcaption></figure>').join('');
-      upd();
-    };
-    const prev = document.getElementById('work-prev'), next = document.getElementById('work-next');
-    const step = () => (rail.querySelector('.work-card') || rail).getBoundingClientRect().width + 24;
-    function upd() { prev.disabled = rail.scrollLeft < 8; next.disabled = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 8; }
-    prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: KGC.reducedMotion() ? 'auto' : 'smooth' }));
-    next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: KGC.reducedMotion() ? 'auto' : 'smooth' }));
-    rail.addEventListener('scroll', () => requestAnimationFrame(upd), { passive: true });
-    addEventListener('resize', upd);
-    render(); KGC.on('lang', render);
-  });
+  }
+  document.addEventListener('DOMContentLoaded', init);
 })();
 
 ;
@@ -2165,53 +2342,49 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
 })();
 
 ;
-/* ==== packages ==== */
+/* ==== work ==== */
 (function () {
-  function init() {
-    const grid = document.getElementById('packages-grid'), seg = document.getElementById('packages-seg');
-    if (!grid || !window.KGC) return;
-    const K = KGC; let view = 'monthly';
-    const L = (de, en) => K.lang === 'en' ? en : de;
-
-    /* Saving over the first year (setup + 12 months) versus booking the same automations singly at their lowest price */
-    /* Package one-time price after its discount (see KGC.discount) */
-    function pset(p) { const n = p.includes.length + p.choice.length; return p.setup - K.r5(p.setup * K.discount(n, true).rate); }
-    function saving(p) {
-      const ids = p.includes.concat(p.choice.map(g => g[0]));
-      const s = ids.reduce((a, id) => a + K.offer(id).setup[0], 0), m = ids.reduce((a, id) => a + K.offer(id).monthly[0], 0);
-      const single = s - K.r5(s * K.discount(ids.length, false).rate) + 12 * m;
-      return Math.floor((single - pset(p) - 12 * p.monthly) / 10) * 10;
-    }
-    function render() {
-      seg.innerHTML = [['monthly', L('Einmalig + monatlich', 'One-time + monthly')], ['year', L('Erstes Jahr total', 'First year total')]]
-        .map(([k, t]) => `<button type="button" data-view="${k}" aria-pressed="${view === k}">${t}</button>`).join('');
-      grid.innerHTML = K.packages.map(p => {
-        const feat = !!p.featured, sv = saving(p), ps = pset(p), was = ps < p.setup ? `<s>${K.chf(p.setup)}</s> ` : '', year = ps + 12 * p.monthly, nm = K.t(p.name);
-        const price = view === 'monthly'
-          ? `<div class="packages-big">${K.chf(p.monthly)}<small>/ ${L('Monat', 'month')}</small></div><div class="packages-sub">${was}${K.chf(ps)} ${L('einmalig', 'one-time')}</div><div class="packages-sup">${L('Monatlich inkl. Support und 1 Gratis-Support-Anruf', 'Monthly incl. support and 1 free support call')}</div>`
-          : `<div class="packages-big">${K.chf(year)}<small>${L('im 1. Jahr', 'in year 1')}</small></div><div class="packages-sub">${K.chf(ps)} + 12 × ${K.chf(p.monthly)}</div>`;
-        const items = p.includes.map(id => `<li>${K.t(K.offer(id).name)}</li>`).join('')
-          + p.choice.map(g => `<li class="is-choice">${g.map(id => K.t(K.offer(id).name)).join(` <em>${L('oder', 'or')}</em> `)}</li>`).join('');
-        return `<article class="packages-card${feat ? ' is-featured' : ''}" aria-labelledby="pk-${p.id}">
-          ${feat ? `<span class="packages-flag">${L('Empfohlen', 'Recommended')}</span>` : ''}
-          <div><h3 class="packages-name" id="pk-${p.id}">${nm}</h3><p class="packages-tag">${K.t(p.tagline)}</p></div>
-          <div class="packages-price">${price}</div>
-          <ul class="packages-list">${items}</ul>
-          <p class="packages-save">${sv > 0 ? L(`Sie sparen ${K.chf(sv)} im ersten Jahr gegenüber Einzelpreisen`, `You save ${K.chf(sv)} in the first year compared with single prices`) : ''}</p>
-          <button type="button" class="btn ${feat ? 'btn-cta' : 'btn-ghost'}" data-quote="${p.id}">${L(nm + ' wählen', 'Choose ' + nm)}</button>
-        </article>`;
-      }).join('');
-    }
-    seg.addEventListener('click', e => {
-      const b = e.target.closest('button[data-view]'); if (!b) return;
-      view = b.dataset.view; render();
-      const nb = seg.querySelector(`[data-view="${view}"]`); if (nb) nb.focus();
-    });
-    K.on('lang', render);
-    render();
-  }
-  document.addEventListener('DOMContentLoaded', init);
+  /* Portfolio, no links (owner's request). Live client sites show their name; drafts are anonymised
+     (logos, names and addresses blurred in the image) and show only the industry. Images live in assets/work/. */
+  const LIVE = { de: 'Kundenprojekt · Live', en: 'Client project · live' };
+  const DRAFT = { de: 'Konzeptentwurf', en: 'Concept draft' };
+  const C = (img, name, de, en, url) => ({ img, url, name: { de: name, en: name }, kind: LIVE, alt: { de: 'Startseite der Website von ' + name + ' (' + de + ')', en: 'Homepage of the ' + name + ' website (' + en + ')' } });
+  const D = (img, de, en) => ({ img, name: { de, en }, kind: DRAFT, alt: { de: 'Konzeptentwurf einer Website: ' + de, en: 'Website concept draft: ' + en } });
+  const WORK = [
+    C('assets/work/precision.webp', 'SwissTech Precision Solutions', 'Präzisionsfertigung', 'precision manufacturing', 'https://www.stps.ch'),
+    C('assets/work/boxing.webp', 'Boxschule Gebenstorf', 'Boxclub', 'boxing club', 'https://boxschule-gebenstorf.ch'),
+    D('assets/work/restaurant.webp', 'Café & Restaurant', 'Café & restaurant'),
+    D('assets/work/barber.webp', 'Barbier', 'Barbershop'),
+    D('assets/work/cleaning.webp', 'Reinigungsfirma', 'Cleaning company'),
+    D('assets/work/pos-it.webp', 'Kassensysteme & IT', 'POS & IT'),
+    D('assets/work/phone-repair.webp', 'Handyreparatur', 'Phone repair'),
+    D('assets/work/it-services.webp', 'IT-Dienstleister', 'IT services'),
+    D('assets/work/facility.webp', 'Hauswartung', 'Building maintenance'),
+  ];
+  document.addEventListener('DOMContentLoaded', () => {
+    const rail = document.getElementById('work-rail');
+    if (!rail || !window.KGC) return;
+    const sec = rail.closest('section');
+    if (!WORK.length) { sec.hidden = true; return; }
+    const render = () => {
+      rail.innerHTML = WORK.map(w => '<figure class="work-card"><div class="work-frame"><div class="work-bar" aria-hidden="true"><i></i><i></i><i></i></div>' +
+        '<img class="work-shot" src="' + w.img + '" alt="' + KGC.t(w.alt).replace(/&/g, '&amp;') + '" loading="lazy" width="1280" height="800"></div>' +
+        '<figcaption class="work-cap"><span class="work-name">' + KGC.t(w.name).replace(/&/g, '&amp;') + '</span><span class="work-kind' + (w.kind === LIVE ? ' is-live' : '') + '">' + KGC.t(w.kind) + '</span>' + (w.url ? '<a class="work-link" href="' + w.url + '" target="_blank" rel="noopener">' + KGC.t({ de: 'Website ansehen', en: 'Visit website' }) + ' <span aria-hidden="true">↗</span></a>' : '') + '</figcaption></figure>').join('');
+      upd();
+    };
+    const prev = document.getElementById('work-prev'), next = document.getElementById('work-next');
+    const step = () => (rail.querySelector('.work-card') || rail).getBoundingClientRect().width + 24;
+    function upd() { prev.disabled = rail.scrollLeft < 8; next.disabled = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 8; }
+    prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: KGC.reducedMotion() ? 'auto' : 'smooth' }));
+    next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: KGC.reducedMotion() ? 'auto' : 'smooth' }));
+    rail.addEventListener('scroll', () => requestAnimationFrame(upd), { passive: true });
+    addEventListener('resize', upd);
+    render(); KGC.on('lang', render);
+  });
 })();
+
+;
+/* ==== faq ==== */
 
 ;
 /* ==== quote ==== */
@@ -2689,9 +2862,6 @@ html { scrollbar-width: thin; scrollbar-color: var(--brass) var(--stone); }
   }
   document.addEventListener('DOMContentLoaded', init);
 })();
-
-;
-/* ==== faq ==== */
 
 ;
 /* ==== footer ==== */

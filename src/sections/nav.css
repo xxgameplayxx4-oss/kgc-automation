@@ -48,3 +48,8 @@
 @media (max-width: 899px) { .nav-burger { display: inline-block; } }
 @media (min-width: 900px) { .nav-menu { display: none !important; } }
 @media (max-width: 480px) { .nav-burger { width: 40px; height: 40px; } .nav-burger span:first-child { top: 16px; } .nav-burger span:last-child { top: 23px; } }
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after { transform: scaleX(1); }
+.nav-menu-links a.is-current { color: var(--brass); }
+.page[hidden] { display: none !important; }
+.page > :first-child h1:focus, .page h2:focus { outline: none; }

@@ -29,8 +29,34 @@
     /* Open the quote configurator, optionally preselecting a package id or offer ids */
     openQuote(preset) {
       KGC.emit('quote:preset', preset || null);
-      const el = document.getElementById('offerte');
-      if (el) el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      KGC.go('offerte', true);
+    },
+
+    /* Pages: one <main data-page> is visible at a time. go(id) accepts a page id or any element id inside a page. */
+    go(id, push) {
+      const pages = [...document.querySelectorAll('[data-page]')];
+      if (!pages.length) return;
+      let el = id && document.getElementById(id);
+      let page = el ? el.closest('[data-page]') : null;
+      if (!page) { page = pages[0]; el = null; }
+      const pid = page.getAttribute('data-page'), changed = page.hidden;
+      pages.forEach(p => { p.hidden = p !== page; });
+      document.querySelectorAll('[data-nav]').forEach(a => {
+        const on = a.getAttribute('data-nav') === pid;
+        a.classList.toggle('is-current', on);
+        if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      });
+      const hash = '#' + (id && el ? id : pid);
+      if (push && location.hash !== hash) { try { history.pushState(null, '', hash); } catch (e) {} }
+      const first = page.firstElementChild;
+      const target = el && el !== page && el !== first && !(first && first.id === id) ? el : null;
+      if (target) requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+      else window.scrollTo(0, 0);
+      if (changed) {
+        page.querySelectorAll('.reveal:not(.in)').forEach(r => { const b = r.getBoundingClientRect(); if (b.top < innerHeight) r.classList.add('in'); });
+        const h = page.querySelector('h1, h2'); if (h && changed && pid !== 'top') { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+        KGC.emit('page', pid);
+      }
     },
 
     /* Line icons (24px grid, 1.5 stroke) */
@@ -170,6 +196,19 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     KGC.setLang(KGC.lang);
+
+    // Hash links switch pages instead of scrolling one long page
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a || a.matches('a[href="#datenschutz"], a[href="#impressum"], [data-quote]') || e.defaultPrevented) return;
+      const id = a.getAttribute('href').slice(1);
+      if (!id || !document.getElementById(id)) return;
+      e.preventDefault();
+      KGC.go(id, true);
+    });
+    addEventListener('popstate', () => KGC.go(location.hash.slice(1)));
+    addEventListener('hashchange', () => KGC.go(location.hash.slice(1)));
+    if (location.hash.length > 1) KGC.go(location.hash.slice(1));
 
     // [data-quote] anywhere opens the configurator; value = package id or comma list of offer ids
     document.addEventListener('click', e => {

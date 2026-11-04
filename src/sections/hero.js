@@ -1,27 +1,9 @@
 (function () {
   document.addEventListener('DOMContentLoaded', () => {
-    const sec = document.querySelector('.hero');
-    if (!sec || !window.KGC) return;
-    const v = sec.querySelector('.hero-video'), img = sec.querySelector('.hero-poster'), btn = document.getElementById('hero-toggle');
-    const narrow = matchMedia('(max-width: 720px)').matches;
-    const poster = narrow ? 'assets/media/film-9x16.webp' : 'assets/media/film-16x9.webp';
-    if (narrow) { img.src = poster; v.poster = poster; }
-    if (KGC.reducedMotion()) return; // poster only
-    v.src = narrow ? 'assets/media/film-9x16.mp4' : 'assets/media/film-16x9.mp4';
-    let userPaused = false;
-    v.addEventListener('playing', () => v.classList.add('is-on'));
-    const io = new IntersectionObserver(es => es.forEach(e => {
-      if (e.isIntersecting && !userPaused) v.play().catch(() => {}); else v.pause();
-    }), { threshold: .15 });
-    io.observe(sec);
-    btn.hidden = false;
-    const label = () => {
-      const p = v.paused; btn.classList.toggle('is-paused', p);
-      btn.setAttribute('data-aria-de', p ? 'Video abspielen' : 'Video pausieren');
-      btn.setAttribute('data-aria-en', p ? 'Play video' : 'Pause video');
-      btn.setAttribute('aria-label', btn.getAttribute('data-aria-' + KGC.lang));
-    };
-    v.addEventListener('play', label); v.addEventListener('pause', label);
-    btn.addEventListener('click', () => { if (v.paused) { userPaused = false; v.play().catch(() => {}); } else { userPaused = true; v.pause(); } });
+    const v = document.querySelector('.hero-visual');
+    if (!v) return;
+    if (!('IntersectionObserver' in window) || (window.KGC && KGC.reducedMotion && KGC.reducedMotion())) { v.classList.add('is-in'); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { v.classList.add('is-in'); io.disconnect(); } }), { threshold: .1 });
+    io.observe(v);
   });
 })();

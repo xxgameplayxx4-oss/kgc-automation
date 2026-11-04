@@ -1,0 +1,10 @@
+.paths-head { display: grid; gap: 12px; margin-bottom: 24px; }
+.paths-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.paths-card { display: grid; align-content: start; gap: 8px; padding: 20px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); color: var(--ink); text-decoration: none; transition: border-color .2s, transform .2s var(--ease); }
+.paths-card b { font-family: var(--f-display); font-weight: 500; font-size: var(--t-lg); margin-top: 4px; }
+.paths-card b::after { content: " →"; color: var(--brass); }
+.paths-card > span:last-child { color: var(--graphite); font-size: var(--t-sm); }
+.paths-card:hover { border-color: var(--brass); transform: translateY(-2px); }
+@media (max-width: 900px) { .paths-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .paths-grid { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .paths-card { transition: none; } }
