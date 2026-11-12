@@ -8,6 +8,7 @@ import { LangContext, mailto, useT, type Lang } from '../data';
 const LINKS = [
   { id: 'pakete', label: { de: 'Pakete', en: 'Packages' } },
   { id: 'beispiele', label: { de: 'Beispiele', en: 'Examples' } },
+  { id: 'ueber-mich', label: { de: 'Über mich', en: 'About' } },
   { id: 'konfigurator', label: { de: 'Konfigurator', en: 'Configurator' } },
   { id: 'print', label: { de: 'Print', en: 'Print' } },
   { id: 'faq', label: { de: 'FAQ', en: 'FAQ' } },

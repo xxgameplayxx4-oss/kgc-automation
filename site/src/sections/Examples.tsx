@@ -8,6 +8,7 @@ import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import { Badge } from '@astryxdesign/core/Badge';
+import Eyebrow from './Eyebrow';
 import { WORK, FUNNELS, useT, type T } from '../data';
 
 const FUNNEL_ALT: T[] = [
@@ -25,6 +26,7 @@ export default function Examples() {
     <Section id="beispiele" variant="transparent" padding={6}>
       <VStack gap={8} maxWidth={1200} style={{ marginInline: "auto", width: "100%" }}>
         <VStack gap={3}>
+          <Eyebrow>{t({ de: 'Pro-Paket', en: 'Pro package' })}</Eyebrow>
           <Heading level={2}>{t({ de: 'Hero-Bereiche, entwickelt für das Geschäft', en: 'Hero sections, engineered for the business' })}</Heading>
           <Text type="large" color="secondary">{t({ de: 'Der erste Eindruck Ihrer Website. Mit dem Pro-Paket entsteht er individuell für Ihr Geschäft.', en: 'The first impression of your website. With the Pro package it is built individually for your business.' })}</Text>
         </VStack>
@@ -50,6 +52,7 @@ export default function Examples() {
         </Grid>
 
         <VStack gap={3}>
+          <Eyebrow>{t({ de: 'Erweiterung', en: 'Add-on' })}</Eyebrow>
           <Heading level={2}>{t({ de: 'Buchungs-Funnels', en: 'Booking funnels' })}</Heading>
           <Text type="large" color="secondary">{t({ de: 'Kunden buchen selbst, Schritt für Schritt. Danach folgt automatisch die Bestätigung per E-Mail und der Eintrag in Ihrem Kalender.', en: 'Customers book on their own, step by step. Then the email confirmation and your calendar entry follow automatically.' })}</Text>
         </VStack>

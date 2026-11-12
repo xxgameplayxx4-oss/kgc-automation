@@ -7,6 +7,7 @@ import { Heading } from '@astryxdesign/core/Heading';
 import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
+import Eyebrow from './Eyebrow';
 import { ADDONS, chf, useT } from '../data';
 
 const NAME = 'Café Muster';
@@ -23,6 +24,7 @@ export default function Print() {
     <Section id="print" variant="muted" padding={6}>
       <VStack gap={6} maxWidth={1200} style={{ marginInline: "auto", width: "100%" }}>
         <VStack gap={3}>
+          <Eyebrow>Print</Eyebrow>
           <Heading level={2}>{t({ de: 'Flyer und Visitenkarten im Design Ihrer Website', en: 'Flyers and business cards in your website’s design' })}</Heading>
           <Text type="large" color="secondary">{t({ de: 'Gleiche Farben, gleiche Schrift, gleicher Auftritt. Alles aus einem Guss.', en: 'Same colors, same type, same look. All of one piece.' })}</Text>
         </VStack>
@@ -37,7 +39,7 @@ export default function Print() {
                   </VStack>
                 </AspectRatio>
               </Card>
-              <Card variant="blue" padding={0} elevation="low">
+              <Card variant="yellow" padding={0} elevation="low">
                 <AspectRatio ratio={85.6 / 54}>
                   <VStack padding={3} justify="center" gap={0.5} height="100%">
                     <Text type="label" weight="semibold">Anna Muster</Text>

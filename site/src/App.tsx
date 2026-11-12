@@ -4,12 +4,13 @@ import Nav from './sections/Nav';
 import Hero from './sections/Hero';
 import Packages from './sections/Packages';
 import Examples from './sections/Examples';
+import About from './sections/About';
 import Configurator from './sections/Configurator';
 import Print from './sections/Print';
 import Faq from './sections/Faq';
 import Footer from './sections/Footer';
 
-// Section ids (used by Nav anchors): top, pakete, beispiele, konfigurator, print, faq, kontakt
+// Section ids (used by Nav anchors): top, pakete, beispiele, ueber-mich, konfigurator, print, faq, kontakt
 export default function App() {
   const [lang, setLang] = useState<Lang>('de');
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Hero />
         <Packages />
         <Examples />
+        <About />
         <Configurator />
         <Print />
         <Faq />

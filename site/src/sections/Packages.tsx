@@ -4,6 +4,7 @@ import { Heading, Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { Badge } from '@astryxdesign/core/Badge';
+import Eyebrow from './Eyebrow';
 import { chf, mailto, TIERS, useT } from '../data';
 
 export default function Packages() {
@@ -11,6 +12,7 @@ export default function Packages() {
   return (
     <VStack id="pakete" as="section" gap={6} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
       <VStack gap={2}>
+        <Eyebrow>{t({ de: 'Fixpreise', en: 'Fixed prices' })}</Eyebrow>
         <Heading level={2} type="display-3">{t({ de: 'Pakete', en: 'Packages' })}</Heading>
         <Text color="secondary">{t({ de: 'Zwei Fixpreis-Pakete. Erweiterungen wählen Sie im Konfigurator.', en: 'Two fixed-price packages. Pick extras in the configurator.' })}</Text>
       </VStack>
@@ -18,13 +20,13 @@ export default function Packages() {
         {TIERS.map(tier => {
           const pro = tier.id === 'pro';
           return (
-            <Card key={tier.id} variant={pro ? 'blue' : 'default'} elevation={pro ? 'low' : 'none'} padding={5}>
+            <Card key={tier.id} variant={pro ? 'yellow' : 'default'} elevation={pro ? 'low' : 'none'} padding={5}>
               <VStack gap={4}>
                 <HStack gap={2} vAlign="center">
                   <Heading level={3}>{t(tier.name)}</Heading>
-                  {pro && <Badge variant="blue" label={t({ de: 'Empfohlen', en: 'Recommended' })} />}
+                  {pro && <Badge variant="yellow" label={t({ de: 'Empfohlen', en: 'Recommended' })} />}
                 </HStack>
-                <Heading level={2} type="display-3">{chf(tier.price)}</Heading>
+                <Heading level={2} type="display-3" color="accent">{chf(tier.price)}</Heading>
                 <Text color="secondary">{t(tier.tagline)}</Text>
                 <VStack gap={2} as="ul" style={{ margin: 0, paddingInlineStart: 'var(--spacing-4)' }}>
                   {tier.features.map((f, i) => <li key={i}><Text>{t(f)}</Text></li>)}

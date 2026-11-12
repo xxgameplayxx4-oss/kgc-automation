@@ -10,6 +10,7 @@ import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/Segme
 import { Stack } from '@astryxdesign/core/Stack';
 import { StatusDot } from '@astryxdesign/core/StatusDot';
 import { Text } from '@astryxdesign/core/Text';
+import Eyebrow from './Eyebrow';
 import { Token } from '@astryxdesign/core/Token';
 import { ADDONS, GROUPS, TIERS, chf, mailto, total, useT, type T } from '../data';
 
@@ -194,6 +195,7 @@ export default function Configurator() {
   return (
     <Stack as="section" id="konfigurator" gap={6} paddingInline={4} paddingBlock={10} style={{ maxWidth: '75rem', marginInline: 'auto', width: '100%' }}>
       <Stack gap={2}>
+        <Eyebrow>{t({ de: 'Konfigurator', en: 'Configurator' })}</Eyebrow>
         <Heading level={2}>{t({ de: 'Stellen Sie Ihre Wunsch-Website zusammen', en: 'Build your dream website' })}</Heading>
         <Text color="secondary">{t({ de: 'Wählen Sie ein Paket und Zusätze. Die Vorschau und der Preis passen sich sofort an.', en: 'Pick a package and add-ons. The preview and price update instantly.' })}</Text>
         <Link href="#beispiele" size="sm">{t({ de: 'Beispiele für Buchungs-Funnels ansehen', en: 'See booking funnel examples' })}</Link>
@@ -289,7 +291,7 @@ export default function Configurator() {
               <Divider />
               <Stack direction="horizontal" justify="between" align="center" gap={3}>
                 <Text weight="bold">{t({ de: 'Total', en: 'Total' })}</Text>
-                <Heading level={3} hasCapsize={false}>{chf(sum)}</Heading>
+                <Heading level={3} hasCapsize={false} color="accent">{chf(sum)}</Heading>
               </Stack>
               <Text type="supporting" size="sm">{t({ de: 'Einmalig, inkl. Einrichtung. Preise in CHF.', en: 'One-time, setup included. Prices in CHF.' })}</Text>
               <Button
