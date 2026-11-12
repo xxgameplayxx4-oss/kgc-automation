@@ -16,8 +16,8 @@ export default function Hero() {
         </Heading>
         <Text type="large" color="secondary" justify="center" textWrap="balance">
           {t({
-            de: 'KGC Websites baut Websites für Schweizer Kleinunternehmen, dazu passende Flyer und Visitenkarten.',
-            en: 'KGC Websites builds websites for Swiss small businesses, plus matching flyers and business cards.',
+            de: 'Cung Solutions baut Websites für Schweizer Kleinunternehmen, dazu passende Flyer und Visitenkarten.',
+            en: 'Cung Solutions builds websites for Swiss small businesses, plus matching flyers and business cards.',
           })}
         </Text>
         <HStack gap={3} wrap="wrap" hAlign="center">

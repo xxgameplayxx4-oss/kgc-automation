@@ -14,7 +14,8 @@ export default function Footer() {
   const close = (o: boolean) => { if (!o) setDoc(null); };
   const address = (
     <VStack gap={0.5}>
-      <Text weight="semibold">Khang Cung, KGC Websites</Text>
+      <Text weight="semibold">Cung Solutions</Text>
+      <Text>{t({ de: 'Einzelfirma, Inhaber Khang Cung', en: 'Sole proprietorship, owner Khang Cung' })}</Text>
       <Text>Stahlrain 7</Text>
       <Text>5200 Brugg AG, {t({ de: 'Schweiz', en: 'Switzerland' })}</Text>
       <Text>{CONTACT_EMAIL}</Text>
@@ -35,7 +36,7 @@ export default function Footer() {
             <Button variant="ghost" label={t({ de: 'Datenschutz', en: 'Privacy' })} onClick={() => setDoc('dat')} />
           </HStack>
         </HStack>
-        <Text type="supporting">© 2026 KGC Websites · Brugg AG</Text>
+        <Text type="supporting">© 2026 Cung Solutions · Brugg AG</Text>
       </VStack>
       <Dialog isOpen={doc === 'imp'} onOpenChange={close} width={480}>
         <DialogHeader title="Impressum" onOpenChange={close} />

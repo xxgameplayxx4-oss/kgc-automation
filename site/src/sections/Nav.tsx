@@ -43,8 +43,8 @@ export default function Nav() {
       style={{ position: 'sticky', top: 0, zIndex: 20, background: 'var(--color-background-surface)' }}
     >
       <HStack hAlign="between" vAlign="center" gap={3} wrap="nowrap">
-        <Button variant="ghost" href="#top" label="KGC Websites">
-          <Text weight="bold" type="large">KGC Websites</Text>
+        <Button variant="ghost" href="#top" label="Cung Solutions">
+          <Text weight="bold" type="large">Cung Solutions</Text>
         </Button>
         {narrow ? (
           <HStack gap={1} vAlign="center">
