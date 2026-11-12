@@ -207,9 +207,9 @@ export const cungTheme = {
     "--radius-container": "0.75rem",
     "--radius-page": "1.75rem",
     "--radius-full": "9999px",
-    "--shadow-low": "0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 25%)), 0 4px 8px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 40%)), inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 8%))",
-    "--shadow-med": "0 2px 4px light-dark(oklch(0 0 0 / 5%), oklch(0 0 0 / 35%)), 0 4px 12px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)), inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 12%))",
-    "--shadow-high": "0 4px 6px light-dark(oklch(0 0 0 / 10%), oklch(0 0 0 / 50%)), 0 12px 24px light-dark(oklch(0 0 0 / 15%), oklch(0 0 0 / 70%)), inset 0 0 0 1px light-dark(transparent, oklch(1 0 0 / 15%))",
+    "--shadow-low": "0 1px 1px light-dark(rgba(31,22,7,.06), rgba(0,0,0,.45)), 0 4px 12px -2px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.45)), inset 0 1px 0 light-dark(rgba(255,255,255,.7), rgba(255,255,255,.05))",
+    "--shadow-med": "0 1px 2px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.5)), 0 8px 24px -6px light-dark(rgba(31,22,7,.14), rgba(0,0,0,.55)), 0 24px 48px -16px light-dark(rgba(31,22,7,.12), rgba(0,0,0,.6)), inset 0 1px 0 light-dark(rgba(255,255,255,.7), rgba(255,255,255,.06))",
+    "--shadow-high": "0 2px 4px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.5)), 0 16px 40px -8px light-dark(rgba(31,22,7,.2), rgba(0,0,0,.6)), 0 40px 80px -24px light-dark(rgba(31,22,7,.18), rgba(0,0,0,.7)), inset 0 1px 0 light-dark(rgba(255,255,255,.8), rgba(255,255,255,.08))",
     "--shadow-inset-hover": "inset 0px 0px 0px 2px #0074e24D",
     "--shadow-inset-selected": "inset 0px 0px 0px 2px #0074e280",
     "--shadow-inset-success": "inset 0px 0px 0px 2px #2f7d334D",
@@ -343,6 +343,10 @@ export const cungTheme = {
       "variant:destructive": {
         "backgroundColor": "var(--color-error-muted)",
         "color": "var(--color-on-error-muted)"
+      },
+      "variant:primary": {
+        "backgroundImage": "linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,0) 60%)",
+        "boxShadow": "0 1px 0 rgba(255,255,255,.35) inset, 0 -1px 0 rgba(0,0,0,.12) inset, 0 6px 18px -6px rgba(233,180,76,.65), 0 2px 4px rgba(0,0,0,.18)"
       }
     },
     "badge": {
@@ -425,7 +429,11 @@ export const cungTheme = {
     },
     "card": {
       "base": {
-        "padding": "var(--spacing-3)"
+        "padding": "var(--spacing-3)",
+        "backgroundImage": "linear-gradient(180deg, light-dark(rgba(255,255,255,.55), rgba(255,255,255,.035)), transparent 45%)"
+      },
+      "variant:yellow": {
+        "boxShadow": "0 0 0 1px rgba(233,180,76,.35), 0 20px 60px -20px rgba(233,180,76,.45), 0 40px 100px -40px rgba(200,134,13,.5), inset 0 1px 0 rgba(255,255,255,.12)"
       }
     },
     "section": {

@@ -7,7 +7,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <title>Cung Solutions</title>
-    <style>html{scroll-padding-top:72px;scroll-behavior:smooth}</style>
+    <style>
+      html{scroll-padding-top:72px;scroll-behavior:smooth}
+      /* Ambient light: warm key light at the top, cooler fill lower down, soft vignette. */
+      body{background:
+        radial-gradient(60rem 36rem at 50% -10rem, light-dark(rgba(200,134,13,.2), rgba(233,180,76,.3)), transparent 70%),
+        radial-gradient(40rem 30rem at 100% 40rem, light-dark(rgba(120,90,40,.08), rgba(120,140,200,.12)), transparent 70%),
+        var(--color-background-body, var(--color-background-surface));}
+      /* Film grain, barely there; off when the user asks for less transparency. */
+      body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.05;mix-blend-mode:overlay;
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+      @media (prefers-reduced-transparency: reduce){body::after{display:none}}
+      /* Hero: the video floats in a pool of warm light. */
+      #top video{box-shadow:0 2px 4px rgba(0,0,0,.3),0 30px 80px -20px rgba(0,0,0,.6),0 0 160px -10px light-dark(rgba(200,134,13,.4),rgba(233,180,76,.45));outline:1px solid light-dark(rgba(0,0,0,.06),rgba(255,255,255,.08));outline-offset:-1px}
+      #top h1{background:linear-gradient(180deg,var(--color-text-primary) 35%,color-mix(in oklab,var(--color-text-primary) 70%,var(--color-accent)));-webkit-background-clip:text;background-clip:text;color:transparent}
+      /* Sections rise into view while scrolling (Chrome/Edge/Safari 26); nothing moves with Reduce Motion. */
+      @media (prefers-reduced-motion: no-preference){@supports (animation-timeline: view()){
+        main > *:not(#top){animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 30%}
+        @keyframes rise{from{opacity:0;transform:translateY(32px) scale(.985)}}
+      }}
+    </style>
   </head>
   <body>
     <div id="root"></div>
