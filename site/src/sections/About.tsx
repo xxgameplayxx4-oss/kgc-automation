@@ -3,50 +3,126 @@ import { HStack, VStack } from '@astryxdesign/core/Layout';
 import { Heading, Text } from '@astryxdesign/core/Text';
 import { Avatar } from '@astryxdesign/core/Avatar';
 import { Divider } from '@astryxdesign/core/Divider';
-import { WORK, useT, type T } from '../data';
+import { Token } from '@astryxdesign/core/Token';
+import { Link } from '@astryxdesign/core/Link';
+import { useT, type T } from '../data';
 import Eyebrow from './Eyebrow';
 
-// Drop the photo at public/about/khang.webp; until it exists the Avatar shows the initials "KC".
-const PORTRAIT = '/about/khang.webp';
+// Portrait taken from the owner's CV (public/about/khang.jpg). Content below follows the CV.
+const PORTRAIT = '/about/khang.jpg';
 const NAME = 'Khang Cung';
 
 const LINES: T[] = [
-  { de: 'Ich bin Khang und baue Websites für Kleinunternehmen in der Region Aargau. Jede Seite entsteht bei mir in Brugg, von mir selbst.', en: 'I’m Khang and I build websites for small businesses in the Aargau region. Every site is made by me, here in Brugg.' },
-  { de: 'Sie haben einen einzigen Ansprechpartner, vom ersten Gespräch bis zum Launch. Keine Agentur, kein Weiterreichen.', en: 'You have one single contact, from the first call to launch. No agency, no hand-offs.' },
-  { de: 'Und Sie wissen von Anfang an, was es kostet: Fixpreise statt Stundenzettel.', en: 'And you know what it costs from the start: fixed prices instead of timesheets.' },
+  { de: 'Ich bin Khang, Informatiker EFZ (Applikationsentwicklung) mit Berufsmaturität. Ich baue Websites für Kleinunternehmen in der Region Aargau, selbst und von A bis Z, hier in Brugg.', en: 'I’m Khang, a certified IT specialist (application development) with a vocational baccalaureate. I build websites for small businesses in the Aargau region myself, end to end, here in Brugg.' },
+  { de: 'Dazu bringe ich Erfahrung aus IT-Support und Cyber Security mit. Sie haben einen einzigen Ansprechpartner, vom ersten Gespräch bis zum Launch, und Fixpreise statt Stundenzettel.', en: 'I also bring experience in IT support and cyber security. You have one single contact from the first call to launch, and fixed prices instead of timesheets.' },
 ];
 
-// Only numbers that can be checked against this repo.
-const STATS: { value: string; label: T }[] = [
-  { value: String(WORK.length), label: { de: 'Projekte und Entwürfe im Portfolio', en: 'Projects and drafts in the portfolio' } },
-  { value: '2', label: { de: 'Sprachen: Deutsch und Englisch', en: 'Languages: German and English' } },
-  { value: '24 h', label: { de: 'Antwort auf Ihre Anfrage', en: 'Reply to your enquiry' } },
+type Job = { role: T; org: string; when: string; points: T[]; url?: string };
+const JOBS: Job[] = [
+  {
+    role: { de: 'Website- und CRM-Entwicklung', en: 'Website and CRM development' }, org: 'SwissTech Precision Solutions (STPS)', when: '2026', url: 'https://www.stps.ch',
+    points: [
+      { de: 'Zweisprachige Firmenwebsite (DE/EN) konzipiert und umgesetzt', en: 'Designed and built the bilingual company website (DE/EN)' },
+      { de: 'Eigenes CRM für Kunden, Offerten und Rechnungen entwickelt', en: 'Developed a custom CRM for customers, quotes and invoices' },
+    ],
+  },
+  {
+    role: { de: 'Website Design & Entwicklung', en: 'Website design & development' }, org: 'Boxschule Gebenstorf', when: '05/2026 – 07/2026', url: 'https://boxschule-gebenstorf.ch',
+    points: [
+      { de: 'Offizielle Website konzipiert und entwickelt', en: 'Designed and developed the official website' },
+      { de: 'Responsives Webdesign, technische Betreuung und Wartung', en: 'Responsive web design, technical support and maintenance' },
+    ],
+  },
+  {
+    role: { de: 'IT Support Praktikant', en: 'IT support intern' }, org: 'Siamp Ltd · Ho-Chi-Minh-Stadt, Vietnam', when: '09/2025 – 05/2026',
+    points: [
+      { de: 'Betrieb von Netzwerken, Servern und IT-Equipment', en: 'Ran networks, servers and IT equipment' },
+      { de: 'Benutzerkonten, E-Mail-Systeme und Software verwaltet', en: 'Managed user accounts, email systems and software' },
+    ],
+  },
+  {
+    role: { de: 'Cyber Security Praktikant', en: 'Cyber security intern' }, org: 'SECURNITE GmbH · Windisch', when: '08/2023 – 07/2024',
+    points: [
+      { de: 'Anwendung zur Erkennung potenzieller Schadsoftware entwickelt', en: 'Built an application to detect potential malware' },
+      { de: 'IT-Support und Mitarbeit an Sicherheitslösungen', en: 'IT support and work on security solutions' },
+    ],
+  },
+];
+
+const EDUCATION: { title: T; place: string; when: string }[] = [
+  { title: { de: 'Informatiker EFZ, Applikationsentwicklung', en: 'IT specialist (EFZ), application development' }, place: 'BBBaden, Baden', when: '2020 – 2024' },
+  { title: { de: 'Berufsmaturität Wirtschaft', en: 'Vocational baccalaureate, business' }, place: 'Kantonsschule Baden', when: '2020 – 2024' },
+];
+
+const SKILLS = ['HTML5', 'CSS3', 'JavaScript', 'React', 'C#', '.NET', 'Java', 'SQL', 'PowerShell', 'Microsoft 365', 'Windows Server', 'Active Directory', 'Netzwerke (TCP/IP)', 'Git'];
+
+const LANGUAGES: { name: T; level: T }[] = [
+  { name: { de: 'Deutsch', en: 'German' }, level: { de: 'fliessend', en: 'fluent' } },
+  { name: { de: 'Englisch', en: 'English' }, level: { de: 'verhandlungssicher (C2)', en: 'proficient (C2)' } },
+  { name: { de: 'Vietnamesisch', en: 'Vietnamese' }, level: { de: 'Muttersprache', en: 'native' } },
+  { name: { de: 'Französisch', en: 'French' }, level: { de: 'Grundkenntnisse', en: 'basic' } },
 ];
 
 export default function About() {
   const t = useT();
   return (
-    <VStack id="ueber-mich" as="section" gap={6} paddingInline={4} paddingBlock={10} maxWidth={1000} style={{ marginInline: 'auto', width: '100%' }}>
+    <VStack id="ueber-mich" as="section" gap={8} paddingInline={4} paddingBlock={10} maxWidth={1000} style={{ marginInline: 'auto', width: '100%' }}>
       <HStack gap={8} wrap="wrap" vAlign="center">
         <Avatar src={PORTRAIT} name={NAME} size={180} tooltip={false} />
         <VStack gap={3} style={{ flex: '1 1 20rem' }}>
           <Eyebrow>{t({ de: 'Über mich', en: 'About me' })}</Eyebrow>
-          <Heading level={2} type="display-3" textWrap="balance">
-            {t({ de: 'Ein Ansprechpartner, vom ersten Gespräch bis zum Launch.', en: 'One contact, from the first call to launch.' })}
-          </Heading>
-          {LINES.map((l, i) => <Text key={i} type="large" color="secondary">{t(l)}</Text>)}
-          <Text type="supporting">Khang Cung · Cung Solutions · Made in Brugg</Text>
+          <Heading level={2} type="display-3" textWrap="balance">Khang Cung</Heading>
+          <Text type="large" weight="medium">{t({ de: 'Webentwicklung · IT-Support · Cyber Security', en: 'Web development · IT support · Cyber security' })}</Text>
+          {LINES.map((l, i) => <Text key={i} color="secondary">{t(l)}</Text>)}
+          <Text type="supporting">Cung Solutions · Brugg AG</Text>
         </VStack>
       </HStack>
+
       <Divider />
-      <Grid columns={{ minWidth: 180, max: 3 }} gap={4}>
-        {STATS.map(s => (
-          <VStack key={s.value} gap={1}>
-            <Heading level={3} type="display-2" color="accent">{s.value}</Heading>
-            <Text color="secondary">{t(s.label)}</Text>
+
+      <VStack gap={5}>
+        <Heading level={3}>{t({ de: 'Erfahrung', en: 'Experience' })}</Heading>
+        {JOBS.map(j => (
+          <VStack key={j.org} gap={1}>
+            <HStack gap={2} wrap="wrap" hAlign="between">
+              <Text weight="semibold">{t(j.role)}</Text>
+              <Text type="supporting" hasTabularNumbers>{j.when}</Text>
+            </HStack>
+            {j.url
+              ? <Link href={j.url} target="_blank" rel="noopener noreferrer" size="sm">{j.org} ↗</Link>
+              : <Text color="accent" size="sm">{j.org}</Text>}
+            {j.points.map((p, i) => <Text key={i} color="secondary" size="sm">· {t(p)}</Text>)}
           </VStack>
         ))}
+      </VStack>
+
+      <Grid columns={{ minWidth: 260, max: 2 }} gap={8}>
+        <VStack gap={3}>
+          <Heading level={3}>{t({ de: 'Ausbildung', en: 'Education' })}</Heading>
+          {EDUCATION.map(e => (
+            <VStack key={e.place} gap={0.5}>
+              <Text weight="semibold">{t(e.title)}</Text>
+              <Text color="secondary" size="sm">{e.place} · {e.when}</Text>
+            </VStack>
+          ))}
+        </VStack>
+        <VStack gap={3}>
+          <Heading level={3}>{t({ de: 'Sprachen', en: 'Languages' })}</Heading>
+          {LANGUAGES.map(l => (
+            <HStack key={l.name.de} gap={2} hAlign="between">
+              <Text weight="semibold">{t(l.name)}</Text>
+              <Text color="secondary" size="sm">{t(l.level)}</Text>
+            </HStack>
+          ))}
+        </VStack>
       </Grid>
+
+      <VStack gap={3}>
+        <Heading level={3}>{t({ de: 'Kenntnisse', en: 'Skills' })}</Heading>
+        <HStack gap={2} wrap="wrap">
+          {SKILLS.map(s => <Token key={s} label={s} size="sm" />)}
+        </HStack>
+      </VStack>
     </VStack>
   );
 }
