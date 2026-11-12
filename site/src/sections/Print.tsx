@@ -7,18 +7,22 @@ import { Heading } from '@astryxdesign/core/Heading';
 import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
+import { useState } from 'react';
+import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import Eyebrow from './Eyebrow';
 import { ADDONS, chf, useT } from '../data';
 
-const NAME = 'Café Muster';
-const OFFERS = [
-  { de: '2 für 1 Kaffee am Montag', en: '2-for-1 coffee on Mondays' },
-  { de: 'Mittagsmenü ab CHF 16', en: 'Lunch menu from CHF 16' },
-  { de: 'Gratis Dessert zum Geburtstag', en: 'Free dessert on your birthday' },
+// Finished sample designs, rendered from fictional brands that match the concept drafts in /work.
+const SETS = [
+  { id: 'barber', name: 'Ferro Barbershop', label: { de: 'Barbier', en: 'Barber' } },
+  { id: 'restaurant', name: 'Tavola', label: { de: 'Restaurant', en: 'Restaurant' } },
+  { id: 'phone-repair', name: 'FixPoint', label: { de: 'Handyshop', en: 'Phone shop' } },
 ];
 
 export default function Print() {
   const t = useT();
+  const [id, setId] = useState(SETS[0].id);
+  const set = SETS.find(x => x.id === id) ?? SETS[0];
   const items = ADDONS.filter(a => a.group === 'print');
   return (
     <Section id="print" variant="muted" padding={6}>
@@ -30,48 +34,27 @@ export default function Print() {
         </VStack>
         <Grid columns={{ minWidth: 300, max: 2 }} gap={6}>
           <VStack gap={4}>
-            <Grid columns={{ minWidth: 200, max: 2 }} gap={3}>
-              <Card padding={0} elevation="low">
-                <AspectRatio ratio={85.6 / 54}>
-                  <VStack padding={3} justify="center" align="center" height="100%">
-                    <Heading level={3}>{NAME}</Heading>
-                    <Text type="supporting">{t({ de: 'Frühstück · Mittag · Kuchen', en: 'Breakfast · lunch · cake' })}</Text>
-                  </VStack>
+            <SegmentedControl label={t({ de: 'Beispiel wählen', en: 'Choose an example' })} value={set.id} onChange={v => setId(v)} layout="fill">
+              {SETS.map(x => <SegmentedControlItem key={x.id} value={x.id} label={t(x.label)} />)}
+            </SegmentedControl>
+            <Grid columns={2} gap={3}>
+              <Card padding={0} elevation="med" style={{ overflow: 'hidden' }}>
+                <AspectRatio ratio={148 / 210} fit="cover">
+                  <img src={`/print/${set.id}-flyer.webp`} alt={t({ de: `Flyer A5 für ${set.name}`, en: `A5 flyer for ${set.name}` })} loading="lazy" decoding="async" />
                 </AspectRatio>
               </Card>
-              <Card variant="yellow" padding={0} elevation="low">
-                <AspectRatio ratio={85.6 / 54}>
-                  <VStack padding={3} justify="center" gap={0.5} height="100%">
-                    <Text type="label" weight="semibold">Anna Muster</Text>
-                    <Text size="xsm">+41 56 000 00 00</Text>
-                    <Text size="xsm">info@cafe-muster.ch</Text>
-                    <Text size="xsm">www.cafe-muster.ch</Text>
-                  </VStack>
-                </AspectRatio>
-              </Card>
-            </Grid>
-            <Card padding={0} elevation="med" maxWidth={360}>
-              <VStack gap={0}>
-                <VStack padding={3}>
-                  <Heading level={3}>{t({ de: 'Frisch. Lokal. Ihr Café.', en: 'Fresh. Local. Your café.' })}</Heading>
-                </VStack>
-                <AspectRatio ratio={16 / 10} fit="cover">
-                  <img src="/work/restaurant.webp" alt={t({ de: 'Innenraum eines Cafés als Flyer-Bild', en: 'Café interior as flyer image' })} loading="lazy" decoding="async" />
-                </AspectRatio>
-                <VStack padding={3} gap={1}>
-                  {OFFERS.map(o => <Text key={o.en} size="sm">• {t(o)}</Text>)}
-                </VStack>
-                <HStack padding={3} gap={3} align="center">
-                  <Card variant="muted" width={72} height={72} padding={1}>
-                    <VStack align="center" justify="center" height="100%"><Text size="xsm">QR</Text></VStack>
+              <VStack gap={3} justify="center">
+                {(['front', 'back'] as const).map(side => (
+                  <Card key={side} padding={0} elevation="med" style={{ overflow: 'hidden' }}>
+                    <AspectRatio ratio={85 / 55} fit="cover">
+                      <img src={`/print/${set.id}-card-${side}.webp`} alt={t({ de: `Visitenkarte ${set.name}, ${side === 'front' ? 'Vorderseite' : 'Rückseite'}`, en: `${set.name} business card, ${side}` })} loading="lazy" decoding="async" />
+                    </AspectRatio>
                   </Card>
-                  <VStack gap={0}>
-                    <Text size="xsm" weight="semibold">{NAME}</Text>
-                    <Text size="xsm">Bahnhofstrasse 1, 5200 Brugg</Text>
-                  </VStack>
-                </HStack>
+                ))}
+                <Text type="supporting">{t({ de: 'Visitenkarte 85 × 55 mm, Vorder- und Rückseite', en: 'Business card 85 × 55 mm, front and back' })}</Text>
               </VStack>
-            </Card>
+            </Grid>
+            <Text type="supporting">{t({ de: 'Beispiele mit erfundenen Firmen. Ihre Version entsteht in den Farben und Schriften Ihrer Website.', en: 'Examples use made-up businesses. Yours is made in your website’s colors and fonts.' })}</Text>
           </VStack>
           <VStack gap={4}>
             {items.map(a => (
