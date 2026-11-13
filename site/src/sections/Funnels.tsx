@@ -14,7 +14,7 @@ import { useT, type T } from '../data';
 
 // Two working booking-funnel demos in the site's own theme. Nothing is sent anywhere.
 
-type Choice = { id: string; name: T; meta: T };
+type Choice = { id: string; name: T; meta: T; desc?: T };
 
 function Shell({ steps, step, picked, onBack, children }: { steps: T[]; step: number; picked: string[]; onBack?: () => void; children: ReactNode }) {
   const t = useT();
@@ -48,7 +48,8 @@ function Choices({ items, value, onPick, columns = 3 }: { items: Choice[]; value
         <SelectableCard key={c.id} label={t(c.name)} isSelected={value === c.id} onChange={() => onPick(c.id)} padding={3} elevation="low">
           <Stack gap={0.5}>
             <Text weight="semibold">{t(c.name)}</Text>
-            <Text size="sm" color="secondary">{t(c.meta)}</Text>
+            <Text size="sm" color="accent" weight="medium">{t(c.meta)}</Text>
+            {c.desc && <Text size="sm" color="secondary">{t(c.desc)}</Text>}
           </Stack>
         </SelectableCard>
       ))}
@@ -92,9 +93,12 @@ function Contact({ phone, onSubmit, cta }: { phone?: boolean; onSubmit: (name: s
 /* ---------- Funnel 1: book a consultation (type, date & time, contact) ---------- */
 
 const MEETINGS: Choice[] = [
-  { id: 'intro', name: { de: 'Erstgespräch', en: 'Intro call' }, meta: { de: '30 Min · kostenlos', en: '30 min · free' } },
-  { id: 'consult', name: { de: 'Beratung', en: 'Consultation' }, meta: { de: '60 Min · CHF 150', en: '60 min · CHF 150' } },
-  { id: 'onsite', name: { de: 'Termin vor Ort', en: 'On-site visit' }, meta: { de: '90 Min · CHF 220', en: '90 min · CHF 220' } },
+  { id: 'intro', name: { de: 'Erstgespräch', en: 'Intro call' }, meta: { de: '30 Min · kostenlos', en: '30 min · free' },
+    desc: { de: 'Kennenlernen per Telefon oder Video. Sie schildern Ihr Anliegen, wir klären, ob und wie ich helfen kann.', en: 'Get to know each other by phone or video. You describe your need, we check if and how I can help.' } },
+  { id: 'consult', name: { de: 'Beratung', en: 'Consultation' }, meta: { de: '60 Min · CHF 60', en: '60 min · CHF 60' },
+    desc: { de: 'Wir arbeiten konkret an Ihrem Fall: Analyse, Empfehlungen und klare nächste Schritte.', en: 'We work on your case: analysis, recommendations and clear next steps.' } },
+  { id: 'onsite', name: { de: 'Termin vor Ort', en: 'On-site visit' }, meta: { de: '90 Min · CHF 150', en: '90 min · CHF 150' },
+    desc: { de: 'Ich komme zu Ihnen ins Geschäft und schaue mir alles direkt an.', en: 'I come to your business and look at everything in person.' } },
 ];
 const SLOTS = ['09:00', '09:30', '10:00', '10:30', '11:00', '13:30', '14:00', '15:30', '16:00'];
 const WEEKDAYS: T[] = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((de, i) => ({ de, en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i] }));

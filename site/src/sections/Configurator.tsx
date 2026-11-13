@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import { Avatar } from '@astryxdesign/core/Avatar';
 import { Button } from '@astryxdesign/core/Button';
@@ -36,15 +36,35 @@ const abs = (s: CSSProperties): CSSProperties => ({ position: 'absolute', ...s }
 // Floating notification chips for automations, overlapping the preview frame edge.
 const CHIPS: Record<string, { text: T; dot: 'success' | 'accent' }> = {
   sheet: { text: { de: 'Neue Anfrage · über die Website', en: 'New enquiry · via the website' }, dot: 'accent' },
-  autoreply: { text: { de: 'Bestätigung gesendet · automatisch', en: 'Confirmation sent · automatic' }, dot: 'success' },
+  autoreply: { text: { de: 'Bestätigung TV-48213 gesendet', en: 'Confirmation TV-48213 sent' }, dot: 'success' },
   calendar: { text: { de: 'Reservation im Kalender · Fr., 19:30', en: 'Booking in calendar · Fri, 7:30 pm' }, dot: 'success' },
   reminder: { text: { de: 'Erinnerung gesendet · 24 h vorher', en: 'Reminder sent · 24 h before' }, dot: 'success' },
   'review-request': { text: { de: '★★★★★ Neue Google-Bewertung', en: '★★★★★ New Google review' }, dot: 'accent' },
 };
 
+// Tavola's hours, by getDay(): [open, close] in hours. Same logic as the souperbe and Barber House sites.
+const HOURS: Record<number, [number, number]> = { 2: [12, 23], 3: [12, 23], 4: [12, 23], 5: [12, 23], 6: [10, 23] };
+const openNow = (d = new Date()) => {
+  const h = HOURS[d.getDay()];
+  const now = d.getHours() + d.getMinutes() / 60;
+  return h && now >= h[0] && now < h[1] ? h[1] : null;
+};
+if (import.meta.env.DEV) {
+  console.assert(openNow(new Date(2026, 10, 13, 20)) === 23 && openNow(new Date(2026, 10, 16, 20)) === null, 'open-now: Fri 20:00 open, Mon closed');
+}
+
+const MENU: Record<string, [T, string][]> = {
+  start: [[{ de: 'Kürbissuppe, Kernöl', en: 'Pumpkin soup, seed oil' }, '12'], [{ de: 'Vitello tonnato', en: 'Vitello tonnato' }, '19']],
+  main: [[{ de: 'Kürbisrisotto mit Salbei', en: 'Pumpkin risotto, sage' }, '28'], [{ de: 'Kalbsbäggli, Polenta', en: 'Veal cheeks, polenta' }, '42']],
+  sweet: [[{ de: 'Tiramisù della casa', en: 'House tiramisù' }, '12'], [{ de: 'Zwetschgen-Crumble', en: 'Plum crumble' }, '11']],
+};
+
 /** A sample restaurant site ("Tavola") that grows with every selected add-on. */
 function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean; phone: boolean }) {
   const t = useT();
+  const [menuTab, setMenuTab] = useState('main');
+  const [guests, setGuests] = useState(30);
+  const until = openNow();
   const links = [{ de: 'Haus', en: 'About' }, { de: 'Karte', en: 'Menu' }, ...(has('page') ? [{ de: 'Team', en: 'Team' }] : []), { de: 'Besuch', en: 'Visit' }];
   const onDark: CSSProperties = { color: 'white' /* text sits on a darkened photo in both themes */ };
 
@@ -135,13 +155,16 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
           ))}
         </Grid>
         {has('menu') && (
-          <Stack {...pop} gap={1}>
-            <Text size="sm" weight="semibold">{t({ de: 'Karte', en: 'Menu' })}</Text>
-            {[
-              [{ de: 'Kürbisrisotto mit Salbei', en: 'Pumpkin risotto, sage' }, '28'],
-              [{ de: 'Kalbsbäggli, Polenta', en: 'Veal cheeks, polenta' }, '42'],
-              [{ de: 'Mittagsmenü Di–Fr', en: 'Lunch menu Tue–Fri' }, '19.50'],
-            ].map(([n, p]) => (
+          <Stack {...pop} gap={1.5}>
+            <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
+              <Text size="sm" weight="semibold">{t({ de: 'Karte', en: 'Menu' })}</Text>
+              <SegmentedControl size="sm" label={t({ de: 'Kategorie', en: 'Category' })} value={menuTab} onChange={setMenuTab}>
+                <SegmentedControlItem value="start" label={t({ de: 'Vorspeisen', en: 'Starters' })} />
+                <SegmentedControlItem value="main" label={t({ de: 'Hauptgang', en: 'Mains' })} />
+                <SegmentedControlItem value="sweet" label="Dessert" />
+              </SegmentedControl>
+            </Stack>
+            {(MENU[menuTab] ?? []).map(([n, p]) => (
               <Stack key={p as string} direction="horizontal" justify="between" gap={2}>
                 <Text size="xsm">{t(n as T)}</Text>
                 <Text size="xsm" hasTabularNumbers>{p as string}</Text>
@@ -158,7 +181,66 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
             </Stack>
           </Card>
         )}
+        {has('pricefinder') && (
+          <Card {...pop} variant="muted" padding={3}>
+            <Stack gap={2}>
+              <Text weight="semibold" size="sm">{t({ de: 'Apéro & Anlässe: Preis berechnen', en: 'Apéritifs & events: get a price' })}</Text>
+              <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
+                <Stack direction="horizontal" gap={1} align="center">
+                  <Button size="sm" variant="secondary" label="−" isDisabled={guests <= 10} onClick={() => setGuests(g => g - 10)} />
+                  <Text size="sm" hasTabularNumbers>{guests} {t({ de: 'Personen', en: 'guests' })}</Text>
+                  <Button size="sm" variant="secondary" label="+" isDisabled={guests >= 120} onClick={() => setGuests(g => g + 10)} />
+                </Stack>
+                <Text size="sm" weight="semibold" color="accent" hasTabularNumbers>{t({ de: 'ab', en: 'from' })} {chf(guests * 32)}</Text>
+              </Stack>
+            </Stack>
+          </Card>
+        )}
+        {has('schedule') && (
+          <Stack {...pop} gap={1}>
+            <Text size="sm" weight="semibold">{t({ de: 'Diese Woche', en: 'This week' })}</Text>
+            {[
+              ['Mi', 'Wed', '19:00', { de: 'Weindegustation Piemont', en: 'Piedmont wine tasting' }],
+              ['Fr', 'Fri', '20:30', { de: 'Live-Jazz im Garten', en: 'Live jazz in the garden' }],
+              ['Sa', 'Sat', '10:00', { de: 'Pasta-Kochkurs', en: 'Pasta cooking class' }],
+            ].map(([de, en, time, what]) => (
+              <Stack key={de as string} direction="horizontal" gap={2} align="center">
+                <Token size="sm" label={t({ de: de as string, en: en as string })} />
+                <Text size="xsm" hasTabularNumbers color="secondary">{time as string}</Text>
+                <Text size="xsm" maxLines={1}>{t(what as T)}</Text>
+              </Stack>
+            ))}
+          </Stack>
+        )}
+        {has('jobs') && (
+          <Stack {...pop} gap={1}>
+            <Text size="sm" weight="semibold">{t({ de: 'Offene Stellen', en: 'Join the team' })}</Text>
+            {[
+              [{ de: 'Koch / Köchin', en: 'Chef' }, '100 %'],
+              [{ de: 'Service-Mitarbeiter/in', en: 'Waiting staff' }, '60 %'],
+            ].map(([n, pct]) => (
+              <Stack key={pct as string} direction="horizontal" justify="between" align="center" gap={2}>
+                <Text size="xsm">{t(n as T)} · {pct as string}</Text>
+                <Button size="sm" variant="ghost" label={t({ de: 'Bewerben', en: 'Apply' })} />
+              </Stack>
+            ))}
+          </Stack>
+        )}
+        {has('newsletter') && (
+          <Stack {...pop} direction="horizontal" gap={1} align="center">
+            <Card variant="muted" padding={1.5} style={{ flex: 1, minWidth: 0 }}><Text size="xsm" color="placeholder" maxLines={1}>{t({ de: 'Ihre E-Mail für Neuigkeiten', en: 'Your email for news' })}</Text></Card>
+            <Button size="sm" variant="secondary" label={t({ de: 'Anmelden', en: 'Sign up' })} />
+          </Stack>
+        )}
         <Divider />
+        {has('hours') && (
+          <Stack {...pop} direction="horizontal" gap={1.5} align="center">
+            <StatusDot variant={until ? 'success' : 'error'} label="" />
+            <Text size="xsm" weight="semibold">
+              {until ? t({ de: `Jetzt geöffnet · bis ${until}:00`, en: `Open now · until ${until}:00` }) : t({ de: 'Gerade geschlossen', en: 'Closed right now' })}
+            </Text>
+          </Stack>
+        )}
         <Text size="xsm" color="secondary">{t({ de: 'Di bis Fr 12–23 Uhr · Sa 10–23 Uhr · Weite Gasse 7, Baden', en: 'Tue to Fri 12–11 pm · Sat 10–11 pm · Weite Gasse 7, Baden' })}</Text>
         {has('form') ? (
           <Stack {...pop} gap={1}>
@@ -188,11 +270,22 @@ function Preview({ pro, sel, device }: { pro: boolean; sel: Set<string>; device:
   const chips = Object.keys(CHIPS).filter(has);
   const screen = <Site pro={pro} has={has} phone={phone} />;
 
+  // Scroll the preview screen to the part that just popped in (only it has a running pop animation).
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      const box = document.querySelector<HTMLElement>('#konfigurator [data-scroll]');
+      const age = (e: HTMLElement) => Number(e.getAnimations().find(a => a.playState === 'running')?.currentTime ?? Infinity);
+      const el = box && [...box.querySelectorAll<HTMLElement>('[data-pop]')].filter(e => age(e) < Infinity).sort((a, b) => age(a) - age(b))[0];
+      if (box && el) box.scrollBy({ top: el.getBoundingClientRect().top - box.getBoundingClientRect().top - 48, behavior: 'smooth' });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [sel, device]);
+
   return (
     <Stack style={{ position: 'relative' }} paddingInlineEnd={3}>
       {phone ? (
         <Card padding={1.5} elevation="high" style={{ width: '100%', maxWidth: '18.5rem', marginInline: 'auto', borderRadius: 'calc(var(--radius-page) * 2)', background: 'black' /* phone bezel stays black in both themes */ }}>
-          <Card padding={0} style={{ overflow: 'hidden', borderRadius: 'calc(var(--radius-page) * 1.6)', position: 'relative', maxHeight: '36rem', overflowY: 'auto' }}>
+          <Card data-scroll="" padding={0} style={{ overflow: 'hidden', borderRadius: 'calc(var(--radius-page) * 1.6)', position: 'relative', maxHeight: 'min(36rem, 60vh)', overflowY: 'auto' }}>
             <Stack align="center" paddingBlock={1}>
               <Card variant="gray" padding={0.5} width="30%" style={{ borderRadius: 'var(--radius-full)' }} />
             </Stack>
@@ -210,7 +303,7 @@ function Preview({ pro, sel, device }: { pro: boolean; sel: Set<string>; device:
                 <Text type="supporting" size="xsm" maxLines={1}>🔒 tavola-baden.ch{has('page') ? t({ de: ' · /team', en: ' · /team' }) : ''}</Text>
               </Card>
             </Stack>
-            {screen}
+            <Stack data-scroll="" style={{ maxHeight: 'min(34rem, 58vh)', overflowY: 'auto' }}>{screen}</Stack>
           </Stack>
         </Card>
       )}
@@ -416,7 +509,7 @@ export default function Configurator() {
         </Stack>
 
         {/* preview + summary */}
-        <Stack gap={4} style={{ minWidth: 0 }}>
+        <Stack gap={4} data-sticky="" style={{ minWidth: 0 }}>
           <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
             <Text weight="semibold">{t({ de: 'Live-Vorschau (Beispiel)', en: 'Live preview (sample)' })}</Text>
             <SegmentedControl size="sm" label={t({ de: 'Ansicht', en: 'View' })} value={device} onChange={v => setDevice(v as Device)}>
@@ -426,7 +519,20 @@ export default function Configurator() {
           </Stack>
           <Preview pro={pro} sel={effective} device={device} />
           <PrintShelf has={has} />
+          <Card padding={3} elevation="med">
+            <Stack direction="horizontal" justify="between" align="center" gap={3} wrap="wrap">
+              <Stack gap={0.5}>
+                <Text size="sm" color="secondary">{t(tier.name)} · {all.filter(l => l.note !== 'included').length} {t({ de: 'Zusätze', en: 'add-ons' })}</Text>
+                <Heading level={3} hasCapsize={false} color="accent">{chf(sum)}</Heading>
+              </Stack>
+              <Button variant="primary" href="#zusammenfassung" label={t({ de: 'Zur Zusammenfassung', en: 'See summary' })} />
+            </Stack>
+          </Card>
+        </Stack>
+      </Grid>
 
+      <Stack id="zusammenfassung" gap={2} style={{ maxWidth: '36rem', width: '100%', marginInline: 'auto' }}>
+          <Text weight="semibold">{t({ de: '3. Zusammenfassung', en: '3. Summary' })}</Text>
           <Card padding={4} elevation="med">
             <Stack gap={3}>
               <Stack direction="horizontal" justify="between" gap={3}>
@@ -464,8 +570,7 @@ export default function Configurator() {
               </Link>
             </Stack>
           </Card>
-        </Stack>
-      </Grid>
+      </Stack>
     </Stack>
   );
 }
