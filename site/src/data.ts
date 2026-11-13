@@ -119,6 +119,18 @@ export const quote = (selected: Set<string>) => {
 export const tierPrice = (tier: Tier) => quote(new Set(presetOf(tier))).total;
 export const pct = (r: number) => `${Math.round(r * 100)} %`;
 
+/** Monthly maintenance per package; Komplett gets 30 % off its CHF 400. Custom picks map by add-on count. */
+export const CARE: Record<Tier['id'], { list: number; price: number }> = {
+  basis: { list: 100, price: 100 },
+  plus: { list: 150, price: 150 },
+  business: { list: 250, price: 250 },
+  komplett: { list: 400, price: 280 },
+};
+export const CARE_HOURS = 2;
+export const DOMAIN_FEE = 50; // monthly extra when I buy and host the domain
+export const careFor = (n: number) =>
+  CARE[n >= ADDONS.length ? 'komplett' : n >= 10 ? 'business' : n >= 5 ? 'plus' : 'basis'];
+
 /** Hero examples for the Pro tier (anonymised drafts, no links: owner's request). */
 export const WORK = [
   { img: '/work/precision.webp', slug: 'stps', video: '/work/video/precision.mp4', name: 'SwissTech Precision Solutions', kind: { de: 'Kundenprojekt · Live', en: 'Client project · live' }, url: 'https://www.stps.ch' },

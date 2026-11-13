@@ -5,7 +5,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { Badge } from '@astryxdesign/core/Badge';
 import Eyebrow from './Eyebrow';
-import { ADDONS, DISCOUNTS, chf, mailto, pct, presetOf, quote, TIERS, useT } from '../data';
+import { ADDONS, CARE, CARE_HOURS, DISCOUNTS, DOMAIN_FEE, chf, mailto, pct, presetOf, quote, TIERS, useT } from '../data';
 
 export default function Packages() {
   const t = useT();
@@ -41,6 +41,10 @@ export default function Packages() {
                       <Text size="sm" color="secondary">{`−${pct(q.rate)} ${t({ de: 'Rabatt', en: 'off' })}`}</Text>
                     </HStack>
                   )}
+                  <Text size="sm" weight="medium" hasTabularNumbers>
+                    {`+ ${chf(CARE[tier.id].price)} / ${t({ de: 'Monat Wartung', en: 'month maintenance' })}`}
+                    {CARE[tier.id].list !== CARE[tier.id].price ? ` (${t({ de: 'statt', en: 'instead of' })} ${chf(CARE[tier.id].list)})` : ''}
+                  </Text>
                 </VStack>
                 <Text color="secondary">{t(tier.tagline)}</Text>
                 <VStack gap={1.5} as="ul" style={{ margin: 0, paddingInlineStart: 'var(--spacing-4)' }}>
@@ -59,6 +63,23 @@ export default function Packages() {
           );
         })}
       </Grid>
+      <Card variant="muted" padding={5}>
+        <VStack gap={2}>
+          <Heading level={3}>{t({ de: 'Monatliche Wartung', en: 'Monthly maintenance' })}</Heading>
+          <Text color="secondary">
+            {t({
+              de: `Hosting, Updates, Sicherheit und ${CARE_HOURS} Stunden Änderungen pro Monat. Basis ${chf(CARE.basis.price)}, Plus ${chf(CARE.plus.price)}, Business ${chf(CARE.business.price)}, Komplett ${chf(CARE.komplett.price)} statt ${chf(CARE.komplett.list)} (−30 %).`,
+              en: `Hosting, updates, security and ${CARE_HOURS} hours of changes per month. Basic ${chf(CARE.basis.price)}, Plus ${chf(CARE.plus.price)}, Business ${chf(CARE.business.price)}, Complete ${chf(CARE.komplett.price)} instead of ${chf(CARE.komplett.list)} (−30 %).`,
+            })}
+          </Text>
+          <Text color="secondary">
+            {t({
+              de: `Domain: Ich kaufe und verwalte sie für + ${chf(DOMAIN_FEE)} pro Monat. Oder Sie kaufen sie selbst und geben mir Zugang, dann verbinde ich sie.`,
+              en: `Domain: I buy and manage it for + ${chf(DOMAIN_FEE)} per month. Or you buy it yourself and give me access, then I connect it.`,
+            })}
+          </Text>
+        </VStack>
+      </Card>
       <Card variant="muted" padding={5}>
         <HStack gap={4} vAlign="center" hAlign="between" wrap="wrap">
           <VStack gap={1}>

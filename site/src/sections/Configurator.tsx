@@ -16,7 +16,7 @@ import { Token } from '@astryxdesign/core/Token';
 import Eyebrow from './Eyebrow';
 import { AutomationFlow, HoursWeek, PriceCalc } from './AddonPreviews';
 import { ADDON_ICONS } from './addonIcons';
-import { ADDONS, BASE_PRICE, DISCOUNTS, GROUPS, TIERS, chf, mailto, nextStep, pct, presetOf, quote, tierPrice, useT, type T } from '../data';
+import { ADDONS, BASE_PRICE, careFor, DISCOUNTS, GROUPS, TIERS, chf, mailto, nextStep, pct, presetOf, quote, tierPrice, useT, type T } from '../data';
 
 // Dev-only self-check of the pricing maths (prices come from data.ts).
 if (import.meta.env.DEV) {
@@ -476,6 +476,7 @@ export default function Configurator() {
   const tier = TIERS.find(x => { const p = presetOf(x); return p.length === sel.size && p.every(id => sel.has(id)); });
   const tierLabel = tier ? t(tier.name) : t({ de: 'Individuell', en: 'Custom' });
   const next = nextStep(q.chosen.length);
+  const care = careFor(q.chosen.length);
   const has = (id: string) => sel.has(id);
   // The add-on switched on last is outlined in the preview, with its name and price as a tag.
   const hl = last && sel.has(last) ? last : null;
@@ -492,6 +493,7 @@ export default function Configurator() {
     ...(q.discount ? ['', `${t({ de: 'Mengenrabatt', en: 'Volume discount' })} ${pct(q.rate)}: − ${chf(q.discount)}`] : []),
     '',
     `${t({ de: 'Total (einmalig)', en: 'Total (one-time)' })}: ${chf(q.total)}`,
+    `${t({ de: 'Wartung', en: 'Maintenance' })}: ${chf(care.price)} / ${t({ de: 'Monat', en: 'month' })}`,
     '',
     t({ de: 'Name:', en: 'Name:' }),
     t({ de: 'Geschäft:', en: 'Business:' }),
@@ -616,6 +618,10 @@ export default function Configurator() {
             <Stack direction="horizontal" justify="between" align="center" gap={3}>
               <Text weight="bold">{t({ de: 'Total', en: 'Total' })}</Text>
               <Heading level={3} hasCapsize={false} color="accent">{chf(q.total)}</Heading>
+            </Stack>
+            <Stack direction="horizontal" justify="between" gap={3}>
+              <Text size="sm">{t({ de: 'Wartung (Hosting, Updates, 2 Std. Änderungen)', en: 'Maintenance (hosting, updates, 2 h of changes)' })}</Text>
+              <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{chf(care.price)} / {t({ de: 'Monat', en: 'month' })}</Text>
             </Stack>
             <Text type="supporting" size="sm">{t({ de: 'Einmalig, inkl. Einrichtung. Preise in CHF.', en: 'One-time, setup included. Prices in CHF.' })}</Text>
             <Button
