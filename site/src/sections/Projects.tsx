@@ -76,7 +76,7 @@ export function HeroVideo({ src, poster, label }: { src: string; poster: string;
 
 /** Screenshot of a site; for video sites a recording of the live hero (header and moving video) is laid over its top. */
 const HERO_RATIO = { desktop: 1100 / 572, phone: 390 / 605 } as const;
-function Screen({ p, kind, alt, lazy }: { p: Project; kind: 'desktop' | 'phone'; alt: string; lazy?: boolean }) {
+export function Screen({ p, kind, alt, lazy }: { p: Project; kind: 'desktop' | 'phone'; alt: string; lazy?: boolean }) {
   const reduce = useReducedMotion();
   const img = `/projects/${p.slug}-${kind}.webp`;
   return (
