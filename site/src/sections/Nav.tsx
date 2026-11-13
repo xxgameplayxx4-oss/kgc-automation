@@ -4,14 +4,13 @@ import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { Drawer } from '@astryxdesign/core/Drawer';
 import { LangContext, mailto, useT, type Lang } from '../data';
+import type { Page } from '../App';
 
-const LINKS = [
-  { id: 'pakete', label: { de: 'Pakete', en: 'Packages' } },
-  { id: 'beispiele', label: { de: 'Beispiele', en: 'Examples' } },
+const LINKS: { id: Page; label: { de: string; en: string } }[] = [
+  { id: 'start', label: { de: 'Start', en: 'Home' } },
+  { id: 'leistungen', label: { de: 'Leistungen', en: 'Services' } },
+  { id: 'projekte', label: { de: 'Projekte', en: 'Projects' } },
   { id: 'ueber-mich', label: { de: 'Über mich', en: 'About' } },
-  { id: 'konfigurator', label: { de: 'Konfigurator', en: 'Configurator' } },
-  { id: 'print', label: { de: 'Print', en: 'Print' } },
-  { id: 'faq', label: { de: 'FAQ', en: 'FAQ' } },
 ];
 
 const useNarrow = () => {
@@ -25,7 +24,7 @@ const useNarrow = () => {
   return narrow;
 };
 
-export default function Nav() {
+export default function Nav({ page }: { page: Page }) {
   const t = useT();
   const { lang, setLang } = useContext(LangContext);
   const narrow = useNarrow();
@@ -44,7 +43,7 @@ export default function Nav() {
       style={{ position: 'sticky', top: 0, zIndex: 20, background: 'color-mix(in oklab, var(--color-background-surface) 72%, transparent)', backdropFilter: 'blur(18px) saturate(1.5)', WebkitBackdropFilter: 'blur(18px) saturate(1.5)', borderBottom: '1px solid color-mix(in oklab, var(--color-text-primary) 8%, transparent)' }}
     >
       <HStack hAlign="between" vAlign="center" gap={3} wrap="nowrap">
-        <Button variant="ghost" href="#top" label="Cung Solutions">
+        <Button variant="ghost" href="#start" label="Cung Solutions">
           <Text weight="bold" type="large">Cung Solutions</Text>
         </Button>
         {narrow ? (
@@ -54,7 +53,7 @@ export default function Nav() {
           </HStack>
         ) : (
           <HStack gap={1} vAlign="center">
-            {LINKS.map(l => <Button key={l.id} variant="ghost" size="sm" href={`#${l.id}`} label={t(l.label)} />)}
+            {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} size="sm" href={`#${l.id}`} label={t(l.label)} />)}
             {langSwitch}
             <Button size="sm" variant="primary" label={contactLabel} href={mailto('Anfrage Website')} />
           </HStack>
@@ -62,7 +61,7 @@ export default function Nav() {
       </HStack>
       <Drawer isOpen={open && narrow} onOpenChange={setOpen} label={t({ de: 'Menü', en: 'Menu' })}>
         <VStack gap={2} padding={4}>
-          {LINKS.map(l => <Button key={l.id} variant="ghost" width="100%" href={`#${l.id}`} label={t(l.label)} onClick={() => setOpen(false)} />)}
+          {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} width="100%" href={`#${l.id}`} label={t(l.label)} onClick={() => setOpen(false)} />)}
           <Button variant="primary" width="100%" label={contactLabel} href={mailto('Anfrage Website')} />
         </VStack>
       </Drawer>

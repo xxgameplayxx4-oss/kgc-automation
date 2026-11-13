@@ -34,6 +34,12 @@ const JOBS: Job[] = [
     ],
   },
   {
+    role: { de: 'Website Design & Entwicklung', en: 'Website design & development' }, org: 'MJ Group · Family Office, Tessin', when: '2026',
+    points: [
+      { de: 'Website für ein Family Office konzipiert und umgesetzt', en: 'Designed and built the website for a family office' },
+    ],
+  },
+  {
     role: { de: 'IT Support Praktikant', en: 'IT support intern' }, org: 'Siamp Ltd · Ho-Chi-Minh-Stadt, Vietnam', when: '09/2025 – 05/2026',
     points: [
       { de: 'Betrieb von Netzwerken, Servern und IT-Equipment', en: 'Ran networks, servers and IT equipment' },

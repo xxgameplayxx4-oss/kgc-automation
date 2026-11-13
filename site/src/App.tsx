@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LangContext, type Lang } from './data';
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
@@ -9,21 +9,48 @@ import Configurator from './sections/Configurator';
 import Print from './sections/Print';
 import Faq from './sections/Faq';
 import Footer from './sections/Footer';
+import Projects from './sections/Projects';
+import Teaser from './sections/Teaser';
 
-// Section ids (used by Nav anchors): top, pakete, beispiele, ueber-mich, konfigurator, print, faq, kontakt
+// Hash routing: the artifact viewer only passes a plain #name, so pages and section anchors share the hash.
+export const PAGES = ['start', 'leistungen', 'projekte', 'ueber-mich'] as const;
+export type Page = (typeof PAGES)[number];
+const SECTION_PAGE: Record<string, Page> = {
+  top: 'start', pakete: 'leistungen', beispiele: 'leistungen', konfigurator: 'leistungen',
+  zusammenfassung: 'leistungen', print: 'leistungen', faq: 'leistungen',
+};
+// Unknown hashes (e.g. #kontakt in the footer) keep the current page.
+const pageOf = (hash: string, current: Page): Page =>
+  (PAGES as readonly string[]).includes(hash) ? (hash as Page) : SECTION_PAGE[hash] ?? current;
+
+const readHash = () => decodeURIComponent(location.hash.slice(1));
+
 export default function App() {
   const [lang, setLang] = useState<Lang>('de');
+  const [hash, setHash] = useState(readHash);
+  const [page, setPage] = useState<Page>(() => pageOf(readHash(), 'start'));
+
+  useEffect(() => {
+    const f = () => { const h = readHash(); setHash(h); setPage(p => pageOf(h, p)); };
+    addEventListener('hashchange', f);
+    return () => removeEventListener('hashchange', f);
+  }, []);
+
+  // A page link starts at the top; a section link scrolls to its section once the page has rendered.
+  useEffect(() => {
+    const el = hash && hash !== 'top' && !(PAGES as readonly string[]).includes(hash) ? document.getElementById(hash) : null;
+    if (el) el.scrollIntoView();
+    else scrollTo({ top: 0 });
+  }, [hash]);
+
   return (
     <LangContext.Provider value={{ lang, setLang }}>
-      <Nav />
-      <main>
-        <Hero />
-        <Packages />
-        <Examples />
-        <About />
-        <Configurator />
-        <Print />
-        <Faq />
+      <Nav page={page} />
+      <main key={page}>
+        {page === 'start' && <><Hero /><Teaser /></>}
+        {page === 'leistungen' && <><Packages /><Examples /><Configurator /><Print /><Faq /></>}
+        {page === 'projekte' && <Projects />}
+        {page === 'ueber-mich' && <About />}
       </main>
       <Footer />
     </LangContext.Provider>
