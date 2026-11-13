@@ -58,7 +58,7 @@ export const GROUPS: { id: AddonGroup; name: T; desc: T }[] = [
 
 export const ADDONS: Addon[] = [
   // Website
-  { id: 'booking', group: 'website', price: 900, name: { de: 'Buchungs-Funnel', en: 'Booking funnel' }, desc: { de: 'Kunden wählen Leistung, Datum und Zeit in 3 Schritten.', en: 'Customers pick service, date and time in 3 steps.' } },
+  { id: 'booking', group: 'website', price: 400, name: { de: 'Buchungs-Funnel', en: 'Booking funnel' }, desc: { de: 'Kunden wählen Leistung, Datum und Zeit in 3 Schritten.', en: 'Customers pick service, date and time in 3 steps.' } },
   { id: 'email', group: 'website', price: 150, includedIn: 'pro', name: { de: 'E-Mail mit eigener Domain', en: 'Email on your domain' }, desc: { de: 'info@ihr-geschaeft.ch, eingerichtet auf Handy und PC.', en: 'info@your-business.ch, set up on phone and PC.' } },
   { id: 'form', group: 'website', price: 150, name: { de: 'Kontaktformular', en: 'Contact form' }, desc: { de: 'Formular mit Spamschutz statt nur E-Mail-Button.', en: 'Form with spam protection instead of an email button.' } },
   { id: 'page', group: 'website', price: 250, name: { de: 'Zusätzliche Unterseite', en: 'Extra subpage' }, desc: { de: 'Z. B. Preisliste, Team oder Stellen.', en: 'E.g. price list, team or jobs.' } },

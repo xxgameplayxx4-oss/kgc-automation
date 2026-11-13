@@ -14,13 +14,14 @@ import { StatusDot } from '@astryxdesign/core/StatusDot';
 import { Text } from '@astryxdesign/core/Text';
 import { Token } from '@astryxdesign/core/Token';
 import Eyebrow from './Eyebrow';
+import { ADDON_ICONS } from './addonIcons';
 import { ADDONS, GROUPS, PRO_FREE, TIERS, chf, lines, mailto, total, useT, type Line, type T } from '../data';
 
 // Dev-only self-check of the pricing maths (prices come from data.ts).
 if (import.meta.env.DEV) {
   const set = (...ids: string[]) => new Set(ids);
   const [basis, pro] = TIERS;
-  console.assert(total(basis, set('booking', 'calendar')) === 2650, 'Basis pays every add-on');
+  console.assert(total(basis, set('booking', 'calendar')) === 2150, 'Basis pays every add-on');
   console.assert(total(pro, set('email')) === 2000, 'Pro: email is included');
   console.assert(total(pro, set('booking', 'lang')) === 2000, 'Pro: 2 priciest add-ons free');
   console.assert(total(pro, set('booking', 'lang', 'calendar', 'form')) === 2000 + 63 + 150, 'Pro: 3rd at 25 %, 4th full');
@@ -78,7 +79,8 @@ const Photo = ({ src, ratio, pos }: { src: string; ratio: number; pos?: string }
 );
 
 /** A sample restaurant site ("Tavola") that grows with every selected add-on. */
-function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean; phone: boolean }) {
+type Mark = (id: string) => Record<string, string>;
+function Site({ pro, has, phone, mark }: { pro: boolean; has: (id: string) => boolean; phone: boolean; mark: Mark }) {
   const t = useT();
   const [menuTab, setMenuTab] = useState('main');
   const [guests, setGuests] = useState(30);
@@ -86,25 +88,25 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
   const gutter = phone ? 3 : 6;
   const links = [{ de: 'Haus', en: 'About' }, { de: 'Karte', en: 'Menu' }, ...(has('page') ? [{ de: 'Team', en: 'Team' }] : []), { de: 'Besuch', en: 'Visit' }];
   const Sec = ({ children, id }: { children: ReactNode; id: string }) => (
-    <Stack {...pop} key={id} gap={3} paddingInline={gutter} paddingBlock={phone ? 5 : 6} style={{ borderTop: `1px solid ${C.line}` }}>{children}</Stack>
+    <Stack {...pop} {...mark(id)} data-sec="" key={id} gap={3} paddingInline={gutter} paddingBlock={phone ? 5 : 6} style={{ borderTop: `1px solid ${C.line}` }}>{children}</Stack>
   );
   const Head = ({ k, title }: { k: T; title: T }) => (
     <Stack gap={1}><Caps color={C.accent}>{t(k)}</Caps><Serif size={phone ? '1.6em' : '2em'}>{t(title)}</Serif></Stack>
   );
   const openBadge = has('hours') && (
-    <Stack {...pop} direction="horizontal" gap={1} align="center">
+    <Stack {...pop} {...mark('hours')} direction="horizontal" gap={1} align="center">
       <StatusDot variant={until ? 'success' : 'error'} label="" />
       <Text size="xsm" color="inherit">{until ? t({ de: `Jetzt geöffnet · bis ${until}:00`, en: `Open now · until ${until}:00` }) : t({ de: 'Gerade geschlossen', en: 'Closed right now' })}</Text>
     </Stack>
   );
-  const stars = has('reviews') && <Text {...pop} size="xsm" color="inherit">★★★★★ &nbsp;4,8 · 126 Google</Text>;
+  const stars = has('reviews') && <Text {...pop} {...mark('reviews')} size="xsm" color="inherit">★★★★★ &nbsp;4,8 · 126 Google</Text>;
 
   const nav = (
     <Stack direction="horizontal" justify="between" align="center" gap={3} paddingInline={gutter} paddingBlock={phone ? 2 : 3}>
       <Text color="inherit" style={{ ...serif, fontStyle: 'italic', fontSize: '1.55em' }}>Tavola</Text>
       <Stack direction="horizontal" gap={phone ? 2 : 4} align="center">
         {!phone && links.map(l => <Text key={l.en} color="inherit" style={caps}>{t(l)}</Text>)}
-        {has('lang') && <Text {...pop} color="inherit" style={caps}>DE / EN</Text>}
+        {has('lang') && <Text {...pop} {...mark('lang')} color="inherit" style={caps}>DE / EN</Text>}
         {phone ? <Text color="inherit" style={{ fontSize: '1.3em' }}>≡</Text> : <Pill>{t({ de: 'Reservieren', en: 'Book' })}</Pill>}
       </Stack>
     </Stack>
@@ -171,13 +173,21 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
       {has('booking') && (
         <Sec id="booking">
           <Head k={{ de: 'Reservation', en: 'Reservation' }} title={{ de: 'Ihr Tisch, in drei Schritten', en: 'Your table, in three steps' }} />
-          <Stack gap={3} padding={phone ? 3 : 4} style={{ background: C.card, border: `1px solid ${C.line}`, borderRadius: 'var(--radius-container)' }}>
+          <Grid columns={phone ? 1 : 3} gap={3} align="stretch">
+          <Stack gap={3} padding={phone ? 3 : 4} style={{ gridColumn: phone ? undefined : 'span 2', background: C.card, border: `1px solid ${C.line}`, borderRadius: 'var(--radius-container)', boxShadow: '0 18px 40px -24px rgba(35,26,18,.45)' }}>
             <Stack direction="horizontal" gap={2} align="center">
-              {[{ de: 'Datum', en: 'Date' }, { de: 'Zeit', en: 'Time' }, { de: 'Kontakt', en: 'Contact' }].map((s, i) => (
-                <Stack key={s.en} direction="horizontal" gap={1} align="center" style={{ opacity: i < 2 ? 1 : 0.4 }}>
-                  <Text size="xsm" color="inherit" style={{ width: '1.7em', height: '1.7em', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: i < 2 ? C.ink : 'transparent', color: i < 2 ? C.paper : C.ink, border: `1px solid ${C.ink}` }}>{i + 1}</Text>
+              {[{ de: 'Personen', en: 'Guests' }, { de: 'Datum & Zeit', en: 'Date & time' }, { de: 'Kontakt', en: 'Contact' }].map((s, i) => (
+                <Stack key={s.en} direction="horizontal" gap={1} align="center" style={{ flex: i < 2 ? 1 : undefined, opacity: i < 2 ? 1 : 0.4 }}>
+                  <Text size="xsm" color="inherit" style={{ width: '1.7em', height: '1.7em', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: i === 0 ? C.accent : i === 1 ? C.ink : 'transparent', color: i < 2 ? C.paper : C.ink, border: `1px solid ${i === 0 ? C.accent : C.ink}` }}>{i === 0 ? '✓' : i + 1}</Text>
                   {!phone && <Text size="xsm" color="inherit" style={caps}>{t(s)}</Text>}
+                  {i < 2 && <Stack style={{ flex: 1, height: 1, background: i === 0 ? C.accent : C.line }} />}
                 </Stack>
+              ))}
+            </Stack>
+            <Stack direction="horizontal" gap={1} align="center" wrap="wrap">
+              <Caps>{t({ de: 'Personen', en: 'Guests' })}</Caps>
+              {['1', '2', '3', '4', '5', '6+'].map(n => (
+                <Text key={n} size="sm" color="inherit" style={{ minWidth: '2.2em', textAlign: 'center', padding: '0.3em 0.5em', borderRadius: 'var(--radius-element)', border: `1px solid ${n === '2' ? C.ink : C.line}`, background: n === '2' ? C.ink : 'transparent', color: n === '2' ? C.paper : C.ink }}>{n}</Text>
               ))}
             </Stack>
             <Grid columns={7} gap={1}>
@@ -198,6 +208,22 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
               <Pill solid>{t({ de: 'Weiter', en: 'Continue' })} →</Pill>
             </Stack>
           </Stack>
+          {/* what the guest sees after step 3 */}
+          <Stack gap={2} padding={phone ? 3 : 4} justify="between" style={{ background: C.night, color: C.paper, borderRadius: 'var(--radius-container)' }}>
+            <Stack gap={2}>
+              <Stack direction="horizontal" gap={1.5} align="center">
+                <Text size="sm" color="inherit" style={{ width: '1.8em', height: '1.8em', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: '#3f8f5a' }}>✓</Text>
+                <Caps color={C.paper}>{t({ de: 'Reservation bestätigt', en: 'Booking confirmed' })}</Caps>
+              </Stack>
+              <Serif size="1.6em">{t({ de: 'Fr., 20. Nov.', en: 'Fri, 20 Nov' })}<br /><em>19:30 · {t({ de: '2 Personen', en: '2 guests' })}</em></Serif>
+            </Stack>
+            <Stack gap={1}>
+              <Text size="xsm" color="inherit" style={{ opacity: 0.7 }}>{t({ de: 'Nummer', en: 'Number' })} TV-48213</Text>
+              <Text size="xsm" color="inherit" style={{ opacity: 0.7 }}>{t({ de: 'Bestätigung per E-Mail gesendet', en: 'Confirmation sent by email' })}</Text>
+              <Text size="xsm" color="inherit" style={{ ...caps, color: '#e3a37f' }}>{t({ de: '+ In Kalender eintragen', en: '+ Add to calendar' })}</Text>
+            </Stack>
+          </Stack>
+          </Grid>
         </Sec>
       )}
 
@@ -267,7 +293,7 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
       )}
 
       {has('page') && (
-        <Sec id="team">
+        <Sec id="page">
           <Head k={{ de: 'Unterseite /team', en: 'Subpage /team' }} title={{ de: 'Die Menschen hinter Tavola', en: 'The people behind Tavola' }} />
           <Grid columns={2} gap={3}>
             {[['MR', 'Marco Rossi', { de: 'Küchenchef', en: 'Head chef' }], ['LB', 'Lea Brunner', { de: 'Gastgeberin', en: 'Host' }]].map(([ini, n, r]) => (
@@ -309,7 +335,7 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
           <Stack gap={1.5}>
             <Text color="inherit" style={{ ...serif, fontStyle: 'italic', fontSize: '1.8em' }}>Tavola</Text>
             <Text size="sm" color="inherit" style={{ opacity: 0.7 }}>Weite Gasse 7, 5400 Baden</Text>
-            {(pro || has('email')) && <Text {...pop} size="sm" color="inherit" style={{ opacity: 0.85 }}>info@tavola-baden.ch</Text>}
+            {(pro || has('email')) && <Text {...pop} {...mark('email')} size="sm" color="inherit" style={{ opacity: 0.85 }}>info@tavola-baden.ch</Text>}
           </Stack>
           <Stack gap={1.5}>
             <Caps color={C.paper}>{t({ de: 'Öffnungszeiten', en: 'Opening hours' })}</Caps>
@@ -317,7 +343,7 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
             {openBadge}
           </Stack>
           {has('newsletter') ? (
-            <Stack {...pop} gap={1.5}>
+            <Stack {...pop} {...mark('newsletter')} gap={1.5}>
               <Caps color={C.paper}>Newsletter</Caps>
               <Stack direction="horizontal" justify="between" align="center" paddingBlockEnd={1} style={{ borderBottom: `1px solid ${C.paper}` }}>
                 <Text size="sm" color="inherit" style={{ opacity: 0.55 }}>{t({ de: 'Ihre E-Mail', en: 'Your email' })}</Text>
@@ -334,25 +360,24 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
 }
 
 /** Desktop browser window or phone frame around the sample site, plus floating automation chips. */
-function Preview({ pro, sel, device, short }: { pro: boolean; sel: Set<string>; device: Device; short: boolean }) {
+function Preview({ pro, sel, device, short, hl, mark }: { pro: boolean; sel: Set<string>; device: Device; short: boolean; hl: string | null; mark: Mark }) {
   const t = useT();
   const has = (id: string) => sel.has(id);
   const phone = device === 'phone';
   const chips = Object.keys(CHIPS).filter(has);
-  const screen = <Site pro={pro} has={has} phone={phone} />;
+  const screen = <Site pro={pro} has={has} phone={phone} mark={mark} />;
   // The preview fills the right column and the viewport height; print pieces below take some of it.
   const height = short ? 'max(26rem, calc(100vh - 27rem))' : 'max(30rem, calc(100vh - 16rem))';
 
-  // Scroll the preview screen to the part that just popped in (only it has a running pop animation).
+  // Scroll the preview screen to the highlighted add-on (elements outside the screen, like chips, need no scroll).
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       const box = document.querySelector<HTMLElement>('#konfigurator [data-scroll]');
-      const age = (e: HTMLElement) => Number(e.getAnimations().find(a => a.playState === 'running')?.currentTime ?? Infinity);
-      const el = box && [...box.querySelectorAll<HTMLElement>('[data-pop]')].filter(e => age(e) < Infinity).sort((a, b) => age(a) - age(b))[0];
-      if (box && el) box.scrollBy({ top: el.getBoundingClientRect().top - box.getBoundingClientRect().top - 48, behavior: 'smooth' });
+      const el = box?.querySelector<HTMLElement>('[data-hl]');
+      if (box && el) box.scrollBy({ top: el.getBoundingClientRect().top - box.getBoundingClientRect().top - 32, behavior: 'smooth' });
     });
     return () => cancelAnimationFrame(id);
-  }, [sel, device]);
+  }, [hl, device]);
 
   return (
     <Stack style={{ position: 'relative' }}>
@@ -378,14 +403,14 @@ function Preview({ pro, sel, device, short }: { pro: boolean; sel: Set<string>; 
         </Card>
       )}
       {has('whatsapp') && (
-        <Stack {...pop} align="center" justify="center" style={abs({ right: phone ? 'calc(50% - 9rem)' : '1.5rem', bottom: '1.5rem', width: '3.2rem', height: '3.2rem', borderRadius: 'var(--radius-full)', background: '#25d366', color: 'white', boxShadow: '0 8px 24px rgba(0,0,0,.3)', zIndex: 2, fontSize: '1.4rem' })}>
+        <Stack {...pop} {...mark('whatsapp')} align="center" justify="center" style={abs({ right: phone ? 'calc(50% - 9rem)' : '1.5rem', bottom: '1.5rem', width: '3.2rem', height: '3.2rem', borderRadius: 'var(--radius-full)', background: '#25d366', color: 'white', boxShadow: '0 8px 24px rgba(0,0,0,.3)', zIndex: 2, fontSize: '1.4rem' })}>
           <Text color="inherit" aria-label="WhatsApp">✆</Text>
         </Stack>
       )}
       {chips.length > 0 && (
         <Stack gap={2} align="end" style={abs({ top: '18%', insetInlineEnd: '-0.75rem', maxWidth: '85%', pointerEvents: 'none', zIndex: 2 })}>
           {chips.map(id => (
-            <Card key={id} {...pop} padding={1.5} elevation="high">
+            <Card key={id} {...pop} {...mark(id)} padding={1.5} elevation="high">
               <Stack direction="horizontal" gap={1.5} align="center">
                 <StatusDot variant={CHIPS[id].dot} label="" />
                 <Text size="xsm" weight="medium">{t(CHIPS[id].text)}</Text>
@@ -399,12 +424,12 @@ function Preview({ pro, sel, device, short }: { pro: boolean; sel: Set<string>; 
 }
 
 /** The print add-ons shown as the real finished pieces for the sample restaurant. */
-function PrintShelf({ has }: { has: (id: string) => boolean }) {
+function PrintShelf({ has, mark }: { has: (id: string) => boolean; mark: Mark }) {
   const t = useT();
   const items: ReactNode[] = [];
   const label = (s: T) => <Text size="xsm" color="secondary" justify="center">{t(s)}</Text>;
   if (has('flyer')) items.push(
-    <Stack key="flyer" {...pop} gap={1} style={{ width: '7.5rem' }}>
+    <Stack key="flyer" {...pop} {...mark('flyer')} gap={1} style={{ width: '7.5rem' }}>
       <Card padding={0} elevation="med" style={{ overflow: 'hidden' }}>
         <AspectRatio ratio={148 / 210} fit="cover"><img src="/print/restaurant-flyer.webp" alt={t({ de: 'Flyer A5 für Tavola', en: 'A5 flyer for Tavola' })} loading="lazy" /></AspectRatio>
       </Card>
@@ -412,7 +437,7 @@ function PrintShelf({ has }: { has: (id: string) => boolean }) {
     </Stack>,
   );
   if (has('cards')) items.push(
-    <Stack key="cards" {...pop} gap={1} style={{ width: '10.5rem' }}>
+    <Stack key="cards" {...pop} {...mark('cards')} gap={1} style={{ width: '10.5rem' }}>
       <Card padding={0} elevation="med" style={{ overflow: 'hidden', transform: 'rotate(-3deg)' }}>
         <AspectRatio ratio={85 / 55} fit="cover"><img src="/print/restaurant-card-front.webp" alt={t({ de: 'Visitenkarte Vorderseite', en: 'Business card front' })} loading="lazy" /></AspectRatio>
       </Card>
@@ -423,7 +448,7 @@ function PrintShelf({ has }: { has: (id: string) => boolean }) {
     </Stack>,
   );
   if (has('social')) items.push(
-    <Stack key="social" {...pop} gap={1} style={{ width: '9.5rem' }}>
+    <Stack key="social" {...pop} {...mark('social')} gap={1} style={{ width: '9.5rem' }}>
       <Card padding={0} elevation="med" style={{ overflow: 'hidden' }}>
         <Stack>
           <Stack direction="horizontal" gap={1} align="center" padding={1.5}>
@@ -474,12 +499,15 @@ export default function Configurator() {
   const [sel, setSel] = useState<Set<string>>(new Set());
   const tier = TIERS.find(x => x.id === tierId)!;
   const pro = tierId === 'pro';
-  const toggle = (id: string, on: boolean) =>
+  const [last, setLast] = useState<string | null>(null);
+  const toggle = (id: string, on: boolean) => {
+    setLast(on ? id : null);
     setSel(prev => {
       const n = new Set(prev);
       if (on) n.add(id); else n.delete(id);
       return n;
     });
+  };
 
   const all = lines(tier, sel);
   const byId = new Map(all.map(l => [l.addon.id, l]));
@@ -488,6 +516,11 @@ export default function Configurator() {
   const freeUsed = all.filter(l => l.note === 'free').length;
   const effective = new Set(all.map(l => l.addon.id));
   const has = (id: string) => effective.has(id);
+  // The add-on switched on last is outlined in the preview, with its name and price as a tag.
+  const hl = last && effective.has(last) ? last : null;
+  const hlLine = hl ? byId.get(hl) : undefined;
+  const hlLabel = hlLine ? `${t(hlLine.addon.name)} · ${hlLine.note === 'free' ? t({ de: 'gratis', en: 'free' }) : `+ ${chf(hlLine.price)}`}` : '';
+  const mark: Mark = id => (id === hl ? { 'data-f': id, 'data-hl': hlLabel } : { 'data-f': id }) as Record<string, string>;
   const noteText = (l: Line) =>
     l.note === 'included' ? t({ de: 'inklusive', en: 'included' })
       : l.note === 'free' ? t({ de: 'gratis (Pro-Bonus)', en: 'free (Pro bonus)' })
@@ -548,27 +581,23 @@ export default function Configurator() {
             </Card>
           )}
 
-          <Stack gap={4}>
+          <Stack gap={3}>
             <Text weight="semibold">{t({ de: '2. Zusätze wählen', en: '2. Choose add-ons' })}</Text>
             {GROUPS.map(g => (
-              <Card key={g.id} padding={3} variant={g.id === 'automation' ? 'green' : 'default'}>
-                <Stack gap={3}>
-                  <Stack gap={0.5}>
-                    <Stack direction="horizontal" gap={2} align="center" wrap="wrap">
-                      <Text weight="semibold">{t(g.name)}</Text>
-                      {g.id === 'automation' && <Token size="sm" color="green" label={t({ de: 'Empfohlen', en: 'Recommended' })} />}
-                    </Stack>
-                    <Text type="supporting" size="sm">
-                      {g.id === 'automation' ? t({ de: 'Kosten im Betrieb fast nichts', en: 'Next to nothing to run' }) : t(g.desc)}
-                    </Text>
+              <Card key={g.id} padding={2} variant={g.id === 'automation' ? 'green' : 'default'}>
+                <Stack gap={1}>
+                  <Stack direction="horizontal" gap={2} align="center" wrap="wrap" paddingBlockEnd={1}>
+                    <Text size="sm" weight="semibold">{t(g.name)}</Text>
+                    {g.id === 'automation' && <Token size="sm" color="green" label={t({ de: 'Empfohlen', en: 'Recommended' })} />}
                   </Stack>
                   {ADDONS.filter(a => a.group === g.id).map(a => {
                     const inc = a.includedIn === tierId;
                     return (
-                      <Stack key={a.id} direction="horizontal" justify="between" align="start" gap={3}>
+                      <Stack key={a.id} direction="horizontal" justify="between" align="center" gap={2}>
                         <CheckboxInput
+                          size="sm"
+                          labelIcon={ADDON_ICONS[a.id]}
                           label={t(a.name)}
-                          description={t(a.desc)}
                           value={inc || sel.has(a.id)}
                           isDisabled={inc}
                           onChange={c => toggle(a.id, c)}
@@ -581,6 +610,16 @@ export default function Configurator() {
               </Card>
             ))}
           </Stack>
+
+          <Card padding={3} elevation="high" style={{ position: 'sticky', bottom: '1rem', zIndex: 3 }}>
+            <Stack direction="horizontal" justify="between" align="center" gap={3} wrap="wrap">
+              <Stack gap={0.5}>
+                <Text size="sm" color="secondary">{t(tier.name)} · {all.filter(l => l.note !== 'included').length} {t({ de: 'Zusätze', en: 'add-ons' })}</Text>
+                <Heading level={3} hasCapsize={false} color="accent">{chf(sum)}</Heading>
+              </Stack>
+              <Button variant="primary" size="sm" href="#zusammenfassung" label={t({ de: 'Zur Zusammenfassung', en: 'See summary' })} />
+            </Stack>
+          </Card>
         </Stack>
 
         {/* preview + summary */}
@@ -592,17 +631,8 @@ export default function Configurator() {
               <SegmentedControlItem value="phone" label={t({ de: 'Handy', en: 'Phone' })} />
             </SegmentedControl>
           </Stack>
-          <Preview pro={pro} sel={effective} device={device} short={['flyer', 'cards', 'social'].some(has)} />
-          <PrintShelf has={has} />
-          <Card padding={3} elevation="med">
-            <Stack direction="horizontal" justify="between" align="center" gap={3} wrap="wrap">
-              <Stack gap={0.5}>
-                <Text size="sm" color="secondary">{t(tier.name)} · {all.filter(l => l.note !== 'included').length} {t({ de: 'Zusätze', en: 'add-ons' })}</Text>
-                <Heading level={3} hasCapsize={false} color="accent">{chf(sum)}</Heading>
-              </Stack>
-              <Button variant="primary" href="#zusammenfassung" label={t({ de: 'Zur Zusammenfassung', en: 'See summary' })} />
-            </Stack>
-          </Card>
+          <Preview pro={pro} sel={effective} device={device} short={['flyer', 'cards', 'social'].some(has)} hl={hl} mark={mark} />
+          <PrintShelf has={has} mark={mark} />
         </Stack>
       </Grid>
 
