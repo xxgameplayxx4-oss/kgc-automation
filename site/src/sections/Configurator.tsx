@@ -27,16 +27,20 @@ if (import.meta.env.DEV) {
 }
 
 type Device = 'desktop' | 'phone';
-const IMG = '/work/restaurant.webp';
-const soft: CSSProperties = { filter: 'blur(5px)', transform: 'scale(1.08)' };
-const crop = (pos: string): CSSProperties => ({ ...soft, width: '100%', height: '100%', backgroundImage: `url(${IMG})`, backgroundSize: '320%', backgroundPosition: pos });
+const IMG = '/demo/r1.webp';
 const pop = { 'data-pop': '' } as Record<string, string>;
 const abs = (s: CSSProperties): CSSProperties => ({ position: 'absolute', ...s });
+
+// The sample restaurant has its own brand, so its colours stay fixed in both site themes.
+export const C = { paper: '#f6f1e8', card: '#fffcf6', ink: '#231a12', soft: '#75644f', line: 'rgba(35, 26, 18, 0.14)', accent: '#a5482a', night: '#1c1510' };
+export const serif: CSSProperties = { fontFamily: 'var(--font-family-heading, Georgia, serif)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '-0.01em' };
+export const caps: CSSProperties = { letterSpacing: '0.18em', textTransform: 'uppercase', fontSize: '0.68em', fontWeight: 600 };
 
 // Floating notification chips for automations, overlapping the preview frame edge.
 const CHIPS: Record<string, { text: T; dot: 'success' | 'accent' }> = {
   sheet: { text: { de: 'Neue Anfrage · über die Website', en: 'New enquiry · via the website' }, dot: 'accent' },
   autoreply: { text: { de: 'Bestätigung TV-48213 gesendet', en: 'Confirmation TV-48213 sent' }, dot: 'success' },
+  maildesign: { text: { de: 'E-Mail im Tavola-Design gesendet', en: 'Email sent in Tavola’s design' }, dot: 'success' },
   calendar: { text: { de: 'Reservation im Kalender · Fr., 19:30', en: 'Booking in calendar · Fri, 7:30 pm' }, dot: 'success' },
   reminder: { text: { de: 'Erinnerung gesendet · 24 h vorher', en: 'Reminder sent · 24 h before' }, dot: 'success' },
   'review-request': { text: { de: '★★★★★ Neue Google-Bewertung', en: '★★★★★ New Google review' }, dot: 'accent' },
@@ -54,10 +58,24 @@ if (import.meta.env.DEV) {
 }
 
 const MENU: Record<string, [T, string][]> = {
-  start: [[{ de: 'Kürbissuppe, Kernöl', en: 'Pumpkin soup, seed oil' }, '12'], [{ de: 'Vitello tonnato', en: 'Vitello tonnato' }, '19']],
-  main: [[{ de: 'Kürbisrisotto mit Salbei', en: 'Pumpkin risotto, sage' }, '28'], [{ de: 'Kalbsbäggli, Polenta', en: 'Veal cheeks, polenta' }, '42']],
-  sweet: [[{ de: 'Tiramisù della casa', en: 'House tiramisù' }, '12'], [{ de: 'Zwetschgen-Crumble', en: 'Plum crumble' }, '11']],
+  start: [[{ de: 'Kürbissuppe, Kernöl, Brotcroûtons', en: 'Pumpkin soup, seed oil, croûtons' }, '12'], [{ de: 'Vitello tonnato, Kapernäpfel', en: 'Vitello tonnato, caper berries' }, '19'], [{ de: 'Burrata, Ofentomaten', en: 'Burrata, roast tomatoes' }, '18']],
+  main: [[{ de: 'Kürbisrisotto, Salbeibutter', en: 'Pumpkin risotto, sage butter' }, '28'], [{ de: 'Kalbsbäggli, Polenta, Jus', en: 'Veal cheeks, polenta, jus' }, '42'], [{ de: 'Saibling, Fenchel, Zitrone', en: 'Char, fennel, lemon' }, '36']],
+  sweet: [[{ de: 'Tiramisù della casa', en: 'House tiramisù' }, '12'], [{ de: 'Zwetschgen-Crumble, Vanilleglace', en: 'Plum crumble, vanilla ice cream' }, '11']],
 };
+
+const Caps = ({ children, color }: { children: ReactNode; color?: string }) => <Text color="inherit" style={{ ...caps, color: color ?? C.soft }}>{children}</Text>;
+const Serif = ({ children, size }: { children: ReactNode; size: string }) => <Text color="inherit" style={{ ...serif, fontSize: size }}>{children}</Text>;
+/** Button look of the sample brand (it is a mock, so nothing is clickable). */
+const Pill = ({ children, solid, light }: { children: ReactNode; solid?: boolean; light?: boolean }) => (
+  <Stack direction="horizontal" align="center" style={{
+    ...caps, fontSize: '0.66em', padding: '0.95em 1.6em', borderRadius: 'var(--radius-full)',
+    background: solid ? (light ? C.paper : C.ink) : 'transparent', color: solid ? (light ? C.ink : C.paper) : 'inherit',
+    border: `1px solid ${solid ? 'transparent' : 'currentColor'}`, whiteSpace: 'nowrap',
+  }}>{children}</Stack>
+);
+const Photo = ({ src, ratio, pos }: { src: string; ratio: number; pos?: string }) => (
+  <AspectRatio ratio={ratio} fit="cover"><img src={src} alt="" loading="lazy" decoding="async" style={{ objectPosition: pos ?? 'center' }} /></AspectRatio>
+);
 
 /** A sample restaurant site ("Tavola") that grows with every selected add-on. */
 function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean; phone: boolean }) {
@@ -65,210 +83,265 @@ function Site({ pro, has, phone }: { pro: boolean; has: (id: string) => boolean;
   const [menuTab, setMenuTab] = useState('main');
   const [guests, setGuests] = useState(30);
   const until = openNow();
+  const gutter = phone ? 3 : 6;
   const links = [{ de: 'Haus', en: 'About' }, { de: 'Karte', en: 'Menu' }, ...(has('page') ? [{ de: 'Team', en: 'Team' }] : []), { de: 'Besuch', en: 'Visit' }];
-  const onDark: CSSProperties = { color: 'white' /* text sits on a darkened photo in both themes */ };
+  const Sec = ({ children, id }: { children: ReactNode; id: string }) => (
+    <Stack {...pop} key={id} gap={3} paddingInline={gutter} paddingBlock={phone ? 5 : 6} style={{ borderTop: `1px solid ${C.line}` }}>{children}</Stack>
+  );
+  const Head = ({ k, title }: { k: T; title: T }) => (
+    <Stack gap={1}><Caps color={C.accent}>{t(k)}</Caps><Serif size={phone ? '1.6em' : '2em'}>{t(title)}</Serif></Stack>
+  );
+  const openBadge = has('hours') && (
+    <Stack {...pop} direction="horizontal" gap={1} align="center">
+      <StatusDot variant={until ? 'success' : 'error'} label="" />
+      <Text size="xsm" color="inherit">{until ? t({ de: `Jetzt geöffnet · bis ${until}:00`, en: `Open now · until ${until}:00` }) : t({ de: 'Gerade geschlossen', en: 'Closed right now' })}</Text>
+    </Stack>
+  );
+  const stars = has('reviews') && <Text {...pop} size="xsm" color="inherit">★★★★★ &nbsp;4,8 · 126 Google</Text>;
 
   const nav = (
-    <Stack direction="horizontal" justify="between" align="center" gap={2} paddingInline={3} paddingBlock={2} style={pro ? onDark : undefined}>
-      <Text weight="bold" color="inherit" style={{ fontFamily: 'var(--font-family-heading, serif)', fontSize: '1.15em' }}>Tavola</Text>
-      {phone ? (
-        <Stack direction="horizontal" gap={2} align="center">
-          {has('lang') && <Token {...pop} label="DE | EN" size="sm" color="blue" />}
-          <Text color="inherit">☰</Text>
-        </Stack>
-      ) : (
-        <Stack direction="horizontal" gap={3} align="center">
-          {links.map(l => <Text key={l.en} size="xsm" color="inherit">{t(l)}</Text>)}
-          {has('lang') && <Token {...pop} label="DE | EN" size="sm" color="blue" />}
-        </Stack>
-      )}
+    <Stack direction="horizontal" justify="between" align="center" gap={3} paddingInline={gutter} paddingBlock={phone ? 2 : 3}>
+      <Text color="inherit" style={{ ...serif, fontStyle: 'italic', fontSize: '1.55em' }}>Tavola</Text>
+      <Stack direction="horizontal" gap={phone ? 2 : 4} align="center">
+        {!phone && links.map(l => <Text key={l.en} color="inherit" style={caps}>{t(l)}</Text>)}
+        {has('lang') && <Text {...pop} color="inherit" style={caps}>DE / EN</Text>}
+        {phone ? <Text color="inherit" style={{ fontSize: '1.3em' }}>≡</Text> : <Pill>{t({ de: 'Reservieren', en: 'Book' })}</Pill>}
+      </Stack>
     </Stack>
   );
 
   const hero = pro ? (
-    <Stack style={{ position: 'relative', overflow: 'hidden', isolation: 'isolate' }}>
-      {/* the sample photo is blurred so its own baked-in text never competes with ours */}
-      <Stack style={{ ...abs({ inset: 0, zIndex: -1 }), ...soft, backgroundImage: `linear-gradient(180deg, color-mix(in srgb, black 50%, transparent), color-mix(in srgb, black 75%, transparent)), url(${IMG})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+    <Stack style={{ position: 'relative', overflow: 'hidden', isolation: 'isolate', color: C.paper, minHeight: phone ? '30rem' : '34rem' }}>
+      <Stack style={{ ...abs({ inset: 0, zIndex: -1 }), backgroundImage: `linear-gradient(180deg, rgba(20,14,10,.55), rgba(20,14,10,.1) 35%, rgba(20,14,10,.85)), url(${IMG})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'kb 14s ease-out both' }} />
       {nav}
-      <Stack gap={2} align="center" paddingInline={4} paddingBlockStart={phone ? 6 : 8} paddingBlockEnd={phone ? 8 : 10} style={{ textAlign: 'center', ...onDark }}>
-        <Text size="xsm" color="inherit" style={{ letterSpacing: '.3em' }}>KOCHEN · SCHENKEN · GENIESSEN</Text>
-        <Heading level={3} type="display-3" color="inherit">Tavola</Heading>
-        <Text size="sm" color="inherit">{t({ de: 'Saisonale Küche in der Altstadt von Baden.', en: 'Seasonal cooking in Baden’s old town.' })}</Text>
-        <Stack direction="horizontal" gap={2} wrap="wrap" justify="center">
-          <Button size="sm" variant="primary" label={t({ de: 'Tisch reservieren', en: 'Book a table' })} />
-          {!phone && <Button size="sm" variant="secondary" label={t({ de: 'Zur Karte', en: 'See the menu' })} />}
+      <Stack gap={3} paddingInline={gutter} paddingBlockEnd={phone ? 5 : 8} style={{ marginTop: 'auto' }}>
+        <Caps color={C.paper}>{t({ de: 'Osteria · Altstadt Baden · seit 2009', en: 'Osteria · Baden old town · since 2009' })}</Caps>
+        <Serif size={phone ? '2.7em' : '4.4em'}>{t({ de: 'Kochen, schenken,', en: 'Cook, pour,' })}<br /><em>{t({ de: 'geniessen.', en: 'enjoy.' })}</em></Serif>
+        <Stack direction={phone ? 'vertical' : 'horizontal'} gap={3} align={phone ? 'start' : 'center'} justify="between">
+          <Stack direction="horizontal" gap={1.5} wrap="wrap">
+            <Pill solid light>{t({ de: 'Tisch reservieren', en: 'Book a table' })}</Pill>
+            <Pill>{t({ de: 'Zur Karte', en: 'See the menu' })}</Pill>
+          </Stack>
+          <Stack gap={1} align={phone ? 'start' : 'end'}>{stars}{openBadge}</Stack>
         </Stack>
-        {has('reviews') && <Text {...pop} size="xsm" color="inherit">★★★★★ 4,8 · 126 Google</Text>}
       </Stack>
     </Stack>
   ) : (
     <Stack>
       {nav}
-      <Stack gap={2} paddingInline={3} paddingBlockEnd={3}>
-        <AspectRatio ratio={phone ? 16 / 9 : 21 / 8} fit="cover">
-          <img src={IMG} alt="" loading="lazy" decoding="async" style={soft} />
-        </AspectRatio>
-        <Heading level={3}>{t({ de: 'Willkommen im Tavola', en: 'Welcome to Tavola' })}</Heading>
-        <Text size="sm" color="secondary">{t({ de: 'Saisonale Küche in der Altstadt von Baden.', en: 'Seasonal cooking in Baden’s old town.' })}</Text>
-        <Stack direction="horizontal" gap={2} wrap="wrap" align="center">
-          <Button size="sm" variant="primary" label={t({ de: 'Tisch reservieren', en: 'Book a table' })} />
-          {has('reviews') && <Text {...pop} size="xsm">★★★★★ 4,8 · 126 Google</Text>}
+      <Stack paddingInline={gutter} paddingBlockStart={phone ? 1 : 3} paddingBlockEnd={phone ? 5 : 8}><Grid columns={phone ? 1 : 2} gap={phone ? 4 : 6} align="center">
+        <Stack gap={3} style={{ order: phone ? 2 : 0 }}>
+          <Caps color={C.accent}>{t({ de: 'Osteria · Altstadt Baden', en: 'Osteria · Baden old town' })}</Caps>
+          <Serif size={phone ? '2.4em' : '3.4em'}>{t({ de: 'Saisonal gekocht,', en: 'Cooked with the season,' })}<br /><em>{t({ de: 'gern geteilt.', en: 'made to share.' })}</em></Serif>
+          <Text color="inherit" style={{ color: C.soft, maxWidth: '30em', lineHeight: 1.6 }}>{t({ de: 'Kleine Karte, die jede Woche wechselt. Gemüse vom Wochenmarkt, Wein aus dem Piemont und dem Aargau.', en: 'A small menu that changes every week. Vegetables from the market, wine from Piedmont and Aargau.' })}</Text>
+          <Stack direction="horizontal" gap={1.5} wrap="wrap"><Pill solid>{t({ de: 'Tisch reservieren', en: 'Book a table' })}</Pill><Pill>{t({ de: 'Zur Karte', en: 'See the menu' })}</Pill></Stack>
+          {stars}{openBadge}
         </Stack>
-      </Stack>
+        <Photo src={IMG} ratio={phone ? 4 / 3 : 4 / 5} pos="30% center" />
+      </Grid></Stack>
     </Stack>
   );
 
+  const days = [['Mo', '16'], ['Di', '17'], ['Mi', '18'], ['Do', '19'], ['Fr', '20'], ['Sa', '21'], ['So', '22']];
   return (
-    <Stack>
+    <Stack style={{ background: C.paper, color: C.ink, fontSize: phone ? '0.82rem' : '0.95rem' }}>
       {hero}
-      <Stack gap={3} padding={3}>
-        {has('booking') && (
-          <Card {...pop} variant="muted" padding={3}>
-            <Stack gap={2}>
-              <Stack direction="horizontal" justify="between" align="center" gap={2}>
-                <Text weight="semibold" size="sm">{t({ de: 'Tisch reservieren', en: 'Book a table' })}</Text>
-                <Text size="xsm" color="secondary">{t({ de: 'Schritt 2 von 3', en: 'Step 2 of 3' })}</Text>
-              </Stack>
-              <Stack direction="horizontal" gap={1} wrap="wrap">
-                {['Do 14', 'Fr 15', 'Sa 16'].map((d, i) => <Token key={d} size="sm" color={i === 1 ? 'yellow' : 'default'} label={d} />)}
-              </Stack>
-              <Stack direction="horizontal" gap={1} wrap="wrap">
-                {['18:00', '19:30', '21:00'].map((d, i) => <Token key={d} size="sm" color={i === 1 ? 'yellow' : 'default'} label={d} />)}
-              </Stack>
-            </Stack>
-          </Card>
-        )}
-        <Grid columns={phone ? 1 : 3} gap={2}>
-          {[
-            [{ de: 'Mittagsmenü', en: 'Lunch menu' }, '8% 40%'],
-            [{ de: 'Abendkarte', en: 'Dinner' }, '50% 60%'],
-            [{ de: 'Apéro', en: 'Apéritif' }, '12% 10%'],
-          ].slice(0, phone ? 2 : 3).map(([n, pos]) => (
-            <Card key={pos as string} variant="muted" padding={0} style={{ overflow: 'hidden' }}>
-              <Stack>
-                <AspectRatio ratio={phone ? 16 / 7 : 4 / 3}>
-                  <Stack style={crop(pos as string)} />
-                </AspectRatio>
-                <Stack padding={1.5}><Text size="xsm" weight="semibold">{t(n as T)}</Text></Stack>
-              </Stack>
-            </Card>
+
+      <Stack paddingInline={gutter} paddingBlock={phone ? 5 : 6} style={{ borderTop: `1px solid ${C.line}` }}><Grid columns={phone ? 1 : 3} gap={phone ? 3 : 4}>
+        {[
+          ['01', { de: 'Saisonal', en: 'Seasonal' }, { de: 'Die Karte folgt dem Markt, nicht dem Kalender.', en: 'The menu follows the market, not the calendar.' }],
+          ['02', { de: 'Regional', en: 'Regional' }, { de: 'Fleisch und Käse aus dem Aargau.', en: 'Meat and cheese from Aargau.' }],
+          ['03', { de: 'Hausgemacht', en: 'Homemade' }, { de: 'Pasta, Brot und Glace aus der eigenen Küche.', en: 'Pasta, bread and ice cream from our kitchen.' }],
+        ].map(([n, h, d]) => (
+          <Stack key={n as string} gap={1}>
+            <Text color="inherit" style={{ ...serif, fontSize: '1.1em', color: C.accent }}>{n as string}</Text>
+            <Text color="inherit" weight="semibold">{t(h as T)}</Text>
+            <Text size="sm" color="inherit" style={{ color: C.soft }}>{t(d as T)}</Text>
+          </Stack>
+        ))}
+      </Grid></Stack>
+
+      <Stack paddingInline={gutter} paddingBlockEnd={phone ? 5 : 6}><Grid columns={phone ? 2 : 3} gap={2}>
+        {([['/demo/r4.webp', { de: 'Mittag', en: 'Lunch' }], ['/demo/r5.webp', { de: 'Abend', en: 'Dinner' }], ['/demo/r6.webp', { de: 'Apéro', en: 'Apéritif' }]] as [string, T][])
+          .slice(0, phone ? 2 : 3).map(([src, n]) => (
+            <Stack key={src} gap={1}><Photo src={src} ratio={phone ? 1 : 4 / 5} /><Caps>{t(n)}</Caps></Stack>
           ))}
-        </Grid>
-        {has('menu') && (
-          <Stack {...pop} gap={1.5}>
-            <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
-              <Text size="sm" weight="semibold">{t({ de: 'Karte', en: 'Menu' })}</Text>
-              <SegmentedControl size="sm" label={t({ de: 'Kategorie', en: 'Category' })} value={menuTab} onChange={setMenuTab}>
-                <SegmentedControlItem value="start" label={t({ de: 'Vorspeisen', en: 'Starters' })} />
-                <SegmentedControlItem value="main" label={t({ de: 'Hauptgang', en: 'Mains' })} />
-                <SegmentedControlItem value="sweet" label="Dessert" />
-              </SegmentedControl>
-            </Stack>
-            {(MENU[menuTab] ?? []).map(([n, p]) => (
-              <Stack key={p as string} direction="horizontal" justify="between" gap={2}>
-                <Text size="xsm">{t(n as T)}</Text>
-                <Text size="xsm" hasTabularNumbers>{p as string}</Text>
-              </Stack>
-            ))}
-          </Stack>
-        )}
-        {has('reviews') && (
-          <Card {...pop} padding={2} variant="muted">
-            <Stack gap={1}>
-              <Text size="xsm" color="accent">★★★★★</Text>
-              <Text size="xsm">{t({ de: '«Bestes Risotto in Baden, sehr herzlicher Service.»', en: '“Best risotto in Baden, very warm service.”' })}</Text>
-              <Text size="xsm" color="secondary">Sandra M. · Google</Text>
-            </Stack>
-          </Card>
-        )}
-        {has('pricefinder') && (
-          <Card {...pop} variant="muted" padding={3}>
-            <Stack gap={2}>
-              <Text weight="semibold" size="sm">{t({ de: 'Apéro & Anlässe: Preis berechnen', en: 'Apéritifs & events: get a price' })}</Text>
-              <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
-                <Stack direction="horizontal" gap={1} align="center">
-                  <Button size="sm" variant="secondary" label="−" isDisabled={guests <= 10} onClick={() => setGuests(g => g - 10)} />
-                  <Text size="sm" hasTabularNumbers>{guests} {t({ de: 'Personen', en: 'guests' })}</Text>
-                  <Button size="sm" variant="secondary" label="+" isDisabled={guests >= 120} onClick={() => setGuests(g => g + 10)} />
+      </Grid></Stack>
+
+      {has('booking') && (
+        <Sec id="booking">
+          <Head k={{ de: 'Reservation', en: 'Reservation' }} title={{ de: 'Ihr Tisch, in drei Schritten', en: 'Your table, in three steps' }} />
+          <Stack gap={3} padding={phone ? 3 : 4} style={{ background: C.card, border: `1px solid ${C.line}`, borderRadius: 'var(--radius-container)' }}>
+            <Stack direction="horizontal" gap={2} align="center">
+              {[{ de: 'Datum', en: 'Date' }, { de: 'Zeit', en: 'Time' }, { de: 'Kontakt', en: 'Contact' }].map((s, i) => (
+                <Stack key={s.en} direction="horizontal" gap={1} align="center" style={{ opacity: i < 2 ? 1 : 0.4 }}>
+                  <Text size="xsm" color="inherit" style={{ width: '1.7em', height: '1.7em', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: i < 2 ? C.ink : 'transparent', color: i < 2 ? C.paper : C.ink, border: `1px solid ${C.ink}` }}>{i + 1}</Text>
+                  {!phone && <Text size="xsm" color="inherit" style={caps}>{t(s)}</Text>}
                 </Stack>
-                <Text size="sm" weight="semibold" color="accent" hasTabularNumbers>{t({ de: 'ab', en: 'from' })} {chf(guests * 32)}</Text>
+              ))}
+            </Stack>
+            <Grid columns={7} gap={1}>
+              {days.slice(0, 7).map(([d, n], i) => (
+                <Stack key={n} align="center" gap={0.5} paddingBlock={1.5} style={{ borderRadius: 'var(--radius-element)', background: i === 4 ? C.ink : 'transparent', color: i === 4 ? C.paper : C.ink, opacity: i === 0 ? 0.3 : 1, border: `1px solid ${i === 4 ? C.ink : C.line}` }}>
+                  <Text color="inherit" style={{ ...caps, fontSize: '0.6em' }}>{d}</Text>
+                  <Text color="inherit" style={{ ...serif, fontSize: '1.25em' }}>{n}</Text>
+                </Stack>
+              ))}
+            </Grid>
+            <Stack direction="horizontal" gap={1} wrap="wrap">
+              {['18:00', '18:30', '19:30', '20:00', '21:00'].map(h => (
+                <Text key={h} size="sm" color="inherit" hasTabularNumbers style={{ padding: '0.45em 0.9em', borderRadius: 'var(--radius-full)', border: `1px solid ${h === '19:30' ? C.accent : C.line}`, background: h === '19:30' ? C.accent : 'transparent', color: h === '19:30' ? C.paper : C.ink, textDecoration: h === '18:30' ? 'line-through' : undefined, opacity: h === '18:30' ? 0.4 : 1 }}>{h}</Text>
+              ))}
+            </Stack>
+            <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
+              <Text size="sm" color="inherit" style={{ color: C.soft }}>{t({ de: 'Fr., 20. Nov. · 19:30 · 2 Personen', en: 'Fri, 20 Nov · 7:30 pm · 2 guests' })}</Text>
+              <Pill solid>{t({ de: 'Weiter', en: 'Continue' })} →</Pill>
+            </Stack>
+          </Stack>
+        </Sec>
+      )}
+
+      {has('menu') && (
+        <Sec id="menu">
+          <Stack direction={phone ? 'vertical' : 'horizontal'} justify="between" align={phone ? 'start' : 'end'} gap={2}>
+            <Head k={{ de: 'Diese Woche', en: 'This week' }} title={{ de: 'Die Karte', en: 'The menu' }} />
+            <Stack direction="horizontal" gap={3}>
+              {([['start', { de: 'Vorspeisen', en: 'Starters' }], ['main', { de: 'Hauptgang', en: 'Mains' }], ['sweet', { de: 'Dessert', en: 'Dessert' }]] as [string, T][]).map(([k, n]) => (
+                <Text key={k} as="span" role="button" tabIndex={0} color="inherit" onClick={() => setMenuTab(k)} style={{ ...caps, background: 'none', border: 0, padding: '0.4em 0', cursor: 'pointer', color: menuTab === k ? C.ink : C.soft, borderBottom: `1px solid ${menuTab === k ? C.ink : 'transparent'}` }}>{t(n)}</Text>
+              ))}
+            </Stack>
+          </Stack>
+          <Stack gap={2}>
+            {(MENU[menuTab] ?? []).map(([n, p]) => (
+              <Stack key={p + n.en} direction="horizontal" align="end" gap={1}>
+                <Text color="inherit" style={{ ...serif, fontSize: '1.15em' }}>{t(n)}</Text>
+                <Stack style={{ flex: 1, borderBottom: `1px dotted ${C.soft}`, marginBottom: '0.35em', minWidth: '1em' }} />
+                <Text color="inherit" hasTabularNumbers style={{ ...serif, fontSize: '1.15em' }}>{p}</Text>
+              </Stack>
+            ))}
+          </Stack>
+        </Sec>
+      )}
+
+      {has('reviews') && (
+        <Sec id="reviews">
+          <Stack gap={2} align="center" style={{ textAlign: 'center' }}>
+            <Text color="inherit" style={{ color: C.accent, letterSpacing: '0.2em' }}>★★★★★</Text>
+            <Serif size={phone ? '1.45em' : '1.9em'}>{t({ de: '«Das beste Risotto in Baden. Und ein Service, bei dem man gern sitzen bleibt.»', en: '“The best risotto in Baden. And service that makes you want to stay.”' })}</Serif>
+            <Caps>{t({ de: 'Sandra M. · Google-Bewertung', en: 'Sandra M. · Google review' })}</Caps>
+          </Stack>
+        </Sec>
+      )}
+
+      {has('pricefinder') && (
+        <Sec id="pricefinder">
+          <Head k={{ de: 'Anlässe', en: 'Events' }} title={{ de: 'Apéro für Ihren Anlass', en: 'Apéritif for your event' }} />
+          <Stack direction="horizontal" justify="between" align="center" gap={3} wrap="wrap" padding={phone ? 3 : 4} style={{ background: C.card, border: `1px solid ${C.line}`, borderRadius: 'var(--radius-container)' }}>
+            <Stack direction="horizontal" gap={2} align="center">
+              <Text as="span" role="button" tabIndex={0} color="inherit" onClick={() => setGuests(g => Math.max(10, g - 10))} style={{ ...serif, fontSize: '1.4em', width: '1.6em', height: '1.6em', borderRadius: 'var(--radius-full)', border: `1px solid ${C.line}`, background: 'none', cursor: 'pointer' }}>−</Text>
+              <Stack gap={0}><Serif size="1.6em">{guests}</Serif><Caps>{t({ de: 'Personen', en: 'guests' })}</Caps></Stack>
+              <Text as="span" role="button" tabIndex={0} color="inherit" onClick={() => setGuests(g => Math.min(120, g + 10))} style={{ ...serif, fontSize: '1.4em', width: '1.6em', height: '1.6em', borderRadius: 'var(--radius-full)', border: `1px solid ${C.line}`, background: 'none', cursor: 'pointer' }}>+</Text>
+            </Stack>
+            <Stack gap={0} align="end"><Caps>{t({ de: 'Richtpreis', en: 'Guide price' })}</Caps><Serif size="1.6em">{chf(guests * 32)}</Serif></Stack>
+          </Stack>
+        </Sec>
+      )}
+
+      {has('schedule') && (
+        <Sec id="schedule">
+          <Head k={{ de: 'Agenda', en: 'What’s on' }} title={{ de: 'Diese Woche im Tavola', en: 'This week at Tavola' }} />
+          <Stack>
+            {[
+              ['Mi 18', 'Wed 18', '19:00', { de: 'Weindegustation Piemont', en: 'Piedmont wine tasting' }],
+              ['Fr 20', 'Fri 20', '20:30', { de: 'Live-Jazz im Garten', en: 'Live jazz in the garden' }],
+              ['Sa 21', 'Sat 21', '10:00', { de: 'Pasta-Kochkurs', en: 'Pasta cooking class' }],
+            ].map(([de, en, time, what]) => (
+              <Stack key={de as string} direction="horizontal" gap={3} align="center" paddingBlock={2} style={{ borderBottom: `1px solid ${C.line}` }}>
+                <Text color="inherit" style={{ ...caps, width: '4.5em', color: C.accent }}>{t({ de: de as string, en: en as string })}</Text>
+                <Text color="inherit" style={{ ...serif, fontSize: '1.15em', flex: 1 }}>{t(what as T)}</Text>
+                <Text size="sm" color="inherit" hasTabularNumbers style={{ color: C.soft }}>{time as string}</Text>
+              </Stack>
+            ))}
+          </Stack>
+        </Sec>
+      )}
+
+      {has('page') && (
+        <Sec id="team">
+          <Head k={{ de: 'Unterseite /team', en: 'Subpage /team' }} title={{ de: 'Die Menschen hinter Tavola', en: 'The people behind Tavola' }} />
+          <Grid columns={2} gap={3}>
+            {[['MR', 'Marco Rossi', { de: 'Küchenchef', en: 'Head chef' }], ['LB', 'Lea Brunner', { de: 'Gastgeberin', en: 'Host' }]].map(([ini, n, r]) => (
+              <Stack key={n as string} gap={1}><AspectRatio ratio={phone ? 1 : 4 / 3}><Stack align="center" justify="center" style={{ height: '100%', background: C.card, border: `1px solid ${C.line}` }}><Serif size="2.6em">{ini as string}</Serif></Stack></AspectRatio><Text color="inherit" weight="semibold">{n as string}</Text><Caps>{t(r as T)}</Caps></Stack>
+            ))}
+          </Grid>
+        </Sec>
+      )}
+
+      {has('jobs') && (
+        <Sec id="jobs">
+          <Head k={{ de: 'Karriere', en: 'Careers' }} title={{ de: 'Wir suchen Verstärkung', en: 'Join the team' }} />
+          <Stack>
+            {[[{ de: 'Koch / Köchin', en: 'Chef' }, '100 %'], [{ de: 'Service-Mitarbeiter/in', en: 'Waiting staff' }, '60 %']].map(([n, pct]) => (
+              <Stack key={pct as string} direction="horizontal" justify="between" align="center" gap={2} paddingBlock={2} style={{ borderBottom: `1px solid ${C.line}` }}>
+                <Text color="inherit" style={{ ...serif, fontSize: '1.15em' }}>{t(n as T)} · {pct as string}</Text>
+                <Text color="inherit" style={{ ...caps, color: C.accent }}>{t({ de: 'Bewerben →', en: 'Apply →' })}</Text>
+              </Stack>
+            ))}
+          </Stack>
+        </Sec>
+      )}
+
+      {has('form') && (
+        <Sec id="form">
+          <Head k={{ de: 'Kontakt', en: 'Contact' }} title={{ de: 'Schreiben Sie uns', en: 'Write to us' }} />
+          <Grid columns={phone ? 1 : 2} gap={3}>
+            {[{ de: 'Name', en: 'Name' }, { de: 'E-Mail', en: 'Email' }].map(f => (
+              <Stack key={f.en} gap={1} paddingBlockEnd={1} style={{ borderBottom: `1px solid ${C.ink}` }}><Caps>{t(f)}</Caps></Stack>
+            ))}
+          </Grid>
+          <Stack gap={1} paddingBlockEnd={4} style={{ borderBottom: `1px solid ${C.ink}` }}><Caps>{t({ de: 'Nachricht', en: 'Message' })}</Caps></Stack>
+          <Stack direction="horizontal"><Pill solid>{t({ de: 'Senden', en: 'Send' })}</Pill></Stack>
+        </Sec>
+      )}
+
+      <Stack gap={4} paddingInline={gutter} paddingBlock={phone ? 5 : 6} style={{ background: C.night, color: C.paper }}>
+        <Grid columns={phone ? 1 : 3} gap={4}>
+          <Stack gap={1.5}>
+            <Text color="inherit" style={{ ...serif, fontStyle: 'italic', fontSize: '1.8em' }}>Tavola</Text>
+            <Text size="sm" color="inherit" style={{ opacity: 0.7 }}>Weite Gasse 7, 5400 Baden</Text>
+            {(pro || has('email')) && <Text {...pop} size="sm" color="inherit" style={{ opacity: 0.85 }}>info@tavola-baden.ch</Text>}
+          </Stack>
+          <Stack gap={1.5}>
+            <Caps color={C.paper}>{t({ de: 'Öffnungszeiten', en: 'Opening hours' })}</Caps>
+            <Text size="sm" color="inherit" style={{ opacity: 0.7 }}>{t({ de: 'Di–Fr 12–23 Uhr · Sa 10–23 Uhr', en: 'Tue–Fri 12–11 pm · Sat 10–11 pm' })}</Text>
+            {openBadge}
+          </Stack>
+          {has('newsletter') ? (
+            <Stack {...pop} gap={1.5}>
+              <Caps color={C.paper}>Newsletter</Caps>
+              <Stack direction="horizontal" justify="between" align="center" paddingBlockEnd={1} style={{ borderBottom: `1px solid ${C.paper}` }}>
+                <Text size="sm" color="inherit" style={{ opacity: 0.55 }}>{t({ de: 'Ihre E-Mail', en: 'Your email' })}</Text>
+                <Text color="inherit">→</Text>
               </Stack>
             </Stack>
-          </Card>
-        )}
-        {has('schedule') && (
-          <Stack {...pop} gap={1}>
-            <Text size="sm" weight="semibold">{t({ de: 'Diese Woche', en: 'This week' })}</Text>
-            {[
-              ['Mi', 'Wed', '19:00', { de: 'Weindegustation Piemont', en: 'Piedmont wine tasting' }],
-              ['Fr', 'Fri', '20:30', { de: 'Live-Jazz im Garten', en: 'Live jazz in the garden' }],
-              ['Sa', 'Sat', '10:00', { de: 'Pasta-Kochkurs', en: 'Pasta cooking class' }],
-            ].map(([de, en, time, what]) => (
-              <Stack key={de as string} direction="horizontal" gap={2} align="center">
-                <Token size="sm" label={t({ de: de as string, en: en as string })} />
-                <Text size="xsm" hasTabularNumbers color="secondary">{time as string}</Text>
-                <Text size="xsm" maxLines={1}>{t(what as T)}</Text>
-              </Stack>
-            ))}
-          </Stack>
-        )}
-        {has('jobs') && (
-          <Stack {...pop} gap={1}>
-            <Text size="sm" weight="semibold">{t({ de: 'Offene Stellen', en: 'Join the team' })}</Text>
-            {[
-              [{ de: 'Koch / Köchin', en: 'Chef' }, '100 %'],
-              [{ de: 'Service-Mitarbeiter/in', en: 'Waiting staff' }, '60 %'],
-            ].map(([n, pct]) => (
-              <Stack key={pct as string} direction="horizontal" justify="between" align="center" gap={2}>
-                <Text size="xsm">{t(n as T)} · {pct as string}</Text>
-                <Button size="sm" variant="ghost" label={t({ de: 'Bewerben', en: 'Apply' })} />
-              </Stack>
-            ))}
-          </Stack>
-        )}
-        {has('newsletter') && (
-          <Stack {...pop} direction="horizontal" gap={1} align="center">
-            <Card variant="muted" padding={1.5} style={{ flex: 1, minWidth: 0 }}><Text size="xsm" color="placeholder" maxLines={1}>{t({ de: 'Ihre E-Mail für Neuigkeiten', en: 'Your email for news' })}</Text></Card>
-            <Button size="sm" variant="secondary" label={t({ de: 'Anmelden', en: 'Sign up' })} />
-          </Stack>
-        )}
-        <Divider />
-        {has('hours') && (
-          <Stack {...pop} direction="horizontal" gap={1.5} align="center">
-            <StatusDot variant={until ? 'success' : 'error'} label="" />
-            <Text size="xsm" weight="semibold">
-              {until ? t({ de: `Jetzt geöffnet · bis ${until}:00`, en: `Open now · until ${until}:00` }) : t({ de: 'Gerade geschlossen', en: 'Closed right now' })}
-            </Text>
-          </Stack>
-        )}
-        <Text size="xsm" color="secondary">{t({ de: 'Di bis Fr 12–23 Uhr · Sa 10–23 Uhr · Weite Gasse 7, Baden', en: 'Tue to Fri 12–11 pm · Sat 10–11 pm · Weite Gasse 7, Baden' })}</Text>
-        {has('form') ? (
-          <Stack {...pop} gap={1}>
-            <Card variant="muted" padding={1.5}><Text size="xsm" color="placeholder">{t({ de: 'Name', en: 'Name' })}</Text></Card>
-            <Card variant="muted" padding={1.5}><Text size="xsm" color="placeholder">{t({ de: 'Ihre Nachricht', en: 'Your message' })}</Text></Card>
-            <Stack direction="horizontal"><Button size="sm" variant="secondary" label={t({ de: 'Senden', en: 'Send' })} /></Stack>
-          </Stack>
-        ) : (
-          <Stack direction="horizontal"><Button size="sm" variant="secondary" label={t({ de: 'E-Mail schreiben', en: 'Send an email' })} /></Stack>
-        )}
-        {(pro || has('email')) && <Text {...pop} size="xsm" color="secondary">info@tavola-baden.ch</Text>}
+          ) : (
+            <Stack gap={1.5} align="start"><Caps color={C.paper}>{t({ de: 'Kontakt', en: 'Contact' })}</Caps><Pill>{t({ de: 'E-Mail schreiben', en: 'Send an email' })}</Pill></Stack>
+          )}
+        </Grid>
       </Stack>
-      {has('whatsapp') && (
-        <Stack {...pop} align="end" paddingInline={3} paddingBlockEnd={3} style={phone ? abs({ insetInlineEnd: 0, bottom: 0 }) : undefined}>
-          <Button size="sm" variant="primary" label="💬 WhatsApp" />
-        </Stack>
-      )}
     </Stack>
   );
 }
 
 /** Desktop browser window or phone frame around the sample site, plus floating automation chips. */
-function Preview({ pro, sel, device }: { pro: boolean; sel: Set<string>; device: Device }) {
+function Preview({ pro, sel, device, short }: { pro: boolean; sel: Set<string>; device: Device; short: boolean }) {
   const t = useT();
   const has = (id: string) => sel.has(id);
   const phone = device === 'phone';
   const chips = Object.keys(CHIPS).filter(has);
   const screen = <Site pro={pro} has={has} phone={phone} />;
+  // The preview fills the right column and the viewport height; print pieces below take some of it.
+  const height = short ? 'max(26rem, calc(100vh - 27rem))' : 'max(30rem, calc(100vh - 16rem))';
 
   // Scroll the preview screen to the part that just popped in (only it has a running pop animation).
   useEffect(() => {
@@ -282,13 +355,10 @@ function Preview({ pro, sel, device }: { pro: boolean; sel: Set<string>; device:
   }, [sel, device]);
 
   return (
-    <Stack style={{ position: 'relative' }} paddingInlineEnd={3}>
+    <Stack style={{ position: 'relative' }}>
       {phone ? (
-        <Card padding={1.5} elevation="high" style={{ width: '100%', maxWidth: '18.5rem', marginInline: 'auto', borderRadius: 'calc(var(--radius-page) * 2)', background: 'black' /* phone bezel stays black in both themes */ }}>
-          <Card data-scroll="" padding={0} style={{ overflow: 'hidden', borderRadius: 'calc(var(--radius-page) * 1.6)', position: 'relative', maxHeight: 'min(36rem, 60vh)', overflowY: 'auto' }}>
-            <Stack align="center" paddingBlock={1}>
-              <Card variant="gray" padding={0.5} width="30%" style={{ borderRadius: 'var(--radius-full)' }} />
-            </Stack>
+        <Card padding={1.5} elevation="high" style={{ width: '100%', maxWidth: '22rem', marginInline: 'auto', borderRadius: '3rem', background: 'black' /* phone bezel stays black in both themes */ }}>
+          <Card data-scroll="" padding={0} style={{ overflow: 'hidden', borderRadius: '2.4rem', position: 'relative', height: `min(46rem, ${height})`, overflowY: 'auto', scrollbarWidth: 'none' }}>
             {screen}
           </Card>
         </Card>
@@ -299,16 +369,21 @@ function Preview({ pro, sel, device }: { pro: boolean; sel: Set<string>; device:
               <StatusDot variant="error" label="" />
               <StatusDot variant="warning" label="" />
               <StatusDot variant="success" label="" />
-              <Card padding={1} style={{ flex: 1, minWidth: 0 }}>
-                <Text type="supporting" size="xsm" maxLines={1}>🔒 tavola-baden.ch{has('page') ? t({ de: ' · /team', en: ' · /team' }) : ''}</Text>
+              <Card padding={1} style={{ flex: 1, minWidth: 0, maxWidth: '28rem', marginInline: 'auto' }}>
+                <Text type="supporting" size="xsm" maxLines={1} justify="center">tavola-baden.ch{has('page') ? '/team' : ''}</Text>
               </Card>
             </Stack>
-            <Stack data-scroll="" style={{ maxHeight: 'min(34rem, 58vh)', overflowY: 'auto' }}>{screen}</Stack>
+            <Stack data-scroll="" style={{ height, overflowY: 'auto' }}>{screen}</Stack>
           </Stack>
         </Card>
       )}
+      {has('whatsapp') && (
+        <Stack {...pop} align="center" justify="center" style={abs({ right: phone ? 'calc(50% - 9rem)' : '1.5rem', bottom: '1.5rem', width: '3.2rem', height: '3.2rem', borderRadius: 'var(--radius-full)', background: '#25d366', color: 'white', boxShadow: '0 8px 24px rgba(0,0,0,.3)', zIndex: 2, fontSize: '1.4rem' })}>
+          <Text color="inherit" aria-label="WhatsApp">✆</Text>
+        </Stack>
+      )}
       {chips.length > 0 && (
-        <Stack gap={2} align="end" style={abs({ top: '28%', insetInlineEnd: 0, maxWidth: '85%', pointerEvents: 'none', zIndex: 2 })}>
+        <Stack gap={2} align="end" style={abs({ top: '18%', insetInlineEnd: '-0.75rem', maxWidth: '85%', pointerEvents: 'none', zIndex: 2 })}>
           {chips.map(id => (
             <Card key={id} {...pop} padding={1.5} elevation="high">
               <Stack direction="horizontal" gap={1.5} align="center">
@@ -433,7 +508,7 @@ export default function Configurator() {
   ].join('\n');
 
   return (
-    <Stack as="section" id="konfigurator" gap={6} paddingInline={4} paddingBlock={10} style={{ maxWidth: '75rem', marginInline: 'auto', width: '100%' }}>
+    <Stack as="section" id="konfigurator" gap={6} paddingInline={4} paddingBlock={10} style={{ maxWidth: '100rem', marginInline: 'auto', width: '100%' }}>
       <Stack gap={2}>
         <Eyebrow>{t({ de: 'Konfigurator', en: 'Configurator' })}</Eyebrow>
         <Heading level={2}>{t({ de: 'Stellen Sie Ihre Wunsch-Website zusammen', en: 'Build your dream website' })}</Heading>
@@ -441,7 +516,7 @@ export default function Configurator() {
         <Link href="#beispiele" size="sm">{t({ de: 'Buchungs-Funnels live ausprobieren', en: 'Try the booking funnels live' })}</Link>
       </Stack>
 
-      <Grid columns={{ minWidth: 340 }} gap={8} align="start">
+      <Grid data-cfg="" columns={1} gap={8} align="start">
         {/* options */}
         <Stack gap={6}>
           <Stack gap={2}>
@@ -517,7 +592,7 @@ export default function Configurator() {
               <SegmentedControlItem value="phone" label={t({ de: 'Handy', en: 'Phone' })} />
             </SegmentedControl>
           </Stack>
-          <Preview pro={pro} sel={effective} device={device} />
+          <Preview pro={pro} sel={effective} device={device} short={['flyer', 'cards', 'social'].some(has)} />
           <PrintShelf has={has} />
           <Card padding={3} elevation="med">
             <Stack direction="horizontal" justify="between" align="center" gap={3} wrap="wrap">

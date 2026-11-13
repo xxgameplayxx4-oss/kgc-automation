@@ -25,7 +25,7 @@ export default function Teaser() {
             <Button href="#projekte" label={t({ de: 'Alle Projekte ansehen', en: 'See all projects' })} />
           </HStack>
           <Grid columns={{ minWidth: 240, max: 4 }} gap={8}>
-            {CLIENTS.map(p => (
+            {CLIENTS.slice(0, 4).map(p => (
               <VStack key={p.slug} gap={2}>
                 <Preview p={p} />
                 <Text weight="semibold">{t(p.title)}</Text>

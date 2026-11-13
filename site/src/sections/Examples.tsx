@@ -9,6 +9,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import Eyebrow from './Eyebrow';
 import Funnels from './Funnels';
+import Emails from './Emails';
 import { WORK, useT } from '../data';
 
 export default function Examples() {
@@ -48,6 +49,12 @@ export default function Examples() {
           <Text type="large" color="secondary">{t({ de: 'Kunden buchen selbst, Schritt für Schritt. Probieren Sie es gleich hier aus: Das ist ein echter Funnel, so wie er auf Ihrer Website läuft.', en: 'Customers book on their own, step by step. Try it right here: this is a real funnel, just as it runs on your website.' })}</Text>
         </VStack>
         <Funnels />
+        <VStack gap={3}>
+          <Eyebrow>{t({ de: 'Automation', en: 'Automation' })}</Eyebrow>
+          <Heading level={2}>{t({ de: 'Bestätigungs-E-Mails mit Design', en: 'Confirmation emails with design' })}</Heading>
+          <Text type="large" color="secondary">{t({ de: 'Dieselbe Reservation, zweimal. Links, wie sie von einem Standard-Formular ankommt. Rechts im Design Ihrer Website, für Sie und für Ihren Gast.', en: 'The same booking, twice. Left, as it arrives from a standard form. Right, in your website’s design, for you and your guest.' })}</Text>
+        </VStack>
+        <Emails />
         <HStack>
           <Button variant="primary" href="#konfigurator" label={t({ de: 'Im Konfigurator hinzufügen', en: 'Add in the configurator' })} />
         </HStack>

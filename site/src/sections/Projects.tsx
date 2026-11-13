@@ -40,6 +40,11 @@ export const CLIENTS: Project[] = [
     kind: { de: 'Handy-Shop & Reparatur · Website', en: 'Phone shop & repair · website' },
     tags: [{ de: 'Reparaturpreise', en: 'Repair prices' }, { de: 'Responsive', en: 'Responsive' }],
   },
+  {
+    slug: 'edge', title: { de: 'Trading-Journal', en: 'Trading journal' }, place: 'Web-App',
+    kind: { de: 'Web-App für einen Kunden', en: 'Web app for a client' },
+    tags: [{ de: 'Kalender mit Tages-P&L', en: 'Calendar with daily P&L' }, { de: 'CSV- und Screenshot-Import', en: 'CSV & screenshot import' }, { de: 'KI-Auswertung', en: 'AI parsing' }],
+  },
 ];
 
 const CONCEPTS: Project[] = [
@@ -54,9 +59,6 @@ const CONCEPTS: Project[] = [
   { slug: 'freestar', place: 'Zürich', title: { de: 'IT-Personalvermittlung', en: 'IT recruiting' }, kind: { de: 'Konzeptentwurf', en: 'Concept' }, tags: [{ de: 'Stellenbörse', en: 'Job board' }, { de: 'Mehrseitig', en: 'Multi-page' }] },
 ];
 
-const TOOLS: Project[] = [
-  { slug: 'edge', place: 'Web-App', title: { de: 'Trading-Journal', en: 'Trading journal' }, kind: { de: 'Eigenes Tool', en: 'Own tool' }, tags: [{ de: 'CSV- und Screenshot-Import', en: 'CSV & screenshot import' }, { de: 'KI-Auswertung', en: 'AI parsing' }, { de: 'Statistiken', en: 'Analytics' }] },
-];
 
 /** Laptop with the desktop screenshot, phone in front at the bottom right. */
 export function Devices({ p, alt }: { p: Project; alt: string }) {
@@ -165,7 +167,7 @@ export default function Projects() {
         <Group
           eyebrow={{ de: 'Projekte', en: 'Projects' }}
           heading={{ de: 'Kundenprojekte', en: 'Client projects' }}
-          intro={{ de: 'Websites, die ich für zahlende Kunden umgesetzt habe. Klicken Sie auf eine Vorschau, um durch die ganze Seite zu scrollen.', en: 'Websites I built for paying clients. Click a preview to scroll through the whole page.' }}
+          intro={{ de: 'Websites und Web-Apps, die ich für zahlende Kunden umgesetzt habe. Klicken Sie auf eine Vorschau, um durch die ganze Seite zu scrollen.', en: 'Websites and web apps I built for paying clients. Click a preview to scroll through the whole page.' }}
           items={CLIENTS} paid min={420}
         />
         <Group
@@ -173,12 +175,6 @@ export default function Projects() {
           heading={{ de: 'Konzeptentwürfe', en: 'Concept designs' }}
           intro={{ de: 'Entwürfe für lokale Geschäfte, um zu zeigen, was möglich ist. Namen und Links sind bewusst weggelassen.', en: 'Drafts for local businesses to show what is possible. Names and links are left out on purpose.' }}
           items={CONCEPTS} min={280}
-        />
-        <Group
-          eyebrow={{ de: 'Eigene Tools', en: 'Own tools' }}
-          heading={{ de: 'Selbst gebaut', en: 'Built for myself' }}
-          intro={{ de: 'Eine Web-App, die ich für mich selbst entwickelt habe.', en: 'A web app I built for my own use.' }}
-          items={TOOLS} min={300}
         />
       </VStack>
     </Section>
