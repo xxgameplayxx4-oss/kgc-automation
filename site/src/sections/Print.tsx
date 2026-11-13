@@ -10,7 +10,7 @@ import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import { useState } from 'react';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import Eyebrow from './Eyebrow';
-import { ADDONS, chf, useT } from '../data';
+import { ADDONS, addonPrice, useT } from '../data';
 
 // Finished sample designs, rendered from fictional brands that match the concept drafts in /work.
 const SETS = [
@@ -64,7 +64,7 @@ export default function Print() {
                     <Heading level={3}>{t(a.name)}</Heading>
                     <Text type="supporting">{t(a.desc)}</Text>
                   </VStack>
-                  <Text weight="semibold" hasTabularNumbers>{chf(a.price)}</Text>
+                  <Text weight="semibold" hasTabularNumbers>{addonPrice(a)}</Text>
                 </HStack>
               </Card>
             ))}

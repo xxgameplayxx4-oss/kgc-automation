@@ -16,7 +16,7 @@ import { Token } from '@astryxdesign/core/Token';
 import Eyebrow from './Eyebrow';
 import { AutomationFlow, HoursWeek, PriceCalc } from './AddonPreviews';
 import { ADDON_ICONS } from './addonIcons';
-import { ADDONS, BASE_PRICE, careFor, DISCOUNTS, GROUPS, TIERS, chf, mailto, nextStep, pct, presetOf, quote, tierPrice, useT, type T } from '../data';
+import { ADDONS, addonPrice, BASE_PRICE, careFor, DISCOUNTS, GROUPS, TIERS, chf, mailto, nextStep, pct, presetOf, quote, tierPrice, useT, type T } from '../data';
 
 // Dev-only self-check of the pricing maths (prices come from data.ts).
 if (import.meta.env.DEV) {
@@ -481,7 +481,7 @@ export default function Configurator() {
   // The add-on switched on last is outlined in the preview, with its name and price as a tag.
   const hl = last && sel.has(last) ? last : null;
   const hlAddon = hl ? ADDONS.find(a => a.id === hl) : undefined;
-  const hlLabel = hlAddon ? `${t(hlAddon.name)} · + ${chf(hlAddon.price)}` : '';
+  const hlLabel = hlAddon ? `${t(hlAddon.name)} · + ${addonPrice(hlAddon)}` : '';
   const mark: Mark = id => (id === hl ? { 'data-f': id, 'data-hl': hlLabel } : { 'data-f': id }) as Record<string, string>;
 
   const body = [
@@ -489,7 +489,7 @@ export default function Configurator() {
     `${t({ de: 'Basis-Website', en: 'Basic website' })}: ${chf(BASE_PRICE)}`,
     '',
     t({ de: 'Zusätze', en: 'Add-ons' }) + ':',
-    ...(q.chosen.length ? q.chosen.map(a => `- ${t(a.name)}: ${chf(a.price)}`) : ['-']),
+    ...(q.chosen.length ? q.chosen.map(a => `- ${t(a.name)}: ${addonPrice(a)}`) : ['-']),
     ...(q.discount ? ['', `${t({ de: 'Mengenrabatt', en: 'Volume discount' })} ${pct(q.rate)}: − ${chf(q.discount)}`] : []),
     '',
     `${t({ de: 'Total (einmalig)', en: 'Total (one-time)' })}: ${chf(q.total)}`,
@@ -556,7 +556,7 @@ export default function Configurator() {
                   {ADDONS.filter(a => a.group === g.id).map(a => (
                     <Stack key={a.id} direction="horizontal" justify="between" align="center" gap={2}>
                       <CheckboxInput size="sm" labelIcon={ADDON_ICONS[a.id]} label={t(a.name)} value={sel.has(a.id)} onChange={c => toggle(a.id, c)} />
-                      <Text size="sm" weight="medium" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>+ {chf(a.price)}</Text>
+                      <Text size="sm" weight="medium" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>+ {addonPrice(a)}</Text>
                     </Stack>
                   ))}
                 </Stack>
@@ -605,7 +605,7 @@ export default function Configurator() {
             {q.chosen.map(a => (
               <Stack key={a.id} direction="horizontal" justify="between" gap={3}>
                 <Text size="sm">{t(a.name)}</Text>
-                <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{chf(a.price)}</Text>
+                <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{addonPrice(a)}</Text>
               </Stack>
             ))}
             {q.discount > 0 && (

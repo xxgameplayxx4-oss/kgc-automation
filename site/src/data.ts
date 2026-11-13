@@ -60,7 +60,9 @@ export const TIERS: Tier[] = [
 ];
 
 export type AddonGroup = 'website' | 'automation' | 'print';
-export type Addon = { id: string; group: AddonGroup; price: number; name: T; desc: T };
+export type Addon = { id: string; group: AddonGroup; price: number; max?: number; name: T; desc: T };
+/** Price label; add-ons with a range count their lower price in the total. */
+export const addonPrice = (a: Addon) => a.max ? `${chf(a.price)}–${a.max}` : chf(a.price);
 
 export const GROUPS: { id: AddonGroup; name: T; desc: T }[] = [
   { id: 'website', name: { de: 'Website-Funktionen', en: 'Website features' }, desc: { de: 'Mehr Funktionen direkt auf Ihrer Seite.', en: 'More features right on your site.' } },
@@ -71,11 +73,11 @@ export const GROUPS: { id: AddonGroup; name: T; desc: T }[] = [
 export const ADDONS: Addon[] = [
   // Website
   { id: 'booking', group: 'website', price: 400, name: { de: 'Buchungs-Funnel', en: 'Booking funnel' }, desc: { de: 'Kunden wählen Leistung, Datum und Zeit in 3 Schritten.', en: 'Customers pick service, date and time in 3 steps.' } },
-  { id: 'hero', group: 'website', price: 500, name: { de: 'Individueller Hero-Bereich', en: 'Custom hero section' }, desc: { de: 'Der erste Eindruck, entwickelt für Ihr Geschäft: Video, Animation oder Bildwelt.', en: 'The first impression, built for your business: video, animation or imagery.' } },
+  { id: 'hero', group: 'website', price: 250, max: 500, name: { de: 'Individueller Hero-Bereich', en: 'Custom hero section' }, desc: { de: 'Der erste Eindruck, entwickelt für Ihr Geschäft: Video, Animation oder Bildwelt. Preis je nach Umfang.', en: 'The first impression, built for your business: video, animation or imagery. Price depends on scope.' } },
   { id: 'email', group: 'website', price: 150, name: { de: 'E-Mail mit eigener Domain', en: 'Email on your domain' }, desc: { de: 'info@ihr-geschaeft.ch, eingerichtet auf Handy und PC.', en: 'info@your-business.ch, set up on phone and PC.' } },
   { id: 'form', group: 'website', price: 150, name: { de: 'Kontaktformular', en: 'Contact form' }, desc: { de: 'Formular mit Spamschutz statt nur E-Mail-Button.', en: 'Form with spam protection instead of an email button.' } },
   { id: 'page', group: 'website', price: 250, name: { de: 'Zusätzliche Unterseite', en: 'Extra subpage' }, desc: { de: 'Z. B. Preisliste, Team oder Stellen.', en: 'E.g. price list, team or jobs.' } },
-  { id: 'lang', group: 'website', price: 400, name: { de: 'Zweite Sprache', en: 'Second language' }, desc: { de: 'Ganze Seite auf Deutsch und z. B. Englisch, mit Umschalter.', en: 'Whole site in German and e.g. English, with a switch.' } },
+  { id: 'lang', group: 'website', price: 200, name: { de: 'Zweite Sprache', en: 'Second language' }, desc: { de: 'Ganze Seite auf Deutsch und z. B. Englisch, mit Umschalter.', en: 'Whole site in German and e.g. English, with a switch.' } },
   { id: 'reviews', group: 'website', price: 150, name: { de: 'Google-Bewertungen anzeigen', en: 'Show Google reviews' }, desc: { de: 'Ihre echten Sterne direkt auf der Seite.', en: 'Your real stars right on the page.' } },
   { id: 'menu', group: 'website', price: 250, name: { de: 'Menü- oder Preisliste', en: 'Menu or price list' }, desc: { de: 'Übersichtlich, selbst änderbar.', en: 'Clear, editable by you.' } },
   // Features already built for client projects (iservice, souperbe, Barber House, Boxschule, Freestar)
@@ -86,7 +88,7 @@ export const ADDONS: Addon[] = [
   { id: 'newsletter', group: 'website', price: 100, name: { de: 'Newsletter-Anmeldung', en: 'Newsletter sign-up' }, desc: { de: 'Besucher tragen sich mit ihrer E-Mail ein.', en: 'Visitors sign up with their email.' } },
   { id: 'whatsapp', group: 'website', price: 50, name: { de: 'WhatsApp-Button', en: 'WhatsApp button' }, desc: { de: 'Kunden schreiben Ihnen mit einem Tipp.', en: 'Customers message you with one tap.' } },
   // Automations
-  { id: 'calendar', group: 'automation', price: 250, name: { de: 'Automatisch im Kalender', en: 'Auto-book in calendar' }, desc: { de: 'Jede Buchung landet sofort in Ihrem Google- oder Outlook-Kalender.', en: 'Every booking lands in your Google or Outlook calendar instantly.' } },
+  { id: 'calendar', group: 'automation', price: 200, name: { de: 'Automatisch im Kalender', en: 'Auto-book in calendar' }, desc: { de: 'Jede Buchung landet sofort in Ihrem Google- oder Outlook-Kalender.', en: 'Every booking lands in your Google or Outlook calendar instantly.' } },
   { id: 'autoreply', group: 'automation', price: 100, name: { de: 'Automatische Bestätigung', en: 'Auto-confirmation' }, desc: { de: 'Jede Anfrage oder Buchung erhält sofort eine Bestätigung mit Buchungsnummer.', en: 'Every enquiry or booking instantly gets a confirmation with a booking number.' } },
   { id: 'maildesign', group: 'automation', price: 150, name: { de: 'E-Mails im eigenen Design', en: 'Emails in your design' }, desc: { de: 'Bestätigungen und Benachrichtigungen im Look Ihrer Website statt als nackter Formular-Text.', en: 'Confirmations and notifications in your website’s look instead of bare form text.' } },
   { id: 'reminder', group: 'automation', price: 150, name: { de: 'Termin-Erinnerung', en: 'Appointment reminder' }, desc: { de: 'E-Mail an den Kunden 24 Stunden vor dem Termin.', en: 'Email to the customer 24 hours before the appointment.' } },
