@@ -3,7 +3,6 @@ import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { Grid } from '@astryxdesign/core/Grid';
 import { Heading } from '@astryxdesign/core/Heading';
-import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import { SelectableCard } from '@astryxdesign/core/SelectableCard';
 import { Stack } from '@astryxdesign/core/Stack';
 import { Step, Stepper } from '@astryxdesign/core/Stepper';
@@ -12,7 +11,7 @@ import { TextInput } from '@astryxdesign/core/TextInput';
 import { Token } from '@astryxdesign/core/Token';
 import { useT, type T } from '../data';
 
-// Two working booking-funnel demos in the site's own theme. Nothing is sent anywhere.
+// A working booking-funnel demo in the site's own theme. Nothing is sent anywhere.
 
 type Choice = { id: string; name: T; meta: T; desc?: T };
 
@@ -191,103 +190,14 @@ function ConsultFunnel() {
   );
 }
 
-/* ---------- Funnel 2: repair request (brand, model, problem, contact) ---------- */
-
-const BRANDS: Choice[] = [
-  { id: 'apple', name: { de: 'Apple', en: 'Apple' }, meta: { de: 'iPhone', en: 'iPhone' } },
-  { id: 'samsung', name: { de: 'Samsung', en: 'Samsung' }, meta: { de: 'Galaxy', en: 'Galaxy' } },
-  { id: 'google', name: { de: 'Google', en: 'Google' }, meta: { de: 'Pixel', en: 'Pixel' } },
-  { id: 'other', name: { de: 'Andere', en: 'Other' }, meta: { de: 'Wir schauen es an', en: 'We’ll take a look' } },
-];
-const MODELS: Record<string, string[]> = {
-  apple: ['iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16', 'iPhone 15', 'iPhone 14', 'iPhone 13'],
-  samsung: ['Galaxy S25 Ultra', 'Galaxy S25', 'Galaxy S24', 'Galaxy A55', 'Galaxy A35'],
-  google: ['Pixel 9 Pro', 'Pixel 9', 'Pixel 8a', 'Pixel 8'],
-  other: [],
-};
-const PROBLEMS: (Choice & { price: number })[] = [
-  { id: 'display', price: 149, name: { de: 'Display', en: 'Screen' }, meta: { de: 'Gesprungen, Streifen, schwarz', en: 'Cracked, lines, black' } },
-  { id: 'battery', price: 79, name: { de: 'Akku', en: 'Battery' }, meta: { de: 'Hält nicht mehr lange', en: 'Drains too fast' } },
-  { id: 'port', price: 69, name: { de: 'Ladebuchse', en: 'Charging port' }, meta: { de: 'Lädt nicht oder nur schräg', en: 'Won’t charge' } },
-  { id: 'camera', price: 99, name: { de: 'Kamera', en: 'Camera' }, meta: { de: 'Unscharf oder Glas kaputt', en: 'Blurry or glass broken' } },
-  { id: 'water', price: 0, name: { de: 'Wasserschaden', en: 'Water damage' }, meta: { de: 'Diagnose kostenlos', en: 'Free diagnosis' } },
-];
-
-function RepairFunnel() {
-  const t = useT();
-  const [step, setStep] = useState(0);
-  const [brand, setBrand] = useState<string>();
-  const [model, setModel] = useState<string>();
-  const [problem, setProblem] = useState<string>();
-  const [doneName, setDoneName] = useState<string>();
-  const b = BRANDS.find(x => x.id === brand);
-  const p = PROBLEMS.find(x => x.id === problem);
-  const price = p && (p.price ? `${t({ de: 'ab', en: 'from' })} CHF ${p.price}` : t({ de: 'Diagnose gratis', en: 'Free diagnosis' }));
-  const picked = [b && t(b.name), model, p && t(p.name)].filter(Boolean) as string[];
-  const reset = () => { setStep(0); setBrand(undefined); setModel(undefined); setProblem(undefined); setDoneName(undefined); };
-  const steps: T[] = [{ de: 'Marke', en: 'Brand' }, { de: 'Modell', en: 'Model' }, { de: 'Problem', en: 'Problem' }, { de: 'Kontakt', en: 'Contact' }];
-  const unknown = t({ de: 'Anderes / weiss nicht', en: 'Other / not sure' });
-
-  if (doneName) return (
-    <Shell steps={steps} step={4} picked={[]}>
-      <Done onReset={reset} lines={[doneName, ...picked, price ?? '']} />
-    </Shell>
-  );
-  return (
-    <Shell steps={steps} step={step} picked={step > 0 ? picked : []} onBack={step > 0 ? () => setStep(brand === 'other' && step === 2 ? 0 : step - 1) : undefined}>
-      {step === 0 && (
-        <Stack gap={3}>
-          <Heading level={3}>{t({ de: 'Welche Marke?', en: 'Which brand?' })}</Heading>
-          <Choices items={BRANDS} value={brand} columns={4} onPick={id => { setBrand(id); setModel(id === 'other' ? unknown : undefined); setStep(id === 'other' ? 2 : 1); }} />
-        </Stack>
-      )}
-      {step === 1 && brand && (
-        <Stack gap={3}>
-          <Heading level={3}>{t({ de: 'Welches Modell genau?', en: 'Which model exactly?' })}</Heading>
-          <Grid columns={{ minWidth: 150, max: 3 }} gap={2}>
-            {[...MODELS[brand], unknown].map(m => (
-              <Button key={m} width="100%" variant={model === m ? 'primary' : 'secondary'} label={m} onClick={() => { setModel(m); setStep(2); }} />
-            ))}
-          </Grid>
-        </Stack>
-      )}
-      {step === 2 && (
-        <Stack gap={3}>
-          <Heading level={3}>{t({ de: 'Was ist kaputt?', en: 'What’s broken?' })}</Heading>
-          <Choices
-            items={PROBLEMS.map(x => ({ ...x, meta: { de: `${x.meta.de} · ${x.price ? `ab CHF ${x.price}` : 'gratis'}`, en: `${x.meta.en} · ${x.price ? `from CHF ${x.price}` : 'free'}` } }))}
-            value={problem}
-            onPick={id => { setProblem(id); setStep(3); }}
-          />
-        </Stack>
-      )}
-      {step === 3 && (
-        <Stack gap={3}>
-          <Heading level={3}>{t({ de: 'Termin reservieren', en: 'Reserve a slot' })}</Heading>
-          {price && <Text color="secondary">{t({ de: 'Richtpreis', en: 'Guide price' })}: <Text as="span" weight="semibold" color="accent">{price}</Text></Text>}
-          <Contact phone cta={{ de: 'Reparatur anfragen', en: 'Request repair' }} onSubmit={setDoneName} />
-        </Stack>
-      )}
-    </Shell>
-  );
-}
 
 export default function Funnels() {
   const t = useT();
-  const [which, setWhich] = useState<'consult' | 'repair'>('consult');
   return (
     <Stack gap={4}>
-      <Stack direction="horizontal">
-        <SegmentedControl label={t({ de: 'Beispiel', en: 'Example' })} value={which} onChange={v => setWhich(v as 'consult' | 'repair')}>
-          <SegmentedControlItem value="consult" label={t({ de: 'Beratung buchen', en: 'Book a consultation' })} />
-          <SegmentedControlItem value="repair" label={t({ de: 'Reparatur anfragen', en: 'Repair request' })} />
-        </SegmentedControl>
-      </Stack>
-      {which === 'consult' ? <ConsultFunnel /> : <RepairFunnel />}
+      <ConsultFunnel />
       <Text type="supporting" size="sm">
-        {which === 'consult'
-          ? t({ de: '3 Schritte: Art, Datum und Zeit, Kontakt. Passt für Beratung, Coiffeur, Praxis.', en: '3 steps: type, date and time, contact. Fits advisors, salons, practices.' })
-          : t({ de: '4 Schritte mit Richtpreis vorab: Marke, Modell, Problem, Kontakt. Passt für Werkstatt und Laden.', en: '4 steps with an upfront guide price: brand, model, problem, contact. Fits workshops and shops.' })}
+        {t({ de: '3 Schritte: Art, Datum und Zeit, Kontakt. Passt für Beratung, Coiffeur, Praxis.', en: '3 steps: type, date and time, contact. Fits advisors, salons, practices.' })}
       </Text>
     </Stack>
   );
