@@ -4,6 +4,7 @@ import { Heading, Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
 import { Section } from '@astryxdesign/core/Section';
+import Logo from './Logo';
 import { CONTACT_EMAIL, mailto, useT } from '../data';
 
 const PHONE = '+41 76 330 79 11';
@@ -14,7 +15,7 @@ export default function Footer() {
   const close = (o: boolean) => { if (!o) setDoc(null); };
   const address = (
     <VStack gap={0.5}>
-      <Text weight="semibold">Cung Solutions</Text>
+      <Logo height={26} />
       <Text>{t({ de: 'Einzelfirma, Inhaber Khang Cung', en: 'Sole proprietorship, owner Khang Cung' })}</Text>
       <Text>Stahlrain 7</Text>
       <Text>5200 Brugg AG, {t({ de: 'Schweiz', en: 'Switzerland' })}</Text>

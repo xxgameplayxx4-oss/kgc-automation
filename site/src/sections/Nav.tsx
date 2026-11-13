@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import { HStack, VStack } from '@astryxdesign/core/Layout';
-import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { Drawer } from '@astryxdesign/core/Drawer';
 import { LangContext, mailto, useT, type Lang } from '../data';
 import type { Page } from '../App';
+import Logo from './Logo';
 
 const LINKS: { id: Page; label: { de: string; en: string } }[] = [
   { id: 'start', label: { de: 'Start', en: 'Home' } },
@@ -44,7 +44,7 @@ export default function Nav({ page }: { page: Page }) {
     >
       <HStack hAlign="between" vAlign="center" gap={3} wrap="nowrap">
         <Button variant="ghost" href="#start" label="Cung Solutions">
-          <Text weight="bold" type="large">Cung Solutions</Text>
+          <Logo height={34} />
         </Button>
         {narrow ? (
           <HStack gap={1} vAlign="center">
