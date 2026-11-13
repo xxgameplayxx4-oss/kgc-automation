@@ -11,17 +11,17 @@ import { Token } from '@astryxdesign/core/Token';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import { ClickableCard } from '@astryxdesign/core/ClickableCard';
 import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import { useT, type T } from '../data';
 import Eyebrow from './Eyebrow';
 
 // Screenshots live in public/projects/<slug>-desktop.webp and <slug>-phone.webp.
 // Only paid client sites get a name and a link; concept drafts stay anonymised.
-type Project = { slug: string; title: T; kind: T; place: string; tags: T[]; url?: string };
+export type Project = { slug: string; title: T; kind: T; place: string; tags: T[]; url?: string; video?: string };
 
 export const CLIENTS: Project[] = [
   {
-    slug: 'stps', title: { de: 'SwissTech Precision Solutions', en: 'SwissTech Precision Solutions' }, url: 'https://www.stps.ch', place: 'Schweiz',
+    slug: 'stps', video: '/work/video/precision.mp4', title: { de: 'SwissTech Precision Solutions', en: 'SwissTech Precision Solutions' }, url: 'https://www.stps.ch', place: 'Schweiz',
     kind: { de: 'Präzisionstechnik · Website und CRM', en: 'Precision engineering · website and CRM' },
     tags: [{ de: 'Zweisprachig DE/EN', en: 'Bilingual DE/EN' }, { de: 'Eigenes CRM', en: 'Custom CRM' }, { de: 'Offerten & Rechnungen', en: 'Quotes & invoices' }],
   },
@@ -60,13 +60,27 @@ const CONCEPTS: Project[] = [
 ];
 
 
+const reduceQuery = '(prefers-reduced-motion: reduce)';
+const useReducedMotion = () => useSyncExternalStore(
+  cb => { const m = window.matchMedia(reduceQuery); m.addEventListener('change', cb); return () => m.removeEventListener('change', cb); },
+  () => window.matchMedia(reduceQuery).matches,
+  () => false,
+);
+
+/** Muted looping hero clip; poster only for reduced motion. */
+export function HeroVideo({ src, poster, label }: { src: string; poster: string; label: string }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <img src={poster} alt={label} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }} />;
+  return <video src={src} poster={poster} aria-label={label} autoPlay muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />;
+}
+
 /** Laptop with the desktop screenshot, phone in front at the bottom right. */
 export function Devices({ p, alt }: { p: Project; alt: string }) {
   return (
     <Stack style={{ position: 'relative', paddingRight: '8%', paddingBottom: '6%' }}>
       <Card padding={1} elevation="high" style={{ background: 'black' /* bezel stays black in both themes */, borderRadius: 'var(--radius-page) var(--radius-page) 0.25rem 0.25rem' }}>
         <AspectRatio ratio={16 / 10} fit="cover">
-          <img src={`/projects/${p.slug}-desktop.webp`} alt={`${alt}, Desktop`} loading="lazy" decoding="async" style={{ objectPosition: 'top' }} />
+          {p.video ? <HeroVideo src={p.video} poster={`/projects/${p.slug}-desktop.webp`} label={`${alt}, Desktop`} /> : <img src={`/projects/${p.slug}-desktop.webp`} alt={`${alt}, Desktop`} loading="lazy" decoding="async" style={{ objectPosition: 'top' }} />}
         </AspectRatio>
       </Card>
       <Card variant="gray" padding={0.5} style={{ marginInline: '-4%', borderRadius: '0 0 0.75rem 0.75rem' }} />
@@ -98,7 +112,28 @@ function Viewer({ p, alt }: { p: Project; alt: string }) {
   );
 }
 
-/** Device mockup that opens the scrollable viewer. */
+/** Scrollable preview dialog: hero video (if any) on top, then laptop and phone captures. */
+export function PreviewDialog({ p, title, open, setOpen }: { p: Project; title: string; open: boolean; setOpen: (o: boolean) => void }) {
+  const t = useT();
+  return (
+    <Dialog isOpen={open} onOpenChange={setOpen} width="min(72rem, calc(100vw - 2rem))" padding={4}>
+      <VStack gap={4}>
+        <DialogHeader title={title} subtitle={t({ de: 'Scrollen Sie in Laptop und Handy durch die Website.', en: 'Scroll through the site on laptop and phone.' })} onOpenChange={setOpen} />
+        {p.video && (
+          <Card padding={1} elevation="high" style={{ background: 'black', borderRadius: 'var(--radius-page)' }}>
+            <AspectRatio ratio={21 / 9} fit="cover" style={{ borderRadius: '0.25rem', overflow: 'hidden' }}>
+              <HeroVideo src={p.video} poster={`/projects/${p.slug}-desktop.webp`} label={`${title}, Hero`} />
+            </AspectRatio>
+          </Card>
+        )}
+        <Viewer p={p} alt={title} />
+        {p.url && <HStack><Button variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Live-Website öffnen ↗', en: 'Open live website ↗' })} /></HStack>}
+      </VStack>
+    </Dialog>
+  );
+}
+
+/** Device mockup that opens the scrollable viewer, plus an explicit preview button. */
 export function Preview({ p }: { p: Project }) {
   const t = useT();
   const [open, setOpen] = useState(false);
@@ -108,13 +143,8 @@ export function Preview({ p }: { p: Project }) {
       <ClickableCard variant="transparent" padding={0} label={t({ de: `${title}: Vorschau öffnen`, en: `${title}: open preview` })} onClick={() => setOpen(true)}>
         <Devices p={p} alt={title} />
       </ClickableCard>
-      <Dialog isOpen={open} onOpenChange={setOpen} width="min(72rem, calc(100vw - 2rem))" padding={4}>
-        <VStack gap={4}>
-          <DialogHeader title={title} subtitle={t({ de: 'Scrollen Sie in Laptop und Handy durch die Website.', en: 'Scroll through the site on laptop and phone.' })} onOpenChange={setOpen} />
-          <Viewer p={p} alt={title} />
-          {p.url && <HStack><Button variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Live-Website öffnen ↗', en: 'Open live website ↗' })} /></HStack>}
-        </VStack>
-      </Dialog>
+      <HStack><Button variant="secondary" size="sm" onClick={() => setOpen(true)} label={t({ de: 'Vorschau', en: 'Preview' })} /></HStack>
+      <PreviewDialog p={p} title={title} open={open} setOpen={setOpen} />
     </>
   );
 }

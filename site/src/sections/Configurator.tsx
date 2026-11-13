@@ -14,17 +14,17 @@ import { StatusDot } from '@astryxdesign/core/StatusDot';
 import { Text } from '@astryxdesign/core/Text';
 import { Token } from '@astryxdesign/core/Token';
 import Eyebrow from './Eyebrow';
+import { AutomationFlow, HoursWeek, PriceCalc } from './AddonPreviews';
 import { ADDON_ICONS } from './addonIcons';
-import { ADDONS, GROUPS, PRO_FREE, TIERS, chf, lines, mailto, total, useT, type Line, type T } from '../data';
+import { ADDONS, BASE_PRICE, DISCOUNTS, GROUPS, TIERS, chf, mailto, nextStep, pct, presetOf, quote, tierPrice, useT, type T } from '../data';
 
 // Dev-only self-check of the pricing maths (prices come from data.ts).
 if (import.meta.env.DEV) {
-  const set = (...ids: string[]) => new Set(ids);
-  const [basis, pro] = TIERS;
-  console.assert(total(basis, set('booking', 'calendar')) === 2150, 'Basis pays every add-on');
-  console.assert(total(pro, set('email')) === 2000, 'Pro: email is included');
-  console.assert(total(pro, set('booking', 'lang')) === 2000, 'Pro: 2 priciest add-ons free');
-  console.assert(total(pro, set('booking', 'lang', 'calendar', 'form')) === 2000 + 63 + 150, 'Pro: 3rd at 25 %, 4th full');
+  const ids = (n: number) => new Set(ADDONS.slice(0, n).map(a => a.id));
+  console.assert(quote(new Set()).total === BASE_PRICE, 'Basis alone');
+  console.assert(quote(new Set(['booking', 'calendar'])).total === BASE_PRICE + 650, 'under 5 add-ons: full price');
+  console.assert(quote(ids(5)).rate === 0.08 && quote(ids(8)).rate === 0.1 && quote(ids(10)).rate === 0.15, '5/8/10 steps');
+  console.assert(quote(ids(15)).rate === 0.2 && quote(ids(ADDONS.length)).rate === 0.3, '15 and all');
 }
 
 type Device = 'desktop' | 'phone';
@@ -36,16 +36,6 @@ const abs = (s: CSSProperties): CSSProperties => ({ position: 'absolute', ...s }
 export const C = { paper: '#f6f1e8', card: '#fffcf6', ink: '#231a12', soft: '#75644f', line: 'rgba(35, 26, 18, 0.14)', accent: '#a5482a', night: '#1c1510' };
 export const serif: CSSProperties = { fontFamily: 'var(--font-family-heading, Georgia, serif)', fontWeight: 400, lineHeight: 1.08, letterSpacing: '-0.01em' };
 export const caps: CSSProperties = { letterSpacing: '0.18em', textTransform: 'uppercase', fontSize: '0.68em', fontWeight: 600 };
-
-// Floating notification chips for automations, overlapping the preview frame edge.
-const CHIPS: Record<string, { text: T; dot: 'success' | 'accent' }> = {
-  sheet: { text: { de: 'Neue Anfrage · über die Website', en: 'New enquiry · via the website' }, dot: 'accent' },
-  autoreply: { text: { de: 'Bestätigung TV-48213 gesendet', en: 'Confirmation TV-48213 sent' }, dot: 'success' },
-  maildesign: { text: { de: 'E-Mail im Tavola-Design gesendet', en: 'Email sent in Tavola’s design' }, dot: 'success' },
-  calendar: { text: { de: 'Reservation im Kalender · Fr., 19:30', en: 'Booking in calendar · Fri, 7:30 pm' }, dot: 'success' },
-  reminder: { text: { de: 'Erinnerung gesendet · 24 h vorher', en: 'Reminder sent · 24 h before' }, dot: 'success' },
-  'review-request': { text: { de: '★★★★★ Neue Google-Bewertung', en: '★★★★★ New Google review' }, dot: 'accent' },
-};
 
 // Tavola's hours, by getDay(): [open, close] in hours. Same logic as the souperbe and Barber House sites.
 const HOURS: Record<number, [number, number]> = { 2: [12, 23], 3: [12, 23], 4: [12, 23], 5: [12, 23], 6: [10, 23] };
@@ -83,7 +73,6 @@ type Mark = (id: string) => Record<string, string>;
 function Site({ pro, has, phone, mark }: { pro: boolean; has: (id: string) => boolean; phone: boolean; mark: Mark }) {
   const t = useT();
   const [menuTab, setMenuTab] = useState('main');
-  const [guests, setGuests] = useState(30);
   const until = openNow();
   const gutter = phone ? 3 : 6;
   const links = [{ de: 'Haus', en: 'About' }, { de: 'Karte', en: 'Menu' }, ...(has('page') ? [{ de: 'Team', en: 'Team' }] : []), { de: 'Besuch', en: 'Visit' }];
@@ -94,7 +83,7 @@ function Site({ pro, has, phone, mark }: { pro: boolean; has: (id: string) => bo
     <Stack gap={1}><Caps color={C.accent}>{t(k)}</Caps><Serif size={phone ? '1.6em' : '2em'}>{t(title)}</Serif></Stack>
   );
   const openBadge = has('hours') && (
-    <Stack {...pop} {...mark('hours')} direction="horizontal" gap={1} align="center">
+    <Stack {...pop} direction="horizontal" gap={1} align="center">
       <StatusDot variant={until ? 'success' : 'error'} label="" />
       <Text size="xsm" color="inherit">{until ? t({ de: `Jetzt geöffnet · bis ${until}:00`, en: `Open now · until ${until}:00` }) : t({ de: 'Gerade geschlossen', en: 'Closed right now' })}</Text>
     </Stack>
@@ -262,14 +251,14 @@ function Site({ pro, has, phone, mark }: { pro: boolean; has: (id: string) => bo
       {has('pricefinder') && (
         <Sec id="pricefinder">
           <Head k={{ de: 'Anlässe', en: 'Events' }} title={{ de: 'Apéro für Ihren Anlass', en: 'Apéritif for your event' }} />
-          <Stack direction="horizontal" justify="between" align="center" gap={3} wrap="wrap" padding={phone ? 3 : 4} style={{ background: C.card, border: `1px solid ${C.line}`, borderRadius: 'var(--radius-container)' }}>
-            <Stack direction="horizontal" gap={2} align="center">
-              <Text as="span" role="button" tabIndex={0} color="inherit" onClick={() => setGuests(g => Math.max(10, g - 10))} style={{ ...serif, fontSize: '1.4em', width: '1.6em', height: '1.6em', borderRadius: 'var(--radius-full)', border: `1px solid ${C.line}`, background: 'none', cursor: 'pointer' }}>−</Text>
-              <Stack gap={0}><Serif size="1.6em">{guests}</Serif><Caps>{t({ de: 'Personen', en: 'guests' })}</Caps></Stack>
-              <Text as="span" role="button" tabIndex={0} color="inherit" onClick={() => setGuests(g => Math.min(120, g + 10))} style={{ ...serif, fontSize: '1.4em', width: '1.6em', height: '1.6em', borderRadius: 'var(--radius-full)', border: `1px solid ${C.line}`, background: 'none', cursor: 'pointer' }}>+</Text>
-            </Stack>
-            <Stack gap={0} align="end"><Caps>{t({ de: 'Richtpreis', en: 'Guide price' })}</Caps><Serif size="1.6em">{chf(guests * 32)}</Serif></Stack>
-          </Stack>
+          <PriceCalc phone={phone} />
+        </Sec>
+      )}
+
+      {has('hours') && (
+        <Sec id="hours">
+          <Head k={{ de: 'Öffnungszeiten', en: 'Opening hours' }} title={{ de: 'Wann wir für Sie da sind', en: 'When we are open' }} />
+          <HoursWeek hours={HOURS} phone={phone} />
         </Sec>
       )}
 
@@ -361,10 +350,8 @@ function Site({ pro, has, phone, mark }: { pro: boolean; has: (id: string) => bo
 
 /** Desktop browser window or phone frame around the sample site, plus floating automation chips. */
 function Preview({ pro, sel, device, short, hl, mark }: { pro: boolean; sel: Set<string>; device: Device; short: boolean; hl: string | null; mark: Mark }) {
-  const t = useT();
   const has = (id: string) => sel.has(id);
   const phone = device === 'phone';
-  const chips = Object.keys(CHIPS).filter(has);
   const screen = <Site pro={pro} has={has} phone={phone} mark={mark} />;
   // The preview fills the right column and the viewport height; print pieces below take some of it.
   const height = short ? 'max(26rem, calc(100vh - 27rem))' : 'max(30rem, calc(100vh - 16rem))';
@@ -374,6 +361,8 @@ function Preview({ pro, sel, device, short, hl, mark }: { pro: boolean; sel: Set
     const id = requestAnimationFrame(() => {
       const box = document.querySelector<HTMLElement>('#konfigurator [data-scroll]');
       const el = box?.querySelector<HTMLElement>('[data-hl]');
+      const out = document.querySelector<HTMLElement>('#konfigurator [data-hl]:not([data-scroll] *)');
+      if (!el && out) out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       if (box && el) box.scrollBy({ top: el.getBoundingClientRect().top - box.getBoundingClientRect().top - 32, behavior: 'smooth' });
     });
     return () => cancelAnimationFrame(id);
@@ -407,18 +396,7 @@ function Preview({ pro, sel, device, short, hl, mark }: { pro: boolean; sel: Set
           <Text color="inherit" aria-label="WhatsApp">✆</Text>
         </Stack>
       )}
-      {chips.length > 0 && (
-        <Stack gap={2} align="end" style={abs({ top: '18%', insetInlineEnd: '-0.75rem', maxWidth: '85%', pointerEvents: 'none', zIndex: 2 })}>
-          {chips.map(id => (
-            <Card key={id} {...pop} {...mark(id)} padding={1.5} elevation="high">
-              <Stack direction="horizontal" gap={1.5} align="center">
-                <StatusDot variant={CHIPS[id].dot} label="" />
-                <Text size="xsm" weight="medium">{t(CHIPS[id].text)}</Text>
-              </Stack>
-            </Card>
-          ))}
-        </Stack>
-      )}
+      <AutomationFlow has={has} mark={mark} phone={phone} />
     </Stack>
   );
 }
@@ -474,31 +452,10 @@ function PrintShelf({ has, mark }: { has: (id: string) => boolean; mark: Mark })
   return <Stack direction="horizontal" gap={4} wrap="wrap" align="end" justify="center">{items}</Stack>;
 }
 
-function PriceTag({ line, price, inc }: { line?: Line; price: number; inc: boolean }) {
-  const t = useT();
-  if (inc) return <Text size="sm" weight="medium">{t({ de: 'Inklusive', en: 'Included' })}</Text>;
-  if (line?.note === 'free') return (
-    <Stack align="end" gap={0.5}>
-      <Token size="sm" color="green" label={t({ de: 'Gratis', en: 'Free' })} />
-      <Text size="xsm" color="secondary" hasTabularNumbers style={{ textDecoration: 'line-through' }}>{chf(price)}</Text>
-    </Stack>
-  );
-  if (line?.note === 'third') return (
-    <Stack align="end" gap={0.5}>
-      <Text size="sm" weight="medium" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>+ {chf(line.price)}</Text>
-      <Token size="sm" color="yellow" label="−75 %" />
-    </Stack>
-  );
-  return <Text size="sm" weight="medium" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>+ {chf(price)}</Text>;
-}
-
 export default function Configurator() {
   const t = useT();
-  const [tierId, setTierId] = useState<'basis' | 'pro'>('basis');
   const [device, setDevice] = useState<Device>('desktop');
   const [sel, setSel] = useState<Set<string>>(new Set());
-  const tier = TIERS.find(x => x.id === tierId)!;
-  const pro = tierId === 'pro';
   const [last, setLast] = useState<string | null>(null);
   const toggle = (id: string, on: boolean) => {
     setLast(on ? id : null);
@@ -508,81 +465,85 @@ export default function Configurator() {
       return n;
     });
   };
+  const pick = (id: string) => {
+    const tier = TIERS.find(x => x.id === id);
+    if (!tier) return;
+    setSel(new Set(presetOf(tier)));
+    setLast(null);
+  };
 
-  const all = lines(tier, sel);
-  const byId = new Map(all.map(l => [l.addon.id, l]));
-  const sum = total(tier, sel);
-  const saved = all.reduce((s, l) => s + (l.note === 'free' || l.note === 'third' ? l.addon.price - l.price : 0), 0);
-  const freeUsed = all.filter(l => l.note === 'free').length;
-  const effective = new Set(all.map(l => l.addon.id));
-  const has = (id: string) => effective.has(id);
+  const q = quote(sel);
+  const tier = TIERS.find(x => { const p = presetOf(x); return p.length === sel.size && p.every(id => sel.has(id)); });
+  const tierLabel = tier ? t(tier.name) : t({ de: 'Individuell', en: 'Custom' });
+  const next = nextStep(q.chosen.length);
+  const has = (id: string) => sel.has(id);
   // The add-on switched on last is outlined in the preview, with its name and price as a tag.
-  const hl = last && effective.has(last) ? last : null;
-  const hlLine = hl ? byId.get(hl) : undefined;
-  const hlLabel = hlLine ? `${t(hlLine.addon.name)} · ${hlLine.note === 'free' ? t({ de: 'gratis', en: 'free' }) : `+ ${chf(hlLine.price)}`}` : '';
+  const hl = last && sel.has(last) ? last : null;
+  const hlAddon = hl ? ADDONS.find(a => a.id === hl) : undefined;
+  const hlLabel = hlAddon ? `${t(hlAddon.name)} · + ${chf(hlAddon.price)}` : '';
   const mark: Mark = id => (id === hl ? { 'data-f': id, 'data-hl': hlLabel } : { 'data-f': id }) as Record<string, string>;
-  const noteText = (l: Line) =>
-    l.note === 'included' ? t({ de: 'inklusive', en: 'included' })
-      : l.note === 'free' ? t({ de: 'gratis (Pro-Bonus)', en: 'free (Pro bonus)' })
-        : l.note === 'third' ? `${chf(l.price)} (${t({ de: '25 %, Pro-Bonus', en: '25 %, Pro bonus' })})`
-          : chf(l.price);
 
   const body = [
-    `${t({ de: 'Paket', en: 'Package' })}: ${t(tier.name)} (${chf(tier.price)})`,
+    `${t({ de: 'Paket', en: 'Package' })}: ${tierLabel}`,
+    `${t({ de: 'Basis-Website', en: 'Basic website' })}: ${chf(BASE_PRICE)}`,
     '',
     t({ de: 'Zusätze', en: 'Add-ons' }) + ':',
-    ...(all.length ? all.map(l => `- ${t(l.addon.name)}: ${noteText(l)}`) : ['-']),
+    ...(q.chosen.length ? q.chosen.map(a => `- ${t(a.name)}: ${chf(a.price)}`) : ['-']),
+    ...(q.discount ? ['', `${t({ de: 'Mengenrabatt', en: 'Volume discount' })} ${pct(q.rate)}: − ${chf(q.discount)}`] : []),
     '',
-    `${t({ de: 'Total (einmalig)', en: 'Total (one-time)' })}: ${chf(sum)}`,
+    `${t({ de: 'Total (einmalig)', en: 'Total (one-time)' })}: ${chf(q.total)}`,
     '',
     t({ de: 'Name:', en: 'Name:' }),
     t({ de: 'Geschäft:', en: 'Business:' }),
     t({ de: 'Telefon:', en: 'Phone:' }),
   ].join('\n');
 
+  const ladder: [string, number][] = [
+    ...[...DISCOUNTS].reverse().map(([min, r]): [string, number] => [`${min}+`, r]),
+    [t({ de: 'Alle', en: 'All' }), 0.3],
+  ];
+  const nudge = next
+    ? t({ de: `Noch ${next[0]} für ${pct(next[1])}`, en: `${next[0]} more for ${pct(next[1])}` })
+    : t({ de: 'Maximum erreicht', en: 'Maximum reached' });
+
   return (
     <Stack as="section" id="konfigurator" gap={6} paddingInline={4} paddingBlock={10} style={{ maxWidth: '100rem', marginInline: 'auto', width: '100%' }}>
       <Stack gap={2}>
         <Eyebrow>{t({ de: 'Konfigurator', en: 'Configurator' })}</Eyebrow>
         <Heading level={2}>{t({ de: 'Stellen Sie Ihre Wunsch-Website zusammen', en: 'Build your dream website' })}</Heading>
-        <Text color="secondary">{t({ de: 'Wählen Sie ein Paket und Zusätze. Vorschau und Preis passen sich sofort an.', en: 'Pick a package and add-ons. The preview and price update instantly.' })}</Text>
+        <Text color="secondary">{t({ de: 'Starten Sie mit einem Paket und passen Sie es an. Ab 5 Zusätzen gibt es Mengenrabatt.', en: 'Start from a package and adjust it. From 5 add-ons you get a volume discount.' })}</Text>
         <Link href="#beispiele" size="sm">{t({ de: 'Buchungs-Funnels live ausprobieren', en: 'Try the booking funnels live' })}</Link>
       </Stack>
 
       <Grid data-cfg="" columns={1} gap={8} align="start">
         {/* options */}
-        <Stack gap={6}>
+        <Stack gap={5}>
           <Stack gap={2}>
             <Text weight="semibold">{t({ de: '1. Paket wählen', en: '1. Choose a package' })}</Text>
-            <SegmentedControl label={t({ de: 'Paket', en: 'Package' })} value={tierId} onChange={v => setTierId(v as 'basis' | 'pro')} layout="fill">
-              {TIERS.map(x => (
-                <SegmentedControlItem key={x.id} value={x.id} label={`${t(x.name)} · ${chf(x.price)}`} />
-              ))}
+            <SegmentedControl size="sm" label={t({ de: 'Paket', en: 'Package' })} value={tier?.id ?? ''} onChange={v => pick(v as string)} layout="fill">
+              {TIERS.map(x => <SegmentedControlItem key={x.id} value={x.id} label={t(x.name)} />)}
             </SegmentedControl>
-            <Text type="supporting">{t(tier.tagline)}</Text>
+            <Text type="supporting" size="sm">
+              {tier ? `${chf(tierPrice(tier))} · ${t(tier.tagline)}` : t({ de: 'Individuell zusammengestellt.', en: 'Put together by you.' })}
+            </Text>
           </Stack>
 
-          {pro ? (
-            <Card variant="yellow" padding={3}>
-              <Stack gap={1.5}>
-                <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
-                  <Text weight="semibold">{t({ de: 'Pro-Bonus', en: 'Pro bonus' })}</Text>
-                  <Token size="sm" color={freeUsed === PRO_FREE ? 'green' : 'default'} label={`${freeUsed} / ${PRO_FREE} ${t({ de: 'gratis gewählt', en: 'free picks used' })}`} />
-                </Stack>
-                <Text size="sm">{t({ de: 'Zwei Zusätze Ihrer Wahl sind gratis, der dritte kostet nur 25 %. Es zählen automatisch die teuersten.', en: 'Two add-ons of your choice are free, the third costs only 25 %. The priciest ones count automatically.' })}</Text>
+          <Card variant={q.rate ? 'yellow' : 'muted'} padding={2}>
+            <Stack gap={1.5}>
+              <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
+                <Text size="sm" weight="semibold">{t({ de: 'Mengenrabatt auf Zusätze', en: 'Volume discount on add-ons' })}</Text>
+                <Text size="sm">{nudge}</Text>
               </Stack>
-            </Card>
-          ) : (
-            <Card variant="muted" padding={3}>
-              <Stack direction="horizontal" justify="between" align="center" gap={3} wrap="wrap">
-                <Text size="sm" style={{ flex: '1 1 14rem' }}>{t({ de: 'Mit Pro: 2 Zusätze gratis, der 3. für 25 %.', en: 'With Pro: 2 add-ons free, the 3rd at 25 %.' })}</Text>
-                <Button size="sm" variant="secondary" label={t({ de: 'Zu Pro wechseln', en: 'Switch to Pro' })} onClick={() => setTierId('pro')} />
+              <Stack direction="horizontal" gap={1} wrap="wrap">
+                {ladder.map(([lbl, r]) => (
+                  <Token key={lbl} size="sm" color={r === q.rate ? 'green' : 'default'} label={`${lbl}  −${pct(r)}`} />
+                ))}
               </Stack>
-            </Card>
-          )}
+            </Stack>
+          </Card>
 
           <Stack gap={3}>
-            <Text weight="semibold">{t({ de: '2. Zusätze wählen', en: '2. Choose add-ons' })}</Text>
+            <Text weight="semibold">{t({ de: '2. Zusätze anpassen', en: '2. Adjust add-ons' })}</Text>
             {GROUPS.map(g => (
               <Card key={g.id} padding={2} variant={g.id === 'automation' ? 'green' : 'default'}>
                 <Stack gap={1}>
@@ -590,22 +551,12 @@ export default function Configurator() {
                     <Text size="sm" weight="semibold">{t(g.name)}</Text>
                     {g.id === 'automation' && <Token size="sm" color="green" label={t({ de: 'Empfohlen', en: 'Recommended' })} />}
                   </Stack>
-                  {ADDONS.filter(a => a.group === g.id).map(a => {
-                    const inc = a.includedIn === tierId;
-                    return (
-                      <Stack key={a.id} direction="horizontal" justify="between" align="center" gap={2}>
-                        <CheckboxInput
-                          size="sm"
-                          labelIcon={ADDON_ICONS[a.id]}
-                          label={t(a.name)}
-                          value={inc || sel.has(a.id)}
-                          isDisabled={inc}
-                          onChange={c => toggle(a.id, c)}
-                        />
-                        <PriceTag line={byId.get(a.id)} price={a.price} inc={inc} />
-                      </Stack>
-                    );
-                  })}
+                  {ADDONS.filter(a => a.group === g.id).map(a => (
+                    <Stack key={a.id} direction="horizontal" justify="between" align="center" gap={2}>
+                      <CheckboxInput size="sm" labelIcon={ADDON_ICONS[a.id]} label={t(a.name)} value={sel.has(a.id)} onChange={c => toggle(a.id, c)} />
+                      <Text size="sm" weight="medium" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>+ {chf(a.price)}</Text>
+                    </Stack>
+                  ))}
                 </Stack>
               </Card>
             ))}
@@ -614,15 +565,20 @@ export default function Configurator() {
           <Card padding={3} elevation="high" style={{ position: 'sticky', bottom: '1rem', zIndex: 3 }}>
             <Stack direction="horizontal" justify="between" align="center" gap={3} wrap="wrap">
               <Stack gap={0.5}>
-                <Text size="sm" color="secondary">{t(tier.name)} · {all.filter(l => l.note !== 'included').length} {t({ de: 'Zusätze', en: 'add-ons' })}</Text>
-                <Heading level={3} hasCapsize={false} color="accent">{chf(sum)}</Heading>
+                <Text size="sm" color="secondary">
+                  {tierLabel} · {q.chosen.length} {t({ de: 'Zusätze', en: 'add-ons' })}{q.rate ? ` · −${pct(q.rate)}` : ''}
+                </Text>
+                <Stack direction="horizontal" gap={1.5} align="center">
+                  <Heading level={3} hasCapsize={false} color="accent">{chf(q.total)}</Heading>
+                  {q.discount > 0 && <Text size="sm" color="secondary" hasTabularNumbers style={{ textDecoration: 'line-through' }}>{chf(q.total + q.discount)}</Text>}
+                </Stack>
               </Stack>
               <Button variant="primary" size="sm" href="#zusammenfassung" label={t({ de: 'Zur Zusammenfassung', en: 'See summary' })} />
             </Stack>
           </Card>
         </Stack>
 
-        {/* preview + summary */}
+        {/* preview */}
         <Stack gap={4} data-sticky="" style={{ minWidth: 0 }}>
           <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
             <Text weight="semibold">{t({ de: 'Live-Vorschau (Beispiel)', en: 'Live preview (sample)' })}</Text>
@@ -631,50 +587,48 @@ export default function Configurator() {
               <SegmentedControlItem value="phone" label={t({ de: 'Handy', en: 'Phone' })} />
             </SegmentedControl>
           </Stack>
-          <Preview pro={pro} sel={effective} device={device} short={['flyer', 'cards', 'social'].some(has)} hl={hl} mark={mark} />
+          <Preview pro={has('hero')} sel={sel} device={device} short={['flyer', 'cards', 'social'].some(has)} hl={hl} mark={mark} />
           <PrintShelf has={has} mark={mark} />
         </Stack>
       </Grid>
 
       <Stack id="zusammenfassung" gap={2} style={{ maxWidth: '36rem', width: '100%', marginInline: 'auto' }}>
-          <Text weight="semibold">{t({ de: '3. Zusammenfassung', en: '3. Summary' })}</Text>
-          <Card padding={4} elevation="med">
-            <Stack gap={3}>
-              <Stack direction="horizontal" justify="between" gap={3}>
-                <Text weight="semibold">{t(tier.name)}</Text>
-                <Text hasTabularNumbers>{chf(tier.price)}</Text>
-              </Stack>
-              {all.filter(l => l.note !== 'included').map(l => (
-                <Stack key={l.addon.id} direction="horizontal" justify="between" gap={3}>
-                  <Text size="sm">{t(l.addon.name)}</Text>
-                  <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }} color={l.note ? 'accent' : undefined}>
-                    {l.note === 'free' ? t({ de: 'Gratis', en: 'Free' }) : chf(l.price)}
-                  </Text>
-                </Stack>
-              ))}
-              {saved > 0 && (
-                <Stack direction="horizontal" justify="between" gap={3}>
-                  <Text size="sm" color="secondary">{t({ de: 'Pro-Bonus gespart', en: 'Saved with Pro bonus' })}</Text>
-                  <Text size="sm" color="secondary" hasTabularNumbers>− {chf(saved)}</Text>
-                </Stack>
-              )}
-              <Divider />
-              <Stack direction="horizontal" justify="between" align="center" gap={3}>
-                <Text weight="bold">{t({ de: 'Total', en: 'Total' })}</Text>
-                <Heading level={3} hasCapsize={false} color="accent">{chf(sum)}</Heading>
-              </Stack>
-              <Text type="supporting" size="sm">{t({ de: 'Einmalig, inkl. Einrichtung. Preise in CHF.', en: 'One-time, setup included. Prices in CHF.' })}</Text>
-              <Button
-                variant="primary"
-                width="100%"
-                href={mailto(`${t({ de: 'Website-Anfrage', en: 'Website enquiry' })}: ${t(tier.name)}`, body)}
-                label={t({ de: 'Anfrage senden', en: 'Send enquiry' })}
-              />
-              <Link href={mailto(t({ de: 'Website-Anfrage', en: 'Website enquiry' }))} size="sm">
-                {t({ de: 'Etwas anderes im Kopf? Schreiben Sie mir.', en: 'Something else in mind? Write to me.' })}
-              </Link>
+        <Text weight="semibold">{t({ de: '3. Zusammenfassung', en: '3. Summary' })}</Text>
+        <Card padding={4} elevation="med">
+          <Stack gap={3}>
+            <Stack direction="horizontal" justify="between" gap={3}>
+              <Text weight="semibold">{t({ de: 'Basis-Website', en: 'Basic website' })}{tier && tier.id !== 'basis' ? ` · ${t({ de: 'Paket', en: 'package' })} ${t(tier.name)}` : ''}</Text>
+              <Text hasTabularNumbers>{chf(BASE_PRICE)}</Text>
             </Stack>
-          </Card>
+            {q.chosen.map(a => (
+              <Stack key={a.id} direction="horizontal" justify="between" gap={3}>
+                <Text size="sm">{t(a.name)}</Text>
+                <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{chf(a.price)}</Text>
+              </Stack>
+            ))}
+            {q.discount > 0 && (
+              <Stack direction="horizontal" justify="between" gap={3}>
+                <Text size="sm" color="accent" weight="medium">{t({ de: 'Mengenrabatt', en: 'Volume discount' })} {pct(q.rate)} ({q.chosen.length} {t({ de: 'Zusätze', en: 'add-ons' })})</Text>
+                <Text size="sm" color="accent" weight="medium" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>− {chf(q.discount)}</Text>
+              </Stack>
+            )}
+            <Divider />
+            <Stack direction="horizontal" justify="between" align="center" gap={3}>
+              <Text weight="bold">{t({ de: 'Total', en: 'Total' })}</Text>
+              <Heading level={3} hasCapsize={false} color="accent">{chf(q.total)}</Heading>
+            </Stack>
+            <Text type="supporting" size="sm">{t({ de: 'Einmalig, inkl. Einrichtung. Preise in CHF.', en: 'One-time, setup included. Prices in CHF.' })}</Text>
+            <Button
+              variant="primary"
+              width="100%"
+              href={mailto(`${t({ de: 'Website-Anfrage', en: 'Website enquiry' })}: ${tierLabel}`, body)}
+              label={t({ de: 'Anfrage senden', en: 'Send enquiry' })}
+            />
+            <Link href={mailto(t({ de: 'Website-Anfrage', en: 'Website enquiry' }))} size="sm">
+              {t({ de: 'Etwas anderes im Kopf? Schreiben Sie mir.', en: 'Something else in mind? Write to me.' })}
+            </Link>
+          </Stack>
+        </Card>
       </Stack>
     </Stack>
   );

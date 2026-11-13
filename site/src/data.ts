@@ -14,7 +14,7 @@ export const chf = (n: number) => 'CHF ' + n.toLocaleString('de-CH').replace(/[�
 export const mailto = (subject: string, body = '') =>
   `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-export type Tier = { id: 'basis' | 'pro'; price: number; name: T; tagline: T; features: T[] };
+export type Tier = { id: 'basis' | 'plus' | 'business' | 'komplett'; preset: string[]; name: T; tagline: T; features: T[] };
 
 const BASE_FEATURES: T[] = [
   { de: 'One-Pager mit Navigation und Mobile-Ansicht', en: 'One-pager with navigation and mobile view' },
@@ -28,27 +28,39 @@ const BASE_FEATURES: T[] = [
   { de: 'Eine Korrekturrunde inklusive', en: 'One round of revisions included' },
 ];
 
+export const BASE_PRICE = 1500;
+export { BASE_FEATURES };
+
+/** Packages are presets of add-ons on top of the Basis website; their price follows the volume discount below. */
 export const TIERS: Tier[] = [
   {
-    id: 'basis', price: 1500,
+    id: 'basis', preset: [],
     name: { de: 'Basis', en: 'Basic' },
-    tagline: { de: 'Alles, was eine Website braucht. Sauber, schnell, mobil.', en: 'Everything a website needs. Clean, fast, mobile.' },
+    tagline: { de: 'Das Nötige: eine saubere, schnelle, mobile Website.', en: 'The essentials: a clean, fast, mobile website.' },
     features: BASE_FEATURES,
   },
   {
-    id: 'pro', price: 2000,
-    name: { de: 'Pro', en: 'Pro' },
-    tagline: { de: 'Basis plus ein Hero-Bereich, der für Ihr Geschäft entwickelt wird.', en: 'Basic plus a hero section engineered for your business.' },
-    features: [
-      { de: 'Alles aus Basis', en: 'Everything in Basic' },
-      { de: 'Individuell entwickelter Hero-Bereich (Video, Animation oder Bildwelt)', en: 'Custom-engineered hero section (video, animation or imagery)' },
-      { de: 'E-Mail-Adresse mit Ihrer Domain, z. B. info@ihr-geschaeft.ch', en: 'Email address on your domain, e.g. info@your-business.ch' },
-    ],
+    id: 'plus', preset: ['hero', 'email', 'form', 'reviews', 'hours'],
+    name: { de: 'Plus', en: 'Plus' },
+    tagline: { de: 'Basis plus eigener Hero, E-Mail, Formular, Bewertungen und Öffnungszeiten.', en: 'Basic plus custom hero, email, form, reviews and opening hours.' },
+    features: [],
+  },
+  {
+    id: 'business', preset: ['hero', 'email', 'form', 'reviews', 'hours', 'whatsapp', 'booking', 'autoreply', 'maildesign', 'reminder'],
+    name: { de: 'Business', en: 'Business' },
+    tagline: { de: 'Für Termine und Reservationen: Buchung mit Bestätigung und Erinnerung.', en: 'For appointments and reservations: booking with confirmation and reminder.' },
+    features: [],
+  },
+  {
+    id: 'komplett', preset: [],
+    name: { de: 'Komplett', en: 'Complete' },
+    tagline: { de: 'Alle Funktionen, Automationen und Print. 30 % Rabatt auf alle Zusätze.', en: 'Every feature, automation and print item. 30 % off all add-ons.' },
+    features: [],
   },
 ];
 
 export type AddonGroup = 'website' | 'automation' | 'print';
-export type Addon = { id: string; group: AddonGroup; price: number; name: T; desc: T; includedIn?: Tier['id'] };
+export type Addon = { id: string; group: AddonGroup; price: number; name: T; desc: T };
 
 export const GROUPS: { id: AddonGroup; name: T; desc: T }[] = [
   { id: 'website', name: { de: 'Website-Funktionen', en: 'Website features' }, desc: { de: 'Mehr Funktionen direkt auf Ihrer Seite.', en: 'More features right on your site.' } },
@@ -59,7 +71,8 @@ export const GROUPS: { id: AddonGroup; name: T; desc: T }[] = [
 export const ADDONS: Addon[] = [
   // Website
   { id: 'booking', group: 'website', price: 400, name: { de: 'Buchungs-Funnel', en: 'Booking funnel' }, desc: { de: 'Kunden wählen Leistung, Datum und Zeit in 3 Schritten.', en: 'Customers pick service, date and time in 3 steps.' } },
-  { id: 'email', group: 'website', price: 150, includedIn: 'pro', name: { de: 'E-Mail mit eigener Domain', en: 'Email on your domain' }, desc: { de: 'info@ihr-geschaeft.ch, eingerichtet auf Handy und PC.', en: 'info@your-business.ch, set up on phone and PC.' } },
+  { id: 'hero', group: 'website', price: 500, name: { de: 'Individueller Hero-Bereich', en: 'Custom hero section' }, desc: { de: 'Der erste Eindruck, entwickelt für Ihr Geschäft: Video, Animation oder Bildwelt.', en: 'The first impression, built for your business: video, animation or imagery.' } },
+  { id: 'email', group: 'website', price: 150, name: { de: 'E-Mail mit eigener Domain', en: 'Email on your domain' }, desc: { de: 'info@ihr-geschaeft.ch, eingerichtet auf Handy und PC.', en: 'info@your-business.ch, set up on phone and PC.' } },
   { id: 'form', group: 'website', price: 150, name: { de: 'Kontaktformular', en: 'Contact form' }, desc: { de: 'Formular mit Spamschutz statt nur E-Mail-Button.', en: 'Form with spam protection instead of an email button.' } },
   { id: 'page', group: 'website', price: 250, name: { de: 'Zusätzliche Unterseite', en: 'Extra subpage' }, desc: { de: 'Z. B. Preisliste, Team oder Stellen.', en: 'E.g. price list, team or jobs.' } },
   { id: 'lang', group: 'website', price: 400, name: { de: 'Zweite Sprache', en: 'Second language' }, desc: { de: 'Ganze Seite auf Deutsch und z. B. Englisch, mit Umschalter.', en: 'Whole site in German and e.g. English, with a switch.' } },
@@ -67,7 +80,7 @@ export const ADDONS: Addon[] = [
   { id: 'menu', group: 'website', price: 250, name: { de: 'Menü- oder Preisliste', en: 'Menu or price list' }, desc: { de: 'Übersichtlich, selbst änderbar.', en: 'Clear, editable by you.' } },
   // Features already built for client projects (iservice, souperbe, Barber House, Boxschule, Freestar)
   { id: 'hours', group: 'website', price: 100, name: { de: 'Live «Jetzt geöffnet»', en: 'Live “open now”' }, desc: { de: 'Zeigt automatisch, ob Sie gerade offen haben und bis wann.', en: 'Shows automatically whether you are open right now and until when.' } },
-  { id: 'pricefinder', group: 'website', price: 400, name: { de: 'Preisrechner', en: 'Price calculator' }, desc: { de: 'Kunden wählen Leistung und Menge und sehen sofort den Richtpreis.', en: 'Customers pick service and quantity and see a guide price instantly.' } },
+  { id: 'pricefinder', group: 'website', price: 150, name: { de: 'Preisrechner', en: 'Price calculator' }, desc: { de: 'Kunden wählen Leistung und Menge und sehen sofort den Richtpreis.', en: 'Customers pick service and quantity and see a guide price instantly.' } },
   { id: 'schedule', group: 'website', price: 200, name: { de: 'Wochen- und Kursplan', en: 'Weekly schedule' }, desc: { de: 'Kurse, Trainings oder Events übersichtlich nach Tag.', en: 'Classes, trainings or events, clearly by day.' } },
   { id: 'jobs', group: 'website', price: 250, name: { de: 'Offene Stellen', en: 'Job openings' }, desc: { de: 'Stelleninserate mit Bewerbungs-Button, selbst änderbar.', en: 'Job ads with an apply button, editable by you.' } },
   { id: 'newsletter', group: 'website', price: 100, name: { de: 'Newsletter-Anmeldung', en: 'Newsletter sign-up' }, desc: { de: 'Besucher tragen sich mit ihrer E-Mail ein.', en: 'Visitors sign up with their email.' } },
@@ -85,31 +98,34 @@ export const ADDONS: Addon[] = [
   { id: 'social', group: 'print', price: 100, name: { de: 'Social-Media-Paket', en: 'Social media kit' }, desc: { de: 'Profilbild und Titelbilder für Instagram, Facebook, Google.', en: 'Profile and cover images for Instagram, Facebook, Google.' } },
 ];
 
-/** Pro bonus: the 2 priciest chosen add-ons are free, the 3rd costs 25 %. Basis pays full price. */
-export const PRO_FREE = 2;
-export const PRO_THIRD_RATE = 0.25;
-export type Line = { addon: Addon; price: number; note: 'included' | 'free' | 'third' | null };
-export const lines = (tier: Tier, selected: Set<string>): Line[] => {
-  const chosen = ADDONS.filter(a => selected.has(a.id) || a.includedIn === tier.id);
-  const paid = chosen.filter(a => a.includedIn !== tier.id).sort((a, b) => b.price - a.price);
-  return chosen.map(addon => {
-    if (addon.includedIn === tier.id) return { addon, price: 0, note: 'included' };
-    const rank = tier.id === 'pro' ? paid.indexOf(addon) : -1;
-    if (rank >= 0 && rank < PRO_FREE) return { addon, price: 0, note: 'free' };
-    if (rank === PRO_FREE) return { addon, price: Math.round(addon.price * PRO_THIRD_RATE), note: 'third' };
-    return { addon, price: addon.price, note: null };
-  });
+/** Volume discount on the add-on subtotal, by number of add-ons; every add-on chosen gives 30 %. */
+export const DISCOUNTS: [number, number][] = [[15, 0.2], [10, 0.15], [8, 0.1], [5, 0.08]];
+export const discountRate = (n: number) =>
+  n >= ADDONS.length ? 0.3 : (DISCOUNTS.find(([min]) => n >= min)?.[1] ?? 0);
+/** The next discount step the customer can reach, for the "2 more for 10 %" nudge. */
+export const nextStep = (n: number): [number, number] | null => {
+  if (n >= ADDONS.length) return null;
+  const s = [...DISCOUNTS].reverse().find(([min]) => n < min);
+  return s ? [s[0] - n, s[1]] : [ADDONS.length - n, 0.3];
 };
-export const total = (tier: Tier, selected: Set<string>) =>
-  tier.price + lines(tier, selected).reduce((s, l) => s + l.price, 0);
+export const presetOf = (tier: Tier) => (tier.id === 'komplett' ? ADDONS.map(a => a.id) : tier.preset);
+export const quote = (selected: Set<string>) => {
+  const chosen = ADDONS.filter(a => selected.has(a.id));
+  const sub = chosen.reduce((s, a) => s + a.price, 0);
+  const rate = discountRate(chosen.length);
+  const discount = Math.round((sub * rate) / 5) * 5; // rounded to CHF 5
+  return { chosen, sub, rate, discount, total: BASE_PRICE + sub - discount };
+};
+export const tierPrice = (tier: Tier) => quote(new Set(presetOf(tier))).total;
+export const pct = (r: number) => `${Math.round(r * 100)} %`;
 
 /** Hero examples for the Pro tier (anonymised drafts, no links: owner's request). */
 export const WORK = [
-  { img: '/work/precision.webp', name: 'SwissTech Precision Solutions', kind: { de: 'Kundenprojekt · Live', en: 'Client project · live' }, url: 'https://www.stps.ch' },
-  { img: '/work/boxing.webp', name: 'Boxschule Gebenstorf', kind: { de: 'Kundenprojekt · Live', en: 'Client project · live' }, url: 'https://boxschule-gebenstorf.ch' },
-  { img: '/work/restaurant.webp', name: 'Café & Restaurant', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
-  { img: '/work/barber.webp', name: 'Barbier', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
-  { img: '/work/cleaning.webp', name: 'Reinigung', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
-  { img: '/work/phone-repair.webp', name: 'Handyreparatur', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
-] as { img: string; name: string; kind: T; url?: string }[];
+  { img: '/work/precision.webp', slug: 'stps', video: '/work/video/precision.mp4', name: 'SwissTech Precision Solutions', kind: { de: 'Kundenprojekt · Live', en: 'Client project · live' }, url: 'https://www.stps.ch' },
+  { img: '/work/boxing.webp', slug: 'boxschule', name: 'Boxschule Gebenstorf', kind: { de: 'Kundenprojekt · Live', en: 'Client project · live' }, url: 'https://boxschule-gebenstorf.ch' },
+  { img: '/work/restaurant.webp', slug: 'souperbe', name: 'Café & Restaurant', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
+  { img: '/work/barber.webp', slug: 'barbershop', name: 'Barbier', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
+  { img: '/work/cleaning.webp', slug: 'halimi', name: 'Reinigung', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
+  { img: '/work/phone-repair.webp', slug: 'iservice', name: 'Handyreparatur', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
+] as { img: string; slug: string; video?: string; name: string; kind: T; url?: string }[];
 

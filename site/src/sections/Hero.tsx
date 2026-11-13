@@ -2,12 +2,12 @@ import { useContext } from 'react';
 import { HStack, VStack } from '@astryxdesign/core/Layout';
 import { Heading, Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
-import { chf, LangContext, TIERS, useT } from '../data';
+import { BASE_PRICE, chf, LangContext, useT } from '../data';
 
 export default function Hero() {
   const t = useT();
   const { lang } = useContext(LangContext);
-  const from = chf(TIERS[0].price);
+  const from = chf(BASE_PRICE);
   return (
     <VStack id="top" as="section" hAlign="center" gap={8} paddingInline={4} paddingBlock={10}>
       <VStack gap={4} hAlign="center" maxWidth={760}>

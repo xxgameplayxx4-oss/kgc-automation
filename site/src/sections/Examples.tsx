@@ -10,7 +10,37 @@ import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import Eyebrow from './Eyebrow';
 import Funnels from './Funnels';
 import Emails from './Emails';
+import { useState } from 'react';
 import { WORK, useT } from '../data';
+import { HeroVideo, PreviewDialog } from './Projects';
+
+type Work = (typeof WORK)[number];
+
+function WorkCard({ w }: { w: Work }) {
+  const t = useT();
+  const [open, setOpen] = useState(false);
+  const p = { slug: w.slug, video: w.video, url: w.url, title: { de: w.name, en: w.name }, kind: w.kind, place: '', tags: [] };
+  return (
+    <Card padding={0}>
+      <VStack gap={0}>
+        <AspectRatio ratio={16 / 10} fit="cover">
+          {w.video
+            ? <HeroVideo src={w.video} poster={w.img} label={`${w.name}, ${t(w.kind)}`} />
+            : <img src={w.img} alt={`${w.name}, ${t(w.kind)}`} loading="lazy" decoding="async" />}
+        </AspectRatio>
+        <VStack gap={1} padding={4}>
+          <Heading level={3}>{w.name}</Heading>
+          <Text type="supporting">{t(w.kind)}</Text>
+          <HStack gap={2} wrap="wrap">
+            <Button variant="secondary" size="sm" onClick={() => setOpen(true)} label={t({ de: 'Vorschau', en: 'Preview' })} />
+            {w.url && <Button variant="ghost" size="sm" href={w.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Website ansehen ↗', en: 'View website ↗' })} />}
+          </HStack>
+        </VStack>
+      </VStack>
+      <PreviewDialog p={p} title={w.name} open={open} setOpen={setOpen} />
+    </Card>
+  );
+}
 
 export default function Examples() {
   const t = useT();
@@ -18,29 +48,12 @@ export default function Examples() {
     <Section id="beispiele" variant="transparent" padding={6}>
       <VStack gap={8} maxWidth={1200} style={{ marginInline: "auto", width: "100%" }}>
         <VStack gap={3}>
-          <Eyebrow>{t({ de: 'Pro-Paket', en: 'Pro package' })}</Eyebrow>
+          <Eyebrow>{t({ de: 'Zusatz: Individueller Hero', en: 'Add-on: custom hero' })}</Eyebrow>
           <Heading level={2}>{t({ de: 'Hero-Bereiche, entwickelt für das Geschäft', en: 'Hero sections, engineered for the business' })}</Heading>
-          <Text type="large" color="secondary">{t({ de: 'Der erste Eindruck Ihrer Website. Mit dem Pro-Paket entsteht er individuell für Ihr Geschäft.', en: 'The first impression of your website. With the Pro package it is built individually for your business.' })}</Text>
+          <Text type="large" color="secondary">{t({ de: 'Der erste Eindruck Ihrer Website. Mit dem Zusatz «Individueller Hero-Bereich» entsteht er für Ihr Geschäft, in den Paketen Plus, Business und Komplett inklusive.', en: 'The first impression of your website. With the «custom hero» add-on it is built for your business, included in the Plus, Business and Complete packages.' })}</Text>
         </VStack>
         <Grid columns={{ minWidth: 280, max: 3 }} gap={4}>
-          {WORK.map(w => (
-            <Card key={w.img} padding={0}>
-              <VStack gap={0}>
-                <AspectRatio ratio={16 / 10} fit="cover">
-                  <img src={w.img} alt={`${w.name}, ${t(w.kind)}`} loading="lazy" decoding="async" />
-                </AspectRatio>
-                <VStack gap={1} padding={4}>
-                  <Heading level={3}>{w.name}</Heading>
-                  <Text type="supporting">{t(w.kind)}</Text>
-                  {w.url && (
-                    <HStack>
-                      <Button variant="ghost" size="sm" href={w.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Website ansehen ↗', en: 'View website ↗' })} />
-                    </HStack>
-                  )}
-                </VStack>
-              </VStack>
-            </Card>
-          ))}
+          {WORK.map(w => <WorkCard key={w.img} w={w} />)}
         </Grid>
 
         <VStack gap={3}>
