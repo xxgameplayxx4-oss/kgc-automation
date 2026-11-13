@@ -37,7 +37,7 @@ export default function Hero() {
           style={{ width: '100%', borderRadius: 'var(--radius-page)', aspectRatio: '16 / 9' }}
         >
           <source src={`/media/promo-${lang}.mp4`} type="video/mp4" />
-          <track kind="subtitles" src={`/media/promo-${lang}.vtt`} srcLang={lang} label={lang === 'de' ? 'Deutsch' : 'English'} default />
+          <track kind="subtitles" src={`/media/promo-${lang}.vtt`} srcLang={lang} label={lang === 'de' ? 'Deutsch' : 'English'} />
         </video>
       </VStack>
     </VStack>
