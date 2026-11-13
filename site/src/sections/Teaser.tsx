@@ -8,7 +8,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { Avatar } from '@astryxdesign/core/Avatar';
 import { useT } from '../data';
 import Eyebrow from './Eyebrow';
-import { CLIENTS, Devices } from './Projects';
+import { CLIENTS, Preview } from './Projects';
 
 /** Start page: three client projects and a short intro, each linking to its own page. */
 export default function Teaser() {
@@ -27,7 +27,7 @@ export default function Teaser() {
           <Grid columns={{ minWidth: 240, max: 4 }} gap={8}>
             {CLIENTS.map(p => (
               <VStack key={p.slug} gap={2}>
-                <Devices p={p} alt={t(p.title)} />
+                <Preview p={p} />
                 <Text weight="semibold">{t(p.title)}</Text>
                 <Text type="supporting">{t(p.kind)}</Text>
               </VStack>

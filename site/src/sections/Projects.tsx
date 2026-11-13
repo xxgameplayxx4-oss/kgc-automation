@@ -9,6 +9,9 @@ import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { Token } from '@astryxdesign/core/Token';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
+import { ClickableCard } from '@astryxdesign/core/ClickableCard';
+import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
+import { useState } from 'react';
 import { useT, type T } from '../data';
 import Eyebrow from './Eyebrow';
 
@@ -74,12 +77,52 @@ export function Devices({ p, alt }: { p: Project; alt: string }) {
   );
 }
 
+/** Full-length screenshots in device frames, each screen scrolls on its own. */
+function Viewer({ p, alt }: { p: Project; alt: string }) {
+  const screen = { overflowY: 'auto', overscrollBehavior: 'contain' } as const;
+  return (
+    <HStack gap={6} wrap="wrap" hAlign="center" vAlign="start">
+      <Card padding={1} elevation="high" style={{ flex: '3 1 26rem', minWidth: 0, background: 'black', borderRadius: 'var(--radius-page)' }}>
+        <Stack style={{ ...screen, aspectRatio: '16 / 10', maxHeight: '60vh', borderRadius: '0.25rem' }}>
+          <img src={`/projects/${p.slug}-desktop.webp`} alt={`${alt}, Desktop`} style={{ width: '100%', display: 'block' }} />
+        </Stack>
+      </Card>
+      <Card padding={1} elevation="high" style={{ flex: '1 1 13rem', maxWidth: '17rem', background: 'black', borderRadius: '1.6rem' }}>
+        <Stack style={{ ...screen, aspectRatio: '390 / 844', maxHeight: '60vh', borderRadius: '1.1rem' }}>
+          <img src={`/projects/${p.slug}-phone.webp`} alt={`${alt}, Handy`} style={{ width: '100%', display: 'block' }} />
+        </Stack>
+      </Card>
+    </HStack>
+  );
+}
+
+/** Device mockup that opens the scrollable viewer. */
+export function Preview({ p }: { p: Project }) {
+  const t = useT();
+  const [open, setOpen] = useState(false);
+  const title = t(p.title);
+  return (
+    <>
+      <ClickableCard variant="transparent" padding={0} label={t({ de: `${title}: Vorschau öffnen`, en: `${title}: open preview` })} onClick={() => setOpen(true)}>
+        <Devices p={p} alt={title} />
+      </ClickableCard>
+      <Dialog isOpen={open} onOpenChange={setOpen} width="min(72rem, calc(100vw - 2rem))" padding={4}>
+        <VStack gap={4}>
+          <DialogHeader title={title} subtitle={t({ de: 'Scrollen Sie in Laptop und Handy durch die Website.', en: 'Scroll through the site on laptop and phone.' })} onOpenChange={setOpen} />
+          <Viewer p={p} alt={title} />
+          {p.url && <HStack><Button variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Live-Website öffnen ↗', en: 'Open live website ↗' })} /></HStack>}
+        </VStack>
+      </Dialog>
+    </>
+  );
+}
+
 function ProjectCard({ p, paid }: { p: Project; paid?: boolean }) {
   const t = useT();
   const title = t(p.title);
   return (
     <VStack gap={4}>
-      <Devices p={p} alt={title} />
+      <Preview p={p} />
       <VStack gap={2}>
         <HStack gap={2} wrap="wrap" vAlign="center">
           <Heading level={3}>{title}</Heading>
@@ -122,7 +165,7 @@ export default function Projects() {
         <Group
           eyebrow={{ de: 'Projekte', en: 'Projects' }}
           heading={{ de: 'Kundenprojekte', en: 'Client projects' }}
-          intro={{ de: 'Websites, die ich für zahlende Kunden umgesetzt habe, auf dem Laptop und dem Handy.', en: 'Websites I built for paying clients, on laptop and phone.' }}
+          intro={{ de: 'Websites, die ich für zahlende Kunden umgesetzt habe. Klicken Sie auf eine Vorschau, um durch die ganze Seite zu scrollen.', en: 'Websites I built for paying clients. Click a preview to scroll through the whole page.' }}
           items={CLIENTS} paid min={420}
         />
         <Group
