@@ -25,7 +25,7 @@ function WorkCard({ w }: { w: Work }) {
       <VStack gap={0}>
         <AspectRatio ratio={16 / 10} fit="cover">
           {w.video
-            ? <HeroVideo src={w.video} poster={w.img} label={`${w.name}, ${t(w.kind)}`} />
+            ? <HeroVideo src={`${w.video}-desktop.mp4`} poster={w.img} label={`${w.name}, ${t(w.kind)}`} />
             : <img src={w.img} alt={`${w.name}, ${t(w.kind)}`} loading="lazy" decoding="async" />}
         </AspectRatio>
         <VStack gap={1} padding={4}>

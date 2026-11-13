@@ -21,7 +21,7 @@ export type Project = { slug: string; title: T; kind: T; place: string; tags: T[
 
 export const CLIENTS: Project[] = [
   {
-    slug: 'stps', video: '/work/video/precision.mp4', title: { de: 'SwissTech Precision Solutions', en: 'SwissTech Precision Solutions' }, url: 'https://www.stps.ch', place: 'Schweiz',
+    slug: 'stps', video: '/work/video/stps-site', title: { de: 'SwissTech Precision Solutions', en: 'SwissTech Precision Solutions' }, url: 'https://www.stps.ch', place: 'Schweiz',
     kind: { de: 'Präzisionstechnik · Website und CRM', en: 'Precision engineering · website and CRM' },
     tags: [{ de: 'Zweisprachig DE/EN', en: 'Bilingual DE/EN' }, { de: 'Eigenes CRM', en: 'Custom CRM' }, { de: 'Offerten & Rechnungen', en: 'Quotes & invoices' }],
   },
@@ -74,19 +74,35 @@ export function HeroVideo({ src, poster, label }: { src: string; poster: string;
   return <video src={src} poster={poster} aria-label={label} autoPlay muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />;
 }
 
+/** Screenshot of a site; for video sites a recording of the live hero (header and moving video) is laid over its top. */
+const HERO_RATIO = { desktop: 1100 / 572, phone: 390 / 605 } as const;
+function Screen({ p, kind, alt, lazy }: { p: Project; kind: 'desktop' | 'phone'; alt: string; lazy?: boolean }) {
+  const reduce = useReducedMotion();
+  const img = `/projects/${p.slug}-${kind}.webp`;
+  return (
+    <Stack style={{ position: 'relative' }}>
+      <img src={img} alt={alt} loading={lazy ? 'lazy' : undefined} decoding="async" style={{ width: '100%', display: 'block' }} />
+      {p.video && !reduce && (
+        <video src={`${p.video}-${kind}.mp4`} aria-hidden autoPlay muted loop playsInline preload="metadata"
+          style={{ position: 'absolute', top: 0, left: 0, width: '100%', aspectRatio: HERO_RATIO[kind], objectFit: 'cover', display: 'block' }} />
+      )}
+    </Stack>
+  );
+}
+
 /** Laptop with the desktop screenshot, phone in front at the bottom right. */
 export function Devices({ p, alt }: { p: Project; alt: string }) {
   return (
     <Stack style={{ position: 'relative', paddingRight: '8%', paddingBottom: '6%' }}>
       <Card padding={1} elevation="high" style={{ background: 'black' /* bezel stays black in both themes */, borderRadius: 'var(--radius-page) var(--radius-page) 0.25rem 0.25rem' }}>
         <AspectRatio ratio={16 / 10} fit="cover">
-          {p.video ? <HeroVideo src={p.video} poster={`/projects/${p.slug}-desktop.webp`} label={`${alt}, Desktop`} /> : <img src={`/projects/${p.slug}-desktop.webp`} alt={`${alt}, Desktop`} loading="lazy" decoding="async" style={{ objectPosition: 'top' }} />}
+          <Screen p={p} kind="desktop" alt={`${alt}, Desktop`} lazy />
         </AspectRatio>
       </Card>
       <Card variant="gray" padding={0.5} style={{ marginInline: '-4%', borderRadius: '0 0 0.75rem 0.75rem' }} />
       <Card padding={0.5} elevation="high" style={{ position: 'absolute', right: 0, bottom: 0, width: '24%', background: 'black', borderRadius: '1rem' }}>
         <AspectRatio ratio={390 / 844} fit="cover" style={{ borderRadius: '0.7rem', overflow: 'hidden' }}>
-          <img src={`/projects/${p.slug}-phone.webp`} alt={`${alt}, Handy`} loading="lazy" decoding="async" style={{ objectPosition: 'top' }} />
+          <Screen p={p} kind="phone" alt={`${alt}, Handy`} lazy />
         </AspectRatio>
       </Card>
     </Stack>
@@ -100,32 +116,25 @@ function Viewer({ p, alt }: { p: Project; alt: string }) {
     <HStack gap={6} wrap="wrap" hAlign="center" vAlign="start">
       <Card padding={1} elevation="high" style={{ flex: '3 1 26rem', minWidth: 0, background: 'black', borderRadius: 'var(--radius-page)' }}>
         <Stack style={{ ...screen, aspectRatio: '16 / 10', maxHeight: '60vh', borderRadius: '0.25rem' }}>
-          <img src={`/projects/${p.slug}-desktop.webp`} alt={`${alt}, Desktop`} style={{ width: '100%', display: 'block' }} />
+          <Screen p={p} kind="desktop" alt={`${alt}, Desktop`} />
         </Stack>
       </Card>
       <Card padding={1} elevation="high" style={{ flex: '1 1 13rem', maxWidth: '17rem', background: 'black', borderRadius: '1.6rem' }}>
         <Stack style={{ ...screen, aspectRatio: '390 / 844', maxHeight: '60vh', borderRadius: '1.1rem' }}>
-          <img src={`/projects/${p.slug}-phone.webp`} alt={`${alt}, Handy`} style={{ width: '100%', display: 'block' }} />
+          <Screen p={p} kind="phone" alt={`${alt}, Handy`} />
         </Stack>
       </Card>
     </HStack>
   );
 }
 
-/** Scrollable preview dialog: hero video (if any) on top, then laptop and phone captures. */
+/** Scrollable preview dialog: laptop and phone captures, with the live hero moving on video sites. */
 export function PreviewDialog({ p, title, open, setOpen }: { p: Project; title: string; open: boolean; setOpen: (o: boolean) => void }) {
   const t = useT();
   return (
     <Dialog isOpen={open} onOpenChange={setOpen} width="min(72rem, calc(100vw - 2rem))" padding={4}>
       <VStack gap={4}>
         <DialogHeader title={title} subtitle={t({ de: 'Scrollen Sie in Laptop und Handy durch die Website.', en: 'Scroll through the site on laptop and phone.' })} onOpenChange={setOpen} />
-        {p.video && (
-          <Card padding={1} elevation="high" style={{ background: 'black', borderRadius: 'var(--radius-page)' }}>
-            <AspectRatio ratio={21 / 9} fit="cover" style={{ borderRadius: '0.25rem', overflow: 'hidden' }}>
-              <HeroVideo src={p.video} poster={`/projects/${p.slug}-desktop.webp`} label={`${title}, Hero`} />
-            </AspectRatio>
-          </Card>
-        )}
         <Viewer p={p} alt={title} />
         {p.url && <HStack><Button variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Live-Website öffnen ↗', en: 'Open live website ↗' })} /></HStack>}
       </VStack>

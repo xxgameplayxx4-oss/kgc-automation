@@ -133,7 +133,7 @@ export const careFor = (n: number) =>
 
 /** Hero examples for the Pro tier (anonymised drafts, no links: owner's request). */
 export const WORK = [
-  { img: '/work/precision.webp', slug: 'stps', video: '/work/video/precision.mp4', name: 'SwissTech Precision Solutions', kind: { de: 'Kundenprojekt · Live', en: 'Client project · live' }, url: 'https://www.stps.ch' },
+  { img: '/work/precision.webp', slug: 'stps', video: '/work/video/stps-site', name: 'SwissTech Precision Solutions', kind: { de: 'Kundenprojekt · Live', en: 'Client project · live' }, url: 'https://www.stps.ch' },
   { img: '/work/boxing.webp', slug: 'boxschule', name: 'Boxschule Gebenstorf', kind: { de: 'Kundenprojekt · Live', en: 'Client project · live' }, url: 'https://boxschule-gebenstorf.ch' },
   { img: '/work/restaurant.webp', slug: 'souperbe', name: 'Café & Restaurant', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
   { img: '/work/barber.webp', slug: 'barbershop', name: 'Barbier', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
