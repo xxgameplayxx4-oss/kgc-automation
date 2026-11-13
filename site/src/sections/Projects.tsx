@@ -32,6 +32,11 @@ export const CLIENTS: Project[] = [
     kind: { de: 'Family Office · Website', en: 'Family office · website' },
     tags: [{ de: 'Seriöser Auftritt', en: 'Premium look' }, { de: 'Mehrsprachig', en: 'Multilingual' }],
   },
+  {
+    slug: 'mobilemaster', title: { de: 'Mobile Master', en: 'Mobile Master' }, url: 'https://mobile-master-entwurf.netlify.app', place: 'Baden-Turgi',
+    kind: { de: 'Handy-Shop & Reparatur · Website', en: 'Phone shop & repair · website' },
+    tags: [{ de: 'Reparaturpreise', en: 'Repair prices' }, { de: 'Responsive', en: 'Responsive' }],
+  },
 ];
 
 const CONCEPTS: Project[] = [
@@ -40,7 +45,6 @@ const CONCEPTS: Project[] = [
   { slug: 'souperbe', place: 'Brugg', title: { de: 'Restaurant', en: 'Restaurant' }, kind: { de: 'Konzeptentwurf', en: 'Concept' }, tags: [{ de: 'Tischreservation', en: 'Table booking' }, { de: 'Menü-Filter', en: 'Menu filter' }, { de: 'Newsletter', en: 'Newsletter' }] },
   { slug: 'yushu', place: 'Brugg', title: { de: 'Sushi & Momo', en: 'Sushi & momo' }, kind: { de: 'Konzeptentwurf', en: 'Concept' }, tags: [{ de: 'Bestellen', en: 'Ordering' }, { de: 'Reservieren', en: 'Reservations' }] },
   { slug: 'iservice', place: 'Wildegg', title: { de: 'Handy-Reparatur', en: 'Phone repair' }, kind: { de: 'Konzeptentwurf', en: 'Concept' }, tags: [{ de: 'Preisrechner', en: 'Price finder' }, { de: 'Reservation mit Bestätigung', en: 'Booking with confirmation' }] },
-  { slug: 'mobilemaster', place: 'Baden', title: { de: 'Handy-Shop', en: 'Phone shop' }, kind: { de: 'Konzeptentwurf', en: 'Concept' }, tags: [{ de: 'Reparaturpreise', en: 'Repair prices' }] },
   { slug: 'halimi', place: 'Aarau', title: { de: 'Reinigungsfirma', en: 'Cleaning company' }, kind: { de: 'Konzeptentwurf', en: 'Concept' }, tags: [{ de: 'Offertanfrage', en: 'Quote request' }, { de: 'Abgabeprotokoll', en: 'Handover protocol' }] },
   { slug: 'reve', place: 'Brugg', title: { de: 'Facility Management', en: 'Facility management' }, kind: { de: 'Konzeptentwurf', en: 'Concept' }, tags: [{ de: 'Vorher/Nachher-Slider', en: 'Before/after slider' }] },
   { slug: 'dd-informatic', place: 'Aargau', title: { de: 'IT-Dienstleister', en: 'IT services' }, kind: { de: 'Konzeptentwurf', en: 'Concept' }, tags: [{ de: 'Dreisprachig', en: 'Trilingual' }, { de: 'Offertanfrage', en: 'Quote request' }] },
@@ -119,7 +123,7 @@ export default function Projects() {
           eyebrow={{ de: 'Projekte', en: 'Projects' }}
           heading={{ de: 'Kundenprojekte', en: 'Client projects' }}
           intro={{ de: 'Websites, die ich für zahlende Kunden umgesetzt habe, auf dem Laptop und dem Handy.', en: 'Websites I built for paying clients, on laptop and phone.' }}
-          items={CLIENTS} paid min={300}
+          items={CLIENTS} paid min={420}
         />
         <Group
           eyebrow={{ de: 'Entwürfe', en: 'Drafts' }}
