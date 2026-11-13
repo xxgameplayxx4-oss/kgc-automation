@@ -33,11 +33,11 @@ export default function Hero() {
           key={lang}
           controls
           preload="none"
-          poster="/media/vsl-poster.webp"
+          poster="/media/promo-poster.webp"
           style={{ width: '100%', borderRadius: 'var(--radius-page)', aspectRatio: '16 / 9' }}
         >
-          <source src={`/media/vsl-${lang}.mp4`} type="video/mp4" />
-          <track kind="subtitles" src={`/media/vsl-${lang}.vtt`} srcLang={lang} label={lang === 'de' ? 'Deutsch' : 'English'} default />
+          <source src={`/media/promo-${lang}.mp4`} type="video/mp4" />
+          <track kind="subtitles" src={`/media/promo-${lang}.vtt`} srcLang={lang} label={lang === 'de' ? 'Deutsch' : 'English'} default />
         </video>
       </VStack>
     </VStack>
