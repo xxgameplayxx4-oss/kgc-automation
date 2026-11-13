@@ -68,8 +68,8 @@ export default function Packages() {
           <Heading level={3}>{t({ de: 'Monatliche Wartung', en: 'Monthly maintenance' })}</Heading>
           <Text color="secondary">
             {t({
-              de: `Hosting, Updates, Sicherheit und ${CARE_HOURS} Stunden Änderungen pro Monat. Basis ${chf(CARE.basis.price)}, Plus ${chf(CARE.plus.price)}, Business ${chf(CARE.business.price)}, Komplett ${chf(CARE.komplett.price)} statt ${chf(CARE.komplett.list)} (−30 %).`,
-              en: `Hosting, updates, security and ${CARE_HOURS} hours of changes per month. Basic ${chf(CARE.basis.price)}, Plus ${chf(CARE.plus.price)}, Business ${chf(CARE.business.price)}, Complete ${chf(CARE.komplett.price)} instead of ${chf(CARE.komplett.list)} (−30 %).`,
+              de: `Hosting, Updates, Sicherheit und ${CARE_HOURS} Stunden Änderungen pro Monat. Basis ${chf(CARE.basis.price)}, Pro ${chf(CARE.plus.price)}, Business ${chf(CARE.business.price)}, Komplett ${chf(CARE.komplett.price)} statt ${chf(CARE.komplett.list)} (−30 %).`,
+              en: `Hosting, updates, security and ${CARE_HOURS} hours of changes per month. Basic ${chf(CARE.basis.price)}, Pro ${chf(CARE.plus.price)}, Business ${chf(CARE.business.price)}, Complete ${chf(CARE.komplett.price)} instead of ${chf(CARE.komplett.list)} (−30 %).`,
             })}
           </Text>
           <Text color="secondary">

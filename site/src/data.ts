@@ -41,7 +41,7 @@ export const TIERS: Tier[] = [
   },
   {
     id: 'plus', preset: ['hero', 'email', 'form', 'reviews', 'hours'],
-    name: { de: 'Plus', en: 'Plus' },
+    name: { de: 'Pro', en: 'Pro' },
     tagline: { de: 'Basis plus eigener Hero, E-Mail, Formular, Bewertungen und Öffnungszeiten.', en: 'Basic plus custom hero, email, form, reviews and opening hours.' },
     features: [],
   },

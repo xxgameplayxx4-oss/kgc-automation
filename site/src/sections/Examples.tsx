@@ -50,7 +50,7 @@ export default function Examples() {
         <VStack gap={3}>
           <Eyebrow>{t({ de: 'Zusatz: Individueller Hero', en: 'Add-on: custom hero' })}</Eyebrow>
           <Heading level={2}>{t({ de: 'Hero-Bereiche, entwickelt für das Geschäft', en: 'Hero sections, engineered for the business' })}</Heading>
-          <Text type="large" color="secondary">{t({ de: 'Der erste Eindruck Ihrer Website. Mit dem Zusatz «Individueller Hero-Bereich» entsteht er für Ihr Geschäft, in den Paketen Plus, Business und Komplett inklusive.', en: 'The first impression of your website. With the «custom hero» add-on it is built for your business, included in the Plus, Business and Complete packages.' })}</Text>
+          <Text type="large" color="secondary">{t({ de: 'Der erste Eindruck Ihrer Website. Mit dem Zusatz «Individueller Hero-Bereich» entsteht er für Ihr Geschäft, in den Paketen Pro, Business und Komplett inklusive.', en: 'The first impression of your website. With the «custom hero» add-on it is built for your business, included in the Pro, Business and Complete packages.' })}</Text>
         </VStack>
         <Grid columns={{ minWidth: 280, max: 3 }} gap={4}>
           {WORK.map(w => <WorkCard key={w.img} w={w} />)}
