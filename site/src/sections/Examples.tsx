@@ -7,18 +7,9 @@ import { Heading } from '@astryxdesign/core/Heading';
 import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
-import { Badge } from '@astryxdesign/core/Badge';
 import Eyebrow from './Eyebrow';
-import { WORK, FUNNELS, useT, type T } from '../data';
-
-const FUNNEL_ALT: T[] = [
-  { de: 'Beispiel eines Buchungs-Funnels, Schritt 2 von 3: Datum und Zeit wählen', en: 'Example booking funnel, step 2 of 3: choose date and time' },
-  { de: 'Beispiel eines Buchungs-Funnels für eine Reparatur, Schritt 2 von 4', en: 'Example repair booking funnel, step 2 of 4' },
-];
-const FUNNEL_STEPS: T[] = [
-  { de: '3 Schritte: Leistung wählen, Datum und Zeit, Kontaktdaten.', en: '3 steps: choose service, date and time, contact details.' },
-  { de: '4 Schritte: Marke, Modell, Problem, Kontakt.', en: '4 steps: brand, model, problem, contact.' },
-];
+import Funnels from './Funnels';
+import { WORK, useT } from '../data';
 
 export default function Examples() {
   const t = useT();
@@ -54,26 +45,9 @@ export default function Examples() {
         <VStack gap={3}>
           <Eyebrow>{t({ de: 'Erweiterung', en: 'Add-on' })}</Eyebrow>
           <Heading level={2}>{t({ de: 'Buchungs-Funnels', en: 'Booking funnels' })}</Heading>
-          <Text type="large" color="secondary">{t({ de: 'Kunden buchen selbst, Schritt für Schritt. Danach folgt automatisch die Bestätigung per E-Mail und der Eintrag in Ihrem Kalender.', en: 'Customers book on their own, step by step. Then the email confirmation and your calendar entry follow automatically.' })}</Text>
+          <Text type="large" color="secondary">{t({ de: 'Kunden buchen selbst, Schritt für Schritt. Probieren Sie es gleich hier aus: Das ist ein echter Funnel, so wie er auf Ihrer Website läuft.', en: 'Customers book on their own, step by step. Try it right here: this is a real funnel, just as it runs on your website.' })}</Text>
         </VStack>
-        <Grid columns={{ minWidth: 300, max: 2 }} gap={4}>
-          {FUNNELS.map((f, i) => (
-            <Card key={f.img} padding={0}>
-              <VStack gap={0}>
-                <AspectRatio ratio={i === 0 ? 1010 / 820 : 1315 / 694} fit="cover">
-                  <img src={f.img} alt={t(FUNNEL_ALT[i])} loading="lazy" decoding="async" />
-                </AspectRatio>
-                <VStack gap={2} padding={4}>
-                  <HStack gap={2} align="center" wrap="wrap">
-                    <Heading level={3}>{t(f.name)}</Heading>
-                    <Badge label={t(f.style)} />
-                  </HStack>
-                  <Text type="supporting">{t(FUNNEL_STEPS[i])}</Text>
-                </VStack>
-              </VStack>
-            </Card>
-          ))}
-        </Grid>
+        <Funnels />
         <HStack>
           <Button variant="primary" href="#konfigurator" label={t({ de: 'Im Konfigurator hinzufügen', en: 'Add in the configurator' })} />
         </HStack>

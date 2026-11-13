@@ -73,14 +73,28 @@ export const ADDONS: Addon[] = [
   { id: 'review-request', group: 'automation', price: 200, name: { de: 'Bewertungs-Anfrage', en: 'Review request' }, desc: { de: 'Nach dem Termin bittet eine E-Mail um eine Google-Bewertung.', en: 'After the appointment an email asks for a Google review.' } },
   { id: 'sheet', group: 'automation', price: 100, name: { de: 'Anfragen in Tabelle', en: 'Enquiries to a sheet' }, desc: { de: 'Alle Anfragen sammeln sich in einer Google-Tabelle.', en: 'All enquiries collect in a Google Sheet.' } },
   // Print
-  { id: 'cards', group: 'print', price: 150, name: { de: 'Visitenkarten-Design', en: 'Business card design' }, desc: { de: 'Vorder- und Rückseite, druckfertig als PDF.', en: 'Front and back, print-ready PDF.' } },
-  { id: 'flyer', group: 'print', price: 250, name: { de: 'Flyer-Design (A5)', en: 'Flyer design (A5)' }, desc: { de: 'Beidseitig, druckfertig, im Look Ihrer Website.', en: 'Double-sided, print-ready, in your website’s look.' } },
-  { id: 'social', group: 'print', price: 150, name: { de: 'Social-Media-Paket', en: 'Social media kit' }, desc: { de: 'Profilbild und Titelbilder für Instagram, Facebook, Google.', en: 'Profile and cover images for Instagram, Facebook, Google.' } },
+  { id: 'cards', group: 'print', price: 100, name: { de: 'Visitenkarten-Design', en: 'Business card design' }, desc: { de: 'Massgeschneidert auf das Design Ihrer Website. Vorder- und Rückseite, druckfertig.', en: 'Tailored to your website’s design. Front and back, print-ready.' } },
+  { id: 'flyer', group: 'print', price: 200, name: { de: 'Flyer-Design (A5)', en: 'Flyer design (A5)' }, desc: { de: 'Beidseitig, druckfertig, im Look Ihrer Website.', en: 'Double-sided, print-ready, in your website’s look.' } },
+  { id: 'social', group: 'print', price: 100, name: { de: 'Social-Media-Paket', en: 'Social media kit' }, desc: { de: 'Profilbild und Titelbilder für Instagram, Facebook, Google.', en: 'Profile and cover images for Instagram, Facebook, Google.' } },
 ];
 
-/** Total for a tier plus selected add-ons; add-ons included in the tier cost nothing. */
+/** Pro bonus: the 2 priciest chosen add-ons are free, the 3rd costs 25 %. Basis pays full price. */
+export const PRO_FREE = 2;
+export const PRO_THIRD_RATE = 0.25;
+export type Line = { addon: Addon; price: number; note: 'included' | 'free' | 'third' | null };
+export const lines = (tier: Tier, selected: Set<string>): Line[] => {
+  const chosen = ADDONS.filter(a => selected.has(a.id) || a.includedIn === tier.id);
+  const paid = chosen.filter(a => a.includedIn !== tier.id).sort((a, b) => b.price - a.price);
+  return chosen.map(addon => {
+    if (addon.includedIn === tier.id) return { addon, price: 0, note: 'included' };
+    const rank = tier.id === 'pro' ? paid.indexOf(addon) : -1;
+    if (rank >= 0 && rank < PRO_FREE) return { addon, price: 0, note: 'free' };
+    if (rank === PRO_FREE) return { addon, price: Math.round(addon.price * PRO_THIRD_RATE), note: 'third' };
+    return { addon, price: addon.price, note: null };
+  });
+};
 export const total = (tier: Tier, selected: Set<string>) =>
-  tier.price + ADDONS.filter(a => selected.has(a.id) && a.includedIn !== tier.id).reduce((s, a) => s + a.price, 0);
+  tier.price + lines(tier, selected).reduce((s, l) => s + l.price, 0);
 
 /** Hero examples for the Pro tier (anonymised drafts, no links: owner's request). */
 export const WORK = [
@@ -92,8 +106,3 @@ export const WORK = [
   { img: '/work/phone-repair.webp', name: 'Handyreparatur', kind: { de: 'Konzeptentwurf', en: 'Concept draft' } },
 ] as { img: string; name: string; kind: T; url?: string }[];
 
-/** Booking-funnel examples (screenshots in public/examples). */
-export const FUNNELS = [
-  { img: '/examples/mjgroup.png', name: { de: 'Beratung buchen in 3 Schritten', en: 'Book a consultation in 3 steps' }, style: { de: 'Elegant, für Beratung und Finanzen', en: 'Elegant, for advisory and finance' } },
-  { img: '/examples/mobilemaster.png', name: { de: 'Reparatur anfragen mit Preis vorab', en: 'Repair request with upfront price' }, style: { de: 'Modern, für Werkstatt und Laden', en: 'Modern, for workshops and shops' } },
-];

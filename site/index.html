@@ -26,6 +26,9 @@
         main > *:not(#top){animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 30%}
         @keyframes rise{from{opacity:0;transform:translateY(32px) scale(.985)}}
       }}
+      /* Parts that appear in the configurator preview pop in. */
+      @keyframes pop{from{opacity:0;transform:translateY(6px) scale(.96)}}
+      @media (prefers-reduced-motion: no-preference){[data-pop]{animation:pop .45s cubic-bezier(.2,.9,.3,1.2) both}}
     </style>
   </head>
   <body>
