@@ -40,11 +40,11 @@ export default function Nav({ page }: { page: Page }) {
       as="header"
       paddingInline={4}
       paddingBlock={2}
-      style={{ position: 'sticky', top: 0, zIndex: 20, background: 'color-mix(in oklab, var(--color-background-surface) 72%, transparent)', backdropFilter: 'blur(18px) saturate(1.5)', WebkitBackdropFilter: 'blur(18px) saturate(1.5)', borderBottom: '1px solid color-mix(in oklab, var(--color-text-primary) 8%, transparent)' }}
+      style={{ position: 'sticky', top: 0, zIndex: 20, background: 'color-mix(in oklab, var(--color-background-surface) 92%, transparent)', backdropFilter: 'blur(18px) saturate(1.5)', WebkitBackdropFilter: 'blur(18px) saturate(1.5)', borderBottom: '1px solid color-mix(in oklab, var(--color-text-primary) 8%, transparent)' }}
     >
       <HStack hAlign="between" vAlign="center" gap={3} wrap="nowrap">
         <Button variant="ghost" href="#start" label="Cung Solutions">
-          <Logo height={34} />
+          <Logo height={narrow ? 26 : 30} />
         </Button>
         {narrow ? (
           <HStack gap={1} vAlign="center">

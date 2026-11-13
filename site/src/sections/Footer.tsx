@@ -5,7 +5,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
 import { Section } from '@astryxdesign/core/Section';
 import Logo from './Logo';
-import { CONTACT_EMAIL, mailto, useT } from '../data';
+import { CONTACT_EMAIL, useT } from '../data';
 
 const PHONE = '+41 76 330 79 11';
 
@@ -28,7 +28,7 @@ export default function Footer() {
       <VStack as="footer" gap={8} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
         <VStack gap={3} hAlign="center">
           <Heading level={2} type="display-3" justify="center">{t({ de: 'Bereit für Ihre neue Website?', en: 'Ready for your new website?' })}</Heading>
-          <Button size="lg" variant="primary" href={mailto('Anfrage Website')} label={t({ de: 'Jetzt anfragen', en: 'Get in touch' })} />
+          <Button size="lg" variant="primary" href="#konfigurator" label={t({ de: 'Jetzt konfigurieren', en: 'Configure now' })} />
         </VStack>
         <HStack gap={6} hAlign="between" wrap="wrap" vAlign="end">
           {address}
