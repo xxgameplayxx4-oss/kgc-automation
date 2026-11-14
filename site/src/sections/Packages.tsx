@@ -5,103 +5,100 @@ import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { Badge } from '@astryxdesign/core/Badge';
 import Eyebrow from './Eyebrow';
-import { ADDONS, CARE, CARE_HOURS, DISCOUNTS, DOMAIN_FEE, UPGRADE_PRICE, chf, contactDraft, pct, presetOf, quote, TIERS, useT } from '../data';
+import HeroFilmDemo from './HeroFilmDemo';
+import { AUTOMATIONS, AUTOMATION_MONTHLY, BASE_FEATURES, CARE, CARE_HOURS, DOMAIN_FEE, FEATURES, TIERS, UPGRADE_PRICE, chf, contactDraft, useT, type T } from '../data';
+
+const HERO_FILM: T = { de: 'Auf Wunsch komme ich vorbei und filme, wie man Ihr Geschäft betritt, geschnitten als kinoreifer Film für den Startbereich.', en: 'On request I come by and film walking into your business, cut as a cinematic film for the hero.' };
+const [CORE, PRO] = TIERS;
+const ul = { margin: 0, paddingInlineStart: 'var(--spacing-4)' };
 
 export default function Packages() {
   const t = useT();
-  const steps = [...DISCOUNTS].reverse().map(([min, r]) => `${min}+ ${pct(r)}`).join(' · ');
+  const cta = (subject: string, body = '') => () => { contactDraft.subject = subject; contactDraft.body = body; };
+  const li = (k: string | number, x: T, bold = false) => <li key={k}><Text size="sm" weight={bold ? 'medium' : undefined}>{t(x)}</Text></li>;
+  const proOnly = FEATURES.filter(f => !CORE.includes.includes(f.id) && f.id !== 'hero');
   return (
     <VStack id="pakete" as="section" gap={6} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
       <VStack gap={2}>
         <Eyebrow>{t({ de: 'Fixpreise', en: 'Fixed prices' })}</Eyebrow>
         <Heading level={2} type="display-3">{t({ de: 'Pakete', en: 'Packages' })}</Heading>
-        <Text color="secondary">
-          {t({
-            de: `Die Basis enthält die Grundlagen, alles Weitere sind Zusätze. Je mehr Zusätze, desto mehr Rabatt: ${steps}, alle Zusätze 30 %.`,
-            en: `Basic has the essentials, everything else is an add-on. The more add-ons, the bigger the discount: ${steps}, all add-ons 30 %.`,
-          })}
-        </Text>
+        <Text color="secondary">{t({ de: 'Websites zum Fixpreis. Wählen Sie Ihr Paket, den Rest erledige ich.', en: 'Websites at a fixed price. Pick your package, I take care of the rest.' })}</Text>
       </VStack>
-      <Grid columns={{ minWidth: 250 }} gap={4} align="stretch">
-        {TIERS.map(tier => {
-          const top = tier.id === 'business';
-          const q = quote(new Set(presetOf(tier)));
-          return (
-            <Card key={tier.id} variant={top ? 'yellow' : 'default'} elevation={top ? 'low' : 'none'} padding={5}>
-              <VStack gap={3}>
-                <HStack gap={2} vAlign="center" wrap="wrap">
-                  <Heading level={3}>{t(tier.name)}</Heading>
-                  {top && <Badge variant="yellow" label={t({ de: 'Beliebt', en: 'Popular' })} />}
-                </HStack>
-                <VStack gap={1}>
-                  <Heading level={2} type="display-3" color="accent">{chf(q.total)}</Heading>
-                  {q.discount > 0 && (
-                    <HStack gap={1.5} vAlign="center">
-                      <Text size="sm" color="secondary" hasTabularNumbers style={{ textDecoration: 'line-through' }}>{chf(q.total + q.discount)}</Text>
-                      <Text size="sm" color="secondary">{`−${pct(q.rate)} ${t({ de: 'Rabatt', en: 'off' })}`}</Text>
-                    </HStack>
-                  )}
-                  <Text size="sm" weight="medium" hasTabularNumbers>
-                    {`+ ${chf(CARE[tier.id].price)} / ${t({ de: 'Monat Wartung', en: 'month maintenance' })}`}
-                    {CARE[tier.id].list !== CARE[tier.id].price ? ` (${t({ de: 'statt', en: 'instead of' })} ${chf(CARE[tier.id].list)})` : ''}
-                  </Text>
-                </VStack>
-                <Text color="secondary">{t(tier.tagline)}</Text>
-                <VStack gap={1.5} as="ul" style={{ margin: 0, paddingInlineStart: 'var(--spacing-4)' }}>
-                  {tier.id === 'basis'
-                    ? tier.features.map((f, i) => <li key={i}><Text size="sm">{t(f)}</Text></li>)
-                    : tier.id === 'komplett'
-                      ? [<li key="all"><Text size="sm">{t({ de: `Alles aus Basis plus alle ${ADDONS.length} Zusätze`, en: `Everything in Basic plus all ${ADDONS.length} add-ons` })}</Text></li>]
-                      : [
-                          <li key="base"><Text size="sm" weight="medium">{t({ de: 'Alles aus Basis, plus:', en: 'Everything in Basic, plus:' })}</Text></li>,
-                          ...q.chosen.map(a => <li key={a.id}><Text size="sm">{t(a.name)}</Text></li>),
-                        ]}
-                </VStack>
-                <Button variant={top ? 'primary' : 'secondary'} href="#konfigurator" label={t({ de: 'Im Konfigurator anpassen', en: 'Adjust in configurator' })} />
+      <Grid columns={{ minWidth: 240, max: 4 }} gap={4} align="stretch">
+        <Card variant="muted" padding={5}>
+          <VStack gap={3}>
+            <Heading level={3}>{t({ de: 'Website-Upgrade', en: 'Website upgrade' })}</Heading>
+            <Heading level={2} type="display-3" color="accent">{t({ de: `ab ${chf(UPGRADE_PRICE)}`, en: `from ${chf(UPGRADE_PRICE)}` })}</Heading>
+            <Text color="secondary">{t({ de: 'Sie haben schon eine Website, aber sie wirkt veraltet? Ich übernehme Ihre Texte, Bilder und Angaben und baue daraus eine neue, schnelle, mobile Website. Weil der Inhalt schon da ist, bleibt der Preis tief.', en: 'You already have a website but it looks dated? I take your texts, images and details and turn them into a new, fast, mobile website. Because the content exists, the price stays low.' })}</Text>
+            <Button variant="secondary" href="#kontakt" label={t({ de: 'Upgrade anfragen', en: 'Request upgrade' })}
+              onClick={cta('Website-Upgrade', t({ de: 'Meine aktuelle Website: ', en: 'My current website: ' }))} />
+          </VStack>
+        </Card>
+        <Card padding={5}>
+          <VStack gap={3}>
+            <Heading level={3}>{t(CORE.name)}</Heading>
+            <Heading level={2} type="display-3" color="accent">{chf(CORE.price)}</Heading>
+            <Text color="secondary">{t(CORE.tagline)}</Text>
+            <VStack gap={1.5} as="ul" style={ul}>
+              {BASE_FEATURES.map((f, i) => li('b' + i, f))}
+              {FEATURES.filter(f => CORE.includes.includes(f.id)).map(f => li(f.id, f.name))}
+            </VStack>
+            <Button variant="secondary" href="#kontakt" label={t({ de: 'Core anfragen', en: 'Request Core' })} onClick={cta('Website Core')} />
+          </VStack>
+        </Card>
+        <Card variant="yellow" elevation="low" padding={5}>
+          <VStack gap={3}>
+            <HStack gap={2} vAlign="center" wrap="wrap">
+              <Heading level={3}>{t(PRO.name)}</Heading>
+              <Badge variant="yellow" label={t({ de: 'Empfohlen', en: 'Recommended' })} />
+            </HStack>
+            <Heading level={2} type="display-3" color="accent">{chf(PRO.price)}</Heading>
+            <Text color="secondary">{t(PRO.tagline)}</Text>
+            <VStack gap={1.5} as="ul" style={ul}>
+              {li('all', { de: 'Alles aus Core, plus:', en: 'Everything in Core, plus:' }, true)}
+              {li('hero', { de: 'Individueller Startbereich mit Film', en: 'Custom hero with film' }, true)}
+              {proOnly.map(f => li(f.id, f.name))}
+            </VStack>
+            <Card variant="muted" padding={3}>
+              <VStack gap={2} hAlign="start">
+                <Text size="sm">{t(HERO_FILM)}</Text>
+                <Button size="sm" variant="secondary" href="#film-demo" label={t({ de: 'Demo ansehen', en: 'View demo' })} />
               </VStack>
             </Card>
-          );
-        })}
-      </Grid>
-      <Card variant="muted" padding={5}>
-        <HStack gap={4} vAlign="center" hAlign="between" wrap="wrap">
-          <VStack gap={2} style={{ flex: '1 1 20rem', minWidth: 0 }}>
-            <HStack gap={2} vAlign="center" wrap="wrap">
-              <Heading level={3}>{t({ de: 'Website-Upgrade', en: 'Website upgrade' })}</Heading>
-              <Badge variant="yellow" label={t({ de: `ab ${chf(UPGRADE_PRICE)}`, en: `from ${chf(UPGRADE_PRICE)}` })} />
-            </HStack>
-            <Text color="secondary">
-              {t({
-                de: 'Sie haben schon eine Website, aber sie wirkt veraltet? Ich übernehme Ihre bestehenden Texte, Bilder und Angaben und baue daraus eine neue, schnelle und mobile Website mit allem aus Basis. Weil der Inhalt schon da ist, braucht es kaum Abstimmung, darum der tiefere Preis. Zusätze aus dem Konfigurator sind möglich.',
-                en: 'You already have a website, but it looks dated? I take your existing texts, images and details and turn them into a new, fast, mobile website with everything in Basic. Because the content already exists, it takes little back and forth, hence the lower price. Add-ons from the configurator are possible.',
-              })}
-            </Text>
+            <Button variant="primary" href="#kontakt" label={t({ de: 'Pro anfragen', en: 'Request Pro' })} onClick={cta('Website Pro')} />
           </VStack>
-          <Button variant="primary" href="#kontakt" label={t({ de: 'Upgrade anfragen', en: 'Request upgrade' })}
-            onClick={() => { contactDraft.subject = 'Website-Upgrade'; contactDraft.body = t({ de: 'Meine aktuelle Website: ', en: 'My current website: ' }); }} />
-        </HStack>
-      </Card>
+        </Card>
+        <Card padding={5}>
+          <VStack gap={3}>
+            <Heading level={3}>{t({ de: 'Automation Add-on', en: 'Automation add-on' })}</Heading>
+            <Heading level={2} type="display-3" color="accent">{t({ de: `ab ${chf(AUTOMATION_MONTHLY)} / Monat`, en: `from ${chf(AUTOMATION_MONTHLY)} / month` })}</Heading>
+            <Text color="secondary">{t({ de: 'Für Betriebe, die nur Automationen wollen, auch ohne neue Website. Keine Einrichtungsgebühr.', en: 'For businesses that only want automations, even without a new website. No setup fee.' })}</Text>
+            <VStack gap={1.5} as="ul" style={ul}>
+              {AUTOMATIONS.map(a => li(a.id, a.name))}
+            </VStack>
+            <Button variant="secondary" href="#kontakt" label={t({ de: 'Automationen anfragen', en: 'Request automations' })} onClick={cta('Automation Add-on')} />
+          </VStack>
+        </Card>
+      </Grid>
+      <HeroFilmDemo />
       <VStack gap={3}>
         <Heading level={3}>{t({ de: 'Monatliche Wartung', en: 'Monthly maintenance' })}</Heading>
         <Grid columns={{ minWidth: 240, max: 3 }} gap={4} align="stretch">
           <Card variant="muted" padding={5}>
             <VStack gap={2}>
               <Text weight="semibold">{t({ de: 'Das ist dabei', en: 'What is included' })}</Text>
-              <VStack gap={1} as="ul" style={{ margin: 0, paddingInlineStart: 'var(--spacing-4)' }}>
-                {[{ de: 'Hosting', en: 'Hosting' }, { de: 'Updates und Sicherheit', en: 'Updates and security' }, { de: `${CARE_HOURS} Stunden Änderungen pro Monat`, en: `${CARE_HOURS} hours of changes per month` }].map((x, i) => <li key={i}><Text size="sm">{t(x)}</Text></li>)}
+              <VStack gap={1} as="ul" style={ul}>
+                {[{ de: 'Hosting', en: 'Hosting' }, { de: 'Updates und Sicherheit', en: 'Updates and security' }, { de: `${CARE_HOURS} Stunden Änderungen pro Monat`, en: `${CARE_HOURS} hours of changes per month` }].map((x, i) => li(i, x))}
               </VStack>
             </VStack>
           </Card>
           <Card variant="muted" padding={5}>
             <VStack gap={2}>
               <Text weight="semibold">{t({ de: 'Preis pro Monat', en: 'Price per month' })}</Text>
-              {TIERS.map(tier => (
-                <HStack key={tier.id} hAlign="between" gap={3}>
-                  <Text size="sm">{t(tier.name)}</Text>
-                  <Text size="sm" hasTabularNumbers>
-                    {chf(CARE[tier.id].price)}
-                    {CARE[tier.id].list !== CARE[tier.id].price ? ` (${t({ de: 'statt', en: 'instead of' })} ${chf(CARE[tier.id].list)})` : ''}
-                  </Text>
+              {([['upgrade', { de: 'Website-Upgrade', en: 'Website upgrade' }], ['core', CORE.name], ['pro', PRO.name]] as [keyof typeof CARE, T][]).map(([k, n]) => (
+                <HStack key={k} hAlign="between" gap={3}>
+                  <Text size="sm">{t(n)}</Text>
+                  <Text size="sm" hasTabularNumbers>{chf(CARE[k])}</Text>
                 </HStack>
               ))}
             </VStack>
@@ -126,8 +123,8 @@ export default function Packages() {
       </Card>
       <Text type="supporting">
         {t({
-          de: 'Preise einmalig in CHF. Rabatt gilt auf die Zusätze. Domain und Drittkosten zum Selbstkostenpreis. Die Hälfte bei Auftrag, der Rest bei Fertigstellung.',
-          en: 'Prices are one-time in CHF. Discount applies to add-ons. Domain and third-party costs at cost. Half on order, the rest on completion.',
+          de: 'Website-Preise einmalig in CHF, Automationen monatlich. Domain und Drittkosten zum Selbstkostenpreis. Die Hälfte bei Auftrag, der Rest bei Fertigstellung.',
+          en: 'Website prices are one-time in CHF, automations monthly. Domain and third-party costs at cost. Half on order, the rest on completion.',
         })}
       </Text>
     </VStack>

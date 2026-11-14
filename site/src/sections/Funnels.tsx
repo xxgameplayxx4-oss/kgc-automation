@@ -7,9 +7,11 @@ import { SelectableCard } from '@astryxdesign/core/SelectableCard';
 import { Stack } from '@astryxdesign/core/Stack';
 import { Step, Stepper } from '@astryxdesign/core/Stepper';
 import { Text } from '@astryxdesign/core/Text';
+import { TextArea } from '@astryxdesign/core/TextArea';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { Token } from '@astryxdesign/core/Token';
 import { useT, type T } from '../data';
+import { sendBuchung, type Buchung } from '../autopilot';
 
 // A working booking-funnel demo in the site's own theme. Nothing is sent anywhere.
 
@@ -56,34 +58,43 @@ function Choices({ items, value, onPick, columns = 3 }: { items: Choice[]; value
   );
 }
 
-function Done({ lines, onReset }: { lines: string[]; onReset: () => void }) {
+function Done({ lines, onReset, preview, reply }: { lines: string[]; onReset: () => void; preview?: boolean; reply?: string }) {
   const t = useT();
   return (
     <Stack gap={3} data-pop="">
       <Heading level={3}>{t({ de: '✓ Anfrage erhalten', en: '✓ Request received' })}</Heading>
-      <Text color="secondary">{t({ de: 'So sieht es Ihr Kunde. Gleichzeitig gehen die Bestätigung per E-Mail und der Kalendereintrag raus.', en: 'This is what your customer sees. At the same time the email confirmation and the calendar entry go out.' })}</Text>
+      <Text color="secondary">{t({ de: 'So sieht es Ihr Kunde. Gleichzeitig gehen die Bestätigung per WhatsApp und E-Mail und der Kalendereintrag raus.', en: 'This is what your customer sees. At the same time the WhatsApp and email confirmation and the calendar entry go out.' })}</Text>
       <Card variant="muted" padding={3}>
         <Stack gap={1}>{lines.map(l => <Text key={l} size="sm">{l}</Text>)}</Stack>
       </Card>
+      {preview && reply && (
+        <Stack gap={1} style={{ maxWidth: '28rem' }}>
+          <Text type="supporting" size="sm">{t({ de: 'WhatsApp-Vorschau', en: 'WhatsApp preview' })}</Text>
+          <Card variant="muted" padding={3} style={{ borderRadius: 'var(--radius-lg)' }}><Text size="sm">{reply}</Text></Card>
+        </Stack>
+      )}
       <Text type="supporting" size="sm">{t({ de: 'Demo: Es wurde nichts gesendet.', en: 'Demo: nothing was sent.' })}</Text>
       <Stack direction="horizontal"><Button variant="secondary" size="sm" label={t({ de: 'Nochmals ausprobieren', en: 'Try again' })} onClick={onReset} /></Stack>
     </Stack>
   );
 }
 
-function Contact({ phone, onSubmit, cta }: { phone?: boolean; onSubmit: (name: string) => void; cta: T }) {
+type Kontakt = { name: string; telefon: string; email: string; bemerkung: string };
+
+function Contact({ onSubmit, cta }: { onSubmit: (k: Kontakt) => void; cta: T }) {
   const t = useT();
-  const [name, setName] = useState('');
-  const [reach, setReach] = useState('');
-  const ok = name.trim().length > 1 && (phone ? reach.replace(/\D/g, '').length >= 9 : /\S+@\S+\.\S+/.test(reach));
+  const [k, setK] = useState<Kontakt>({ name: '', telefon: '', email: '', bemerkung: '' });
+  const set = (f: keyof Kontakt) => (v: string) => setK(o => ({ ...o, [f]: v }));
+  const ok = k.name.trim().length > 1 && k.telefon.replace(/[s+]/g, '').length >= 9 && /S+@S+.S+/.test(k.email);
   return (
     <Stack gap={3} style={{ maxWidth: '28rem' }}>
-      <TextInput label={t({ de: 'Name', en: 'Name' })} value={name} onChange={setName} placeholder="Maria Muster" />
-      {phone
-        ? <TextInput type="tel" label={t({ de: 'Telefon', en: 'Phone' })} value={reach} onChange={setReach} placeholder="079 123 45 67" />
-        : <TextInput type="email" label="E-Mail" value={reach} onChange={setReach} placeholder="maria@beispiel.ch" />}
+      <TextInput label="Name" value={k.name} onChange={set('name')} placeholder="Maria Muster" autoComplete="name" isRequired />
+      <TextInput type="tel" label={t({ de: 'Telefon / WhatsApp', en: 'Phone / WhatsApp' })} value={k.telefon} onChange={set('telefon')} placeholder="079 123 45 67" autoComplete="tel"
+        description={t({ de: 'Sie erhalten die Bestätigung sofort per WhatsApp.', en: 'You get the confirmation right away on WhatsApp.' })} isRequired />
+      <TextInput type="email" label="E-Mail" value={k.email} onChange={set('email')} placeholder="maria@beispiel.ch" autoComplete="email" isRequired />
+      <TextArea label={t({ de: 'Bemerkung', en: 'Note' })} value={k.bemerkung} onChange={set('bemerkung')} rows={3} isOptional />
       <Stack direction="horizontal">
-        <Button variant="primary" label={t(cta)} isDisabled={!ok} onClick={() => onSubmit(name.trim())} />
+        <Button variant="primary" label={t(cta)} isDisabled={!ok} onClick={() => onSubmit({ ...k, name: k.name.trim() })} />
       </Stack>
     </Stack>
   );
@@ -140,16 +151,27 @@ function ConsultFunnel() {
   const [type, setType] = useState<string>();
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>();
-  const [doneName, setDoneName] = useState<string>();
+  const [done, setDone] = useState<{ name: string; reply: string; preview: boolean }>();
   const meeting = MEETINGS.find(m => m.id === type);
   const day = date?.toLocaleDateString(t({ de: 'de-CH', en: 'en-GB' }), { weekday: 'long', day: 'numeric', month: 'long' });
   const picked = [meeting && t(meeting.name), day, time].filter(Boolean) as string[];
-  const reset = () => { setStep(0); setType(undefined); setDate(undefined); setTime(undefined); setDoneName(undefined); };
+  const reset = () => { setStep(0); setType(undefined); setDate(undefined); setTime(undefined); setDone(undefined); };
   const steps: T[] = [{ de: 'Art', en: 'Type' }, { de: 'Datum & Zeit', en: 'Date & time' }, { de: 'Kontakt', en: 'Contact' }];
 
-  if (doneName) return (
+  const submit = async (k: Kontakt) => {
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const iso = date ? `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` : '';
+    const first = k.name.split(' ')[0];
+    const reply = t({ de: `Hallo ${first}, danke für Ihre Buchung am ${day} um ${time}. Wir freuen uns auf Sie!`, en: `Hi ${first}, thanks for your booking on ${day} at ${time}. We look forward to seeing you!` });
+    const b: Buchung = { name: k.name, telefon: k.telefon, email: k.email, termin_art: meeting ? meeting.name.de : '', datum: iso, uhrzeit: time ?? '', bemerkung: k.bemerkung };
+    setDone({ name: k.name, reply, preview: false }); // never blocks the confirmation
+    const r = await sendBuchung(b);
+    setDone(d => d && { ...d, preview: r === 'preview' });
+  };
+
+  if (done) return (
     <Shell steps={steps} step={3} picked={[]}>
-      <Done onReset={reset} lines={[`${doneName}`, ...picked]} />
+      <Done onReset={reset} preview={done.preview} reply={done.reply} lines={[done.name, ...picked]} />
     </Shell>
   );
   return (
@@ -172,18 +194,18 @@ function ConsultFunnel() {
                   {SLOTS.map(s => <Button key={s} size="sm" width="100%" variant={time === s ? 'primary' : 'secondary'} label={s} onClick={() => setTime(s)} />)}
                 </Grid>
               )}
+              <Stack direction="horizontal">
+                <Button variant="primary" label={t({ de: 'Weiter', en: 'Continue' })} isDisabled={!date || !time} onClick={() => setStep(2)} />
+              </Stack>
               <Text type="supporting" size="sm">{t({ de: 'Zeitzone: Europe/Zurich', en: 'Time zone: Europe/Zurich' })}</Text>
             </Stack>
           </Grid>
-          <Stack direction="horizontal">
-            <Button variant="primary" label={t({ de: 'Weiter', en: 'Continue' })} isDisabled={!date || !time} onClick={() => setStep(2)} />
-          </Stack>
         </Stack>
       )}
       {step === 2 && (
         <Stack gap={3}>
           <Heading level={3}>{t({ de: 'Wie erreichen wir Sie?', en: 'How can we reach you?' })}</Heading>
-          <Contact cta={{ de: 'Termin anfragen', en: 'Request appointment' }} onSubmit={setDoneName} />
+          <Contact cta={{ de: 'Termin anfragen', en: 'Request appointment' }} onSubmit={submit} />
         </Stack>
       )}
     </Shell>

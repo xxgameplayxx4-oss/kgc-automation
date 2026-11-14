@@ -6,7 +6,7 @@ import { Text } from '@astryxdesign/core/Text';
 import { chf, useT, type T } from '../data';
 import { C, caps, serif } from './Configurator';
 
-// Presentational previews of add-ons for the sample restaurant "Tavola" (all mock data, nothing is clickable except the calculator).
+// Presentational previews of add-ons with neutral sample content (all mock data, nothing is clickable except the calculator).
 type Mark = (id: string) => Record<string, string>;
 const pop = { 'data-pop': '' } as Record<string, string>;
 const Caps = ({ children, color }: { children: ReactNode; color?: string }) => <Text color="inherit" style={{ ...caps, color: color ?? C.soft }}>{children}</Text>;
@@ -139,7 +139,7 @@ export function PriceCalc({ phone }: { phone: boolean }) {
         </Stack>
         <Stack gap={1} paddingBlockStart={2} style={{ borderTop: '1px solid rgba(246,241,232,.25)' }}>
           <Serif size="2em">{t({ de: 'Richtpreis', en: 'Guide price' })} {chf(food + drinks)}</Serif>
-          <Text size="xsm" color="inherit" style={{ opacity: 0.6 }}>{t({ de: `ca. ${chf(Math.round((food + drinks) / guests))} pro Person · unverbindlich, inkl. MwSt.`, en: `approx. ${chf(Math.round((food + drinks) / guests))} per person · non-binding, incl. VAT` })}</Text>
+          <Text size="xsm" color="inherit" style={{ opacity: 0.6 }}>{t({ de: `ca. ${chf(Math.round((food + drinks) / guests))} pro Person · unverbindlich`, en: `approx. ${chf(Math.round((food + drinks) / guests))} per person · non-binding` })}</Text>
           <Text color="inherit" style={{ ...caps, color: '#e3a37f', paddingTop: '0.4em' }}>{t({ de: 'Offerte anfragen →', en: 'Request a quote →' })}</Text>
         </Stack>
       </Stack>
@@ -149,7 +149,7 @@ export function PriceCalc({ phone }: { phone: boolean }) {
 
 /* ───────────── Automations: what happens after a booking ───────────── */
 
-const NO = 'TV-48213';
+const NO = 'MA-48213';
 const Mail = ({ from, subject, children, tag }: { from: string; subject: string; children: ReactNode; tag?: ReactNode }) => (
   <Card padding={0} elevation="med" style={{ overflow: 'hidden', height: '100%' }}>
     <Stack>
@@ -168,11 +168,11 @@ function PlainConfirmation({ m }: { m: Record<string, string> }) {
   const t = useT();
   return (
     <Stack {...pop} {...m} gap={1}>
-      <Mail from="Tavola <info@tavola-baden.ch>" subject={t({ de: `Ihre Reservation ${NO}`, en: `Your booking ${NO}` })}>
+      <Mail from="Muster AG <info@muster.ch>" subject={t({ de: `Ihr Termin ${NO}`, en: `Your booking ${NO}` })}>
         <Stack padding={3}>
           <Text size="sm" style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{t({
-            de: `Guten Tag Laura Meier\n\nvielen Dank, Ihre Reservation ist bei uns eingegangen.\n\nBuchungsnummer: ${NO}\nDatum: Fr., 20. November 2026\nZeit: 19:30 Uhr\nPersonen: 2\n\nFreundliche Grüsse\nTavola, Weite Gasse 7, 5400 Baden`,
-            en: `Hello Laura Meier\n\nthank you, we have received your booking.\n\nBooking number: ${NO}\nDate: Fri, 20 November 2026\nTime: 7:30 pm\nGuests: 2\n\nKind regards\nTavola, Weite Gasse 7, 5400 Baden`,
+            de: `Guten Tag Laura Meier\n\nvielen Dank, Ihr Termin ist bei uns eingegangen.\n\nBuchungsnummer: ${NO}\nDatum: Fr., 20. November 2026\nZeit: 19:30 Uhr\nLeistung: Beratung\n\nFreundliche Grüsse\nMuster AG, Musterstrasse 1, 8000 Zürich`,
+            en: `Hello Laura Meier\n\nthank you, we have received your booking.\n\nBooking number: ${NO}\nDate: Fri, 20 November 2026\nTime: 7:30 pm\nService: Consultation\n\nKind regards\nMuster AG, Musterstrasse 1, 8000 Zürich`,
           })}</Text>
         </Stack>
       </Mail>
@@ -184,19 +184,19 @@ function DesignedConfirmation({ m }: { m: Record<string, string> }) {
   const t = useT();
   return (
     <Stack {...pop} {...m}>
-      <Mail from="Tavola <reservation@tavola-baden.ch>" subject={t({ de: `Ihre Reservation ${NO} · Fr., 20. Nov., 19:30`, en: `Your booking ${NO} · Fri 20 Nov, 7:30 pm` })}>
+      <Mail from="Muster AG <termin@muster.ch>" subject={t({ de: `Ihr Termin ${NO} · Fr., 20. Nov., 19:30`, en: `Your booking ${NO} · Fri 20 Nov, 7:30 pm` })}>
         <Stack style={{ background: C.card, color: C.ink }}>
           <Stack direction="horizontal" justify="between" align="center" paddingInline={3} paddingBlock={3} style={{ background: C.night, color: C.paper }}>
-            <Text color="inherit" style={{ ...serif, fontStyle: 'italic', fontSize: '1.35em' }}>Tavola</Text>
+            <Text color="inherit" style={{ ...serif, fontStyle: 'italic', fontSize: '1.35em' }}>Muster AG</Text>
             <Text size="xsm" color="inherit" style={{ ...mono, color: '#d7a07c' }}>{NO}</Text>
           </Stack>
           <Stack gap={1} paddingInline={3} paddingBlock={3} style={{ borderBottom: `2px solid ${C.ink}` }}>
-            <Caps color={C.accent}>{t({ de: 'Reservation bestätigt', en: 'Booking confirmed' })}</Caps>
+            <Caps color={C.accent}>{t({ de: 'Termin bestätigt', en: 'Booking confirmed' })}</Caps>
             <Serif size="1.5em">{t({ de: 'Freitag, 20. November', en: 'Friday, 20 November' })}</Serif>
-            <Text color="inherit" style={{ ...serif, fontSize: '1.1em' }}><strong>{t({ de: '19:30 Uhr', en: '7:30 pm' })}</strong> · {t({ de: '2 Personen', en: '2 guests' })}</Text>
+            <Text color="inherit" style={{ ...serif, fontSize: '1.1em' }}><strong>{t({ de: '19:30 Uhr', en: '7:30 pm' })}</strong> · {t({ de: 'Beratung', en: 'Consultation' })}</Text>
           </Stack>
           <Stack gap={2} padding={3}>
-            <Text size="sm" color="inherit" style={{ color: C.soft }}>{t({ de: 'Guten Tag Laura, wir freuen uns auf Sie. Der Tisch ist für Sie reserviert.', en: 'Hello Laura, we look forward to seeing you. Your table is reserved.' })}</Text>
+            <Text size="sm" color="inherit" style={{ color: C.soft }}>{t({ de: 'Guten Tag Laura, wir freuen uns auf Sie. Ihr Termin ist für Sie reserviert.', en: 'Hello Laura, we look forward to seeing you. Your appointment is reserved.' })}</Text>
             <Stack direction="horizontal" gap={1.5} wrap="wrap">
               <Text color="inherit" style={{ ...caps, padding: '0.9em 1.3em', background: C.ink, color: C.paper }}>{t({ de: 'In Kalender eintragen', en: 'Add to calendar' })}</Text>
               <Text color="inherit" style={{ ...caps, padding: '0.9em 1.3em', border: `1px solid ${C.ink}` }}>{t({ de: 'Umbuchen', en: 'Change' })}</Text>
@@ -220,7 +220,7 @@ function CalendarDay({ m }: { m: Record<string, string> }) {
               <Text size="xsm" color="secondary" style={caps}>{t({ de: 'Fr.', en: 'Fri' })}</Text>
               <Text style={{ ...serif, fontSize: '1.6em' }}>20</Text>
             </Stack>
-            <Text size="xsm" color="secondary">{t({ de: 'Kalender · Tavola Reservationen', en: 'Calendar · Tavola bookings' })}</Text>
+            <Text size="xsm" color="secondary">{t({ de: 'Kalender · Termine', en: 'Calendar · Appointments' })}</Text>
           </Stack>
           <Stack style={{ position: 'relative', paddingBlock: '0.4rem' }}>
             {[17, 18, 19, 20, 21].map(h => (
@@ -229,7 +229,7 @@ function CalendarDay({ m }: { m: Record<string, string> }) {
               </Stack>
             ))}
             <Stack gap={0} padding={1} style={abs({ left: '4.2em', right: '0.75rem', top: `${0.4 + (19.5 - H0) * rowH}rem`, height: `${rowH * 1.5 - 0.15}rem`, background: '#1a73e8', color: 'white', borderRadius: '0.4rem', overflow: 'hidden' })}>
-              <Text size="xsm" color="inherit" weight="semibold" maxLines={1}>Tavola · Laura Meier · 2 {t({ de: 'Pers.', en: 'guests' })}</Text>
+              <Text size="xsm" color="inherit" weight="semibold" maxLines={1}>Beratung · Laura Meier</Text>
               <Text size="xsm" color="inherit" hasTabularNumbers style={{ opacity: 0.9 }}>19:30–21:00 · {NO}</Text>
             </Stack>
           </Stack>
@@ -247,15 +247,15 @@ function Reminder({ m }: { m: Record<string, string> }) {
         <Stack direction="horizontal" gap={2} align="start">
           <Text size="sm" color="inherit" style={{ width: '2.2em', height: '2.2em', display: 'grid', placeItems: 'center', borderRadius: '0.5em', background: C.night, color: C.paper, ...serif, fontStyle: 'italic', flexShrink: 0 }}>T</Text>
           <Stack gap={0.5} style={{ minWidth: 0 }}>
-            <Stack direction="horizontal" justify="between" gap={2}><Text size="xsm" weight="semibold">Tavola</Text><Text size="xsm" color="secondary">{t({ de: 'jetzt', en: 'now' })}</Text></Stack>
-            <Text size="sm" weight="semibold">{t({ de: 'Morgen 19:30 · Tavola', en: 'Tomorrow 7:30 pm · Tavola' })}</Text>
-            <Text size="xsm" color="secondary">{t({ de: 'Wir freuen uns auf Sie, 2 Personen.', en: 'We look forward to seeing you, 2 guests.' })}</Text>
+            <Stack direction="horizontal" justify="between" gap={2}><Text size="xsm" weight="semibold">Muster AG</Text><Text size="xsm" color="secondary">{t({ de: 'jetzt', en: 'now' })}</Text></Stack>
+            <Text size="sm" weight="semibold">{t({ de: 'Morgen 19:30 · Muster AG', en: 'Tomorrow 7:30 pm · Muster AG' })}</Text>
+            <Text size="xsm" color="secondary">{t({ de: 'Wir freuen uns auf Sie.', en: 'We look forward to seeing you.' })}</Text>
           </Stack>
         </Stack>
       </Card>
-      <Mail from="Tavola <reservation@tavola-baden.ch>" subject={t({ de: 'Erinnerung: Morgen 19:30 · Tavola', en: 'Reminder: Tomorrow 7:30 pm · Tavola' })} tag={<Label>{t({ de: '24 Stunden vorher', en: '24 hours before' })}</Label>}>
+      <Mail from="Muster AG <termin@muster.ch>" subject={t({ de: 'Erinnerung: Morgen 19:30 · Muster AG', en: 'Reminder: Tomorrow 7:30 pm · Muster AG' })} tag={<Label>{t({ de: '24 Stunden vorher', en: '24 hours before' })}</Label>}>
         <Stack gap={2} padding={3}>
-          <Text size="sm">{t({ de: `Guten Tag Laura, Ihr Tisch für 2 Personen ist morgen um 19:30 Uhr bereit. Buchung ${NO}.`, en: `Hello Laura, your table for 2 is ready tomorrow at 7:30 pm. Booking ${NO}.` })}</Text>
+          <Text size="sm">{t({ de: `Guten Tag Laura, Ihr Termin ist morgen um 19:30 Uhr. Buchung ${NO}.`, en: `Hello Laura, your appointment is tomorrow at 7:30 pm. Booking ${NO}.` })}</Text>
           <Stack direction="horizontal" gap={1.5}>
             <Text color="inherit" style={{ ...caps, padding: '0.9em 1.3em', background: C.accent, color: C.paper }}>{t({ de: 'Bestätigen', en: 'Confirm' })}</Text>
             <Text color="inherit" style={{ ...caps, padding: '0.9em 1.3em', border: `1px solid ${C.ink}` }}>{t({ de: 'Absagen', en: 'Cancel' })}</Text>
@@ -270,7 +270,7 @@ function ReviewRequest({ m }: { m: Record<string, string> }) {
   const t = useT();
   return (
     <Stack {...pop} {...m}>
-      <Mail from="Tavola <reservation@tavola-baden.ch>" subject={t({ de: 'Wie war Ihr Abend im Tavola?', en: 'How was your evening at Tavola?' })} tag={<Label>{t({ de: 'Am Tag nach dem Besuch', en: 'The day after the visit' })}</Label>}>
+      <Mail from="Muster AG <termin@muster.ch>" subject={t({ de: 'Wie war Ihr Besuch bei Muster AG?', en: 'How was your visit to Muster AG?' })} tag={<Label>{t({ de: 'Am Tag nach dem Besuch', en: 'The day after the visit' })}</Label>}>
         <Stack gap={2} padding={3} align="center" style={{ textAlign: 'center' }}>
           <Text size="sm">{t({ de: 'Guten Tag Laura, danke für Ihren Besuch. Eine Google-Bewertung hilft uns sehr, sie dauert 20 Sekunden.', en: 'Hello Laura, thank you for visiting. A Google review helps us a lot and takes 20 seconds.' })}</Text>
           <Stack direction="horizontal" gap={1}>
@@ -289,9 +289,9 @@ function SheetTable({ m, phone }: { m: Record<string, string>; phone: boolean })
   const t = useT();
   const rows: [string, string, string, string, string][] = [
     [NO, 'Laura Meier', 'Fr 20.11. 19:30', '2', t({ de: 'Neu', en: 'New' })],
-    ['TV-48190', 'Marco Keller', 'Sa 21.11. 20:00', '6', t({ de: 'Bestätigt', en: 'Confirmed' })],
-    ['TV-48177', 'Anna Frei', 'Do 19.11. 18:30', '4', t({ de: 'Bestätigt', en: 'Confirmed' })],
-    ['TV-48152', 'Firma Brun AG', 'Mi 18.11. 12:00', '12', t({ de: 'Bestätigt', en: 'Confirmed' })],
+    ['MA-48190', 'Marco Keller', 'Sa 21.11. 20:00', '6', t({ de: 'Bestätigt', en: 'Confirmed' })],
+    ['MA-48177', 'Anna Frei', 'Do 19.11. 18:30', '4', t({ de: 'Bestätigt', en: 'Confirmed' })],
+    ['MA-48152', 'Firma Brun AG', 'Mi 18.11. 12:00', '12', t({ de: 'Bestätigt', en: 'Confirmed' })],
   ];
   const heads = [t({ de: 'Nr.', en: 'No.' }), 'Name', t({ de: 'Datum', en: 'Date' }), 'P.', 'Status'];
   const tpl = phone ? '5.6em 1fr 2.6em 5.6em' : '5.6em 1fr 8em 2.4em 5.6em';
@@ -303,7 +303,7 @@ function SheetTable({ m, phone }: { m: Record<string, string>; phone: boolean })
         <Stack>
           <Stack direction="horizontal" gap={1.5} align="center" padding={2} style={{ borderBottom: '1px solid var(--color-border)' }}>
             <Text size="sm" color="inherit" style={{ width: '1.4em', height: '1.8em', background: '#188038', borderRadius: '0.2em', flexShrink: 0 }} aria-hidden="true">{' '}</Text>
-            <Text size="sm" weight="semibold" maxLines={1}>{t({ de: 'Tavola · Anfragen 2026', en: 'Tavola · Enquiries 2026' })}</Text>
+            <Text size="sm" weight="semibold" maxLines={1}>{t({ de: 'Anfragen 2026', en: 'Enquiries 2026' })}</Text>
           </Stack>
           <Stack style={{ background: 'white', color: '#202124', overflowX: 'auto' }}><Stack style={{ minWidth: phone ? undefined : '34em' }}>
             {[show(heads), ...rows.map(show)].map((r, i) => {
@@ -325,6 +325,7 @@ function SheetTable({ m, phone }: { m: Record<string, string>; phone: boolean })
 export function AutomationFlow({ has, mark, phone }: { has: (id: string) => boolean; mark: Mark; phone: boolean }) {
   const t = useT();
   const cards: { id: string; wide?: boolean; node: ReactNode }[] = [];
+  if (has('wa-agent')) cards.push({ id: 'wa-agent', node: <WaReply m={mark('wa-agent')} /> });
   if (has('maildesign')) cards.push({ id: 'maildesign', node: <DesignedConfirmation m={{ ...mark('autoreply'), ...mark('maildesign') }} /> });
   else if (has('autoreply')) cards.push({ id: 'autoreply', node: <PlainConfirmation m={mark('autoreply')} /> });
   if (has('calendar')) cards.push({ id: 'calendar', node: <CalendarDay m={mark('calendar')} /> });
@@ -335,12 +336,63 @@ export function AutomationFlow({ has, mark, phone }: { has: (id: string) => bool
   return (
     <Stack gap={2}>
       <Stack gap={0.5}>
-        <Text type="supporting" size="sm" weight="semibold">{t({ de: 'Was nach einer Buchung automatisch passiert', en: 'What happens automatically after a booking' })}</Text>
-        <Text type="supporting" size="xsm">{t({ de: 'Beispiel: Laura Meier reserviert für Fr., 20. Nov., 19:30.', en: 'Example: Laura Meier books for Fri, 20 Nov, 7:30 pm.' })}</Text>
+        <Text type="supporting" size="sm" weight="semibold">{t({ de: 'Was nach einer Anfrage automatisch passiert', en: 'What happens automatically after an enquiry' })}</Text>
+        <Text type="supporting" size="xsm">{t({ de: 'Beispiel: Laura Meier bucht für Fr., 20. Nov., 19:30.', en: 'Example: Laura Meier books for Fri, 20 Nov, 7:30 pm.' })}</Text>
       </Stack>
       <Grid columns={{ minWidth: 300, max: phone ? 1 : 2 }} gap={3} align="start">
         {cards.map(c => <Stack key={c.id} style={{ gridColumn: c.wide ? '1 / -1' : undefined, minWidth: 0 }}>{c.node}</Stack>)}
       </Grid>
     </Stack>
+  );
+}
+
+/* ───────────── Neutral previews that work for any business ───────────── */
+
+/** WhatsApp reply a customer gets right after an enquiry. */
+function WaReply({ m }: { m: Record<string, string> }) {
+  const t = useT();
+  return (
+    <Stack {...pop} {...m}>
+      <Card padding={2} elevation="med" style={{ overflow: 'hidden', height: '100%' }}>
+        <Stack gap={1.5}>
+          <Stack direction="horizontal" gap={1.5} align="center">
+            <Text size="sm" color="inherit" style={{ width: '1.8em', height: '1.8em', display: 'grid', placeItems: 'center', borderRadius: 'var(--radius-full)', background: '#25d366', color: 'white' }}>✆</Text>
+            <Text size="sm" weight="semibold">Muster AG</Text>
+          </Stack>
+          <Text size="sm" style={{ background: 'var(--color-background-muted)', padding: '0.7em 0.9em', borderRadius: '0.7em', lineHeight: 1.5 }}>{t({ de: `Guten Tag Laura, danke für Ihre Anfrage. Ihr Termin ${NO} ist bestätigt: Fr., 20. Nov., 19:30.`, en: `Hello Laura, thanks for your enquiry. Your appointment ${NO} is confirmed: Fri, 20 Nov, 7:30 pm.` })}</Text>
+        </Stack>
+      </Card>
+    </Stack>
+  );
+}
+
+/** A price list as a square social post, with neutral sample services. */
+export function PricelistPost() {
+  const t = useT();
+  const rows: [T, string][] = [
+    [{ de: 'Leistung A', en: 'Service A' }, '60'],
+    [{ de: 'Leistung B', en: 'Service B' }, '90'],
+    [{ de: 'Leistung C', en: 'Service C' }, '140'],
+    [{ de: 'Beratung', en: 'Consultation' }, '80'],
+  ];
+  return (
+    <Card padding={0} elevation="med" style={{ overflow: 'hidden' }}>
+      <Stack gap={0} style={{ aspectRatio: '1', background: C.paper, color: C.ink, padding: '1.1em', fontSize: '0.8rem' }} justify="between">
+        <Stack gap={0.5}>
+          <Caps color={C.accent}>{t({ de: 'Ihr Geschäft', en: 'Your business' })}</Caps>
+          <Serif size="1.7em">{t({ de: 'Preisliste', en: 'Price list' })}</Serif>
+        </Stack>
+        <Stack gap={1}>
+          {rows.map(([n, p]) => (
+            <Stack key={p + n.en} direction="horizontal" align="end" gap={1}>
+              <Text size="sm" color="inherit">{t(n)}</Text>
+              <Stack style={{ flex: 1, borderBottom: `1px dotted ${C.soft}`, marginBottom: '0.3em', minWidth: '0.5em' }} />
+              <Text size="sm" color="inherit" hasTabularNumbers weight="semibold">CHF {p}</Text>
+            </Stack>
+          ))}
+        </Stack>
+        <Caps>muster.ch</Caps>
+      </Stack>
+    </Card>
   );
 }

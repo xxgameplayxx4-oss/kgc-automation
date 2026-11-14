@@ -1,7 +1,7 @@
 import { VStack } from '@astryxdesign/core/Layout';
 import { Heading, Text } from '@astryxdesign/core/Text';
 import { Collapsible, CollapsibleGroup } from '@astryxdesign/core/Collapsible';
-import { AUTOPILOT_MONTHLY, chf, useT, type T } from '../data';
+import { AUTOMATION_MONTHLY, AUTOPILOT_MONTHLY, CORE_PRICE, PRO_PRICE, UPGRADE_PRICE, chf, useT, type T } from '../data';
 
 const ITEMS: { q: T; a: T }[] = [
   { q: { de: 'Was kostet der Anfragen-Autopilot?', en: 'What does the Enquiry Autopilot cost?' }, a: { de: `Ab ${chf(AUTOPILOT_MONTHLY)} pro Monat, ohne Einrichtungsgebühr. Der genaue Preis hängt davon ab, wie viele Kanäle angebunden werden.`, en: `From ${chf(AUTOPILOT_MONTHLY)} per month, with no setup fee. The exact price depends on how many channels are connected.` } },
@@ -13,7 +13,9 @@ const ITEMS: { q: T; a: T }[] = [
   { q: { de: 'Was muss ich liefern?', en: 'What do I need to provide?' }, a: { de: 'Texte, Logo und Fotos. Wenn etwas fehlt, helfe ich gerne beim Formulieren und bei der Bildauswahl.', en: 'Texts, logo and photos. If something is missing, I am happy to help with wording and picking images.' } },
   { q: { de: 'Was kosten Hosting und Domain?', en: 'What do hosting and domain cost?' }, a: { de: 'Domain und Hosting verrechne ich zum Selbstkostenpreis, ohne Aufschlag. Die Einrichtung ist im Paket enthalten.', en: 'Domain and hosting are charged at cost, with no markup. Setup is included in the package.' } },
   { q: { de: 'Kann ich Inhalte später ändern?', en: 'Can I change content later?' }, a: { de: 'Ja. Schreiben Sie mir, was angepasst werden soll. Kleine Änderungen erledige ich schnell, grössere bespreche ich vorab mit Ihnen.', en: 'Yes. Tell me what to change. I handle small edits quickly and discuss larger ones with you first.' } },
-  { q: { de: 'Was ist der Unterschied zwischen Basis und Pro?', en: 'What is the difference between Basic and Pro?' }, a: { de: 'Pro enthält zusätzlich einen individuell gestalteten Startbereich (der grosse Bereich ganz oben, mit Video, Animation oder Bildern) und eine E-Mail-Adresse mit Ihrer Domain.', en: 'Pro adds a custom-engineered hero section (video, animation or imagery) and an email address on your domain.' } },
+  { q: { de: 'Was kostet eine Website?', en: 'What does a website cost?' }, a: { de: `Alles zum Fixpreis: Upgrade Ihrer bestehenden Website ab ${chf(UPGRADE_PRICE)}, Core ${chf(CORE_PRICE)}, Pro ${chf(PRO_PRICE)}.`, en: `All at a fixed price: upgrade of your existing website from ${chf(UPGRADE_PRICE)}, Core ${chf(CORE_PRICE)}, Pro ${chf(PRO_PRICE)}.` } },
+  { q: { de: 'Was ist der Unterschied zwischen Core und Pro?', en: 'What is the difference between Core and Pro?' }, a: { de: 'Core enthält alles Wichtige für eine gute Geschäfts-Website. Pro bringt zusätzlich alle individuellen Funktionen: Startbereich mit Film, Buchung, Preisrechner, Wochenplan, Unterseiten, zweite Sprache, offene Stellen und Newsletter.', en: 'Core has everything a good business website needs. Pro adds every custom feature: hero with film, booking, price calculator, weekly schedule, subpages, second language, job openings and newsletter.' } },
+  { q: { de: 'Kann ich nur Automationen buchen?', en: 'Can I book only automations?' }, a: { de: `Ja. Das Automation Add-on gibt es ab ${chf(AUTOMATION_MONTHLY)} pro Monat, ganz ohne neue Website.`, en: `Yes. The automation add-on starts at ${chf(AUTOMATION_MONTHLY)} per month, with no new website needed.` } },
   { q: { de: 'Gehört die Website mir?', en: 'Do I own the website?' }, a: { de: 'Ja. Nach der Schlusszahlung gehören Ihnen die Website und alle Inhalte. Sie erhalten die Dateien auf Wunsch.', en: 'Yes. After final payment the website and all content belong to you. You can have the files on request.' } },
 ];
 

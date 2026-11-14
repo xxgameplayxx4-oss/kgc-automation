@@ -1,6 +1,5 @@
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
-import { Avatar } from '@astryxdesign/core/Avatar';
 import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { CheckboxInput } from '@astryxdesign/core/CheckboxInput';
@@ -11,20 +10,17 @@ import { Link } from '@astryxdesign/core/Link';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import { Stack } from '@astryxdesign/core/Stack';
 import { StatusDot } from '@astryxdesign/core/StatusDot';
+import { Switch } from '@astryxdesign/core/Switch';
 import { Text } from '@astryxdesign/core/Text';
-import { Token } from '@astryxdesign/core/Token';
 import Eyebrow from './Eyebrow';
-import { AutomationFlow, HoursWeek, PriceCalc } from './AddonPreviews';
+import { AutomationFlow, HoursWeek, PriceCalc, PricelistPost } from './AddonPreviews';
 import { ADDON_ICONS } from './addonIcons';
-import { ADDONS, addonPrice, BASE_PRICE, careFor, DISCOUNTS, GROUPS, TIERS, chf, contactDraft, nextStep, pct, presetOf, quote, tierPrice, useT, type T } from '../data';
+import { AUTOMATIONS, AUTOMATION_MONTHLY, CARE, PRINT, TIERS, chf, contactDraft, quote, useT, type T } from '../data';
 
 // Dev-only self-check of the pricing maths (prices come from data.ts).
 if (import.meta.env.DEV) {
-  const ids = (n: number) => new Set(ADDONS.slice(0, n).map(a => a.id));
-  console.assert(quote(new Set()).total === BASE_PRICE, 'Basis alone');
-  console.assert(quote(new Set(['booking', 'calendar'])).total === BASE_PRICE + 650, 'under 5 add-ons: full price');
-  console.assert(quote(ids(5)).rate === 0.08 && quote(ids(8)).rate === 0.1 && quote(ids(10)).rate === 0.15, '5/8/10 steps');
-  console.assert(quote(ids(15)).rate === 0.2 && quote(ids(ADDONS.length)).rate === 0.3, '15 and all');
+  console.assert(quote(TIERS[0], new Set()).total === 2000, 'Core alone = 2000');
+  console.assert(quote(TIERS[1], new Set(['flyer', 'cards'])).total === 3200, 'Pro + flyer + cards = 3200');
 }
 
 type Device = 'desktop' | 'phone';
@@ -106,6 +102,7 @@ function Site({ pro, has, phone, mark }: { pro: boolean; has: (id: string) => bo
       <Stack style={{ ...abs({ inset: 0, zIndex: -1 }), backgroundImage: `linear-gradient(180deg, rgba(20,14,10,.55), rgba(20,14,10,.1) 35%, rgba(20,14,10,.85)), url(${IMG})`, backgroundSize: 'cover', backgroundPosition: 'center', animation: 'kb 14s ease-out both' }} />
       {nav}
       <Stack gap={3} paddingInline={gutter} paddingBlockEnd={phone ? 5 : 8} style={{ marginTop: 'auto' }}>
+        <Stack direction="horizontal"><Text {...pop} {...mark('hero')} size="xsm" color="inherit" style={{ ...caps, padding: '0.5em 1em', borderRadius: 'var(--radius-full)', background: 'rgba(246,241,232,.18)', border: '1px solid rgba(246,241,232,.5)' }}>▶ {t({ de: 'Film: Eingang zu Ihrem Geschäft', en: 'Film: walking into your business' })}</Text></Stack>
         <Caps color={C.paper}>{t({ de: 'Osteria · Altstadt Baden · seit 2009', en: 'Osteria · Baden old town · since 2009' })}</Caps>
         <Serif size={phone ? '2.7em' : '4.4em'}>{t({ de: 'Kochen, schenken,', en: 'Cook, pour,' })}<br /><em>{t({ de: 'geniessen.', en: 'enjoy.' })}</em></Serif>
         <Stack direction={phone ? 'vertical' : 'horizontal'} gap={3} align={phone ? 'start' : 'center'} justify="between">
@@ -348,31 +345,31 @@ function Site({ pro, has, phone, mark }: { pro: boolean; has: (id: string) => bo
   );
 }
 
-/** Desktop browser window or phone frame around the sample site, plus floating automation chips. */
-function Preview({ pro, sel, device, short, hl, mark }: { pro: boolean; sel: Set<string>; device: Device; short: boolean; hl: string | null; mark: Mark }) {
-  const has = (id: string) => sel.has(id);
+/** Desktop browser window or phone frame around the sample site; automation chips sit below it. */
+function Preview({ pro, has, device, short, mark }: { pro: boolean; has: (id: string) => boolean; device: Device; short: boolean; mark: Mark }) {
   const phone = device === 'phone';
-  const screen = <Site pro={pro} has={has} phone={phone} mark={mark} />;
   // The preview fills the right column and the viewport height; print pieces below take some of it.
   const height = short ? 'max(26rem, calc(100vh - 27rem))' : 'max(30rem, calc(100vh - 16rem))';
-
-  // Scroll the preview screen to the highlighted add-on (elements outside the screen, like chips, need no scroll).
-  useEffect(() => {
-    const id = requestAnimationFrame(() => {
-      const box = document.querySelector<HTMLElement>('#konfigurator [data-scroll]');
-      const el = box?.querySelector<HTMLElement>('[data-hl]');
-      const out = document.querySelector<HTMLElement>('#konfigurator [data-hl]:not([data-scroll] *)');
-      if (!el && out) out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      if (box && el) box.scrollBy({ top: el.getBoundingClientRect().top - box.getBoundingClientRect().top - 32, behavior: 'smooth' });
-    });
-    return () => cancelAnimationFrame(id);
-  }, [hl, device]);
+  // The WhatsApp button is the last child of the scrolling screen and sticks to its bottom edge,
+  // so it stays at the visible bottom-right corner however tall the page or the wrapper gets.
+  const screen = (
+    <>
+      <Site pro={pro} has={has} phone={phone} mark={mark} />
+      {has('whatsapp') && (
+        <Stack aria-hidden="true" style={{ position: 'sticky', bottom: 0, height: 0, overflow: 'visible', zIndex: 2, pointerEvents: 'none' }}>
+          <Stack {...pop} {...mark('whatsapp')} align="center" justify="center" style={abs({ right: '1rem', bottom: '1rem', width: '3.2rem', height: '3.2rem', borderRadius: 'var(--radius-full)', background: '#25d366', color: 'white', boxShadow: '0 8px 24px rgba(0,0,0,.3)', fontSize: '1.4rem' })}>
+            <Text color="inherit" aria-label="WhatsApp">✆</Text>
+          </Stack>
+        </Stack>
+      )}
+    </>
+  );
 
   return (
-    <Stack style={{ position: 'relative' }}>
+    <Stack gap={4}>
       {phone ? (
         <Card padding={1.5} elevation="high" style={{ width: '100%', maxWidth: '22rem', marginInline: 'auto', borderRadius: '3rem', background: 'black' /* phone bezel stays black in both themes */ }}>
-          <Card data-scroll="" padding={0} style={{ overflow: 'hidden', borderRadius: '2.4rem', position: 'relative', height: `min(46rem, ${height})`, overflowY: 'auto', scrollbarWidth: 'none' }}>
+          <Card data-scroll="" padding={0} style={{ borderRadius: '2.4rem', position: 'relative', height: `min(46rem, ${height})`, overflowY: 'auto', overflowX: 'hidden', scrollbarWidth: 'none' }}>
             {screen}
           </Card>
         </Card>
@@ -387,21 +384,16 @@ function Preview({ pro, sel, device, short, hl, mark }: { pro: boolean; sel: Set
                 <Text type="supporting" size="xsm" maxLines={1} justify="center">tavola-baden.ch{has('page') ? '/team' : ''}</Text>
               </Card>
             </Stack>
-            <Stack data-scroll="" style={{ height, overflowY: 'auto' }}>{screen}</Stack>
+            <Stack data-scroll="" style={{ height, overflowY: 'auto', overflowX: 'hidden', position: 'relative' }}>{screen}</Stack>
           </Stack>
         </Card>
-      )}
-      {has('whatsapp') && (
-        <Stack {...pop} {...mark('whatsapp')} align="center" justify="center" style={abs({ right: phone ? 'calc(50% - 9rem)' : '1.5rem', bottom: '1.5rem', width: '3.2rem', height: '3.2rem', borderRadius: 'var(--radius-full)', background: '#25d366', color: 'white', boxShadow: '0 8px 24px rgba(0,0,0,.3)', zIndex: 2, fontSize: '1.4rem' })}>
-          <Text color="inherit" aria-label="WhatsApp">✆</Text>
-        </Stack>
       )}
       <AutomationFlow has={has} mark={mark} phone={phone} />
     </Stack>
   );
 }
 
-/** The print add-ons shown as the real finished pieces for the sample restaurant. */
+/** The print add-ons shown as finished pieces (flyer and cards are the sample designs; the social post is neutral). */
 function PrintShelf({ has, mark }: { has: (id: string) => boolean; mark: Mark }) {
   const t = useT();
   const items: ReactNode[] = [];
@@ -409,7 +401,7 @@ function PrintShelf({ has, mark }: { has: (id: string) => boolean; mark: Mark })
   if (has('flyer')) items.push(
     <Stack key="flyer" {...pop} {...mark('flyer')} gap={1} style={{ width: '7.5rem' }}>
       <Card padding={0} elevation="med" style={{ overflow: 'hidden' }}>
-        <AspectRatio ratio={148 / 210} fit="cover"><img src="/print/restaurant-flyer.webp" alt={t({ de: 'Flyer A5 für Tavola', en: 'A5 flyer for Tavola' })} loading="lazy" /></AspectRatio>
+        <AspectRatio ratio={148 / 210} fit="cover"><img src="/print/restaurant-flyer.webp" alt={t({ de: 'Flyer A5, Beispiel', en: 'A5 flyer, sample' })} loading="lazy" /></AspectRatio>
       </Card>
       {label({ de: 'Flyer A5', en: 'A5 flyer' })}
     </Stack>,
@@ -426,26 +418,9 @@ function PrintShelf({ has, mark }: { has: (id: string) => boolean; mark: Mark })
     </Stack>,
   );
   if (has('social')) items.push(
-    <Stack key="social" {...pop} {...mark('social')} gap={1} style={{ width: '9.5rem' }}>
-      <Card padding={0} elevation="med" style={{ overflow: 'hidden' }}>
-        <Stack>
-          <Stack direction="horizontal" gap={1} align="center" padding={1.5}>
-            <Avatar name="Tavola" size={20} tooltip={false} />
-            <Text size="xsm" weight="semibold" maxLines={1}>tavola.baden</Text>
-          </Stack>
-          <AspectRatio ratio={1}>
-            <Stack justify="center" align="center" gap={0.5} style={{
-              backgroundImage: `linear-gradient(color-mix(in srgb, black 45%, transparent), color-mix(in srgb, black 45%, transparent)), url(${IMG})`,
-              backgroundSize: 'cover', backgroundPosition: 'center', color: 'white' /* text sits on a darkened photo in both themes */,
-            }}>
-              <Text weight="bold" color="inherit" style={{ fontFamily: 'var(--font-family-heading, serif)', fontSize: '1.4em' }}>Tavola</Text>
-              <Text size="xsm" color="inherit">{t({ de: 'Neue Herbstkarte', en: 'New autumn menu' })}</Text>
-            </Stack>
-          </AspectRatio>
-          <Stack padding={1.5}><Text size="xsm">♡ 214</Text></Stack>
-        </Stack>
-      </Card>
-      {label({ de: 'Social Media', en: 'Social media' })}
+    <Stack key="social" {...pop} {...mark('social')} gap={1} style={{ width: '12rem' }}>
+      <PricelistPost />
+      {label({ de: 'Preisliste für Social Media', en: 'Price list for social media' })}
     </Stack>,
   );
   if (!items.length) return null;
@@ -455,125 +430,78 @@ function PrintShelf({ has, mark }: { has: (id: string) => boolean; mark: Mark })
 export default function Configurator() {
   const t = useT();
   const [device, setDevice] = useState<Device>('desktop');
-  const [sel, setSel] = useState<Set<string>>(new Set());
-  const [last, setLast] = useState<string | null>(null);
-  const toggle = (id: string, on: boolean) => {
-    setLast(on ? id : null);
-    setSel(prev => {
-      const n = new Set(prev);
-      if (on) n.add(id); else n.delete(id);
-      return n;
-    });
-  };
-  const pick = (id: string) => {
-    const tier = TIERS.find(x => x.id === id);
-    if (!tier) return;
-    setSel(new Set(presetOf(tier)));
-    setLast(null);
-  };
+  const [tierId, setTierId] = useState<string>(TIERS[0].id);
+  const [auto, setAuto] = useState(false);
+  const [extras, setExtras] = useState<Set<string>>(new Set());
+  const [care, setCare] = useState(false);
+  const tier = TIERS.find(x => x.id === tierId) ?? TIERS[0];
+  const q = quote(tier, extras);
+  const has = (id: string) => tier.includes.includes(id) || extras.has(id) || (auto && AUTOMATIONS.some(a => a.id === id));
+  const mark: Mark = id => ({ 'data-f': id });
+  const toggleExtra = (id: string, on: boolean) => setExtras(prev => { const n = new Set(prev); if (on) n.add(id); else n.delete(id); return n; });
 
-  const q = quote(sel);
-  const tier = TIERS.find(x => { const p = presetOf(x); return p.length === sel.size && p.every(id => sel.has(id)); });
-  const tierLabel = tier ? t(tier.name) : t({ de: 'Individuell', en: 'Custom' });
-  const next = nextStep(q.chosen.length);
-  const care = careFor(q.chosen.length);
-  const has = (id: string) => sel.has(id);
-  // The add-on switched on last is outlined in the preview, with its name and price as a tag.
-  const hl = last && sel.has(last) ? last : null;
-  const hlAddon = hl ? ADDONS.find(a => a.id === hl) : undefined;
-  const hlLabel = hlAddon ? `${t(hlAddon.name)} · + ${addonPrice(hlAddon)}` : '';
-  const mark: Mark = id => (id === hl ? { 'data-f': id, 'data-hl': hlLabel } : { 'data-f': id }) as Record<string, string>;
-
+  const month = t({ de: 'Monat', en: 'month' });
+  const from = t({ de: 'ab', en: 'from' });
   const body = [
-    `${t({ de: 'Paket', en: 'Package' })}: ${tierLabel}`,
-    `${t({ de: 'Basis-Website', en: 'Basic website' })}: ${chf(BASE_PRICE)}`,
-    '',
-    t({ de: 'Zusätze', en: 'Add-ons' }) + ':',
-    ...(q.chosen.length ? q.chosen.map(a => `- ${t(a.name)}: ${addonPrice(a)}`) : ['-']),
-    ...(q.discount ? ['', `${t({ de: 'Mengenrabatt', en: 'Volume discount' })} ${pct(q.rate)}: − ${chf(q.discount)}`] : []),
+    `${t({ de: 'Paket', en: 'Package' })}: ${t(tier.name)} (${chf(tier.price)})`,
+    ...q.chosen.map(p => `- ${t(p.name)}: + ${chf(p.price)}`),
     '',
     `${t({ de: 'Total (einmalig)', en: 'Total (one-time)' })}: ${chf(q.total)}`,
-    `${t({ de: 'Wartung', en: 'Maintenance' })}: ${chf(care.price)} / ${t({ de: 'Monat', en: 'month' })}`,
+    ...(auto ? [`${t({ de: 'Automation Add-on', en: 'Automation add-on' })}: ${from} ${chf(AUTOMATION_MONTHLY)} / ${month}`] : []),
+    ...(care ? [`${t({ de: 'Wartung', en: 'Maintenance' })}: ${chf(CARE[tier.id])} / ${month}`] : []),
     '',
     t({ de: 'Name:', en: 'Name:' }),
     t({ de: 'Geschäft:', en: 'Business:' }),
     t({ de: 'Telefon:', en: 'Phone:' }),
   ].join('\n');
 
-  const ladder: [string, number][] = [
-    ...[...DISCOUNTS].reverse().map(([min, r]): [string, number] => [`${min}+`, r]),
-    [t({ de: 'Alle', en: 'All' }), 0.3],
-  ];
-  const nudge = next
-    ? t({ de: `Noch ${next[0]} für ${pct(next[1])}`, en: `${next[0]} more for ${pct(next[1])}` })
-    : t({ de: 'Maximum erreicht', en: 'Maximum reached' });
-
   return (
     <Stack as="section" id="konfigurator" gap={6} paddingInline={4} paddingBlock={10} style={{ maxWidth: '100rem', marginInline: 'auto', width: '100%' }}>
       <Stack gap={2}>
         <Eyebrow>{t({ de: 'Konfigurator', en: 'Configurator' })}</Eyebrow>
         <Heading level={2}>{t({ de: 'Stellen Sie Ihre Wunsch-Website zusammen', en: 'Build your dream website' })}</Heading>
-        <Text color="secondary">{t({ de: 'Starten Sie mit einem Paket und passen Sie es an. Ab 5 Zusätzen gibt es Mengenrabatt.', en: 'Start from a package and adjust it. From 5 add-ons you get a volume discount.' })}</Text>
+        <Text color="secondary">{t({ de: 'Wählen Sie ein Paket, dazu nach Wunsch Automationen und Druckdesign. Alle Preise sind fix.', en: 'Choose a package, then add automations and print design if you like. All prices are fixed.' })}</Text>
         <Link href="#beispiele" size="sm">{t({ de: 'Buchungs-Funnels live ausprobieren', en: 'Try the booking funnels live' })}</Link>
       </Stack>
 
       <Grid data-cfg="" columns={1} gap={8} align="start">
         {/* options */}
-        <Stack gap={5}>
+        <Stack gap={5} style={{ minWidth: 0 }}>
           <Stack gap={2}>
             <Text weight="semibold">{t({ de: '1. Paket wählen', en: '1. Choose a package' })}</Text>
-            <SegmentedControl size="sm" label={t({ de: 'Paket', en: 'Package' })} value={tier?.id ?? ''} onChange={v => pick(v as string)} layout="fill">
-              {TIERS.map(x => <SegmentedControlItem key={x.id} value={x.id} label={t(x.name)} />)}
+            <SegmentedControl size="sm" label={t({ de: 'Paket', en: 'Package' })} value={tier.id} onChange={v => setTierId(v as string)} layout="fill">
+              {TIERS.map(x => <SegmentedControlItem key={x.id} value={x.id} label={`${t(x.name)} · ${chf(x.price)}`} />)}
             </SegmentedControl>
-            <Text type="supporting" size="sm">
-              {tier ? `${chf(tierPrice(tier))} · ${t(tier.tagline)}` : t({ de: 'Individuell zusammengestellt.', en: 'Put together by you.' })}
-            </Text>
+            <Text type="supporting" size="sm">{t(tier.tagline)}</Text>
           </Stack>
 
-          <Card variant={q.rate ? 'yellow' : 'muted'} padding={2}>
-            <Stack gap={1.5}>
-              <Stack direction="horizontal" justify="between" align="center" gap={2} wrap="wrap">
-                <Text size="sm" weight="semibold">{t({ de: 'Mengenrabatt auf Zusätze', en: 'Volume discount on add-ons' })}</Text>
-                <Text size="sm">{nudge}</Text>
-              </Stack>
-              <Stack direction="horizontal" gap={1} wrap="wrap">
-                {ladder.map(([lbl, r]) => (
-                  <Token key={lbl} size="sm" color={r === q.rate ? 'green' : 'default'} label={`${lbl}  −${pct(r)}`} />
-                ))}
+          <Card padding={3} variant={auto ? 'green' : 'default'}>
+            <Stack gap={2}>
+              <Switch label={t({ de: '2. Automation Add-on (optional)', en: '2. Automation add-on (optional)' })} value={auto} onChange={setAuto} />
+              <Text size="sm" weight="medium">{from} {chf(AUTOMATION_MONTHLY)} / {month}</Text>
+              <Stack gap={0.5}>
+                {AUTOMATIONS.map(a => <Text key={a.id} size="sm" type="supporting">✓ {t(a.name)}</Text>)}
               </Stack>
             </Stack>
           </Card>
 
-          <Stack gap={3}>
-            <Text weight="semibold">{t({ de: '2. Zusätze anpassen', en: '2. Adjust add-ons' })}</Text>
-            {GROUPS.map(g => (
-              <Card key={g.id} padding={2} variant={g.id === 'automation' ? 'green' : 'default'}>
-                <Stack gap={1}>
-                  <Stack direction="horizontal" gap={2} align="center" wrap="wrap" paddingBlockEnd={1}>
-                    <Text size="sm" weight="semibold">{t(g.name)}</Text>
-                    {g.id === 'automation' && <Token size="sm" color="green" label={t({ de: 'Empfohlen', en: 'Recommended' })} />}
-                  </Stack>
-                  {ADDONS.filter(a => a.group === g.id).map(a => (
-                    <Stack key={a.id} direction="horizontal" justify="between" align="center" gap={2}>
-                      <CheckboxInput size="sm" labelIcon={ADDON_ICONS[a.id]} label={t(a.name)} value={sel.has(a.id)} onChange={c => toggle(a.id, c)} />
-                      <Text size="sm" weight="medium" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>+ {addonPrice(a)}</Text>
-                    </Stack>
-                  ))}
+          <Card padding={3}>
+            <Stack gap={1.5}>
+              <Text weight="semibold">{t({ de: '3. Druckdesign (optional)', en: '3. Print design (optional)' })}</Text>
+              {PRINT.map(p => (
+                <Stack key={p.id} direction="horizontal" justify="between" align="center" gap={2}>
+                  <CheckboxInput size="sm" labelIcon={ADDON_ICONS[p.id]} label={t(p.name)} value={extras.has(p.id)} onChange={c => toggleExtra(p.id, c)} />
+                  <Text size="sm" weight="medium" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>+ {chf(p.price)}</Text>
                 </Stack>
-              </Card>
-            ))}
-          </Stack>
+              ))}
+            </Stack>
+          </Card>
 
           <Card padding={3} elevation="high" style={{ position: 'sticky', bottom: '1rem', zIndex: 3 }}>
             <Stack direction="horizontal" justify="between" align="center" gap={3} wrap="wrap">
               <Stack gap={0.5}>
-                <Text size="sm" color="secondary">
-                  {tierLabel} · {q.chosen.length} {t({ de: 'Zusätze', en: 'add-ons' })}{q.rate ? ` · −${pct(q.rate)}` : ''}
-                </Text>
-                <Stack direction="horizontal" gap={1.5} align="center">
-                  <Heading level={3} hasCapsize={false} color="accent">{chf(q.total)}</Heading>
-                  {q.discount > 0 && <Text size="sm" color="secondary" hasTabularNumbers style={{ textDecoration: 'line-through' }}>{chf(q.total + q.discount)}</Text>}
-                </Stack>
+                <Text size="sm" color="secondary">{t(tier.name)}{q.chosen.length ? ` + ${q.chosen.length} ${t({ de: 'Druck', en: 'print' })}` : ''}</Text>
+                <Heading level={3} hasCapsize={false} color="accent">{chf(q.total)}</Heading>
               </Stack>
               <Button variant="primary" size="sm" href="#zusammenfassung" label={t({ de: 'Zur Zusammenfassung', en: 'See summary' })} />
             </Stack>
@@ -589,46 +517,46 @@ export default function Configurator() {
               <SegmentedControlItem value="phone" label={t({ de: 'Handy', en: 'Phone' })} />
             </SegmentedControl>
           </Stack>
-          <Preview pro={has('hero')} sel={sel} device={device} short={['flyer', 'cards', 'social'].some(has)} hl={hl} mark={mark} />
+          <Preview pro={tier.id === 'pro'} has={has} device={device} short={extras.size > 0} mark={mark} />
           <PrintShelf has={has} mark={mark} />
         </Stack>
       </Grid>
 
       <Stack id="zusammenfassung" gap={2} style={{ maxWidth: '36rem', width: '100%', marginInline: 'auto' }}>
-        <Text weight="semibold">{t({ de: '3. Zusammenfassung', en: '3. Summary' })}</Text>
+        <Text weight="semibold">{t({ de: '4. Zusammenfassung', en: '4. Summary' })}</Text>
         <Card padding={4} elevation="med">
           <Stack gap={3}>
             <Stack direction="horizontal" justify="between" gap={3}>
-              <Text weight="semibold">{t({ de: 'Basis-Website', en: 'Basic website' })}{tier && tier.id !== 'basis' ? ` · ${t({ de: 'Paket', en: 'package' })} ${t(tier.name)}` : ''}</Text>
-              <Text hasTabularNumbers>{chf(BASE_PRICE)}</Text>
+              <Text weight="semibold">{t({ de: 'Paket', en: 'Package' })} {t(tier.name)}</Text>
+              <Text hasTabularNumbers>{chf(tier.price)}</Text>
             </Stack>
-            {q.chosen.map(a => (
-              <Stack key={a.id} direction="horizontal" justify="between" gap={3}>
-                <Text size="sm">{t(a.name)}</Text>
-                <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{addonPrice(a)}</Text>
+            {q.chosen.map(p => (
+              <Stack key={p.id} direction="horizontal" justify="between" gap={3}>
+                <Text size="sm">{t(p.name)}</Text>
+                <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{chf(p.price)}</Text>
               </Stack>
             ))}
-            {q.discount > 0 && (
-              <Stack direction="horizontal" justify="between" gap={3}>
-                <Text size="sm" color="accent" weight="medium">{t({ de: 'Mengenrabatt', en: 'Volume discount' })} {pct(q.rate)} ({q.chosen.length} {t({ de: 'Zusätze', en: 'add-ons' })})</Text>
-                <Text size="sm" color="accent" weight="medium" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>− {chf(q.discount)}</Text>
-              </Stack>
-            )}
             <Divider />
             <Stack direction="horizontal" justify="between" align="center" gap={3}>
-              <Text weight="bold">{t({ de: 'Total', en: 'Total' })}</Text>
+              <Text weight="bold">{t({ de: 'Total einmalig', en: 'Total one-time' })}</Text>
               <Heading level={3} hasCapsize={false} color="accent">{chf(q.total)}</Heading>
             </Stack>
-            <Stack direction="horizontal" justify="between" gap={3}>
-              <Text size="sm">{t({ de: 'Wartung (Hosting, Updates, 2 Std. Änderungen)', en: 'Maintenance (hosting, updates, 2 h of changes)' })}</Text>
-              <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{chf(care.price)} / {t({ de: 'Monat', en: 'month' })}</Text>
+            {auto && (
+              <Stack direction="horizontal" justify="between" gap={3}>
+                <Text size="sm">{t({ de: 'Automation Add-on', en: 'Automation add-on' })}</Text>
+                <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{from} {chf(AUTOMATION_MONTHLY)} / {month}</Text>
+              </Stack>
+            )}
+            <Stack direction="horizontal" justify="between" align="center" gap={3}>
+              <CheckboxInput size="sm" label={t({ de: 'Wartung dazu (Hosting, Updates, 2 Std. Änderungen)', en: 'Add maintenance (hosting, updates, 2 h of changes)' })} value={care} onChange={setCare} />
+              <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{chf(CARE[tier.id])} / {month}</Text>
             </Stack>
             <Text type="supporting" size="sm">{t({ de: 'Einmalig, inkl. Einrichtung. Preise in CHF.', en: 'One-time, setup included. Prices in CHF.' })}</Text>
             <Button
               variant="primary"
               width="100%"
               href="#kontakt"
-              onClick={() => { contactDraft.subject = `Website-Anfrage: ${tierLabel}`; contactDraft.body = body; }}
+              onClick={() => { contactDraft.subject = `Website-Anfrage: ${t(tier.name)}`; contactDraft.body = body; }}
               label={t({ de: 'Anfrage senden', en: 'Send enquiry' })}
             />
             <Link href="#kontakt" size="sm">

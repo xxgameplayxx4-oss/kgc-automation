@@ -10,7 +10,7 @@ import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import { useState } from 'react';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import Eyebrow from './Eyebrow';
-import { ADDONS, addonPrice, useT } from '../data';
+import { PRINT, chf, useT } from '../data';
 
 // Finished sample designs, rendered from fictional brands that match the concept drafts in /work.
 const SETS = [
@@ -23,7 +23,7 @@ export default function Print() {
   const t = useT();
   const [id, setId] = useState(SETS[0].id);
   const set = SETS.find(x => x.id === id) ?? SETS[0];
-  const items = ADDONS.filter(a => a.group === 'print');
+  const items = PRINT;
   return (
     <Section id="print" variant="muted" padding={6}>
       <VStack gap={6} maxWidth={1200} style={{ marginInline: "auto", width: "100%" }}>
@@ -64,13 +64,13 @@ export default function Print() {
                     <Heading level={3}>{t(a.name)}</Heading>
                     <Text type="supporting">{t(a.desc)}</Text>
                   </VStack>
-                  <Text weight="semibold" hasTabularNumbers>{addonPrice(a)}</Text>
+                  <Text weight="semibold" hasTabularNumbers>{chf(a.price)}</Text>
                 </HStack>
               </Card>
             ))}
             <Text type="supporting">{t({ de: 'Die Designs liefere ich als druckfertiges PDF. Der Druck kann auf Wunsch zum Selbstkostenpreis organisiert werden.', en: 'Designs are delivered as print-ready PDF. Printing can be arranged at cost on request.' })}</Text>
             <HStack>
-              <Button variant="primary" href="#konfigurator" label={t({ de: 'Im Konfigurator hinzufügen', en: 'Add in the configurator' })} />
+              <Button variant="primary" href="#kontakt" label={t({ de: 'Print anfragen', en: 'Request print' })} />
             </HStack>
           </VStack>
         </Grid>

@@ -115,12 +115,13 @@ function Viewer({ p, alt }: { p: Project; alt: string }) {
   return (
     <HStack gap={6} wrap="wrap" hAlign="center" vAlign="start">
       <Card padding={1} elevation="high" style={{ flex: '3 1 26rem', minWidth: 0, background: 'black', borderRadius: 'var(--radius-page)' }}>
-        <Stack style={{ ...screen, aspectRatio: '16 / 10', maxHeight: '60vh', borderRadius: '0.25rem' }}>
+        {/* Fixed height, full width: aspectRatio plus maxHeight shrank the screen and left black space on the right. */}
+        <Stack style={{ ...screen, width: '100%', height: 'min(60vh, 62vw)', borderRadius: '0.25rem' }}>
           <Screen p={p} kind="desktop" alt={`${alt}, Desktop`} />
         </Stack>
       </Card>
       <Card padding={1} elevation="high" style={{ flex: '1 1 13rem', maxWidth: '17rem', background: 'black', borderRadius: '1.6rem' }}>
-        <Stack style={{ ...screen, aspectRatio: '390 / 844', maxHeight: '60vh', borderRadius: '1.1rem' }}>
+        <Stack style={{ ...screen, width: '100%', height: 'min(60vh, 34rem)', borderRadius: '1.1rem' }}>
           <Screen p={p} kind="phone" alt={`${alt}, Handy`} />
         </Stack>
       </Card>

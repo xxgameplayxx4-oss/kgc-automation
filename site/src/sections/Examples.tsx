@@ -65,7 +65,7 @@ export default function Examples() {
         </TabList>
         {tab === 'hero' && (
           <VStack id="ex-hero" role="tabpanel" gap={5}>
-            <Text type="large" color="secondary">{t({ de: 'Der Startbereich (auch «Hero» genannt) ist der grosse Bereich ganz oben auf Ihrer Website, also das Erste, was Besucher sehen. Mit diesem Zusatz gestalte ich ihn mit Video, Animation oder Bildern speziell für Ihr Geschäft. In Pro, Business und Komplett inklusive.', en: 'The hero is the large area at the very top of your website, the first thing visitors see. With this add-on I design it with video, animation or imagery specifically for your business. Included in Pro, Business and Complete.' })}</Text>
+            <Text type="large" color="secondary">{t({ de: 'Der Startbereich (auch «Hero» genannt) ist der grosse Bereich ganz oben auf Ihrer Website, also das Erste, was Besucher sehen. Im Pro-Paket gestalte ich ihn mit Video, Animation oder Bildern speziell für Ihr Geschäft. Auf Wunsch komme ich vorbei und filme, wie man Ihr Geschäft betritt.', en: 'The hero is the large area at the very top of your website, the first thing visitors see. In the Pro package I design it with video, animation or imagery specifically for your business. On request I come by and film walking into your shop.' })}</Text>
             <Grid columns={{ minWidth: 280, max: 3 }} gap={4}>
               {WORK.map(w => <WorkCard key={w.img} w={w} />)}
             </Grid>

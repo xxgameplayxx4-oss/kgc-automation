@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { HStack, VStack } from '@astryxdesign/core/Layout';
 import { Button } from '@astryxdesign/core/Button';
 import { Drawer } from '@astryxdesign/core/Drawer';
-import { LangContext, useT, type Lang } from '../data';
+import { LangContext, ModeContext, useT, type Lang } from '../data';
 import type { Page } from '../App';
 import Logo from './Logo';
 
@@ -29,12 +29,16 @@ const useNarrow = () => {
 export default function Nav({ page }: { page: Page }) {
   const t = useT();
   const { lang, setLang } = useContext(LangContext);
+  const { mode, setMode } = useContext(ModeContext);
   const narrow = useNarrow();
   const [open, setOpen] = useState(false);
 
   const langSwitch = (['de', 'en'] as Lang[]).map(l => (
     <Button key={l} size="sm" label={l.toUpperCase()} variant={lang === l ? 'secondary' : 'ghost'} onClick={() => setLang(l)} />
   ));
+  const modeSwitch = (
+    <Button size="sm" variant="ghost" label={mode === 'dark' ? t({ de: 'Hell', en: 'Light' }) : t({ de: 'Dunkel', en: 'Dark' })} aria-label={t({ de: 'Farbmodus wechseln', en: 'Switch colour mode' })} onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')} />
+  );
   const contactLabel = t({ de: 'Kontakt', en: 'Contact' });
 
   return (
@@ -56,6 +60,7 @@ export default function Nav({ page }: { page: Page }) {
           <HStack gap={1} vAlign="center">
             {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} size="sm" href={`#${l.id}`} label={t(l.label)} />)}
             {langSwitch}
+            {modeSwitch}
             <Button size="sm" variant="primary" label={contactLabel} href="#kontakt" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)" }} />
           </HStack>
         )}
@@ -64,7 +69,7 @@ export default function Nav({ page }: { page: Page }) {
         <VStack gap={2} padding={4}>
           {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} width="100%" href={`#${l.id}`} label={t(l.label)} onClick={() => setOpen(false)} />)}
           <Button variant="primary" width="100%" label={contactLabel} href="#kontakt" onClick={() => setOpen(false)} />
-          <HStack gap={1} hAlign="center">{langSwitch}</HStack>
+          <HStack gap={1} hAlign="center">{langSwitch}{modeSwitch}</HStack>
         </VStack>
       </Drawer>
     </VStack>

@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { Card } from '@astryxdesign/core/Card';
-import { useState } from 'react';
-import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
+import { useState, type KeyboardEvent, type PointerEvent } from 'react';
 import { Stack } from '@astryxdesign/core/Stack';
 import { Text } from '@astryxdesign/core/Text';
 import { useT, type T } from '../data';
@@ -32,7 +31,19 @@ function Mail({ from, subject, children }: { from: string; subject: string; chil
 
 export default function Emails() {
   const t = useT();
-  const [view, setView] = useState('design');
+  const [pos, setPos] = useState(50);
+  const clamp = (n: number) => Math.min(100, Math.max(0, n));
+  const move = (e: PointerEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    setPos(clamp(((e.clientX - r.left) / r.width) * 100));
+  };
+  const onKey = (e: KeyboardEvent) => {
+    const d = { ArrowLeft: -5, ArrowDown: -5, ArrowRight: 5, ArrowUp: 5 }[e.key];
+    if (d) { e.preventDefault(); setPos((p) => clamp(p + d)); }
+    else if (e.key === 'Home') setPos(0);
+    else if (e.key === 'End') setPos(100);
+  };
+  const tag = { position: 'absolute', top: 'var(--spacing-2)', padding: '0.2em 0.7em', borderRadius: '999px', background: 'var(--color-background-gray)', border: '1px solid var(--color-border)', pointerEvents: 'none' } as const;
   const plain = [
     t({ de: 'Sie haben eine neue Einsendung erhalten.', en: 'You have received a new submission.' }),
     '',
@@ -50,18 +61,19 @@ export default function Emails() {
 
   return (
     <Stack gap={4} style={{ maxWidth: '40rem' }}>
-      <SegmentedControl value={view} onChange={setView} label={t({ de: 'Ansicht', en: 'View' })} size="lg">
-        <SegmentedControlItem value="plain" label={t({ de: 'Ohne Design', en: 'Without design' })} />
-        <SegmentedControlItem value="design" label={t({ de: 'Mit Design', en: 'With design' })} />
-      </SegmentedControl>
-      {view === 'plain' ? <Stack gap={2}>
+      <Stack
+        onPointerDown={(e: PointerEvent<HTMLElement>) => { e.currentTarget.setPointerCapture(e.pointerId); move(e); }}
+        onPointerMove={(e: PointerEvent<HTMLElement>) => { if (e.currentTarget.hasPointerCapture(e.pointerId)) move(e); }}
+        style={{ display: 'grid', position: 'relative', overflow: 'hidden', touchAction: 'pan-y', userSelect: 'none', cursor: 'ew-resize', borderRadius: 'var(--radius-lg)' }}
+      >
+        <Stack style={{ gridArea: '1/1', minWidth: 0 }}>
         <Mail from="Formular <noreply@form-service.com>" subject={t({ de: 'Neue Formular-Einsendung', en: 'New form submission' })}>
           <Stack padding={3}>
             <Text size="sm" style={{ fontFamily: 'ui-monospace, Menlo, Consolas, monospace', whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>{plain}</Text>
           </Stack>
         </Mail>
-        <Text type="supporting" size="sm">{t({ de: 'So kommen Anfragen oft an: Datum im Computerformat, kein Absender, nichts zum Antippen.', en: 'How enquiries often arrive: a machine date, no real sender, nothing to tap.' })}</Text>
-      </Stack> : <Stack gap={2}>
+        </Stack>
+        <Stack style={{ gridArea: '1/1', minWidth: 0, clipPath: `inset(0 0 0 ${pos}%)` }}>
         <Mail from="Tavola <reservation@tavola-baden.ch>" subject={t({ de: 'Neue Reservation · Mi., 5. August, 12:30', en: 'New reservation · Wed 5 August, 12:30' })}>
           <Stack style={{ background: C.card, color: C.ink }}>
             <Stack direction="horizontal" justify="between" align="center" paddingInline={4} paddingBlock={3} style={{ background: C.night, color: C.paper }}>
@@ -96,8 +108,19 @@ export default function Emails() {
             </Stack>
           </Stack>
         </Mail>
-        <Text type="supporting" size="sm">{t({ de: 'Im Look Ihrer Website: Datum zum Lesen, Wünsche sofort sichtbar, Anrufen mit einem Tipp.', en: 'In your website’s look: a readable date, requests stand out, call with one tap.' })}</Text>
-      </Stack>}
+        </Stack>
+        <Text size="xsm" weight="semibold" style={{ ...tag, left: 'var(--spacing-2)' }}>{t({ de: 'Ohne Design', en: 'Without design' })}</Text>
+        <Text size="xsm" weight="semibold" style={{ ...tag, right: 'var(--spacing-2)' }}>{t({ de: 'Mit Design', en: 'With design' })}</Text>
+        <Stack align="center" justify="center" style={{ position: 'absolute', top: 0, bottom: 0, left: `${pos}%`, width: '2px', marginInlineStart: '-1px', background: 'var(--color-text-primary)', pointerEvents: 'none' }}>
+          <Text size="sm" weight="bold" style={{ width: '2.25rem', height: '2.25rem', flexShrink: 0, display: 'grid', placeItems: 'center', borderRadius: '50%', background: 'var(--color-background-gray)', border: '2px solid var(--color-text-primary)', boxShadow: '0 1px 6px rgba(0,0,0,.35)' }}>{'↔'}</Text>
+        </Stack>
+        <input
+          type="range" min={0} max={100} step={1} value={Math.round(pos)} onChange={(e) => setPos(Number(e.target.value))} onKeyDown={onKey}
+          aria-label={t({ de: 'Vergleich Ohne Design / Mit Design', en: 'Compare without / with design' })}
+          style={{ position: 'absolute', width: 1, height: 1, opacity: 0, overflow: 'hidden', clip: 'rect(0 0 0 0)', pointerEvents: 'none' }}
+        />
+      </Stack>
+      <Text type="supporting" size="sm">{t({ de: 'Ziehen Sie den Regler, um den Unterschied zu sehen.', en: 'Drag the handle to see the difference.' })}</Text>
     </Stack>
   );
 }
