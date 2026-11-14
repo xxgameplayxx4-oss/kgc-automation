@@ -39,9 +39,11 @@ export default function Nav({ page }: { page: Page }) {
   return (
     <VStack
       as="header"
+      data-astryx-media="dark"
       paddingInline={4}
       paddingBlock={2}
-      style={{ position: 'sticky', top: 0, zIndex: 20, background: 'color-mix(in oklab, var(--color-background-surface) 92%, transparent)', backdropFilter: 'blur(18px) saturate(1.5)', WebkitBackdropFilter: 'blur(18px) saturate(1.5)', borderBottom: '1px solid color-mix(in oklab, var(--color-text-primary) 8%, transparent)' }}
+      // Black frosted glass bar in both themes (KGC); colorScheme makes the tokens inside resolve to dark.
+      style={{ position: 'sticky', top: 0, zIndex: 20, colorScheme: 'dark', background: 'rgba(0,0,0,.72)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', borderBottom: '1px solid rgba(255,255,255,.08)' }}
     >
       <HStack hAlign="between" vAlign="center" gap={3} wrap="nowrap">
         <Button variant="ghost" href="#start" label="Cung Solutions" style={{ flexShrink: 0 }}>
@@ -53,7 +55,7 @@ export default function Nav({ page }: { page: Page }) {
           <HStack gap={1} vAlign="center">
             {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} size="sm" href={`#${l.id}`} label={t(l.label)} />)}
             {langSwitch}
-            <Button size="sm" variant="primary" label={contactLabel} href="#kontakt" onClick={() => setOpen(false)} />
+            <Button size="sm" variant="primary" label={contactLabel} href="#kontakt" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)" }} />
           </HStack>
         )}
       </HStack>

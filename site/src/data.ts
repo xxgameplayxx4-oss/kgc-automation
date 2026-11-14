@@ -32,6 +32,8 @@ const BASE_FEATURES: T[] = [
 ];
 
 export const BASE_PRICE = 1500;
+// Redo of an existing site: content already exists, so less back and forth (KGC, 2026-11-14).
+export const UPGRADE_PRICE = 750;
 export { BASE_FEATURES };
 
 /** Packages are presets of add-ons on top of the Basis website; their price follows the volume discount below. */

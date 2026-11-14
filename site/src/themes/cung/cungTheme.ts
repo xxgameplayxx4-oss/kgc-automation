@@ -56,6 +56,14 @@ export const cungTheme = defineTheme({
     // Primary buttons: flat and quiet, only a soft contact shadow.
     button: {
       'variant:primary': { boxShadow: '0 1px 2px rgba(0,0,0,.15)' },
+      // KGC: dark buttons as Apple-style frosted glass.
+      'variant:secondary': {
+        backgroundColor: 'light-dark(rgba(20,33,61,.82), rgba(255,255,255,.08))',
+        color: '#FFFFFF',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), inset 0 0 0 1px rgba(255,255,255,.1), 0 4px 16px -4px rgba(0,0,0,.35)',
+      },
     },
   },
 });

@@ -5,7 +5,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { Badge } from '@astryxdesign/core/Badge';
 import Eyebrow from './Eyebrow';
-import { ADDONS, CARE, CARE_HOURS, DISCOUNTS, DOMAIN_FEE, chf, pct, presetOf, quote, TIERS, useT } from '../data';
+import { ADDONS, CARE, CARE_HOURS, DISCOUNTS, DOMAIN_FEE, UPGRADE_PRICE, chf, contactDraft, pct, presetOf, quote, TIERS, useT } from '../data';
 
 export default function Packages() {
   const t = useT();
@@ -63,6 +63,24 @@ export default function Packages() {
           );
         })}
       </Grid>
+      <Card variant="muted" padding={5}>
+        <HStack gap={4} vAlign="center" hAlign="between" wrap="wrap">
+          <VStack gap={2} style={{ flex: '1 1 20rem', minWidth: 0 }}>
+            <HStack gap={2} vAlign="center" wrap="wrap">
+              <Heading level={3}>{t({ de: 'Website-Upgrade', en: 'Website upgrade' })}</Heading>
+              <Badge variant="yellow" label={t({ de: `ab ${chf(UPGRADE_PRICE)}`, en: `from ${chf(UPGRADE_PRICE)}` })} />
+            </HStack>
+            <Text color="secondary">
+              {t({
+                de: 'Sie haben schon eine Website, aber sie wirkt veraltet? Ich übernehme Ihre bestehenden Texte, Bilder und Angaben und baue daraus eine neue, schnelle und mobile Website mit allem aus Basis. Weil der Inhalt schon da ist, braucht es kaum Abstimmung, darum der tiefere Preis. Zusätze aus dem Konfigurator sind möglich.',
+                en: 'You already have a website, but it looks dated? I take your existing texts, images and details and turn them into a new, fast, mobile website with everything in Basic. Because the content already exists, it takes little back and forth, hence the lower price. Add-ons from the configurator are possible.',
+              })}
+            </Text>
+          </VStack>
+          <Button variant="primary" href="#kontakt" label={t({ de: 'Upgrade anfragen', en: 'Request upgrade' })}
+            onClick={() => { contactDraft.subject = 'Website-Upgrade'; contactDraft.body = t({ de: 'Meine aktuelle Website: ', en: 'My current website: ' }); }} />
+        </HStack>
+      </Card>
       <VStack gap={3}>
         <Heading level={3}>{t({ de: 'Monatliche Wartung', en: 'Monthly maintenance' })}</Heading>
         <Grid columns={{ minWidth: 240, max: 3 }} gap={4} align="stretch">
