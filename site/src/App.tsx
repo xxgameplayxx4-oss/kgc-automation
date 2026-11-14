@@ -12,13 +12,15 @@ import Footer from './sections/Footer';
 import Projects from './sections/Projects';
 import Teaser from './sections/Teaser';
 import Contact from './sections/Contact';
+import Pains, { AutopilotTeaser, WebsitesTeaser } from './sections/Pains';
+import Automations from './sections/Automations';
 
 // Hash routing: the artifact viewer only passes a plain #name, so pages and section anchors share the hash.
-export const PAGES = ['start', 'leistungen', 'projekte', 'ueber-mich', 'faq', 'kontakt'] as const;
+export const PAGES = ['start', 'automationen', 'websites', 'projekte', 'ueber-mich', 'faq', 'kontakt'] as const;
 export type Page = (typeof PAGES)[number];
 const SECTION_PAGE: Record<string, Page> = {
-  top: 'start', pakete: 'leistungen', beispiele: 'leistungen', konfigurator: 'leistungen',
-  zusammenfassung: 'leistungen', print: 'leistungen',
+  top: 'start', pakete: 'websites', beispiele: 'websites', konfigurator: 'websites',
+  zusammenfassung: 'websites', print: 'websites', leistungen: 'websites', autopilot: 'automationen',
 };
 // Unknown hashes (e.g. #footer) keep the current page.
 const pageOf = (hash: string, current: Page): Page =>
@@ -48,8 +50,9 @@ export default function App() {
     <LangContext.Provider value={{ lang, setLang }}>
       <Nav page={page} />
       <main key={page}>
-        {page === 'start' && <><Hero /><Teaser /></>}
-        {page === 'leistungen' && <><Packages /><Examples /><Print /><Configurator /></>}
+        {page === 'start' && <><Hero /><Pains /><AutopilotTeaser /><WebsitesTeaser /><Teaser /></>}
+        {page === 'automationen' && <Automations />}
+        {page === 'websites' && <><Packages /><Examples /><Print /><Configurator /></>}
         {page === 'projekte' && <Projects />}
         {page === 'ueber-mich' && <About />}
         {page === 'faq' && <Faq />}

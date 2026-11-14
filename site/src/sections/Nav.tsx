@@ -8,7 +8,8 @@ import Logo from './Logo';
 
 const LINKS: { id: Page; label: { de: string; en: string } }[] = [
   { id: 'start', label: { de: 'Start', en: 'Home' } },
-  { id: 'leistungen', label: { de: 'Leistungen', en: 'Services' } },
+  { id: 'automationen', label: { de: 'Automationen', en: 'Automations' } },
+  { id: 'websites', label: { de: 'Websites', en: 'Websites' } },
   { id: 'projekte', label: { de: 'Projekte', en: 'Projects' } },
   { id: 'ueber-mich', label: { de: 'Über mich', en: 'About' } },
   { id: 'faq', label: { de: 'FAQ', en: 'FAQ' } },

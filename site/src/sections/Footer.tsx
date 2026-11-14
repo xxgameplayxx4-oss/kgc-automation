@@ -26,8 +26,8 @@ export default function Footer() {
     <Section id="footer" variant="muted" padding={0}>
       <VStack as="footer" gap={8} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
         <VStack gap={3} hAlign="center">
-          <Heading level={2} type="display-3" justify="center">{t({ de: 'Bereit für Ihre neue Website?', en: 'Ready for your new website?' })}</Heading>
-          <Button size="lg" variant="primary" href="#konfigurator" label={t({ de: 'Jetzt konfigurieren', en: 'Configure now' })} />
+          <Heading level={2} type="display-3" justify="center">{t({ de: 'Wo verlieren Sie Zeit?', en: 'Where are you losing time?' })}</Heading>
+          <Button size="lg" variant="primary" href="#kontakt" label={t({ de: 'Kostenloses Gespräch, 20 Minuten', en: 'Free 20-minute call' })} />
         </VStack>
         <HStack gap={6} hAlign="between" wrap="wrap" vAlign="end">
           {address}

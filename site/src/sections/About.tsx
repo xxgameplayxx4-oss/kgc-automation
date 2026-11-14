@@ -13,7 +13,7 @@ const PORTRAIT = '/about/khang.jpg';
 const NAME = 'Khang Cung';
 
 const LINES: T[] = [
-  { de: 'Mein Name ist Khang, Informatiker EFZ (Applikationsentwicklung) mit Berufsmaturität. Von Brugg aus entwickle ich Websites für KMU im Aargau, von A bis Z und alles selbst.', en: 'My name is Khang, a certified IT specialist (application development) with a vocational baccalaureate. From Brugg, I build websites for small businesses in Aargau, end to end and all by myself.' },
+  { de: 'Mein Name ist Khang, Informatiker EFZ (Applikationsentwicklung) mit Berufsmaturität. Von Brugg aus automatisiere ich Büroarbeit für KMU im Aargau und baue Websites, von A bis Z und alles selbst.', en: 'My name is Khang, a certified IT specialist (application development) with a vocational baccalaureate. From Brugg, I automate office work for small businesses in Aargau and build websites, end to end and all by myself.' },
   { de: 'Dazu kommt meine Erfahrung aus IT-Support und Cyber Security. Sie haben einen einzigen Ansprechpartner, vom ersten Gespräch bis zum Launch, und Fixpreise statt Stundenzettel.', en: 'I also bring experience in IT support and cyber security. You have one single contact from the first call to launch, and fixed prices instead of timesheets.' },
 ];
 
