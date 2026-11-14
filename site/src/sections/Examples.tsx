@@ -7,6 +7,7 @@ import { Heading } from '@astryxdesign/core/Heading';
 import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
+import { Tab, TabList } from '@astryxdesign/core/TabList';
 import Eyebrow from './Eyebrow';
 import Funnels from './Funnels';
 import Emails from './Emails';
@@ -42,32 +43,46 @@ function WorkCard({ w }: { w: Work }) {
   );
 }
 
+const TABS = [
+  { id: 'hero', label: { de: 'Startbereich', en: 'Hero' } },
+  { id: 'funnel', label: { de: 'Buchungs-Funnel', en: 'Booking funnel' } },
+  { id: 'mail', label: { de: 'E-Mails mit Design', en: 'Designed emails' } },
+] as const;
+
+// One example at a time keeps the Leistungen page short.
 export default function Examples() {
   const t = useT();
+  const [tab, setTab] = useState<string>('hero');
   return (
     <Section id="beispiele" variant="transparent" padding={6}>
-      <VStack gap={8} maxWidth={1200} style={{ marginInline: "auto", width: "100%" }}>
+      <VStack gap={6} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
         <VStack gap={3}>
-          <Eyebrow>{t({ de: 'Zusatz: Individueller Hero', en: 'Add-on: custom hero' })}</Eyebrow>
-          <Heading level={2}>{t({ de: 'Hero-Bereiche, entwickelt für das Geschäft', en: 'Hero sections, engineered for the business' })}</Heading>
-          <Text type="large" color="secondary">{t({ de: 'Der erste Eindruck Ihrer Website. Mit dem Zusatz «Individueller Hero-Bereich» entsteht er für Ihr Geschäft, in den Paketen Pro, Business und Komplett inklusive.', en: 'The first impression of your website. With the «custom hero» add-on it is built for your business, included in the Pro, Business and Complete packages.' })}</Text>
+          <Eyebrow>{t({ de: 'Beispiele', en: 'Examples' })}</Eyebrow>
+          <Heading level={2}>{t({ de: 'So sehen die Zusätze aus', en: 'What the add-ons look like' })}</Heading>
         </VStack>
-        <Grid columns={{ minWidth: 280, max: 3 }} gap={4}>
-          {WORK.map(w => <WorkCard key={w.img} w={w} />)}
-        </Grid>
-
-        <VStack gap={3}>
-          <Eyebrow>{t({ de: 'Erweiterung', en: 'Add-on' })}</Eyebrow>
-          <Heading level={2}>{t({ de: 'Buchungs-Funnels', en: 'Booking funnels' })}</Heading>
-          <Text type="large" color="secondary">{t({ de: 'Kunden buchen selbst, Schritt für Schritt. Probieren Sie es gleich hier aus: Das ist ein echter Funnel, so wie er auf Ihrer Website läuft.', en: 'Customers book on their own, step by step. Try it right here: this is a real funnel, just as it runs on your website.' })}</Text>
-        </VStack>
-        <Funnels />
-        <VStack gap={3}>
-          <Eyebrow>{t({ de: 'Automation', en: 'Automation' })}</Eyebrow>
-          <Heading level={2}>{t({ de: 'Bestätigungs-E-Mails mit Design', en: 'Confirmation emails with design' })}</Heading>
-          <Text type="large" color="secondary">{t({ de: 'Dieselbe Reservation, zweimal. Links, wie sie von einem Standard-Formular ankommt. Rechts im Design Ihrer Website, für Sie und für Ihren Gast.', en: 'The same booking, twice. Left, as it arrives from a standard form. Right, in your website’s design, for you and your guest.' })}</Text>
-        </VStack>
-        <Emails />
+        <TabList value={tab} onChange={setTab} role="tablist" hasDivider>
+          {TABS.map(x => <Tab key={x.id} value={x.id} label={t(x.label)} panelId={"ex-" + x.id} />)}
+        </TabList>
+        {tab === 'hero' && (
+          <VStack id="ex-hero" role="tabpanel" gap={5}>
+            <Text type="large" color="secondary">{t({ de: 'Der Startbereich (auch «Hero» genannt) ist der grosse Bereich ganz oben auf Ihrer Website, also das Erste, was Besucher sehen. Mit diesem Zusatz gestalte ich ihn mit Video, Animation oder Bildern speziell für Ihr Geschäft. In Pro, Business und Komplett inklusive.', en: 'The hero is the large area at the very top of your website, the first thing visitors see. With this add-on I design it with video, animation or imagery specifically for your business. Included in Pro, Business and Complete.' })}</Text>
+            <Grid columns={{ minWidth: 280, max: 3 }} gap={4}>
+              {WORK.map(w => <WorkCard key={w.img} w={w} />)}
+            </Grid>
+          </VStack>
+        )}
+        {tab === 'funnel' && (
+          <VStack id="ex-funnel" role="tabpanel" gap={5}>
+            <Text type="large" color="secondary">{t({ de: 'Kunden buchen selbst, Schritt für Schritt. Probieren Sie es gleich hier aus: Das ist ein echter Funnel, so wie er auf Ihrer Website läuft.', en: 'Customers book on their own, step by step. Try it right here: this is a real funnel, just as it runs on your website.' })}</Text>
+            <Funnels />
+          </VStack>
+        )}
+        {tab === 'mail' && (
+          <VStack id="ex-mail" role="tabpanel" gap={5}>
+            <Text type="large" color="secondary">{t({ de: 'Dieselbe Reservation, einmal ohne und einmal mit Design. Schalten Sie um und vergleichen Sie.', en: 'The same booking, once without and once with design. Switch and compare.' })}</Text>
+            <Emails />
+          </VStack>
+        )}
         <HStack>
           <Button variant="primary" href="#konfigurator" label={t({ de: 'Im Konfigurator hinzufügen', en: 'Add in the configurator' })} />
         </HStack>

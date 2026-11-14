@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { Card } from '@astryxdesign/core/Card';
-import { Grid } from '@astryxdesign/core/Grid';
+import { useState } from 'react';
+import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import { Stack } from '@astryxdesign/core/Stack';
 import { Text } from '@astryxdesign/core/Text';
-import { Token } from '@astryxdesign/core/Token';
 import { useT, type T } from '../data';
 import { C, caps, serif } from './Configurator';
 
@@ -32,6 +32,7 @@ function Mail({ from, subject, children }: { from: string; subject: string; chil
 
 export default function Emails() {
   const t = useT();
+  const [view, setView] = useState('design');
   const plain = [
     t({ de: 'Sie haben eine neue Einsendung erhalten.', en: 'You have received a new submission.' }),
     '',
@@ -48,19 +49,19 @@ export default function Emails() {
   ].join('\n');
 
   return (
-    <Grid columns={{ minWidth: 300, max: 2 }} gap={6} align="start">
-      <Stack gap={2}>
-        <Stack direction="horizontal" gap={2} align="center"><Token size="sm" label={t({ de: 'Ohne Design', en: 'Without design' })} /></Stack>
+    <Stack gap={4} style={{ maxWidth: '40rem' }}>
+      <SegmentedControl value={view} onChange={setView} label={t({ de: 'Ansicht', en: 'View' })} size="lg">
+        <SegmentedControlItem value="plain" label={t({ de: 'Ohne Design', en: 'Without design' })} />
+        <SegmentedControlItem value="design" label={t({ de: 'Mit Design', en: 'With design' })} />
+      </SegmentedControl>
+      {view === 'plain' ? <Stack gap={2}>
         <Mail from="Formular <noreply@form-service.com>" subject={t({ de: 'Neue Formular-Einsendung', en: 'New form submission' })}>
           <Stack padding={3}>
             <Text size="sm" style={{ fontFamily: 'ui-monospace, Menlo, Consolas, monospace', whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>{plain}</Text>
           </Stack>
         </Mail>
         <Text type="supporting" size="sm">{t({ de: 'So kommen Anfragen oft an: Datum im Computerformat, kein Absender, nichts zum Antippen.', en: 'How enquiries often arrive: a machine date, no real sender, nothing to tap.' })}</Text>
-      </Stack>
-
-      <Stack gap={2}>
-        <Stack direction="horizontal" gap={2} align="center"><Token size="sm" color="green" label={t({ de: 'Mit Design', en: 'With design' })} /></Stack>
+      </Stack> : <Stack gap={2}>
         <Mail from="Tavola <reservation@tavola-baden.ch>" subject={t({ de: 'Neue Reservation · Mi., 5. August, 12:30', en: 'New reservation · Wed 5 August, 12:30' })}>
           <Stack style={{ background: C.card, color: C.ink }}>
             <Stack direction="horizontal" justify="between" align="center" paddingInline={4} paddingBlock={3} style={{ background: C.night, color: C.paper }}>
@@ -96,7 +97,7 @@ export default function Emails() {
           </Stack>
         </Mail>
         <Text type="supporting" size="sm">{t({ de: 'Im Look Ihrer Website: Datum zum Lesen, Wünsche sofort sichtbar, Anrufen mit einem Tipp.', en: 'In your website’s look: a readable date, requests stand out, call with one tap.' })}</Text>
-      </Stack>
-    </Grid>
+      </Stack>}
+    </Stack>
   );
 }

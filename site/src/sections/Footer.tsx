@@ -5,9 +5,8 @@ import { Button } from '@astryxdesign/core/Button';
 import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
 import { Section } from '@astryxdesign/core/Section';
 import Logo from './Logo';
-import { CONTACT_EMAIL, useT } from '../data';
+import { CONTACT_EMAIL, PHONE, useT } from '../data';
 
-const PHONE = '+41 76 330 79 11';
 
 export default function Footer() {
   const t = useT();
@@ -24,7 +23,7 @@ export default function Footer() {
     </VStack>
   );
   return (
-    <Section id="kontakt" variant="muted" padding={0}>
+    <Section id="footer" variant="muted" padding={0}>
       <VStack as="footer" gap={8} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
         <VStack gap={3} hAlign="center">
           <Heading level={2} type="display-3" justify="center">{t({ de: 'Bereit für Ihre neue Website?', en: 'Ready for your new website?' })}</Heading>
@@ -54,7 +53,7 @@ export default function Footer() {
       <Dialog isOpen={doc === 'dat'} onOpenChange={close} width={480}>
         <DialogHeader title={t({ de: 'Datenschutz', en: 'Privacy' })} onOpenChange={close} />
         <VStack gap={3} padding={5}>
-          <Text>{t({ de: 'Wir erhalten nur die Daten, die Sie uns per E-Mail senden.', en: 'We only receive the data you send us by email.' })}</Text>
+          <Text>{t({ de: 'Wir erhalten nur die Daten, die Sie uns über das Kontaktformular oder per E-Mail senden. Das Formular wird über unseren Hosting-Anbieter Netlify übermittelt.', en: 'We only receive the data you send us through the contact form or by email. The form is transmitted via our hosting provider Netlify.' })}</Text>
           <Text>{t({ de: 'Diese verwenden wir ausschliesslich, um Ihre Anfrage zu beantworten.', en: 'We use it only to answer your enquiry.' })}</Text>
           <Text>{t({ de: 'Ihre Daten werden nicht verkauft oder weitergegeben.', en: 'Your data is never sold or passed on.' })}</Text>
           <Text>{t({ de: `Gemäss nDSG haben Sie ein Recht auf Auskunft und Löschung: ${CONTACT_EMAIL}.`, en: `Under the Swiss nDSG you have the right to access and deletion: ${CONTACT_EMAIL}.` })}</Text>

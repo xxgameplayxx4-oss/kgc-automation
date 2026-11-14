@@ -16,7 +16,7 @@ import { Token } from '@astryxdesign/core/Token';
 import Eyebrow from './Eyebrow';
 import { AutomationFlow, HoursWeek, PriceCalc } from './AddonPreviews';
 import { ADDON_ICONS } from './addonIcons';
-import { ADDONS, addonPrice, BASE_PRICE, careFor, DISCOUNTS, GROUPS, TIERS, chf, mailto, nextStep, pct, presetOf, quote, tierPrice, useT, type T } from '../data';
+import { ADDONS, addonPrice, BASE_PRICE, careFor, DISCOUNTS, GROUPS, TIERS, chf, contactDraft, nextStep, pct, presetOf, quote, tierPrice, useT, type T } from '../data';
 
 // Dev-only self-check of the pricing maths (prices come from data.ts).
 if (import.meta.env.DEV) {
@@ -627,10 +627,11 @@ export default function Configurator() {
             <Button
               variant="primary"
               width="100%"
-              href={mailto(`${t({ de: 'Website-Anfrage', en: 'Website enquiry' })}: ${tierLabel}`, body)}
+              href="#kontakt"
+              onClick={() => { contactDraft.subject = `Website-Anfrage: ${tierLabel}`; contactDraft.body = body; }}
               label={t({ de: 'Anfrage senden', en: 'Send enquiry' })}
             />
-            <Link href={mailto(t({ de: 'Website-Anfrage', en: 'Website enquiry' }))} size="sm">
+            <Link href="#kontakt" size="sm">
               {t({ de: 'Etwas anderes im Kopf? Schreiben Sie mir.', en: 'Something else in mind? Write to me.' })}
             </Link>
           </Stack>

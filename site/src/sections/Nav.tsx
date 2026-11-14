@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { HStack, VStack } from '@astryxdesign/core/Layout';
 import { Button } from '@astryxdesign/core/Button';
 import { Drawer } from '@astryxdesign/core/Drawer';
-import { LangContext, mailto, useT, type Lang } from '../data';
+import { LangContext, useT, type Lang } from '../data';
 import type { Page } from '../App';
 import Logo from './Logo';
 
@@ -11,6 +11,7 @@ const LINKS: { id: Page; label: { de: string; en: string } }[] = [
   { id: 'leistungen', label: { de: 'Leistungen', en: 'Services' } },
   { id: 'projekte', label: { de: 'Projekte', en: 'Projects' } },
   { id: 'ueber-mich', label: { de: 'Über mich', en: 'About' } },
+  { id: 'faq', label: { de: 'FAQ', en: 'FAQ' } },
 ];
 
 const useNarrow = () => {
@@ -31,7 +32,7 @@ export default function Nav({ page }: { page: Page }) {
   const [open, setOpen] = useState(false);
 
   const langSwitch = (['de', 'en'] as Lang[]).map(l => (
-    <Button key={l} size="sm" label={l.toUpperCase()} variant={lang === l ? 'primary' : 'ghost'} onClick={() => setLang(l)} />
+    <Button key={l} size="sm" label={l.toUpperCase()} variant={lang === l ? 'secondary' : 'ghost'} onClick={() => setLang(l)} />
   ));
   const contactLabel = t({ de: 'Kontakt', en: 'Contact' });
 
@@ -43,26 +44,24 @@ export default function Nav({ page }: { page: Page }) {
       style={{ position: 'sticky', top: 0, zIndex: 20, background: 'color-mix(in oklab, var(--color-background-surface) 92%, transparent)', backdropFilter: 'blur(18px) saturate(1.5)', WebkitBackdropFilter: 'blur(18px) saturate(1.5)', borderBottom: '1px solid color-mix(in oklab, var(--color-text-primary) 8%, transparent)' }}
     >
       <HStack hAlign="between" vAlign="center" gap={3} wrap="nowrap">
-        <Button variant="ghost" href="#start" label="Cung Solutions">
+        <Button variant="ghost" href="#start" label="Cung Solutions" style={{ flexShrink: 0 }}>
           <Logo height={narrow ? 26 : 30} />
         </Button>
         {narrow ? (
-          <HStack gap={1} vAlign="center">
-            {langSwitch}
-            <Button size="sm" label={t({ de: 'Menü', en: 'Menu' })} onClick={() => setOpen(true)} />
-          </HStack>
+          <Button size="sm" label={t({ de: 'Menü', en: 'Menu' })} onClick={() => setOpen(true)} />
         ) : (
           <HStack gap={1} vAlign="center">
             {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} size="sm" href={`#${l.id}`} label={t(l.label)} />)}
             {langSwitch}
-            <Button size="sm" variant="primary" label={contactLabel} href={mailto('Anfrage Website')} />
+            <Button size="sm" variant="primary" label={contactLabel} href="#kontakt" onClick={() => setOpen(false)} />
           </HStack>
         )}
       </HStack>
       <Drawer isOpen={open && narrow} onOpenChange={setOpen} label={t({ de: 'Menü', en: 'Menu' })}>
         <VStack gap={2} padding={4}>
           {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} width="100%" href={`#${l.id}`} label={t(l.label)} onClick={() => setOpen(false)} />)}
-          <Button variant="primary" width="100%" label={contactLabel} href={mailto('Anfrage Website')} />
+          <Button variant="primary" width="100%" label={contactLabel} href="#kontakt" onClick={() => setOpen(false)} />
+          <HStack gap={1} hAlign="center">{langSwitch}</HStack>
         </VStack>
       </Drawer>
     </VStack>

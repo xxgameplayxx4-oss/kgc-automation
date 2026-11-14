@@ -193,24 +193,24 @@
     --color-syntax-diff-header: transparent;
     --color-syntax-added-marker: var(--color-syntax-punctuation);
     --color-syntax-removed-marker: var(--color-syntax-punctuation);
-    --color-background-surface: light-dark(#ffffff, #262626);
-    --color-background-body: light-dark(#f1f1f1, #1b1b1b);
-    --color-background-card: light-dark(#ffffff, #1b1b1b);
-    --color-background-popover: light-dark(#ffffff, #1b1b1b);
-    --color-background-muted: light-dark(#f1f1f1, #1b1b1b);
-    --color-accent: light-dark(#C8860D, #E9B44C);
-    --color-accent-muted: light-dark(#F6E3B8, #4A3A14);
+    --color-background-surface: light-dark(#FFFFFF, #14213D);
+    --color-background-body: light-dark(#E5E5E5, #000000);
+    --color-background-card: light-dark(#FFFFFF, #14213D);
+    --color-background-popover: light-dark(#FFFFFF, #14213D);
+    --color-background-muted: light-dark(#E5E5E5, #0B1426);
+    --color-accent: #FCA311;
+    --color-accent-muted: light-dark(#FDE7C2, #3A2E14);
     --color-neutral: light-dark(#0000000F, #ffffff1A);
     --color-overlay: light-dark(#00000080, #000000CC);
     --color-overlay-hover: light-dark(#0000000D, #ffffff0D);
     --color-overlay-pressed: light-dark(#0000001A, #ffffff1A);
-    --color-text-primary: light-dark(#000000, #ffffff);
-    --color-text-secondary: light-dark(#474747, #9e9e9e);
+    --color-text-primary: light-dark(#000000, #FFFFFF);
+    --color-text-secondary: light-dark(#3B4252, #E5E5E5);
     --color-text-disabled: light-dark(#919191, #525252);
-    --color-text-accent: light-dark(#8A5A00, #EDBE62);
+    --color-text-accent: light-dark(#14213D, #FCA311);
     --color-on-dark: #ffffff;
     --color-on-light: #111111;
-    --color-on-accent: #1F1607;
+    --color-on-accent: #000000;
     --color-on-success: light-dark(#ffffff, #111111);
     --color-on-error: light-dark(#ffffff, #111111);
     --color-on-warning: #111111;
@@ -225,7 +225,7 @@
     --color-on-success-muted: light-dark(#00490b, #90ca90);
     --color-on-warning-muted: light-dark(#4b3900, #eec448);
     --color-on-error-muted: light-dark(#76000c, #ffaea7);
-    --color-icon-accent: light-dark(#8A5A00, #EDBE62);
+    --color-icon-accent: light-dark(#14213D, #FCA311);
     --color-icon-primary: light-dark(#000000, #ffffff);
     --color-icon-secondary: light-dark(#6a6a6a, #9e9e9e);
     --color-icon-disabled: light-dark(#919191, #525252);
@@ -235,8 +235,8 @@
     --color-success-muted: light-dark(#bce0bb, #90ca903D);
     --color-error-muted: light-dark(#ffc4be, #ff98903D);
     --color-warning-muted: light-dark(#fae19e, #e2b6233D);
-    --color-border: light-dark(#00000014, #ffffff1A);
-    --color-border-emphasized: light-dark(#d4d4d4, #525252);
+    --color-border: light-dark(#14213D1F, #E5E5E526);
+    --color-border-emphasized: light-dark(#C9CCD3, #3A4A6B);
     --color-skeleton: light-dark(#f1f1f1, #525252);
     --color-shadow: light-dark(#0000001A, #0000004D);
     --color-tint-hover: light-dark(#000000, #ffffff);
@@ -248,10 +248,10 @@
     --color-border-orange: light-dark(#ffc7a1, #df843f);
     --color-icon-orange: light-dark(#622700, #ff9e55);
     --color-text-orange: light-dark(#622700, #ffb37e);
-    --color-background-yellow: light-dark(#FBF1D9, #3A2D10);
-    --color-border-yellow: light-dark(#E9CF95, #8A6A1F);
-    --color-icon-yellow: light-dark(#6B4500, #EDBE62);
-    --color-text-yellow: light-dark(#6B4500, #EDBE62);
+    --color-background-yellow: light-dark(#FFF4E0, #1C2A4A);
+    --color-border-yellow: light-dark(#FCA311, #FCA311);
+    --color-icon-yellow: light-dark(#14213D, #FCA311);
+    --color-text-yellow: light-dark(#14213D, #FCA311);
     --color-background-green: light-dark(#bce0bb, #2b422b);
     --color-border-green: light-dark(#aad4a9, #6ab26b);
     --color-icon-green: light-dark(#00490b, #90ca90);
@@ -440,8 +440,7 @@
   }
 
   .astryx-button[data-variant="primary"] {
-    background-image: linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,0) 60%);
-    box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 -1px 0 rgba(0,0,0,.12) inset, 0 6px 18px -6px rgba(233,180,76,.65), 0 2px 4px rgba(0,0,0,.18);
+    box-shadow: 0 1px 2px rgba(0,0,0,.15);
   }
 
   .astryx-badge[data-variant="neutral"] {
@@ -538,7 +537,7 @@
   }
 
   .astryx-card[data-variant="yellow"] {
-    box-shadow: 0 0 0 1px rgba(233,180,76,.35), 0 20px 60px -20px rgba(233,180,76,.45), 0 40px 100px -40px rgba(200,134,13,.5), inset 0 1px 0 rgba(255,255,255,.12);
+    box-shadow: 0 0 0 1px rgba(252,163,17,.35), 0 20px 60px -20px rgba(252,163,17,.45), 0 40px 100px -40px rgba(252,163,17,.5), inset 0 1px 0 rgba(255,255,255,.12);
   }
 
   .astryx-section {

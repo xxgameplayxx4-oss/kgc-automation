@@ -16,7 +16,7 @@ export default function Hero() {
         </Heading>
         <Text type="large" color="secondary" justify="center" textWrap="balance">
           {t({
-            de: 'Cung Solutions baut Websites für Schweizer Kleinunternehmen, dazu passende Flyer und Visitenkarten.',
+            de: 'Cung Solutions baut Websites für Schweizer KMU, dazu passende Flyer und Visitenkarten.',
             en: 'Cung Solutions builds websites for Swiss small businesses, plus matching flyers and business cards.',
           })}
         </Text>

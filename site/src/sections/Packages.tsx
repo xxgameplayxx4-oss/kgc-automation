@@ -5,7 +5,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { Badge } from '@astryxdesign/core/Badge';
 import Eyebrow from './Eyebrow';
-import { ADDONS, CARE, CARE_HOURS, DISCOUNTS, DOMAIN_FEE, chf, mailto, pct, presetOf, quote, TIERS, useT } from '../data';
+import { ADDONS, CARE, CARE_HOURS, DISCOUNTS, DOMAIN_FEE, chf, pct, presetOf, quote, TIERS, useT } from '../data';
 
 export default function Packages() {
   const t = useT();
@@ -17,7 +17,7 @@ export default function Packages() {
         <Heading level={2} type="display-3">{t({ de: 'Pakete', en: 'Packages' })}</Heading>
         <Text color="secondary">
           {t({
-            de: `Die Basis enthält das Nötige, alles Weitere sind Zusätze. Je mehr Zusätze, desto mehr Rabatt: ${steps}, alle Zusätze 30 %.`,
+            de: `Die Basis enthält die Grundlagen, alles Weitere sind Zusätze. Je mehr Zusätze, desto mehr Rabatt: ${steps}, alle Zusätze 30 %.`,
             en: `Basic has the essentials, everything else is an add-on. The more add-ons, the bigger the discount: ${steps}, all add-ons 30 %.`,
           })}
         </Text>
@@ -63,30 +63,47 @@ export default function Packages() {
           );
         })}
       </Grid>
-      <Card variant="muted" padding={5}>
-        <VStack gap={2}>
-          <Heading level={3}>{t({ de: 'Monatliche Wartung', en: 'Monthly maintenance' })}</Heading>
-          <Text color="secondary">
-            {t({
-              de: `Hosting, Updates, Sicherheit und ${CARE_HOURS} Stunden Änderungen pro Monat. Basis ${chf(CARE.basis.price)}, Pro ${chf(CARE.plus.price)}, Business ${chf(CARE.business.price)}, Komplett ${chf(CARE.komplett.price)} statt ${chf(CARE.komplett.list)} (−30 %).`,
-              en: `Hosting, updates, security and ${CARE_HOURS} hours of changes per month. Basic ${chf(CARE.basis.price)}, Pro ${chf(CARE.plus.price)}, Business ${chf(CARE.business.price)}, Complete ${chf(CARE.komplett.price)} instead of ${chf(CARE.komplett.list)} (−30 %).`,
-            })}
-          </Text>
-          <Text color="secondary">
-            {t({
-              de: `Domain: Ich kaufe und verwalte sie für + ${chf(DOMAIN_FEE)} pro Monat. Oder Sie kaufen sie selbst und geben mir Zugang, dann verbinde ich sie.`,
-              en: `Domain: I buy and manage it for + ${chf(DOMAIN_FEE)} per month. Or you buy it yourself and give me access, then I connect it.`,
-            })}
-          </Text>
-        </VStack>
-      </Card>
+      <VStack gap={3}>
+        <Heading level={3}>{t({ de: 'Monatliche Wartung', en: 'Monthly maintenance' })}</Heading>
+        <Grid columns={{ minWidth: 240, max: 3 }} gap={4} align="stretch">
+          <Card variant="muted" padding={5}>
+            <VStack gap={2}>
+              <Text weight="semibold">{t({ de: 'Das ist dabei', en: 'What is included' })}</Text>
+              <VStack gap={1} as="ul" style={{ margin: 0, paddingInlineStart: 'var(--spacing-4)' }}>
+                {[{ de: 'Hosting', en: 'Hosting' }, { de: 'Updates und Sicherheit', en: 'Updates and security' }, { de: `${CARE_HOURS} Stunden Änderungen pro Monat`, en: `${CARE_HOURS} hours of changes per month` }].map((x, i) => <li key={i}><Text size="sm">{t(x)}</Text></li>)}
+              </VStack>
+            </VStack>
+          </Card>
+          <Card variant="muted" padding={5}>
+            <VStack gap={2}>
+              <Text weight="semibold">{t({ de: 'Preis pro Monat', en: 'Price per month' })}</Text>
+              {TIERS.map(tier => (
+                <HStack key={tier.id} hAlign="between" gap={3}>
+                  <Text size="sm">{t(tier.name)}</Text>
+                  <Text size="sm" hasTabularNumbers>
+                    {chf(CARE[tier.id].price)}
+                    {CARE[tier.id].list !== CARE[tier.id].price ? ` (${t({ de: 'statt', en: 'instead of' })} ${chf(CARE[tier.id].list)})` : ''}
+                  </Text>
+                </HStack>
+              ))}
+            </VStack>
+          </Card>
+          <Card variant="muted" padding={5}>
+            <VStack gap={2}>
+              <Text weight="semibold">Domain</Text>
+              <Text size="sm" color="secondary">{t({ de: `Ich kaufe und verwalte sie für + ${chf(DOMAIN_FEE)} pro Monat.`, en: `I buy and manage it for + ${chf(DOMAIN_FEE)} per month.` })}</Text>
+              <Text size="sm" color="secondary">{t({ de: 'Oder Sie kaufen sie selbst und geben mir Zugang, dann verbinde ich sie.', en: 'Or you buy it yourself and give me access, then I connect it.' })}</Text>
+            </VStack>
+          </Card>
+        </Grid>
+      </VStack>
       <Card variant="muted" padding={5}>
         <HStack gap={4} vAlign="center" hAlign="between" wrap="wrap">
           <VStack gap={1}>
             <Heading level={3}>{t({ de: 'Individuell', en: 'Custom' })}</Heading>
             <Text color="secondary">{t({ de: 'Sie brauchen mehr? Schreiben Sie mir.', en: 'Need more? Write to me.' })}</Text>
           </VStack>
-          <Button href={mailto('Individuelle Anfrage')} label={t({ de: 'Anfrage senden', en: 'Send enquiry' })} />
+          <Button href="#kontakt" label={t({ de: 'Anfrage senden', en: 'Send enquiry' })} />
         </HStack>
       </Card>
       <Text type="supporting">

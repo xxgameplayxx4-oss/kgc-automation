@@ -13,8 +13,8 @@ const PORTRAIT = '/about/khang.jpg';
 const NAME = 'Khang Cung';
 
 const LINES: T[] = [
-  { de: 'Ich bin Khang, Informatiker EFZ (Applikationsentwicklung) mit Berufsmaturität. Ich baue Websites für Kleinunternehmen in der Region Aargau, selbst und von A bis Z, hier in Brugg.', en: 'I’m Khang, a certified IT specialist (application development) with a vocational baccalaureate. I build websites for small businesses in the Aargau region myself, end to end, here in Brugg.' },
-  { de: 'Dazu bringe ich Erfahrung aus IT-Support und Cyber Security mit. Sie haben einen einzigen Ansprechpartner, vom ersten Gespräch bis zum Launch, und Fixpreise statt Stundenzettel.', en: 'I also bring experience in IT support and cyber security. You have one single contact from the first call to launch, and fixed prices instead of timesheets.' },
+  { de: 'Mein Name ist Khang, Informatiker EFZ (Applikationsentwicklung) mit Berufsmaturität. Von Brugg aus entwickle ich Websites für KMU im Aargau, von A bis Z und alles selbst.', en: 'My name is Khang, a certified IT specialist (application development) with a vocational baccalaureate. From Brugg, I build websites for small businesses in Aargau, end to end and all by myself.' },
+  { de: 'Dazu kommt meine Erfahrung aus IT-Support und Cyber Security. Sie haben einen einzigen Ansprechpartner, vom ersten Gespräch bis zum Launch, und Fixpreise statt Stundenzettel.', en: 'I also bring experience in IT support and cyber security. You have one single contact from the first call to launch, and fixed prices instead of timesheets.' },
 ];
 
 type Job = { role: T; org: string; when: string; points: T[]; url?: string };
@@ -27,27 +27,27 @@ const JOBS: Job[] = [
     ],
   },
   {
-    role: { de: 'Website Design & Entwicklung', en: 'Website design & development' }, org: 'Boxschule Gebenstorf', when: '05/2026 – 07/2026', url: 'https://boxschule-gebenstorf.ch',
+    role: { de: 'Webdesign und Entwicklung', en: 'Web design and development' }, org: 'Boxschule Gebenstorf', when: '05/2026 – 07/2026', url: 'https://boxschule-gebenstorf.ch',
     points: [
       { de: 'Offizielle Website konzipiert und entwickelt', en: 'Designed and developed the official website' },
       { de: 'Responsives Webdesign, technische Betreuung und Wartung', en: 'Responsive web design, technical support and maintenance' },
     ],
   },
   {
-    role: { de: 'Website Design & Entwicklung', en: 'Website design & development' }, org: 'MJ Group · Family Office, Tessin', when: '2026',
+    role: { de: 'Webdesign und Entwicklung', en: 'Web design and development' }, org: 'MJ Group · Family Office, Tessin', when: '2026',
     points: [
       { de: 'Website für ein Family Office konzipiert und umgesetzt', en: 'Designed and built the website for a family office' },
     ],
   },
   {
-    role: { de: 'IT Support Praktikant', en: 'IT support intern' }, org: 'Siamp Ltd · Ho-Chi-Minh-Stadt, Vietnam', when: '09/2025 – 05/2026',
+    role: { de: 'Praktikant IT-Support', en: 'IT support intern' }, org: 'Siamp Ltd · Ho-Chi-Minh-Stadt, Vietnam', when: '09/2025 – 05/2026',
     points: [
       { de: 'Betrieb von Netzwerken, Servern und IT-Equipment', en: 'Ran networks, servers and IT equipment' },
       { de: 'Benutzerkonten, E-Mail-Systeme und Software verwaltet', en: 'Managed user accounts, email systems and software' },
     ],
   },
   {
-    role: { de: 'Cyber Security Praktikant', en: 'Cyber security intern' }, org: 'SECURNITE GmbH · Windisch', when: '08/2023 – 07/2024',
+    role: { de: 'Praktikant Cyber Security', en: 'Cyber security intern' }, org: 'SECURNITE GmbH · Windisch', when: '08/2023 – 07/2024',
     points: [
       { de: 'Anwendung zur Erkennung potenzieller Schadsoftware entwickelt', en: 'Built an application to detect potential malware' },
       { de: 'IT-Support und Mitarbeit an Sicherheitslösungen', en: 'IT support and work on security solutions' },
@@ -63,10 +63,10 @@ const EDUCATION: { title: T; place: string; when: string }[] = [
 const SKILLS = ['HTML5', 'CSS3', 'JavaScript', 'React', 'C#', '.NET', 'Java', 'SQL', 'PowerShell', 'Microsoft 365', 'Windows Server', 'Active Directory', 'Netzwerke (TCP/IP)', 'Git'];
 
 const LANGUAGES: { name: T; level: T }[] = [
-  { name: { de: 'Deutsch', en: 'German' }, level: { de: 'fliessend', en: 'fluent' } },
-  { name: { de: 'Englisch', en: 'English' }, level: { de: 'verhandlungssicher (C2)', en: 'proficient (C2)' } },
-  { name: { de: 'Vietnamesisch', en: 'Vietnamese' }, level: { de: 'Muttersprache', en: 'native' } },
-  { name: { de: 'Französisch', en: 'French' }, level: { de: 'Grundkenntnisse', en: 'basic' } },
+  { name: { de: 'Deutsch', en: 'German' }, level: { de: 'Fliessend', en: 'Fluent' } },
+  { name: { de: 'Englisch', en: 'English' }, level: { de: 'Fliessend (C2)', en: 'Fluent (C2)' } },
+  { name: { de: 'Vietnamesisch', en: 'Vietnamese' }, level: { de: 'Muttersprache', en: 'Native' } },
+  { name: { de: 'Französisch', en: 'French' }, level: { de: 'Grundkenntnisse', en: 'Basic' } },
 ];
 
 export default function About() {

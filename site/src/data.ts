@@ -13,6 +13,9 @@ export const CONTACT_EMAIL = 'khangcung196@gmail.com';
 export const chf = (n: number) => 'CHF ' + n.toLocaleString('de-CH').replace(/[’']/g, "'");
 export const mailto = (subject: string, body = '') =>
   `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+// The configurator leaves its summary here before sending the visitor to the contact page.
+export const contactDraft = { subject: '', body: '' };
+export const PHONE = '+41 76 330 79 11';
 
 export type Tier = { id: 'basis' | 'plus' | 'business' | 'komplett'; preset: string[]; name: T; tagline: T; features: T[] };
 
@@ -36,13 +39,13 @@ export const TIERS: Tier[] = [
   {
     id: 'basis', preset: [],
     name: { de: 'Basis', en: 'Basic' },
-    tagline: { de: 'Das Nötige: eine saubere, schnelle, mobile Website.', en: 'The essentials: a clean, fast, mobile website.' },
+    tagline: { de: 'Die Grundlagen: eine saubere, schnelle, mobile Website.', en: 'The essentials: a clean, fast, mobile website.' },
     features: BASE_FEATURES,
   },
   {
     id: 'plus', preset: ['hero', 'email', 'form', 'reviews', 'hours'],
     name: { de: 'Pro', en: 'Pro' },
-    tagline: { de: 'Basis plus eigener Hero, E-Mail, Formular, Bewertungen und Öffnungszeiten.', en: 'Basic plus custom hero, email, form, reviews and opening hours.' },
+    tagline: { de: 'Basis plus eigener Startbereich, E-Mail, Formular, Bewertungen und Öffnungszeiten.', en: 'Basic plus custom hero, email, form, reviews and opening hours.' },
     features: [],
   },
   {
@@ -73,7 +76,7 @@ export const GROUPS: { id: AddonGroup; name: T; desc: T }[] = [
 export const ADDONS: Addon[] = [
   // Website
   { id: 'booking', group: 'website', price: 400, name: { de: 'Buchungs-Funnel', en: 'Booking funnel' }, desc: { de: 'Kunden wählen Leistung, Datum und Zeit in 3 Schritten.', en: 'Customers pick service, date and time in 3 steps.' } },
-  { id: 'hero', group: 'website', price: 250, max: 500, name: { de: 'Individueller Hero-Bereich', en: 'Custom hero section' }, desc: { de: 'Der erste Eindruck, entwickelt für Ihr Geschäft: Video, Animation oder Bildwelt. Preis je nach Umfang.', en: 'The first impression, built for your business: video, animation or imagery. Price depends on scope.' } },
+  { id: 'hero', group: 'website', price: 250, max: 500, name: { de: 'Individueller Startbereich', en: 'Custom hero section' }, desc: { de: 'Der grosse Bereich ganz oben auf Ihrer Website, das Erste, was Besucher sehen. Mit Video, Animation oder Bildern für Ihr Geschäft gestaltet. Preis je nach Umfang.', en: 'The large area at the very top of your website, the first thing visitors see. Designed for your business with video, animation or imagery. Price depends on scope.' } },
   { id: 'email', group: 'website', price: 150, name: { de: 'E-Mail mit eigener Domain', en: 'Email on your domain' }, desc: { de: 'info@ihr-geschaeft.ch, eingerichtet auf Handy und PC.', en: 'info@your-business.ch, set up on phone and PC.' } },
   { id: 'form', group: 'website', price: 150, name: { de: 'Kontaktformular', en: 'Contact form' }, desc: { de: 'Formular mit Spamschutz statt nur E-Mail-Button.', en: 'Form with spam protection instead of an email button.' } },
   { id: 'page', group: 'website', price: 250, name: { de: 'Zusätzliche Unterseite', en: 'Extra subpage' }, desc: { de: 'Z. B. Preisliste, Team oder Stellen.', en: 'E.g. price list, team or jobs.' } },

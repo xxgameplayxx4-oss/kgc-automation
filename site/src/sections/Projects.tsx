@@ -93,14 +93,14 @@ export function Screen({ p, kind, alt, lazy }: { p: Project; kind: 'desktop' | '
 /** Laptop with the desktop screenshot, phone in front at the bottom right. */
 export function Devices({ p, alt }: { p: Project; alt: string }) {
   return (
-    <Stack style={{ position: 'relative', paddingRight: '8%', paddingBottom: '6%' }}>
+    <Stack style={{ position: 'relative', paddingRight: 'max(8%, 3rem)', paddingBottom: 'max(6%, 2.5rem)' }}>
       <Card padding={1} elevation="high" style={{ background: 'black' /* bezel stays black in both themes */, borderRadius: 'var(--radius-page) var(--radius-page) 0.25rem 0.25rem' }}>
         <AspectRatio ratio={16 / 10} fit="cover">
           <Screen p={p} kind="desktop" alt={`${alt}, Desktop`} lazy />
         </AspectRatio>
       </Card>
       <Card variant="gray" padding={0.5} style={{ marginInline: '-4%', borderRadius: '0 0 0.75rem 0.75rem' }} />
-      <Card padding={0.5} elevation="high" style={{ position: 'absolute', right: 0, bottom: 0, width: '24%', background: 'black', borderRadius: '1rem' }}>
+      <Card padding={0.5} elevation="high" style={{ position: 'absolute', right: 0, bottom: 0, width: 'max(24%, 8.5rem)', background: 'black', borderRadius: '1rem' }}>
         <AspectRatio ratio={390 / 844} fit="cover" style={{ borderRadius: '0.7rem', overflow: 'hidden' }}>
           <Screen p={p} kind="phone" alt={`${alt}, Handy`} lazy />
         </AspectRatio>

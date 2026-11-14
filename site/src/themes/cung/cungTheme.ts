@@ -3,7 +3,6 @@
 import { defineTheme } from '@astryxdesign/core/theme';
 import { neutralTheme } from '@astryxdesign/theme-neutral';
 
-const INK = '#1F1607'; // text on amber fills, both modes
 const SANS = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 
 export const cungTheme = defineTheme({
@@ -20,16 +19,27 @@ export const cungTheme = defineTheme({
 
   // [light, dark]. Contrast ratios are listed in the commit message.
   tokens: {
-    '--color-accent': ['#C8860D', '#E9B44C'],
-    '--color-on-accent': INK,
-    '--color-accent-muted': ['#F6E3B8', '#4A3A14'],
-    '--color-text-accent': ['#8A5A00', '#EDBE62'],
-    '--color-icon-accent': ['#8A5A00', '#EDBE62'],
-    // "yellow" category variant (Pro card, Empfohlen badge) re-pointed to the brand amber.
-    '--color-background-yellow': ['#FBF1D9', '#3A2D10'],
-    '--color-border-yellow': ['#E9CF95', '#8A6A1F'],
-    '--color-text-yellow': ['#6B4500', '#EDBE62'],
-    '--color-icon-yellow': ['#6B4500', '#EDBE62'],
+    // KGC palette: Black, Prussian Blue #14213D, Orange #FCA311, Alabaster #E5E5E5, White.
+    '--color-accent': '#FCA311',
+    '--color-on-accent': '#000000',
+    '--color-accent-muted': ['#FDE7C2', '#3A2E14'],
+    // Orange text fails contrast on white, so light mode uses Prussian Blue for accent text.
+    '--color-text-accent': ['#14213D', '#FCA311'],
+    '--color-icon-accent': ['#14213D', '#FCA311'],
+    '--color-background-body': ['#E5E5E5', '#000000'],
+    '--color-background-surface': ['#FFFFFF', '#14213D'],
+    '--color-background-card': ['#FFFFFF', '#14213D'],
+    '--color-background-popover': ['#FFFFFF', '#14213D'],
+    '--color-background-muted': ['#E5E5E5', '#0B1426'],
+    '--color-text-primary': ['#000000', '#FFFFFF'],
+    '--color-text-secondary': ['#3B4252', '#E5E5E5'],
+    '--color-border': ['#14213D1F', '#E5E5E526'],
+    '--color-border-emphasized': ['#C9CCD3', '#3A4A6B'],
+    // "yellow" category variant (Pro card, Beliebt badge) re-pointed to the orange.
+    '--color-background-yellow': ['#FFF4E0', '#1C2A4A'],
+    '--color-border-yellow': ['#FCA311', '#FCA311'],
+    '--color-text-yellow': ['#14213D', '#FCA311'],
+    '--color-icon-yellow': ['#14213D', '#FCA311'],
     // "Epic settings": layered contact + ambient shadows, so surfaces sit in real light.
     '--shadow-low': '0 1px 1px light-dark(rgba(31,22,7,.06), rgba(0,0,0,.45)), 0 4px 12px -2px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.45)), inset 0 1px 0 light-dark(rgba(255,255,255,.7), rgba(255,255,255,.05))',
     '--shadow-med': '0 1px 2px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.5)), 0 8px 24px -6px light-dark(rgba(31,22,7,.14), rgba(0,0,0,.55)), 0 24px 48px -16px light-dark(rgba(31,22,7,.12), rgba(0,0,0,.6)), inset 0 1px 0 light-dark(rgba(255,255,255,.7), rgba(255,255,255,.06))',
@@ -41,14 +51,11 @@ export const cungTheme = defineTheme({
     card: {
       base: { backgroundImage: 'linear-gradient(180deg, light-dark(rgba(255,255,255,.55), rgba(255,255,255,.035)), transparent 45%)' },
       // The recommended (Pro) card glows like a lit object.
-      'variant:yellow': { boxShadow: '0 0 0 1px rgba(233,180,76,.35), 0 20px 60px -20px rgba(233,180,76,.45), 0 40px 100px -40px rgba(200,134,13,.5), inset 0 1px 0 rgba(255,255,255,.12)' },
+      'variant:yellow': { boxShadow: '0 0 0 1px rgba(252,163,17,.35), 0 20px 60px -20px rgba(252,163,17,.45), 0 40px 100px -40px rgba(252,163,17,.5), inset 0 1px 0 rgba(255,255,255,.12)' },
     },
-    // Primary buttons: lit from above, with a warm amber glow.
+    // Primary buttons: flat and quiet, only a soft contact shadow.
     button: {
-      'variant:primary': {
-        backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,0) 60%)',
-        boxShadow: '0 1px 0 rgba(255,255,255,.35) inset, 0 -1px 0 rgba(0,0,0,.12) inset, 0 6px 18px -6px rgba(233,180,76,.65), 0 2px 4px rgba(0,0,0,.18)',
-      },
+      'variant:primary': { boxShadow: '0 1px 2px rgba(0,0,0,.15)' },
     },
   },
 });

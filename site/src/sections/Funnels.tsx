@@ -117,7 +117,7 @@ function Calendar({ value, onPick }: { value?: Date; onPick: (d: Date) => void }
     const wk = date.getDay();
     const off = date <= today || wk === 0 || wk === 6;
     const on = value?.getTime() === date.getTime();
-    cells.push(<Button key={d} size="sm" width="100%" variant={on ? 'primary' : 'ghost'} isDisabled={off} label={String(d)} onClick={() => onPick(date)} />);
+    cells.push(<Button key={d} size="sm" width="100%" variant={on ? 'primary' : 'ghost'} isDisabled={off} label={String(d)} style={{ paddingInline: 0, minWidth: 0 }} onClick={() => onPick(date)} />);
   }
   return (
     <Stack gap={2}>
