@@ -3,7 +3,7 @@ import { HStack, VStack } from '@astryxdesign/core/Layout';
 import { Text } from '@astryxdesign/core/Text';
 import { Badge } from '@astryxdesign/core/Badge';
 import { Card } from '@astryxdesign/core/Card';
-import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
+import { Button } from '@astryxdesign/core/Button';
 import { useT } from '../data';
 
 type L = { de: string; en: string };
@@ -71,16 +71,19 @@ export default function WorkflowPreviews() {
 
   return (
     <VStack gap={3} style={{ minWidth: 0 }}>
-      <VStack style={{ overflowX: 'auto', maxWidth: '100%' }}>
-        <SegmentedControl label={t({ de: 'Workflow wählen', en: 'Choose a workflow' })} value={id} onChange={setId}>
-          {FLOWS.map(f => <SegmentedControlItem key={f.id} value={f.id} label={t(f.tab)} />)}
-        </SegmentedControl>
-      </VStack>
+      {/* Wrapping pill buttons instead of a segmented control: on phones the segments shrank and cut the names off (KGC). */}
+      <HStack gap={1.5} wrap="wrap" role="group" aria-label={t({ de: 'Workflow wählen', en: 'Choose a workflow' })}>
+        {FLOWS.map(f => (
+          <Button key={f.id} size="sm" variant={f.id === id ? 'primary' : 'secondary'} aria-pressed={f.id === id}
+            label={t(f.tab)} onClick={() => setId(f.id)} />
+        ))}
+      </HStack>
       <VStack gap={2} style={{ minWidth: 0 }}>
         {flow.steps.map((s, i) => {
           const on = reduce || i < n;
           return (
-            <Card key={`${id}-${i}`} variant="muted" padding={3}>
+            // The whole card fades in, so steps that haven't run yet don't show as empty boxes.
+            <Card key={`${id}-${i}`} variant="muted" padding={3} aria-hidden={!on} style={{ opacity: on ? 1 : 0, transition: 'opacity 0.4s ease' }}>
               <VStack gap={1.5} style={{
                 opacity: on ? 1 : 0,
                 transform: on ? 'none' : 'translateY(var(--spacing-2))',
