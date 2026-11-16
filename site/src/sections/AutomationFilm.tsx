@@ -4,7 +4,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { Stack } from '@astryxdesign/core/Stack';
 import { Text } from '@astryxdesign/core/Text';
-import { AUTOMATION_MONTHLY, chf, useT, type T } from '../data';
+import { AUTOPILOT_MONTHLY, chf, useT, type T } from '../data';
 import WhatsAppChat from './WhatsAppChat';
 
 // The automations film: an animated scene player synced to an ElevenLabs voiceover.
@@ -15,18 +15,18 @@ export type Line = { at: { de: number; en: number }; text: T };
 // Start times in seconds, measured from the voiceover (see VOICE).
 export const LINES: Line[] = [
   { at: { de: 0, en: 0 }, text: { de: 'Halb elf am Abend. Ihr Telefon klingelt. Und klingelt wieder.', en: 'Half past ten at night. Your phone rings. And rings again.' } },
-  { at: { de: 4.35, en: 5.3 }, text: { de: 'Sie können nicht abnehmen. Sie sind noch beim Kunden, in der Werkstatt, oder endlich zu Hause.', en: 'You can’t pick up. You’re still with a customer, in the workshop, or finally at home.' } },
-  { at: { de: 9.6, en: 11.7 }, text: { de: 'Jeder verpasste Anruf ist ein Kunde, der jetzt bei der Konkurrenz sucht.', en: 'Every missed call is a customer now looking at your competitor.' } },
-  { at: { de: 13.6, en: 16.5 }, text: { de: 'Mit meinen Automationen passiert das nicht mehr.', en: 'With my automations, that stops.' } },
-  { at: { de: 16.35, en: 19.45 }, text: { de: 'Verpasster Anruf? Ihr Kunde bekommt innert einer Minute eine SMS mit Rückruf- oder Buchungslink.', en: 'Missed call? Your customer gets a text within a minute with a callback or booking link.' } },
-  { at: { de: 23.45, en: 25.7 }, text: { de: 'Neue Anfrage per E-Mail, WhatsApp oder Formular? Die Antwort geht sofort raus, und alles landet in einer Liste.', en: 'New enquiry by email, WhatsApp or form? The reply goes out at once, and everything lands in one list.' } },
-  { at: { de: 31.85, en: 33.65 }, text: { de: 'Der WhatsApp-Agent beantwortet Fragen und nimmt Termine auf, auch um Mitternacht.', en: 'The WhatsApp agent answers questions and takes bookings, even at midnight.' } },
-  { at: { de: 37.4, en: 39.1 }, text: { de: 'Der Termin steht automatisch in Ihrem Kalender, und am Tag davor kommt die Erinnerung.', en: 'The appointment is in your calendar automatically, and the reminder goes out the day before.' } },
-  { at: { de: 43.3, en: 45 }, text: { de: 'Offerte verschickt? Nach fünf Tagen wird freundlich nachgefasst.', en: 'Quote sent? After five days, a friendly follow-up goes out.' } },
-  { at: { de: 47.3, en: 49.4 }, text: { de: 'Auftrag erledigt? Die Bitte um eine Google-Bewertung geht von selbst raus. Und offene Rechnungen werden höflich erinnert.', en: 'Job done? The request for a Google review goes out on its own. And unpaid invoices get a polite reminder.' } },
-  { at: { de: 54.35, en: 57.4 }, text: { de: 'Nichts geht ohne Ihre Freigabe raus. Ihre Daten bleiben in der Schweiz oder der EU.', en: 'Nothing goes out without your approval. Your data stays in Switzerland or the EU.' } },
-  { at: { de: 59.6, en: 64.65 }, text: { de: `Automationen ab ${AUTOMATION_MONTHLY} Franken im Monat, ohne Einrichtungsgebühr.`, en: `Automations from ${AUTOMATION_MONTHLY} francs a month, with no setup fee.` } },
-  { at: { de: 63.9, en: 70 }, text: { de: 'Buchen Sie jetzt Ihr kostenloses Gespräch.', en: 'Book your free call now.' } },
+  { at: { de: 4.85, en: 4.8 }, text: { de: 'Sie können nicht abnehmen. Sie sind noch beim Kunden, in der Werkstatt, oder endlich zu Hause.', en: 'You can’t pick up. You’re still with a customer, in the workshop, or finally at home.' } },
+  { at: { de: 9.8, en: 11.65 }, text: { de: 'Jeder verpasste Anruf ist ein Kunde, der jetzt bei der Konkurrenz sucht.', en: 'Every missed call is a customer now looking at your competitor.' } },
+  { at: { de: 14.05, en: 15.9 }, text: { de: 'Mit meinen Automationen passiert das nicht mehr.', en: 'With my automations, that stops.' } },
+  { at: { de: 16.9, en: 18.85 }, text: { de: 'Verpasster Anruf? Ihr Kunde bekommt innert einer Minute eine SMS mit Rückruf- oder Buchungslink.', en: 'Missed call? Your customer gets a text within a minute with a callback or booking link.' } },
+  { at: { de: 23.4, en: 24.8 }, text: { de: 'Neue Anfrage per E-Mail, WhatsApp oder Formular? Die Antwort geht sofort raus, und alles landet in einer Liste.', en: 'New enquiry by email, WhatsApp or form? The reply goes out at once, and everything lands in one list.' } },
+  { at: { de: 30.85, en: 32.55 }, text: { de: 'Der WhatsApp-Agent beantwortet Fragen und nimmt Termine auf, auch um Mitternacht.', en: 'The WhatsApp agent answers questions and takes bookings, even at midnight.' } },
+  { at: { de: 36.45, en: 37.9 }, text: { de: 'Der Termin steht automatisch in Ihrem Kalender, und am Tag davor kommt die Erinnerung.', en: 'The appointment is in your calendar automatically, and the reminder goes out the day before.' } },
+  { at: { de: 42.45, en: 44 }, text: { de: 'Offerte verschickt? Nach fünf Tagen wird freundlich nachgefasst.', en: 'Quote sent? After five days, a friendly follow-up goes out.' } },
+  { at: { de: 46.55, en: 48.65 }, text: { de: 'Auftrag erledigt? Die Bitte um eine Google-Bewertung geht von selbst raus. Und offene Rechnungen werden höflich erinnert.', en: 'Job done? The request for a Google review goes out on its own. And unpaid invoices get a polite reminder.' } },
+  { at: { de: 53.35, en: 57.45 }, text: { de: 'Nichts geht ohne Ihre Freigabe raus. Ihre Daten bleiben in der Schweiz oder der EU.', en: 'Nothing goes out without your approval. Your data stays in Switzerland or the EU.' } },
+  { at: { de: 59.4, en: 64.1 }, text: { de: `Automationen ab ${AUTOPILOT_MONTHLY} Franken im Monat, ohne Einrichtungsgebühr.`, en: `Automations from ${AUTOPILOT_MONTHLY} francs a month, with no setup fee.` } },
+  { at: { de: 64.1, en: 69.3 }, text: { de: 'Buchen Sie jetzt Ihr kostenloses Gespräch.', en: 'Book your free call now.' } },
 ];
 // KGC: voice a little faster (about 8 %). Timings stay in audio seconds, so the scenes stay in sync.
 const SPEED = 1.08;
@@ -185,7 +185,7 @@ function Scene({ i }: { i: number }) {
     case 11: return (
       <Center gap={1}>
         <Text color="inherit" style={{ letterSpacing: '0.2em', textTransform: 'uppercase', fontSize: '0.8rem', color: F.soft }}>{t({ de: 'Automations-Add-on', en: 'Automation add-on' })}</Text>
-        <Big color={F.orange}>{t({ de: `ab ${chf(AUTOMATION_MONTHLY)} / Monat`, en: `from ${chf(AUTOMATION_MONTHLY)} / month` })}</Big>
+        <Big color={F.orange}>{t({ de: `ab ${chf(AUTOPILOT_MONTHLY)} / Monat`, en: `from ${chf(AUTOPILOT_MONTHLY)} / month` })}</Big>
         <Text size="sm" color="inherit" style={{ color: F.soft }}>{t({ de: 'Keine Einrichtungsgebühr', en: 'No setup fee' })}</Text>
       </Center>
     );
