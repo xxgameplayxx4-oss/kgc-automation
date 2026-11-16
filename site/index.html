@@ -13,16 +13,8 @@
     <meta name="twitter:card" content="summary" />
     <style>
       html{scroll-padding-top:72px;scroll-behavior:smooth}
-      /* Ambient light: warm key light at the top, cooler fill lower down, soft vignette. */
-      body{background:
-        radial-gradient(60rem 36rem at 50% -10rem, light-dark(rgba(252,163,17,.14), rgba(252,163,17,.16)), transparent 70%),
-        radial-gradient(40rem 30rem at 100% 40rem, light-dark(rgba(20,33,61,.08), rgba(20,33,61,.55)), transparent 70%),
-        var(--color-background-body, var(--color-background-surface));}
-      /* Film grain, barely there; off when the user asks for less transparency. */
-      body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.05;mix-blend-mode:overlay;
-        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-      @media (prefers-reduced-transparency: reduce){body::after{display:none}}
-      #top h1{background:linear-gradient(180deg,var(--color-text-primary) 35%,color-mix(in oklab,var(--color-text-primary) 70%,var(--color-accent)));-webkit-background-clip:text;background-clip:text;color:transparent}
+      /* Flat design (KGC): plain body colour, no ambient light, grain or gradient text. */
+      body{background:var(--color-background-body, var(--color-background-surface))}
       /* Sections rise into view while scrolling (Chrome/Edge/Safari 26); nothing moves with Reduce Motion. */
       @media (prefers-reduced-motion: no-preference){@supports (animation-timeline: view()){
         main > *:not(#top){animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 30%}

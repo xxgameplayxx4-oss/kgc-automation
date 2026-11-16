@@ -1,4 +1,4 @@
-// Cung Solutions brand theme: neutral + one amber accent + Fraunces headlines.
+// Cung Solutions brand theme: neutral + one amber accent, Bricolage Grotesque headlines, JetBrains Mono for times and data (2026-11-16 redesign).
 // After editing: npx astryx theme build src/themes/cung/cungTheme.ts
 import { defineTheme } from '@astryxdesign/core/theme';
 import { neutralTheme } from '@astryxdesign/theme-neutral';
@@ -13,8 +13,8 @@ export const cungTheme = defineTheme({
   typography: {
     scale: { base: 14, ratio: 1.2 },
     body: { family: 'Figtree', fallbacks: SANS },
-    heading: { family: 'Fraunces', fallbacks: 'Georgia, "Times New Roman", serif', weights: { 3: 'semibold', 4: 'semibold' } },
-    code: { family: 'ui-monospace', fallbacks: '"SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace' },
+    heading: { family: 'Bricolage Grotesque', fallbacks: SANS, weights: { 1: 'bold', 2: 'bold', 3: 'semibold', 4: 'semibold' } },
+    code: { family: 'JetBrains Mono', fallbacks: '"SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace' },
   },
 
   // [light, dark]. Contrast ratios are listed in the commit message.
@@ -40,22 +40,22 @@ export const cungTheme = defineTheme({
     '--color-border-yellow': ['#FDC600', '#FCA311'],
     '--color-text-yellow': ['#080708', '#FCA311'],
     '--color-icon-yellow': ['#080708', '#FCA311'],
-    // "Epic settings": layered contact + ambient shadows, so surfaces sit in real light.
-    '--shadow-low': '0 1px 1px light-dark(rgba(31,22,7,.06), rgba(0,0,0,.45)), 0 4px 12px -2px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.45)), inset 0 1px 0 light-dark(rgba(255,255,255,.7), rgba(255,255,255,.05))',
-    '--shadow-med': '0 1px 2px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.5)), 0 8px 24px -6px light-dark(rgba(31,22,7,.14), rgba(0,0,0,.55)), 0 24px 48px -16px light-dark(rgba(31,22,7,.12), rgba(0,0,0,.6)), inset 0 1px 0 light-dark(rgba(255,255,255,.7), rgba(255,255,255,.06))',
-    '--shadow-high': '0 2px 4px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.5)), 0 16px 40px -8px light-dark(rgba(31,22,7,.2), rgba(0,0,0,.6)), 0 40px 80px -24px light-dark(rgba(31,22,7,.18), rgba(0,0,0,.7)), inset 0 1px 0 light-dark(rgba(255,255,255,.8), rgba(255,255,255,.08))',
+    // Flat design (KGC): surfaces are separated by a hairline, not by light. Only the high level keeps a faint drop for floating things (dialogs, device mockups).
+    '--shadow-low': '0 0 0 1px var(--color-border)',
+    '--shadow-med': '0 0 0 1px var(--color-border)',
+    '--shadow-high': '0 0 0 1px var(--color-border), 0 12px 32px -12px rgba(0,0,0,.45)',
   },
 
   components: {
-    // Soft top-lit sheen on every surface.
+    // Flat surfaces (KGC): no sheen.
     card: {
-      base: { backgroundImage: 'linear-gradient(180deg, light-dark(rgba(255,255,255,.55), rgba(255,255,255,.035)), transparent 45%)' },
-      // The recommended (Pro) card glows like a lit object.
-      'variant:yellow': { boxShadow: '0 0 0 1px rgba(252,163,17,.35), 0 20px 60px -20px rgba(252,163,17,.45), 0 40px 100px -40px rgba(252,163,17,.5), inset 0 1px 0 rgba(255,255,255,.12)' },
+      base: {},
+      // The recommended (Pro) card is marked by a solid accent outline, not a glow (flat design).
+      'variant:yellow': { boxShadow: '0 0 0 2px var(--color-accent)' },
     },
-    // Primary buttons: flat and quiet, only a soft contact shadow.
+    // Primary buttons: flat.
     button: {
-      'variant:primary': { boxShadow: '0 1px 2px rgba(0,0,0,.15)' },
+      'variant:primary': { boxShadow: 'none' },
       // KGC: dark buttons as Apple-style frosted glass.
       'variant:secondary': {
         backgroundColor: 'light-dark(rgba(8,7,8,.82), rgba(255,255,255,.08))',

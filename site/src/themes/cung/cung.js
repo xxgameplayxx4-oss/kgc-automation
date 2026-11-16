@@ -32,10 +32,10 @@ export const cungTheme = {
     "--font-size-4xl": "2.1875rem",
     "--font-size-5xl": "2.625rem",
     "--text-heading-1-size": "var(--font-size-2xl)",
-    "--text-heading-1-weight": "var(--font-weight-semibold)",
+    "--text-heading-1-weight": "var(--font-weight-bold)",
     "--text-heading-1-leading": "1.3333",
     "--text-heading-2-size": "var(--font-size-xl)",
-    "--text-heading-2-weight": "var(--font-weight-semibold)",
+    "--text-heading-2-weight": "var(--font-weight-bold)",
     "--text-heading-2-leading": "1.4",
     "--text-heading-3-size": "var(--font-size-lg)",
     "--text-heading-3-weight": "var(--font-weight-semibold)",
@@ -93,8 +93,8 @@ export const cungTheme = {
     "--_astryx-pre-tempo-duration-slow-max": "935ms",
     "--_astryx-motion-tempo": "1",
     "--font-family-body": "Figtree, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
-    "--font-family-heading": "Fraunces, Georgia, \"Times New Roman\", serif",
-    "--font-family-code": "ui-monospace, \"SF Mono\", Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace",
+    "--font-family-heading": "\"Bricolage Grotesque\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+    "--font-family-code": "\"JetBrains Mono\", \"SF Mono\", Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace",
     "--color-syntax-keyword": "light-dark(#6b187c, #efa8ff)",
     "--color-syntax-string": "light-dark(#0b5615, #a4d6a3)",
     "--color-syntax-comment": "light-dark(#525252, #b9b9b9)",
@@ -207,9 +207,9 @@ export const cungTheme = {
     "--radius-container": "0.75rem",
     "--radius-page": "1.75rem",
     "--radius-full": "9999px",
-    "--shadow-low": "0 1px 1px light-dark(rgba(31,22,7,.06), rgba(0,0,0,.45)), 0 4px 12px -2px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.45)), inset 0 1px 0 light-dark(rgba(255,255,255,.7), rgba(255,255,255,.05))",
-    "--shadow-med": "0 1px 2px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.5)), 0 8px 24px -6px light-dark(rgba(31,22,7,.14), rgba(0,0,0,.55)), 0 24px 48px -16px light-dark(rgba(31,22,7,.12), rgba(0,0,0,.6)), inset 0 1px 0 light-dark(rgba(255,255,255,.7), rgba(255,255,255,.06))",
-    "--shadow-high": "0 2px 4px light-dark(rgba(31,22,7,.08), rgba(0,0,0,.5)), 0 16px 40px -8px light-dark(rgba(31,22,7,.2), rgba(0,0,0,.6)), 0 40px 80px -24px light-dark(rgba(31,22,7,.18), rgba(0,0,0,.7)), inset 0 1px 0 light-dark(rgba(255,255,255,.8), rgba(255,255,255,.08))",
+    "--shadow-low": "0 0 0 1px var(--color-border)",
+    "--shadow-med": "0 0 0 1px var(--color-border)",
+    "--shadow-high": "0 0 0 1px var(--color-border), 0 12px 32px -12px rgba(0,0,0,.45)",
     "--shadow-inset-hover": "inset 0px 0px 0px 2px #0074e24D",
     "--shadow-inset-selected": "inset 0px 0px 0px 2px #0074e280",
     "--shadow-inset-success": "inset 0px 0px 0px 2px #2f7d334D",
@@ -345,7 +345,7 @@ export const cungTheme = {
         "color": "var(--color-on-error-muted)"
       },
       "variant:primary": {
-        "boxShadow": "0 1px 2px rgba(0,0,0,.15)"
+        "boxShadow": "none"
       },
       "variant:secondary": {
         "backgroundColor": "light-dark(rgba(8,7,8,.82), rgba(255,255,255,.08))",
@@ -435,11 +435,10 @@ export const cungTheme = {
     },
     "card": {
       "base": {
-        "padding": "var(--spacing-3)",
-        "backgroundImage": "linear-gradient(180deg, light-dark(rgba(255,255,255,.55), rgba(255,255,255,.035)), transparent 45%)"
+        "padding": "var(--spacing-3)"
       },
       "variant:yellow": {
-        "boxShadow": "0 0 0 1px rgba(252,163,17,.35), 0 20px 60px -20px rgba(252,163,17,.45), 0 40px 100px -40px rgba(252,163,17,.5), inset 0 1px 0 rgba(255,255,255,.12)"
+        "boxShadow": "0 0 0 2px var(--color-accent)"
       }
     },
     "section": {
@@ -502,15 +501,17 @@ export const cungTheme = {
         "fallbacks": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif"
       },
       "heading": {
-        "family": "Fraunces",
-        "fallbacks": "Georgia, \"Times New Roman\", serif",
+        "family": "Bricolage Grotesque",
+        "fallbacks": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
         "weights": {
+          "1": "bold",
+          "2": "bold",
           "3": "semibold",
           "4": "semibold"
         }
       },
       "code": {
-        "family": "ui-monospace",
+        "family": "JetBrains Mono",
         "fallbacks": "\"SF Mono\", Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
       }
     },
