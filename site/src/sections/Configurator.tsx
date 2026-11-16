@@ -17,6 +17,7 @@ import { AutomationFlow, HoursWeek, PriceCalc, PricelistPost } from './AddonPrev
 import { ADDON_ICONS } from './addonIcons';
 import { AUTOMATIONS, AUTOMATION_MONTHLY, CARE, PRINT, SET_PARTS, TIERS, chf, contactDraft, quote, toggleExtra as nextExtras, useT, type T } from '../data';
 import { UI, ic } from './uiIcons';
+import { usePhone, PHONE_QUERY } from './usePhone';
 
 // Dev-only self-check of the pricing maths (prices come from data.ts).
 if (import.meta.env.DEV) {
@@ -430,7 +431,8 @@ function PrintShelf({ has, mark }: { has: (id: string) => boolean; mark: Mark })
 
 export default function Configurator() {
   const t = useT();
-  const [device, setDevice] = useState<Device>('desktop');
+  const phone = usePhone();
+  const [device, setDevice] = useState<Device>(() => window.matchMedia(PHONE_QUERY).matches ? 'phone' : 'desktop');
   const [tierId, setTierId] = useState<string>(TIERS[0].id);
   const [auto, setAuto] = useState(false);
   const [extras, setExtras] = useState<Set<string>>(new Set());
@@ -459,8 +461,8 @@ export default function Configurator() {
       <Stack gap={2}>
         <Eyebrow>{t({ de: 'Konfigurator', en: 'Configurator' })}</Eyebrow>
         <Heading level={2}>{t({ de: 'Stellen Sie Ihre Wunsch-Website zusammen', en: 'Build your dream website' })}</Heading>
-        <Text color="secondary">{t({ de: 'Wählen Sie ein Paket, dazu nach Wunsch Automationen und Druckdesign. Alle Preise sind fix.', en: 'Choose a package, then add automations and print design if you like. All prices are fixed.' })}</Text>
-        <Link href="#beispiele" size="sm">{t({ de: 'Buchungs-Funnels live ausprobieren', en: 'Try the booking funnels live' })}</Link>
+        <Text color="secondary">{t({ de: 'Paket wählen, Automationen und Druckdesign nach Wunsch. Alle Preise sind fix.', en: 'Pick a package, add automations and print design if you like. All prices are fixed.' })}</Text>
+        {!phone && <Link href="#beispiele" size="sm">{t({ de: 'Buchungs-Funnels live ausprobieren', en: 'Try the booking funnels live' })}</Link>}
       </Stack>
 
       <Grid data-cfg="" columns={1} gap={8} align="start">
@@ -478,9 +480,9 @@ export default function Configurator() {
             <Stack gap={2}>
               <Switch label={t({ de: '2. Automation Add-on (optional)', en: '2. Automation add-on (optional)' })} value={auto} onChange={setAuto} />
               <Text size="sm" weight="medium">{from} {chf(AUTOMATION_MONTHLY)} / {month}</Text>
-              <Stack gap={0.5}>
+              {(!phone || auto) && <Stack gap={0.5}>
                 {AUTOMATIONS.map(a => <Text key={a.id} size="sm" type="supporting">✓ {t(a.name)}</Text>)}
-              </Stack>
+              </Stack>}
             </Stack>
           </Card>
 
@@ -547,7 +549,7 @@ export default function Configurator() {
               </Stack>
             )}
             <Stack direction="horizontal" justify="between" align="center" gap={3}>
-              <CheckboxInput size="sm" label={t({ de: 'Wartung dazu (Hosting, Updates, 2 Std. Änderungen)', en: 'Add maintenance (hosting, updates, 2 h of changes)' })} value={care} onChange={setCare} />
+              <CheckboxInput size="sm" label={phone ? t({ de: 'Wartung dazu', en: 'Add maintenance' }) : t({ de: 'Wartung dazu (Hosting, Updates, 2 Std. Änderungen)', en: 'Add maintenance (hosting, updates, 2 h of changes)' })} value={care} onChange={setCare} />
               <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{chf(CARE[tier.id])} / {month}</Text>
             </Stack>
             <Text type="supporting" size="sm">{t({ de: 'Einmalig, inkl. Einrichtung. Preise in CHF.', en: 'One-time, setup included. Prices in CHF.' })}</Text>

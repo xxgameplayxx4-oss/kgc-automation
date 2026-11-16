@@ -98,10 +98,10 @@ export const AUTOMATIONS: Feature[] = [
 /** Print extras in the website's design, one-time. */
 export type Extra = { id: string; price: number; name: T; desc: T };
 export const PRINT: Extra[] = [
-  { id: 'set', price: 125, name: { de: 'Paket Flyer + Visitenkarte', en: 'Flyer + business card package' }, desc: { de: 'Flyer A5 und Visitenkarte zusammen, beide im Look Ihrer Website, druckfertig. Inklusive 1 Mockup-Entwurf gratis vorab, damit Sie das Design sehen, bevor es losgeht. Sie sparen CHF 75.', en: 'A5 flyer and business card together, both in your website’s look, print-ready. Includes 1 free mockup up front, so you see the design before we start. You save CHF 75.' } },
-  { id: 'cards', price: 100, name: { de: 'Visitenkarten-Design', en: 'Business card design' }, desc: { de: 'Massgeschneidert auf das Design Ihrer Website. Vorder- und Rückseite, druckfertig.', en: 'Tailored to your website’s design. Front and back, print-ready.' } },
-  { id: 'flyer', price: 100, name: { de: 'Flyer-Design (A5)', en: 'Flyer design (A5)' }, desc: { de: 'Beidseitig, druckfertig, im Look Ihrer Website.', en: 'Double-sided, print-ready, in your website’s look.' } },
-  { id: 'social', price: 100, name: { de: 'Preisliste für Social Media', en: 'Price list for social media' }, desc: { de: 'Ihre Preisliste als Bild für Instagram, Facebook und Google, im Look Ihrer Website.', en: 'Your price list as an image for Instagram, Facebook and Google, in your website’s look.' } },
+  { id: 'set', price: 125, name: { de: 'Paket Flyer + Visitenkarte', en: 'Flyer + business card package' }, desc: { de: 'Flyer A5 und Visitenkarte zusammen, druckfertig. Inklusive 1 Mockup-Entwurf gratis vorab. Sie sparen CHF 75.', en: 'A5 flyer and business card together, print-ready. Includes 1 free mockup up front. You save CHF 75.' } },
+  { id: 'cards', price: 100, name: { de: 'Visitenkarten-Design', en: 'Business card design' }, desc: { de: 'Vorder- und Rückseite, druckfertig.', en: 'Front and back, print-ready.' } },
+  { id: 'flyer', price: 100, name: { de: 'Flyer-Design (A5)', en: 'Flyer design (A5)' }, desc: { de: 'Beidseitig, druckfertig.', en: 'Double-sided, print-ready.' } },
+  { id: 'social', price: 100, name: { de: 'Preisliste für Social Media', en: 'Price list for social media' }, desc: { de: 'Als Bild für Instagram, Facebook und Google.', en: 'As an image for Instagram, Facebook and Google.' } },
 ];
 
 /** The bundle replaces its two parts: picking both singles switches to the bundle (KGC, 2026-11-16). */

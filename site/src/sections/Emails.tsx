@@ -121,7 +121,6 @@ export default function Emails() {
           style={{ position: 'absolute', width: 1, height: 1, opacity: 0, overflow: 'hidden', clip: 'rect(0 0 0 0)', pointerEvents: 'none' }}
         />
       </Stack>
-      <Text type="supporting" size="sm">{t({ de: 'Ziehen Sie den Regler, um den Unterschied zu sehen.', en: 'Drag the handle to see the difference.' })}</Text>
     </Stack>
   );
 }

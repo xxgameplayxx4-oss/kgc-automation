@@ -16,6 +16,8 @@ import { useT, type T } from '../data';
 import Eyebrow from './Eyebrow';
 import { UI, ic } from './uiIcons';
 import InViewVideo from './InViewVideo';
+import { usePhone } from './usePhone';
+import PhoneMore from './PhoneMore';
 
 // Screenshots live in public/projects/<slug>-desktop.webp and <slug>-phone.webp.
 // Only paid client sites get a name and a link; concept drafts stay anonymised.
@@ -163,6 +165,7 @@ export function Preview({ p }: { p: Project }) {
 
 function ProjectCard({ p, paid }: { p: Project; paid?: boolean }) {
   const t = useT();
+  const phone = usePhone();
   const title = t(p.title);
   return (
     <VStack gap={4}>
@@ -173,9 +176,9 @@ function ProjectCard({ p, paid }: { p: Project; paid?: boolean }) {
           {paid && <Token label={t({ de: 'Kundenprojekt', en: 'Client project' })} size="sm" color="orange" />}
         </HStack>
         <Text type="supporting">{t(p.kind)} · {p.place}</Text>
-        <HStack gap={1} wrap="wrap">
+        {!phone && <HStack gap={1} wrap="wrap">
           {p.tags.map(tag => <Token key={tag.de} label={t(tag)} size="sm" />)}
-        </HStack>
+        </HStack>}
         {p.url && (
           <HStack>
             <Button icon={ic(UI.external)} variant="ghost" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Website ansehen', en: 'View website' })} />
@@ -195,9 +198,13 @@ function Group({ eyebrow, heading, intro, items, paid, min }: { eyebrow: T; head
         <Heading level={2}>{t(heading)}</Heading>
         <Text color="secondary" style={{ maxWidth: "42rem" }}>{t(intro)}</Text>
       </VStack>
-      <Grid columns={{ minWidth: min, max: 3 }} gap={8}>
-        {items.map(p => <ProjectCard key={p.slug} p={p} paid={paid} />)}
-      </Grid>
+      <PhoneMore items={items} limit={3}>
+        {shown => (
+          <Grid columns={{ minWidth: min, max: 3 }} gap={8}>
+            {shown.map(p => <ProjectCard key={p.slug} p={p} paid={paid} />)}
+          </Grid>
+        )}
+      </PhoneMore>
     </VStack>
   );
 }
@@ -209,13 +216,13 @@ export default function Projects() {
         <Group
           eyebrow={{ de: 'Projekte', en: 'Projects' }}
           heading={{ de: 'Kundenprojekte', en: 'Client projects' }}
-          intro={{ de: 'Websites und Web-Apps, die ich für zahlende Kunden umgesetzt habe. Klicken Sie auf eine Vorschau, um durch die ganze Seite zu scrollen.', en: 'Websites and web apps I built for paying clients. Click a preview to scroll through the whole page.' }}
+          intro={{ de: 'Für zahlende Kunden umgesetzt. Tippen Sie auf eine Vorschau, um durch die Seite zu scrollen.', en: 'Built for paying clients. Tap a preview to scroll through the site.' }}
           items={CLIENTS} paid min={420}
         />
         <Group
           eyebrow={{ de: 'Entwürfe', en: 'Drafts' }}
           heading={{ de: 'Konzeptentwürfe', en: 'Concept designs' }}
-          intro={{ de: 'Entwürfe für lokale Geschäfte, um zu zeigen, was möglich ist. Namen und Links sind bewusst weggelassen.', en: 'Drafts for local businesses to show what is possible. Names and links are left out on purpose.' }}
+          intro={{ de: 'Entwürfe für lokale Geschäfte. Namen und Links sind bewusst weggelassen.', en: 'Drafts for local businesses. Names and links are left out on purpose.' }}
           items={CONCEPTS} min={280}
         />
       </VStack>

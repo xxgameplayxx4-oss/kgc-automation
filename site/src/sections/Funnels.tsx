@@ -66,7 +66,7 @@ function Done({ lines, onReset, status, reply }: { lines: string[]; onReset: () 
   return (
     <Stack gap={3} data-pop="">
       <Heading level={3}>{t({ de: '✓ Anfrage erhalten', en: '✓ Request received' })}</Heading>
-      <Text color="secondary">{t({ de: 'So sieht es Ihr Kunde. Gleichzeitig gehen die Bestätigung per WhatsApp und E-Mail und der Kalendereintrag raus.', en: 'This is what your customer sees. At the same time the WhatsApp and email confirmation and the calendar entry go out.' })}</Text>
+      <Text color="secondary">{t({ de: 'So sieht es Ihr Kunde. Bestätigung und Kalendereintrag gehen automatisch raus.', en: 'This is what your customer sees. Confirmation and calendar entry go out automatically.' })}</Text>
       <Card variant="muted" padding={3}>
         <Stack gap={1}>{lines.map(l => <Text key={l} size="sm">{l}</Text>)}</Stack>
       </Card>
@@ -223,11 +223,8 @@ export default function Funnels() {
   const t = useT();
   return (
     <Stack gap={4}>
-      <Text type="supporting" size="sm">{t({ de: 'Beispiel: Praxis Muster. So könnte die Terminbuchung für Ihr Geschäft aussehen.', en: 'Example: Praxis Muster. This is how appointment booking could look for your business.' })}</Text>
+      <Text type="supporting" size="sm">{t({ de: 'Beispiel: Praxis Muster.', en: 'Example: Praxis Muster.' })}</Text>
       <ConsultFunnel />
-      <Text type="supporting" size="sm">
-        {t({ de: '3 Schritte: Art, Datum und Zeit, Kontakt. Passt für Beratung, Coiffeur, Praxis.', en: '3 steps: type, date and time, contact. Fits advisors, salons, practices.' })}
-      </Text>
     </Stack>
   );
 }

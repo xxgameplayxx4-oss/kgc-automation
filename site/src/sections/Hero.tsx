@@ -3,6 +3,7 @@ import { HStack, VStack } from '@astryxdesign/core/Layout';
 import { Heading, Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { contactDraft, useT } from '../data';
+import { usePhone } from './usePhone';
 import PromoFilm from './PromoFilm';
 import NightTicker from './NightTicker';
 import { UI, ic } from './uiIcons';
@@ -10,6 +11,7 @@ import { UI, ic } from './uiIcons';
 // Hero (2026-11-16 redesign): the promise on the left, the proof on the right — a night of enquiries that answer themselves.
 export default function Hero() {
   const t = useT();
+  const phone = usePhone();
   return (
     <VStack id="top" as="section" gap={10} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
       <Grid columns={{ minWidth: 320, max: 2 }} gap={8} align="center">
@@ -22,8 +24,8 @@ export default function Hero() {
           </Heading>
           <Text type="large" color="secondary" textWrap="pretty">
             {t({
-              de: 'Ich automatisiere die wiederkehrende Büroarbeit von KMU im Aargau: Anfragen, Offerten, Rechnungen, Termine. Mit den Programmen, die Sie schon haben.',
-              en: 'I automate the recurring office work of small businesses in Aargau: enquiries, quotes, invoices, appointments. With the tools you already have.',
+              de: 'Ich automatisiere die Büroarbeit von KMU im Aargau, mit den Programmen, die Sie schon haben.',
+              en: 'I automate office work for small businesses in Aargau, with the tools you already have.',
             })}
           </Text>
           <HStack gap={3} wrap="wrap">
@@ -36,12 +38,14 @@ export default function Hero() {
             />
             <Button icon={ic(UI.arrow)} size="lg" href="#automationen" label={t({ de: 'Automationen ansehen', en: 'See automations' })} />
           </HStack>
-          <Text type="supporting">
-            {t({
-              de: 'Ein Ansprechpartner aus Brugg · Keine Offerte ohne Ihre Freigabe · Antwort innert 24 h',
-              en: 'One contact in Brugg · No quote without your approval · Reply within 24 h',
-            })}
-          </Text>
+          {!phone && (
+            <Text type="supporting">
+              {t({
+                de: 'Ein Ansprechpartner aus Brugg · Keine Offerte ohne Ihre Freigabe · Antwort innert 24 h',
+                en: 'One contact in Brugg · No quote without your approval · Reply within 24 h',
+              })}
+            </Text>
+          )}
         </VStack>
         <NightTicker />
       </Grid>

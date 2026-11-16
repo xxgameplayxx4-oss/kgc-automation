@@ -7,14 +7,16 @@ import { Token } from '@astryxdesign/core/Token';
 import { Link } from '@astryxdesign/core/Link';
 import { useT, type T } from '../data';
 import Eyebrow from './Eyebrow';
+import { usePhone } from './usePhone';
+import PhoneMore from './PhoneMore';
 
 // Portrait taken from the owner's CV (public/about/khang.jpg). Content below follows the CV.
 const PORTRAIT = '/about/khang.jpg';
 const NAME = 'Khang Cung';
 
 const LINES: T[] = [
-  { de: 'Mein Name ist Khang, Informatiker EFZ (Applikationsentwicklung) mit Berufsmaturität. Von Brugg aus automatisiere ich Büroarbeit für KMU im Aargau und baue Websites, von A bis Z und alles selbst.', en: 'My name is Khang, a certified IT specialist (application development) with a vocational baccalaureate. From Brugg, I automate office work for small businesses in Aargau and build websites, end to end and all by myself.' },
-  { de: 'Dazu kommt meine Erfahrung aus IT-Support und Cyber Security. Sie haben einen einzigen Ansprechpartner, vom ersten Gespräch bis zum Launch, und Fixpreise statt Stundenzettel.', en: 'I also bring experience in IT support and cyber security. You have one single contact from the first call to launch, and fixed prices instead of timesheets.' },
+  { de: 'Informatiker EFZ (Applikationsentwicklung) mit Berufsmaturität. Von Brugg aus automatisiere ich Büroarbeit für KMU im Aargau und baue Websites, alles selbst.', en: 'Certified IT specialist (application development) with a vocational baccalaureate. From Brugg, I automate office work for small businesses in Aargau and build websites, all by myself.' },
+  { de: 'Ein einziger Ansprechpartner vom ersten Gespräch bis zum Launch, Fixpreise statt Stundenzettel.', en: 'One single contact from first call to launch, and fixed prices instead of timesheets.' },
 ];
 
 type Job = { role: T; org: string; when: string; points: T[]; url?: string };
@@ -71,15 +73,16 @@ const LANGUAGES: { name: T; level: T }[] = [
 
 export default function About() {
   const t = useT();
+  const phone = usePhone();
   return (
     <VStack id="ueber-mich" as="section" gap={8} paddingInline={4} paddingBlock={10} maxWidth={1000} style={{ marginInline: 'auto', width: '100%' }}>
       <HStack gap={8} wrap="wrap" vAlign="center">
-        <Avatar src={PORTRAIT} name={NAME} size={180} tooltip={false} />
+        <Avatar src={PORTRAIT} name={NAME} size={phone ? 96 : 180} tooltip={false} />
         <VStack gap={3} style={{ flex: '1 1 20rem' }}>
           <Eyebrow>{t({ de: 'Über mich', en: 'About me' })}</Eyebrow>
           <Heading level={1} type="display-3" textWrap="balance">Khang Cung</Heading>
           <Text type="large" weight="medium">{t({ de: 'Automationen · Websites · IT', en: 'Automations · Websites · IT' })}</Text>
-          {LINES.map((l, i) => <Text key={i} color="secondary">{t(l)}</Text>)}
+          {(phone ? LINES.slice(0, 1) : LINES).map((l, i) => <Text key={i} color="secondary">{t(l)}</Text>)}
           <Text type="supporting">Cung Solutions · Brugg AG</Text>
         </VStack>
       </HStack>
@@ -97,7 +100,7 @@ export default function About() {
             {j.url
               ? <Link href={j.url} target="_blank" rel="noopener noreferrer" size="sm">{j.org} ↗</Link>
               : <Text color="accent" size="sm">{j.org}</Text>}
-            {j.points.map((p, i) => <Text key={i} color="secondary" size="sm">· {t(p)}</Text>)}
+            {!phone && j.points.map((p, i) => <Text key={i} color="secondary" size="sm">· {t(p)}</Text>)}
           </VStack>
         ))}
       </VStack>
@@ -125,9 +128,13 @@ export default function About() {
 
       <VStack gap={3}>
         <Heading level={3}>{t({ de: 'Kenntnisse', en: 'Skills' })}</Heading>
-        <HStack gap={2} wrap="wrap">
-          {SKILLS.map(s => { const l = typeof s === 'string' ? s : t(s); return <Token key={l} label={l} size="sm" />; })}
-        </HStack>
+        <PhoneMore items={SKILLS} limit={6}>
+          {shown => (
+            <HStack gap={2} wrap="wrap">
+              {shown.map(s => { const l = typeof s === 'string' ? s : t(s); return <Token key={l} label={l} size="sm" />; })}
+            </HStack>
+          )}
+        </PhoneMore>
       </VStack>
     </VStack>
   );

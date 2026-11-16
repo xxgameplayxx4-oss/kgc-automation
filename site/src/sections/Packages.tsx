@@ -6,6 +6,8 @@ import { Card } from '@astryxdesign/core/Card';
 import { Badge } from '@astryxdesign/core/Badge';
 import Eyebrow from './Eyebrow';
 import HeroFilmDemo from './HeroFilmDemo';
+import PhoneMore from './PhoneMore';
+import { usePhone } from './usePhone';
 import { AUTOMATIONS, AUTOMATION_MONTHLY, AUTOPILOT_MONTHLY, BASE_FEATURES, CARE, CARE_HOURS, DOMAIN_FEE, FEATURES, TIERS, UPGRADE_PRICE, chf, contactDraft, useT, type T } from '../data';
 import { UI, ic } from './uiIcons';
 
@@ -15,8 +17,10 @@ const ul = { margin: 0, paddingInlineStart: 'var(--spacing-4)' };
 
 export default function Packages() {
   const t = useT();
+  const phone = usePhone();
   const cta = (subject: string, body = '') => () => { contactDraft.subject = subject; contactDraft.body = body; };
   const li = (k: string | number, x: T, bold = false) => <li key={k}><Text size="sm" weight={bold ? 'medium' : undefined}>{t(x)}</Text></li>;
+  const coreItems: T[] = [...BASE_FEATURES, ...FEATURES.filter(f => CORE.includes.includes(f.id)).map(f => f.name)];
   const proOnly = FEATURES.filter(f => !CORE.includes.includes(f.id) && f.id !== 'hero');
   return (
     <VStack id="pakete" as="section" gap={6} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
@@ -26,28 +30,29 @@ export default function Packages() {
         <Text color="secondary">{t({ de: 'Websites zum Fixpreis. Wählen Sie Ihr Paket, den Rest erledige ich.', en: 'Websites at a fixed price. Pick your package, I take care of the rest.' })}</Text>
       </VStack>
       <Grid columns={{ minWidth: 240, max: 4 }} gap={4} align="stretch">
-        <Card variant="muted" padding={5}>
+        <Card variant="muted" padding={phone ? 4 : 5}>
           <VStack gap={3}>
             <Heading level={3}>{t({ de: 'Website-Upgrade', en: 'Website upgrade' })}</Heading>
             <Text type="large" weight="semibold" color="accent">{t({ de: `ab ${chf(UPGRADE_PRICE)}`, en: `from ${chf(UPGRADE_PRICE)}` })}</Text>
-            <Text color="secondary">{t({ de: 'Sie haben schon eine Website, aber sie wirkt veraltet? Ich übernehme Ihre Texte, Bilder und Angaben und baue daraus eine neue, schnelle, mobile Website. Weil der Inhalt schon da ist, bleibt der Preis tief.', en: 'You already have a website but it looks dated? I take your texts, images and details and turn them into a new, fast, mobile website. Because the content exists, the price stays low.' })}</Text>
+            <Text color="secondary">{t({ de: 'Ihre Website wirkt veraltet? Ich baue aus Ihren Texten und Bildern eine neue, schnelle, mobile Website.', en: 'Website looking dated? I turn your texts and images into a new, fast, mobile website.' })}</Text>
             <Button icon={ic(UI.chat)} variant="secondary" href="#kontakt" label={t({ de: 'Upgrade anfragen', en: 'Request upgrade' })}
               onClick={cta('Website-Upgrade', t({ de: 'Meine aktuelle Website: ', en: 'My current website: ' }))} />
           </VStack>
         </Card>
-        <Card padding={5}>
+        <Card padding={phone ? 4 : 5}>
           <VStack gap={3}>
             <Heading level={3}>{t(CORE.name)}</Heading>
             <Text type="large" weight="semibold" color="accent">{chf(CORE.price)}</Text>
             <Text color="secondary">{t(CORE.tagline)}</Text>
-            <VStack gap={1.5} as="ul" style={ul}>
-              {BASE_FEATURES.map((f, i) => li('b' + i, f))}
-              {FEATURES.filter(f => CORE.includes.includes(f.id)).map(f => li(f.id, f.name))}
-            </VStack>
+            <PhoneMore items={coreItems} limit={4}>{shown => (
+              <VStack gap={1.5} as="ul" style={ul}>
+                {shown.map((x, i) => li('c' + i, x))}
+              </VStack>
+            )}</PhoneMore>
             <Button icon={ic(UI.chat)} variant="secondary" href="#kontakt" label={t({ de: 'Core anfragen', en: 'Request Core' })} onClick={cta('Website Core')} />
           </VStack>
         </Card>
-        <Card variant="yellow" elevation="low" padding={5}>
+        <Card variant="yellow" elevation="low" padding={phone ? 4 : 5}>
           <VStack gap={3}>
             <HStack gap={2} vAlign="center" wrap="wrap">
               <Heading level={3}>{t(PRO.name)}</Heading>
@@ -55,28 +60,32 @@ export default function Packages() {
             </HStack>
             <Text type="large" weight="semibold" color="accent">{chf(PRO.price)}</Text>
             <Text color="secondary">{t(PRO.tagline)}</Text>
+            <PhoneMore items={proOnly} limit={2}>{shown => (
             <VStack gap={1.5} as="ul" style={ul}>
               {li('all', { de: 'Alles aus Core, plus:', en: 'Everything in Core, plus:' }, true)}
               {li('hero', { de: 'Individueller Startbereich mit Film', en: 'Custom hero with film' }, true)}
-              {proOnly.map(f => li(f.id, f.name))}
+              {shown.map(f => li(f.id, f.name))}
             </VStack>
+            )}</PhoneMore>
             <Card variant="muted" padding={3}>
               <VStack gap={2} hAlign="start">
-                <Text size="sm">{t(HERO_FILM)}</Text>
+                {!phone && <Text size="sm">{t(HERO_FILM)}</Text>}
                 <Button icon={ic(UI.play)} size="sm" variant="secondary" href="#film-demo" label={t({ de: 'Demo ansehen', en: 'View demo' })} />
               </VStack>
             </Card>
             <Button icon={ic(UI.chat)} variant="primary" href="#kontakt" label={t({ de: 'Pro anfragen', en: 'Request Pro' })} onClick={cta('Website Pro')} />
           </VStack>
         </Card>
-        <Card padding={5}>
+        <Card padding={phone ? 4 : 5}>
           <VStack gap={3}>
             <Heading level={3}>{t({ de: 'Automation Add-on', en: 'Automation add-on' })}</Heading>
             <Text type="large" weight="semibold" color="accent">{t({ de: `ab ${chf(AUTOMATION_MONTHLY)} / Monat`, en: `from ${chf(AUTOMATION_MONTHLY)} / month` })}</Text>
-            <Text color="secondary">{t({ de: `Das Bündel aller Automationen, mit oder ohne neue Website buchbar. Keine Einrichtungsgebühr. Nur Anfragen beantworten und nachfassen? Das macht der Anfragen-Autopilot ab ${chf(AUTOPILOT_MONTHLY)} / Monat.`, en: `The bundle of all automations, bookable with or without a new website. No setup fee. Only need enquiries answered and followed up? That is the Enquiry Autopilot from ${chf(AUTOPILOT_MONTHLY)} / month.` })}</Text>
-            <VStack gap={1.5} as="ul" style={ul}>
-              {AUTOMATIONS.map(a => li(a.id, a.name))}
-            </VStack>
+            <Text color="secondary">{t({ de: `Alle Automationen im Bündel, mit oder ohne neue Website. Keine Einrichtungsgebühr. Nur Anfragen? Anfragen-Autopilot ab ${chf(AUTOPILOT_MONTHLY)} / Monat.`, en: `All automations bundled, with or without a new website. No setup fee. Enquiries only? Enquiry Autopilot from ${chf(AUTOPILOT_MONTHLY)} / month.` })}</Text>
+            <PhoneMore items={AUTOMATIONS} limit={4}>{shown => (
+              <VStack gap={1.5} as="ul" style={ul}>
+                {shown.map(a => li(a.id, a.name))}
+              </VStack>
+            )}</PhoneMore>
             <Button icon={ic(UI.chat)} variant="secondary" href="#kontakt" label={t({ de: 'Automationen anfragen', en: 'Request automations' })} onClick={cta('Automation Add-on')} />
           </VStack>
         </Card>
@@ -85,7 +94,7 @@ export default function Packages() {
       <VStack gap={3}>
         <Heading level={3}>{t({ de: 'Monatliche Wartung', en: 'Monthly maintenance' })}</Heading>
         <Grid columns={{ minWidth: 240, max: 3 }} gap={4} align="stretch">
-          <Card variant="muted" padding={5}>
+          <Card variant="muted" padding={phone ? 4 : 5}>
             <VStack gap={2}>
               <Text weight="semibold">{t({ de: 'Das ist dabei', en: 'What is included' })}</Text>
               <VStack gap={1} as="ul" style={ul}>
@@ -93,7 +102,7 @@ export default function Packages() {
               </VStack>
             </VStack>
           </Card>
-          <Card variant="muted" padding={5}>
+          <Card variant="muted" padding={phone ? 4 : 5}>
             <VStack gap={2}>
               <Text weight="semibold">{t({ de: 'Preis pro Monat', en: 'Price per month' })}</Text>
               {([['upgrade', { de: 'Website-Upgrade', en: 'Website upgrade' }], ['core', CORE.name], ['pro', PRO.name]] as [keyof typeof CARE, T][]).map(([k, n]) => (
@@ -104,16 +113,15 @@ export default function Packages() {
               ))}
             </VStack>
           </Card>
-          <Card variant="muted" padding={5}>
+          <Card variant="muted" padding={phone ? 4 : 5}>
             <VStack gap={2}>
               <Text weight="semibold">Domain</Text>
-              <Text size="sm" color="secondary">{t({ de: `Ich kaufe und verwalte sie für + ${chf(DOMAIN_FEE)} pro Monat.`, en: `I buy and manage it for + ${chf(DOMAIN_FEE)} per month.` })}</Text>
-              <Text size="sm" color="secondary">{t({ de: 'Oder Sie kaufen sie selbst und geben mir Zugang, dann verbinde ich sie.', en: 'Or you buy it yourself and give me access, then I connect it.' })}</Text>
+              <Text size="sm" color="secondary">{t({ de: `Ich verwalte sie für + ${chf(DOMAIN_FEE)} pro Monat, oder Sie kaufen sie selbst und geben mir Zugang.`, en: `I manage it for + ${chf(DOMAIN_FEE)} per month, or you buy it yourself and give me access.` })}</Text>
             </VStack>
           </Card>
         </Grid>
       </VStack>
-      <Card variant="muted" padding={5}>
+      <Card variant="muted" padding={phone ? 4 : 5}>
         <HStack gap={4} vAlign="center" hAlign="between" wrap="wrap">
           <VStack gap={1}>
             <Heading level={3}>{t({ de: 'Individuell', en: 'Custom' })}</Heading>

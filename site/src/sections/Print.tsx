@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import Eyebrow from './Eyebrow';
 import { PRINT, chf, useT } from '../data';
+import { usePhone } from './usePhone';
 import { UI, ic } from './uiIcons';
 
 // Finished sample designs, rendered from fictional brands that match the concept drafts in /work.
@@ -22,6 +23,7 @@ const SETS = [
 
 export default function Print() {
   const t = useT();
+  const phone = usePhone();
   const [id, setId] = useState(SETS[0].id);
   const set = SETS.find(x => x.id === id) ?? SETS[0];
   const items = PRINT;
@@ -52,10 +54,10 @@ export default function Print() {
                     </AspectRatio>
                   </Card>
                 ))}
-                <Text type="supporting">{t({ de: 'Visitenkarte 85 × 55 mm, Vorder- und Rückseite', en: 'Business card 85 × 55 mm, front and back' })}</Text>
+                {!phone && <Text type="supporting">{t({ de: 'Visitenkarte 85 × 55 mm, Vorder- und Rückseite', en: 'Business card 85 × 55 mm, front and back' })}</Text>}
               </VStack>
             </Grid>
-            <Text type="supporting">{t({ de: 'Beispiele mit erfundenen Firmen. Ihre Version entsteht in den Farben und Schriften Ihrer Website.', en: 'Examples use made-up businesses. Yours is made in your website’s colours and fonts.' })}</Text>
+            <Text type="supporting">{t({ de: 'Beispiele mit erfundenen Firmen.', en: 'Examples use made-up businesses.' })}</Text>
           </VStack>
           <VStack gap={4}>
             {items.map(a => (
@@ -70,7 +72,7 @@ export default function Print() {
                 </HStack>
               </Card>
             ))}
-            <Text type="supporting">{t({ de: 'Die Designs liefere ich als druckfertiges PDF. Der Druck kann auf Wunsch zum Selbstkostenpreis organisiert werden.', en: 'Designs are delivered as print-ready PDF. Printing can be arranged at cost on request.' })}</Text>
+            <Text type="supporting">{t({ de: 'Lieferung als druckfertiges PDF. Druck auf Wunsch zum Selbstkostenpreis.', en: 'Delivered as print-ready PDF. Printing at cost on request.' })}</Text>
             <HStack>
               <Button icon={ic(UI.chat)} variant="primary" href="#kontakt" label={t({ de: 'Print anfragen', en: 'Request print' })} />
             </HStack>
