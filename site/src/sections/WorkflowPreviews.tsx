@@ -65,7 +65,8 @@ export default function WorkflowPreviews() {
   useEffect(() => {
     if (reduce) return;
     setN(0);
-    const h = setInterval(() => setN(v => (v >= len + 2 ? 0 : v + 1)), TICK);
+    // Steps appear one by one and then stay (KGC); switching workflow plays the new one from the start.
+    const h = setInterval(() => setN(v => { if (v >= len) { clearInterval(h); return v; } return v + 1; }), TICK);
     return () => clearInterval(h);
   }, [id, len, reduce]);
 

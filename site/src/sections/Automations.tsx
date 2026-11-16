@@ -5,6 +5,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import Eyebrow from './Eyebrow';
 import WorkflowPreviews from './WorkflowPreviews';
+import AutomationFilm from './AutomationFilm';
 import { AUTOPILOT_MONTHLY, chf, contactDraft, useT } from '../data';
 
 type L = { de: string; en: string };
@@ -57,7 +58,8 @@ export default function Automations() {
         </Text>
       </VStack>
 
-      {/* Automation video goes here (KGC, pending) */}
+      {/* Automation film: scene player synced to the ElevenLabs voiceover (AutomationFilm.tsx). */}
+      <AutomationFilm />
 
       <VStack gap={3}>
         <Heading level={2} type="display-3">{t({ de: 'So läuft es ab', en: 'How it runs' })}</Heading>
