@@ -5,6 +5,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import Eyebrow from './Eyebrow';
 import { AUTOPILOT_MONTHLY, BASE_PRICE, UPGRADE_PRICE, chf, contactDraft, useT } from '../data';
+import { UI, ic } from './uiIcons';
 
 const wrap = { marginInline: 'auto', width: '100%' } as const;
 
@@ -99,13 +100,13 @@ export function AutopilotTeaser() {
             ))}
           </VStack>
           <HStack gap={3} wrap="wrap">
-            <Button
+            <Button icon={ic(UI.calendar)}
               variant="primary"
               href="#kontakt"
               onClick={() => { contactDraft.subject = 'Anfragen-Autopilot'; }}
               label={t({ de: 'Kostenloses Gespräch', en: 'Free call' })}
             />
-            <Button href="#automationen" label={t({ de: 'Alle Automationen', en: 'All automations' })} />
+            <Button icon={ic(UI.arrow)} href="#automationen" label={t({ de: 'Alle Automationen', en: 'All automations' })} />
           </HStack>
         </VStack>
       </Card>
@@ -129,7 +130,7 @@ export function WebsitesTeaser() {
               en: `If the website is the bottleneck because there is none, it does not work on phones or it is outdated, I build it too. Every form on your website can feed the Enquiry Autopilot. New website from ${base}, upgrade of your existing website from ${upgrade}.`,
             })}
           </Text>
-          <Button href="#websites" label={t({ de: 'Websites ansehen', en: 'See websites' })} />
+          <Button icon={ic(UI.arrow)} href="#websites" label={t({ de: 'Websites ansehen', en: 'See websites' })} />
         </VStack>
       </Card>
     </VStack>

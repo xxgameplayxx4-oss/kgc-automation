@@ -7,6 +7,7 @@ import Eyebrow from './Eyebrow';
 import WorkflowPreviews from './WorkflowPreviews';
 import AutomationFilm from './AutomationFilm';
 import { AUTOPILOT_MONTHLY, chf, contactDraft, useT } from '../data';
+import { UI, ic } from './uiIcons';
 
 type L = { de: string; en: string };
 
@@ -75,7 +76,7 @@ export default function Automations() {
             {STEPS.map((s, i) => <li key={i}><Text size="sm">{t(s)}</Text></li>)}
           </VStack>
           <HStack>
-            <Button variant="primary" href="#kontakt" label={t({ de: 'Kostenloses Gespräch, 20 Minuten', en: 'Free call, 20 minutes' })} onClick={ask('Anfragen-Autopilot')} />
+            <Button icon={ic(UI.calendar)} variant="primary" href="#kontakt" label={t({ de: 'Kostenloses Gespräch, 20 Minuten', en: 'Free call, 20 minutes' })} onClick={ask('Anfragen-Autopilot')} />
           </HStack>
         </VStack>
       </Card>
@@ -91,7 +92,7 @@ export default function Automations() {
                 <Text size="sm">{`${t({ de: 'Für: ', en: 'For: ' })}${t(m.who)}`}</Text>
                 <Text size="sm" weight="medium">{t({ de: 'Preis je nach Umfang, monatlich', en: 'Price depends on scope, monthly' })}</Text>
                 <HStack>
-                  <Button variant="secondary" href="#kontakt" label={t({ de: 'Darüber sprechen', en: 'Talk about this' })} onClick={ask(m.name.de)} />
+                  <Button icon={ic(UI.chat)} variant="secondary" href="#kontakt" label={t({ de: 'Darüber sprechen', en: 'Talk about this' })} onClick={ask(m.name.de)} />
                 </HStack>
               </VStack>
             </Card>

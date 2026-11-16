@@ -16,6 +16,7 @@ import Eyebrow from './Eyebrow';
 import { AutomationFlow, HoursWeek, PriceCalc, PricelistPost } from './AddonPreviews';
 import { ADDON_ICONS } from './addonIcons';
 import { AUTOMATIONS, AUTOMATION_MONTHLY, CARE, PRINT, TIERS, chf, contactDraft, quote, useT, type T } from '../data';
+import { UI, ic } from './uiIcons';
 
 // Dev-only self-check of the pricing maths (prices come from data.ts).
 if (import.meta.env.DEV) {
@@ -503,7 +504,7 @@ export default function Configurator() {
                 <Text size="sm" color="secondary">{t(tier.name)}{q.chosen.length ? ` + ${q.chosen.length} ${t({ de: 'Druck', en: 'print' })}` : ''}</Text>
                 <Heading level={3} hasCapsize={false} color="accent">{chf(q.total)}</Heading>
               </Stack>
-              <Button variant="primary" size="sm" href="#zusammenfassung" label={t({ de: 'Zur Zusammenfassung', en: 'See summary' })} />
+              <Button icon={ic(UI.arrow)} variant="primary" size="sm" href="#zusammenfassung" label={t({ de: 'Zur Zusammenfassung', en: 'See summary' })} />
             </Stack>
           </Card>
         </Stack>
@@ -552,7 +553,7 @@ export default function Configurator() {
               <Text size="sm" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{chf(CARE[tier.id])} / {month}</Text>
             </Stack>
             <Text type="supporting" size="sm">{t({ de: 'Einmalig, inkl. Einrichtung. Preise in CHF.', en: 'One-time, setup included. Prices in CHF.' })}</Text>
-            <Button
+            <Button icon={ic(UI.send)}
               variant="primary"
               width="100%"
               href="#kontakt"

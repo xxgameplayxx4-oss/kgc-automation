@@ -3,6 +3,7 @@ import { HStack, VStack } from '@astryxdesign/core/Layout';
 import { Heading, Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { contactDraft, LangContext, useT } from '../data';
+import { UI, ic } from './uiIcons';
 
 export default function Hero() {
   const t = useT();
@@ -20,14 +21,14 @@ export default function Hero() {
           })}
         </Text>
         <HStack gap={3} wrap="wrap" hAlign="center">
-          <Button
+          <Button icon={ic(UI.calendar)}
             size="lg"
             variant="primary"
             href="#kontakt"
             onClick={() => { contactDraft.subject = 'Kostenloses Gespräch'; }}
             label={t({ de: 'Kostenloses Gespräch, 20 Minuten', en: 'Free call, 20 minutes' })}
           />
-          <Button size="lg" href="#automationen" label={t({ de: 'Automationen ansehen', en: 'See automations' })} />
+          <Button icon={ic(UI.arrow)} size="lg" href="#automationen" label={t({ de: 'Automationen ansehen', en: 'See automations' })} />
         </HStack>
         <Text type="supporting" justify="center">
           {t({

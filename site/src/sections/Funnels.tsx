@@ -12,6 +12,7 @@ import { TextInput } from '@astryxdesign/core/TextInput';
 import { Token } from '@astryxdesign/core/Token';
 import { useT, type T } from '../data';
 import { sendBuchung, type Buchung } from '../autopilot';
+import { UI, ic } from './uiIcons';
 
 // A working booking-funnel demo in the site's own theme. Nothing is sent anywhere.
 
@@ -33,7 +34,7 @@ function Shell({ steps, step, picked, onBack, children }: { steps: T[]; step: nu
         {children}
         {onBack && (
           <Stack direction="horizontal">
-            <Button variant="ghost" size="sm" label={`← ${t({ de: 'Zurück', en: 'Back' })}`} onClick={onBack} />
+            <Button icon={ic(UI.back)} variant="ghost" size="sm" label={t({ de: 'Zurück', en: 'Back' })} onClick={onBack} />
           </Stack>
         )}
       </Stack>
@@ -74,7 +75,7 @@ function Done({ lines, onReset, preview, reply }: { lines: string[]; onReset: ()
         </Stack>
       )}
       <Text type="supporting" size="sm">{t({ de: 'Demo: Es wurde nichts gesendet.', en: 'Demo: nothing was sent.' })}</Text>
-      <Stack direction="horizontal"><Button variant="secondary" size="sm" label={t({ de: 'Nochmals ausprobieren', en: 'Try again' })} onClick={onReset} /></Stack>
+      <Stack direction="horizontal"><Button icon={ic(UI.retry)} variant="secondary" size="sm" label={t({ de: 'Nochmals ausprobieren', en: 'Try again' })} onClick={onReset} /></Stack>
     </Stack>
   );
 }
@@ -94,7 +95,7 @@ function Contact({ onSubmit, cta }: { onSubmit: (k: Kontakt) => void; cta: T }) 
       <TextInput type="email" label="E-Mail" value={k.email} onChange={set('email')} placeholder="maria@beispiel.ch" autoComplete="email" isRequired />
       <TextArea label={t({ de: 'Bemerkung', en: 'Note' })} value={k.bemerkung} onChange={set('bemerkung')} rows={3} isOptional />
       <Stack direction="horizontal">
-        <Button variant="primary" label={t(cta)} isDisabled={!ok} onClick={() => onSubmit({ ...k, name: k.name.trim() })} />
+        <Button variant="primary" icon={ic(UI.send)} label={t(cta)} isDisabled={!ok} onClick={() => onSubmit({ ...k, name: k.name.trim() })} />
       </Stack>
     </Stack>
   );
@@ -195,7 +196,7 @@ function ConsultFunnel() {
                 </Grid>
               )}
               <Stack direction="horizontal">
-                <Button variant="primary" label={t({ de: 'Weiter', en: 'Continue' })} isDisabled={!date || !time} onClick={() => setStep(2)} />
+                <Button icon={ic(UI.arrow)} variant="primary" label={t({ de: 'Weiter', en: 'Continue' })} isDisabled={!date || !time} onClick={() => setStep(2)} />
               </Stack>
               <Text type="supporting" size="sm">{t({ de: 'Zeitzone: Europe/Zurich', en: 'Time zone: Europe/Zurich' })}</Text>
             </Stack>

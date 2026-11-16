@@ -6,6 +6,7 @@ import { Stack } from '@astryxdesign/core/Stack';
 import { Text } from '@astryxdesign/core/Text';
 import { AUTOPILOT_MONTHLY, chf, useT, type T } from '../data';
 import WhatsAppChat from './WhatsAppChat';
+import { UI, ic } from './uiIcons';
 
 // The automations film: an animated scene player synced to an ElevenLabs voiceover.
 // Each line of the script has its own scene; LINES[i].at is the second the line starts in the audio.
@@ -248,7 +249,7 @@ export function FilmPlayer({ lines, voice, scene, nightUntil = 0, label }: { lin
         </AspectRatio>
       </Card>
       <Stack direction="horizontal" gap={2} align="center">
-        <Button size="sm" variant="secondary" label={playing ? t({ de: 'Pause', en: 'Pause' }) : t({ de: 'Abspielen', en: 'Play' })} onClick={toggle} />
+        <Button size="sm" variant="secondary" icon={ic(playing ? UI.pause : UI.play)} label={playing ? t({ de: 'Pause', en: 'Pause' }) : t({ de: 'Abspielen', en: 'Play' })} onClick={toggle} />
         <Stack role="slider" aria-label={t({ de: 'Position im Film', en: 'Film position' })} aria-valuemin={0} aria-valuemax={Math.round(dur)} aria-valuenow={Math.round(time)} tabIndex={0}
           onClick={e => { const r = e.currentTarget.getBoundingClientRect(); seek(((e.clientX - r.left) / r.width) * dur); }}
           onKeyDown={e => { if (e.key === 'ArrowRight') seek(Math.min(dur, time + 5)); if (e.key === 'ArrowLeft') seek(Math.max(0, time - 5)); }}

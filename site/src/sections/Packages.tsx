@@ -7,6 +7,7 @@ import { Badge } from '@astryxdesign/core/Badge';
 import Eyebrow from './Eyebrow';
 import HeroFilmDemo from './HeroFilmDemo';
 import { AUTOMATIONS, AUTOMATION_MONTHLY, BASE_FEATURES, CARE, CARE_HOURS, DOMAIN_FEE, FEATURES, TIERS, UPGRADE_PRICE, chf, contactDraft, useT, type T } from '../data';
+import { UI, ic } from './uiIcons';
 
 const HERO_FILM: T = { de: 'Auf Wunsch komme ich vorbei und filme, wie man Ihr Geschäft betritt, geschnitten als kinoreifer Film für den Startbereich.', en: 'On request I come by and film walking into your business, cut as a cinematic film for the hero.' };
 const [CORE, PRO] = TIERS;
@@ -30,7 +31,7 @@ export default function Packages() {
             <Heading level={3}>{t({ de: 'Website-Upgrade', en: 'Website upgrade' })}</Heading>
             <Heading level={2} type="display-3" color="accent">{t({ de: `ab ${chf(UPGRADE_PRICE)}`, en: `from ${chf(UPGRADE_PRICE)}` })}</Heading>
             <Text color="secondary">{t({ de: 'Sie haben schon eine Website, aber sie wirkt veraltet? Ich übernehme Ihre Texte, Bilder und Angaben und baue daraus eine neue, schnelle, mobile Website. Weil der Inhalt schon da ist, bleibt der Preis tief.', en: 'You already have a website but it looks dated? I take your texts, images and details and turn them into a new, fast, mobile website. Because the content exists, the price stays low.' })}</Text>
-            <Button variant="secondary" href="#kontakt" label={t({ de: 'Upgrade anfragen', en: 'Request upgrade' })}
+            <Button icon={ic(UI.chat)} variant="secondary" href="#kontakt" label={t({ de: 'Upgrade anfragen', en: 'Request upgrade' })}
               onClick={cta('Website-Upgrade', t({ de: 'Meine aktuelle Website: ', en: 'My current website: ' }))} />
           </VStack>
         </Card>
@@ -43,7 +44,7 @@ export default function Packages() {
               {BASE_FEATURES.map((f, i) => li('b' + i, f))}
               {FEATURES.filter(f => CORE.includes.includes(f.id)).map(f => li(f.id, f.name))}
             </VStack>
-            <Button variant="secondary" href="#kontakt" label={t({ de: 'Core anfragen', en: 'Request Core' })} onClick={cta('Website Core')} />
+            <Button icon={ic(UI.chat)} variant="secondary" href="#kontakt" label={t({ de: 'Core anfragen', en: 'Request Core' })} onClick={cta('Website Core')} />
           </VStack>
         </Card>
         <Card variant="yellow" elevation="low" padding={5}>
@@ -62,10 +63,10 @@ export default function Packages() {
             <Card variant="muted" padding={3}>
               <VStack gap={2} hAlign="start">
                 <Text size="sm">{t(HERO_FILM)}</Text>
-                <Button size="sm" variant="secondary" href="#film-demo" label={t({ de: 'Demo ansehen', en: 'View demo' })} />
+                <Button icon={ic(UI.play)} size="sm" variant="secondary" href="#film-demo" label={t({ de: 'Demo ansehen', en: 'View demo' })} />
               </VStack>
             </Card>
-            <Button variant="primary" href="#kontakt" label={t({ de: 'Pro anfragen', en: 'Request Pro' })} onClick={cta('Website Pro')} />
+            <Button icon={ic(UI.chat)} variant="primary" href="#kontakt" label={t({ de: 'Pro anfragen', en: 'Request Pro' })} onClick={cta('Website Pro')} />
           </VStack>
         </Card>
         <Card padding={5}>
@@ -76,7 +77,7 @@ export default function Packages() {
             <VStack gap={1.5} as="ul" style={ul}>
               {AUTOMATIONS.map(a => li(a.id, a.name))}
             </VStack>
-            <Button variant="secondary" href="#kontakt" label={t({ de: 'Automationen anfragen', en: 'Request automations' })} onClick={cta('Automation Add-on')} />
+            <Button icon={ic(UI.chat)} variant="secondary" href="#kontakt" label={t({ de: 'Automationen anfragen', en: 'Request automations' })} onClick={cta('Automation Add-on')} />
           </VStack>
         </Card>
       </Grid>
@@ -118,7 +119,7 @@ export default function Packages() {
             <Heading level={3}>{t({ de: 'Individuell', en: 'Custom' })}</Heading>
             <Text color="secondary">{t({ de: 'Sie brauchen mehr? Schreiben Sie mir.', en: 'Need more? Write to me.' })}</Text>
           </VStack>
-          <Button href="#kontakt" label={t({ de: 'Anfrage senden', en: 'Send enquiry' })} />
+          <Button icon={ic(UI.send)} href="#kontakt" label={t({ de: 'Anfrage senden', en: 'Send enquiry' })} />
         </HStack>
       </Card>
       <Text type="supporting">

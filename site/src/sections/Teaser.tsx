@@ -9,6 +9,7 @@ import { Avatar } from '@astryxdesign/core/Avatar';
 import { useT } from '../data';
 import Eyebrow from './Eyebrow';
 import { CLIENTS, Preview } from './Projects';
+import { UI, ic } from './uiIcons';
 
 /** Start page: three client projects and a short intro, each linking to its own page. */
 export default function Teaser() {
@@ -22,7 +23,7 @@ export default function Teaser() {
               <Eyebrow>{t({ de: 'Projekte', en: 'Projects' })}</Eyebrow>
               <Heading level={2}>{t({ de: 'Websites für echte Kunden', en: 'Websites for real clients' })}</Heading>
             </VStack>
-            <Button href="#projekte" label={t({ de: 'Alle Projekte ansehen', en: 'See all projects' })} />
+            <Button icon={ic(UI.arrow)} href="#projekte" label={t({ de: 'Alle Projekte ansehen', en: 'See all projects' })} />
           </HStack>
           <Grid columns={{ minWidth: 240, max: 4 }} gap={8}>
             {CLIENTS.slice(0, 4).map(p => (
@@ -40,7 +41,7 @@ export default function Teaser() {
             <Eyebrow>{t({ de: 'Über mich', en: 'About me' })}</Eyebrow>
             <Heading level={2}>{t({ de: 'Ein Ansprechpartner, von A bis Z', en: 'One contact, end to end' })}</Heading>
             <Text color="secondary">{t({ de: 'Mein Name ist Khang Cung, Informatiker EFZ aus Brugg. Ihre Website plane, gestalte und baue ich selbst.', en: 'I’m Khang Cung, a certified IT specialist from Brugg. I plan, design and build your website myself.' })}</Text>
-            <HStack><Button variant="ghost" href="#ueber-mich" label={t({ de: 'Mehr über mich →', en: 'More about me →' })} /></HStack>
+            <HStack><Button icon={ic(UI.arrow)} variant="ghost" href="#ueber-mich" label={t({ de: 'Mehr über mich', en: 'More about me' })} /></HStack>
           </VStack>
         </HStack>
       </VStack>

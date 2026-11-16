@@ -14,6 +14,7 @@ import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
 import { useState, useSyncExternalStore } from 'react';
 import { useT, type T } from '../data';
 import Eyebrow from './Eyebrow';
+import { UI, ic } from './uiIcons';
 
 // Screenshots live in public/projects/<slug>-desktop.webp and <slug>-phone.webp.
 // Only paid client sites get a name and a link; concept drafts stay anonymised.
@@ -137,7 +138,7 @@ export function PreviewDialog({ p, title, open, setOpen }: { p: Project; title: 
       <VStack gap={4}>
         <DialogHeader title={title} subtitle={t({ de: 'Scrollen Sie in Laptop und Handy durch die Website.', en: 'Scroll through the site on laptop and phone.' })} onOpenChange={setOpen} />
         <Viewer p={p} alt={title} />
-        {p.url && <HStack><Button variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Live-Website öffnen ↗', en: 'Open live website ↗' })} /></HStack>}
+        {p.url && <HStack><Button icon={ic(UI.external)} variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Live-Website öffnen', en: 'Open live website' })} /></HStack>}
       </VStack>
     </Dialog>
   );
@@ -153,7 +154,7 @@ export function Preview({ p }: { p: Project }) {
       <ClickableCard variant="transparent" padding={0} label={t({ de: `${title}: Vorschau öffnen`, en: `${title}: open preview` })} onClick={() => setOpen(true)}>
         <Devices p={p} alt={title} />
       </ClickableCard>
-      <HStack><Button variant="secondary" size="sm" onClick={() => setOpen(true)} label={t({ de: 'Vorschau', en: 'Preview' })} /></HStack>
+      <HStack><Button variant="secondary" size="sm" icon={ic(UI.eye)} onClick={() => setOpen(true)} label={t({ de: 'Vorschau', en: 'Preview' })} /></HStack>
       <PreviewDialog p={p} title={title} open={open} setOpen={setOpen} />
     </>
   );
@@ -176,7 +177,7 @@ function ProjectCard({ p, paid }: { p: Project; paid?: boolean }) {
         </HStack>
         {p.url && (
           <HStack>
-            <Button variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Website ansehen ↗', en: 'View website ↗' })} />
+            <Button icon={ic(UI.external)} variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Website ansehen', en: 'View website' })} />
           </HStack>
         )}
       </VStack>

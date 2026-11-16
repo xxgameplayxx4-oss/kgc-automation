@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
 import Eyebrow from './Eyebrow';
 import { PRINT, chf, useT } from '../data';
+import { UI, ic } from './uiIcons';
 
 // Finished sample designs, rendered from fictional brands that match the concept drafts in /work.
 const SETS = [
@@ -70,7 +71,7 @@ export default function Print() {
             ))}
             <Text type="supporting">{t({ de: 'Die Designs liefere ich als druckfertiges PDF. Der Druck kann auf Wunsch zum Selbstkostenpreis organisiert werden.', en: 'Designs are delivered as print-ready PDF. Printing can be arranged at cost on request.' })}</Text>
             <HStack>
-              <Button variant="primary" href="#kontakt" label={t({ de: 'Print anfragen', en: 'Request print' })} />
+              <Button icon={ic(UI.chat)} variant="primary" href="#kontakt" label={t({ de: 'Print anfragen', en: 'Request print' })} />
             </HStack>
           </VStack>
         </Grid>

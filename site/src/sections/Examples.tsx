@@ -14,6 +14,7 @@ import Emails from './Emails';
 import { useState } from 'react';
 import { WORK, useT } from '../data';
 import { PreviewDialog, Screen } from './Projects';
+import { UI, ic } from './uiIcons';
 
 type Work = (typeof WORK)[number];
 
@@ -33,8 +34,8 @@ function WorkCard({ w }: { w: Work }) {
           <Heading level={3}>{w.name}</Heading>
           <Text type="supporting">{t(w.kind)}</Text>
           <HStack gap={2} wrap="wrap">
-            <Button variant="secondary" size="sm" onClick={() => setOpen(true)} label={t({ de: 'Vorschau', en: 'Preview' })} />
-            {w.url && <Button variant="ghost" size="sm" href={w.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Website ansehen ↗', en: 'View website ↗' })} />}
+            <Button variant="secondary" size="sm" icon={ic(UI.eye)} onClick={() => setOpen(true)} label={t({ de: 'Vorschau', en: 'Preview' })} />
+            {w.url && <Button icon={ic(UI.external)} variant="ghost" size="sm" href={w.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Website ansehen', en: 'View website' })} />}
           </HStack>
         </VStack>
       </VStack>
@@ -84,7 +85,7 @@ export default function Examples() {
           </VStack>
         )}
         <HStack>
-          <Button variant="primary" href="#konfigurator" label={t({ de: 'Im Konfigurator hinzufügen', en: 'Add in the configurator' })} />
+          <Button icon={ic(UI.arrow)} variant="primary" href="#konfigurator" label={t({ de: 'Im Konfigurator hinzufügen', en: 'Add in the configurator' })} />
         </HStack>
       </VStack>
     </Section>

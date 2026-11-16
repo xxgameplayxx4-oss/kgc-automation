@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from 'react';
 import { HStack, VStack } from '@astryxdesign/core/Layout';
 import { Button } from '@astryxdesign/core/Button';
 import { Drawer } from '@astryxdesign/core/Drawer';
+import { IconButton } from '@astryxdesign/core/IconButton';
+import { UI, ic } from './uiIcons';
 import { LangContext, ModeContext, useT, type Lang } from '../data';
 import type { Page } from '../App';
 import Logo from './Logo';
@@ -33,11 +35,17 @@ export default function Nav({ page }: { page: Page }) {
   const narrow = useNarrow();
   const [open, setOpen] = useState(false);
 
-  const langSwitch = (['de', 'en'] as Lang[]).map(l => (
-    <Button key={l} size="sm" label={l.toUpperCase()} variant={lang === l ? 'secondary' : 'ghost'} onClick={() => setLang(l)} />
-  ));
+  // One globe button toggles DE/EN, one sun/moon button toggles the colour mode (KGC).
+  const other: Lang = lang === 'de' ? 'en' : 'de';
+  const langSwitch = (
+    <Button size="sm" variant="ghost" icon={ic(UI.globe)} label={t({ de: 'Sprache: auf Englisch wechseln', en: 'Language: switch to German' })}
+      tooltip={t({ de: 'English', en: 'Deutsch' })} onClick={() => setLang(other)}>{lang.toUpperCase()}</Button>
+  );
   const modeSwitch = (
-    <Button size="sm" variant="ghost" label={mode === 'dark' ? t({ de: 'Hell', en: 'Light' }) : t({ de: 'Dunkel', en: 'Dark' })} aria-label={t({ de: 'Farbmodus wechseln', en: 'Switch colour mode' })} onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')} />
+    <IconButton size="sm" variant="ghost" icon={ic(mode === 'dark' ? UI.sun : UI.moon)}
+      label={mode === 'dark' ? t({ de: 'Hellen Modus einschalten', en: 'Switch to light mode' }) : t({ de: 'Dunklen Modus einschalten', en: 'Switch to dark mode' })}
+      tooltip={mode === 'dark' ? t({ de: 'Hell', en: 'Light' }) : t({ de: 'Dunkel', en: 'Dark' })}
+      onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')} />
   );
   const contactLabel = t({ de: 'Kontakt', en: 'Contact' });
 
@@ -55,20 +63,20 @@ export default function Nav({ page }: { page: Page }) {
           <Logo height={narrow ? 26 : 30} />
         </Button>
         {narrow ? (
-          <Button size="sm" label={t({ de: 'Menü', en: 'Menu' })} onClick={() => setOpen(true)} />
+          <Button size="sm" icon={ic(UI.menu)} label={t({ de: 'Menü', en: 'Menu' })} onClick={() => setOpen(true)} />
         ) : (
           <HStack gap={1} vAlign="center">
             {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} size="sm" href={`#${l.id}`} label={t(l.label)} />)}
             {langSwitch}
             {modeSwitch}
-            <Button size="sm" variant="primary" label={contactLabel} href="#kontakt" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)" }} />
+            <Button size="sm" variant="primary" icon={ic(UI.mail)} label={contactLabel} href="#kontakt" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)" }} />
           </HStack>
         )}
       </HStack>
       <Drawer isOpen={open && narrow} onOpenChange={setOpen} label={t({ de: 'Menü', en: 'Menu' })}>
         <VStack gap={2} padding={4}>
           {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} width="100%" href={`#${l.id}`} label={t(l.label)} onClick={() => setOpen(false)} />)}
-          <Button variant="primary" width="100%" label={contactLabel} href="#kontakt" onClick={() => setOpen(false)} />
+          <Button variant="primary" width="100%" icon={ic(UI.mail)} label={contactLabel} href="#kontakt" onClick={() => setOpen(false)} />
           <HStack gap={1} hAlign="center">{langSwitch}{modeSwitch}</HStack>
         </VStack>
       </Drawer>

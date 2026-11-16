@@ -7,6 +7,7 @@ import { Banner } from '@astryxdesign/core/Banner';
 import { TextInput } from '@astryxdesign/core/TextInput';
 import { TextArea } from '@astryxdesign/core/TextArea';
 import { CONTACT_EMAIL, PHONE, contactDraft, useT } from '../data';
+import { UI, ic } from './uiIcons';
 
 // Netlify Forms: the hidden form named "kontakt" in index.html registers these fields at deploy time.
 const encode = (d: Record<string, string>) => new URLSearchParams(d).toString();
@@ -66,7 +67,7 @@ export default function Contact() {
               <Banner status="error" title={t({ de: 'Senden hat nicht geklappt.', en: 'Sending did not work.' })}
                 description={t({ de: `Bitte schreiben Sie mir direkt an ${CONTACT_EMAIL}.`, en: `Please write to me directly at ${CONTACT_EMAIL}.` })} />
             )}
-            <Button type="submit" variant="primary" width="100%" isLoading={state === 'sending'} label={t({ de: 'Nachricht senden', en: 'Send message' })} />
+            <Button icon={ic(UI.send)} type="submit" variant="primary" width="100%" isLoading={state === 'sending'} label={t({ de: 'Nachricht senden', en: 'Send message' })} />
           </VStack>
         </Card>
       )}
