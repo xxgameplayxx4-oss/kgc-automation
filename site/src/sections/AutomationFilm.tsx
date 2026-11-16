@@ -206,6 +206,9 @@ export function FilmPlayer({ lines, voice, scene, nightUntil = 0, label }: { lin
   const audio = useRef<HTMLAudioElement>(null);
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(false);
+  // Captions are off by default; the visitor's choice is remembered across both films.
+  const [cc, setCc] = useState(() => { try { return localStorage.getItem('cung-cc') === '1'; } catch { return false; } });
+  const toggleCc = () => setCc(v => { try { localStorage.setItem('cung-cc', v ? '0' : '1'); } catch { /* storage blocked */ } return !v; });
   const [dur, setDur] = useState(lines[lines.length - 1].at[lang] + 4);
   const idx = Math.max(0, lines.findLastIndex(l => time >= l.at[lang]));
   const night = idx < nightUntil;
@@ -233,10 +236,12 @@ export function FilmPlayer({ lines, voice, scene, nightUntil = 0, label }: { lin
           <Stack onClick={toggle} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } }} role="button" tabIndex={0} aria-label={playing ? t({ de: 'Film pausieren', en: 'Pause film' }) : t({ de: 'Film abspielen', en: 'Play film' })} style={{ position: 'relative', height: '100%', cursor: 'pointer', color: F.ink, overflow: 'hidden',
             background: night ? `radial-gradient(60% 70% at 70% 40%, rgba(40,60,90,.35), transparent), ${F.night}` : `radial-gradient(70% 80% at 50% 30%, rgba(252,163,17,.18), transparent), ${F.night}`, transition: 'background 1s' }}>
             <Stack key={idx} data-scene="" style={fill}>{scene(idx)}</Stack>
-            {/* subtitles */}
-            <Stack style={{ position: 'absolute', insetInline: 0, bottom: 0, padding: '1.5% 6% 3%', background: 'linear-gradient(transparent, rgba(0,0,0,.75))' }}>
-              {(playing || time > 0) && <Text size="sm" color="inherit" justify="center" style={{ textShadow: '0 1px 3px #000' }}>{t(lines[idx].text)}</Text>}
-            </Stack>
+            {/* subtitles (off by default, toggled below) */}
+            {cc && (playing || time > 0) && (
+              <Stack style={{ position: 'absolute', insetInline: 0, bottom: 0, padding: '1.5% 6% 3%', background: 'linear-gradient(transparent, rgba(0,0,0,.75))' }}>
+                <Text size="sm" color="inherit" justify="center" style={{ textShadow: '0 1px 3px #000' }}>{t(lines[idx].text)}</Text>
+              </Stack>
+            )}
             {!playing && (
               <Stack align="center" justify="center" gap={1} style={{ ...fill, background: 'rgba(0,0,0,.35)' }}>
                 <Stack align="center" justify="center" style={{ width: '4.2rem', height: '4.2rem', borderRadius: 'var(--radius-full)', background: F.orange, color: '#000', boxShadow: '0 10px 40px rgba(252,163,17,.45)' }}>
@@ -259,6 +264,8 @@ export function FilmPlayer({ lines, voice, scene, nightUntil = 0, label }: { lin
           </Stack>
         </Stack>
         <Text size="xsm" color="secondary" hasTabularNumbers>{`${Math.floor(time / 60)}:${String(Math.floor(time % 60)).padStart(2, '0')}`}</Text>
+        <Button variant={cc ? 'primary' : 'secondary'} icon={ic(UI.cc)} isIconOnly aria-pressed={cc} onClick={toggleCc}
+          label={cc ? t({ de: 'Untertitel ausschalten', en: 'Turn captions off' }) : t({ de: 'Untertitel einschalten', en: 'Turn captions on' })} />
       </Stack>
       <audio ref={audio} src={voice[lang]} preload="metadata"
         onPlay={e => { e.currentTarget.playbackRate = SPEED; setPlaying(true); }} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)}

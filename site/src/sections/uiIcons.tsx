@@ -27,6 +27,7 @@ export const UI = {
   plus: mk('M12 5v14M5 12h14'),
   doc: mk('M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6'),
   shield: mk('M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'),
+  cc: mk('M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM10.5 10.2a2.2 2.2 0 1 0 0 3.6M17 10.2a2.2 2.2 0 1 0 0 3.6'),
   user: mk('M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z'),
 } satisfies Record<string, G>;
 

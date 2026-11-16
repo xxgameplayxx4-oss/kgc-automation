@@ -59,13 +59,14 @@ export default function Print() {
           </VStack>
           <VStack gap={4}>
             {items.map(a => (
-              <Card key={a.id}>
+              <Card key={a.id} variant={a.id === 'set' ? 'yellow' : 'default'}>
                 <HStack justify="between" align="start" gap={3}>
                   <VStack gap={1}>
                     <Heading level={3}>{t(a.name)}</Heading>
+                    {a.id === 'set' && <Text size="sm" weight="semibold" color="accent">{t({ de: '+ 1 Mockup-Entwurf gratis', en: '+ 1 free mockup' })}</Text>}
                     <Text type="supporting">{t(a.desc)}</Text>
                   </VStack>
-                  <Text weight="semibold" hasTabularNumbers>{chf(a.price)}</Text>
+                  <Text weight="semibold" hasTabularNumbers style={{ whiteSpace: 'nowrap' }}>{chf(a.price)}</Text>
                 </HStack>
               </Card>
             ))}

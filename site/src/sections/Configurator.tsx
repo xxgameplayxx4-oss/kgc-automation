@@ -15,13 +15,13 @@ import { Text } from '@astryxdesign/core/Text';
 import Eyebrow from './Eyebrow';
 import { AutomationFlow, HoursWeek, PriceCalc, PricelistPost } from './AddonPreviews';
 import { ADDON_ICONS } from './addonIcons';
-import { AUTOMATIONS, AUTOMATION_MONTHLY, CARE, PRINT, TIERS, chf, contactDraft, quote, useT, type T } from '../data';
+import { AUTOMATIONS, AUTOMATION_MONTHLY, CARE, PRINT, SET_PARTS, TIERS, chf, contactDraft, quote, toggleExtra as nextExtras, useT, type T } from '../data';
 import { UI, ic } from './uiIcons';
 
 // Dev-only self-check of the pricing maths (prices come from data.ts).
 if (import.meta.env.DEV) {
   console.assert(quote(TIERS[0], new Set()).total === 2000, 'Core alone = 2000');
-  console.assert(quote(TIERS[1], new Set(['flyer', 'cards'])).total === 3200, 'Pro + flyer + cards = 3200');
+  console.assert(quote(TIERS[1], nextExtras(new Set(['flyer']), 'cards', true)).total === 3125, 'Pro + flyer + cards = Pro + set = 3125');
 }
 
 type Device = 'desktop' | 'phone';
@@ -437,9 +437,9 @@ export default function Configurator() {
   const [care, setCare] = useState(false);
   const tier = TIERS.find(x => x.id === tierId) ?? TIERS[0];
   const q = quote(tier, extras);
-  const has = (id: string) => tier.includes.includes(id) || extras.has(id) || (auto && AUTOMATIONS.some(a => a.id === id));
+  const has = (id: string) => tier.includes.includes(id) || extras.has(id) || (SET_PARTS.includes(id) && extras.has('set')) || (auto && AUTOMATIONS.some(a => a.id === id));
   const mark: Mark = id => ({ 'data-f': id });
-  const toggleExtra = (id: string, on: boolean) => setExtras(prev => { const n = new Set(prev); if (on) n.add(id); else n.delete(id); return n; });
+  const toggleExtra = (id: string, on: boolean) => setExtras(prev => nextExtras(prev, id, on));
 
   const month = t({ de: 'Monat', en: 'month' });
   const from = t({ de: 'ab', en: 'from' });

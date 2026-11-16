@@ -30,6 +30,7 @@ export const ADDON_ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>>
   'review-request': mk('M7 10v12M15 5.9 14 10h5.8a2 2 0 0 1 1.9 2.6l-2.3 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.8a2 2 0 0 0 1.8-1.1L12 2a3.1 3.1 0 0 1 3 3.9z'),
   sheet: mk('M3 3h18v18H3zM3 9h18M3 15h18M9 3v18'),
   cards: mk('M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM8 8.5a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6zM14 9h4M14 13h4M5 16c.5-1.3 1.6-2 3-2s2.5.7 3 2'),
+  set: mk('M3 9h11a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1zM8 4h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-3M5 13h7M5 16h4'),
   flyer: mk(`${DOC}M8 13h8M8 17h8M8 9h2`),
   social: mk('M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zM12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM17.5 6.5h.01'),
 };
