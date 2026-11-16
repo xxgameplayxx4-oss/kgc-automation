@@ -60,7 +60,7 @@ const EDUCATION: { title: T; place: string; when: string }[] = [
   { title: { de: 'Berufsmaturität Wirtschaft', en: 'Vocational baccalaureate, business' }, place: 'Kantonsschule Baden', when: '2020 – 2024' },
 ];
 
-const SKILLS = ['HTML5', 'CSS3', 'JavaScript', 'React', 'C#', '.NET', 'Java', 'SQL', 'PowerShell', 'Microsoft 365', 'Windows Server', 'Active Directory', 'Netzwerke (TCP/IP)', 'Git'];
+const SKILLS: (string | T)[] = ['HTML5', 'CSS3', 'JavaScript', 'React', 'C#', '.NET', 'Java', 'SQL', 'PowerShell', 'Microsoft 365', 'Windows Server', 'Active Directory', { de: 'Netzwerke (TCP/IP)', en: 'Networks (TCP/IP)' }, 'Git'];
 
 const LANGUAGES: { name: T; level: T }[] = [
   { name: { de: 'Deutsch', en: 'German' }, level: { de: 'Fliessend', en: 'Fluent' } },
@@ -77,8 +77,8 @@ export default function About() {
         <Avatar src={PORTRAIT} name={NAME} size={180} tooltip={false} />
         <VStack gap={3} style={{ flex: '1 1 20rem' }}>
           <Eyebrow>{t({ de: 'Über mich', en: 'About me' })}</Eyebrow>
-          <Heading level={2} type="display-3" textWrap="balance">Khang Cung</Heading>
-          <Text type="large" weight="medium">{t({ de: 'Webentwicklung · IT-Support · Cyber Security', en: 'Web development · IT support · Cyber security' })}</Text>
+          <Heading level={1} type="display-3" textWrap="balance">Khang Cung</Heading>
+          <Text type="large" weight="medium">{t({ de: 'Automationen · Websites · IT', en: 'Automations · Websites · IT' })}</Text>
           {LINES.map((l, i) => <Text key={i} color="secondary">{t(l)}</Text>)}
           <Text type="supporting">Cung Solutions · Brugg AG</Text>
         </VStack>
@@ -126,7 +126,7 @@ export default function About() {
       <VStack gap={3}>
         <Heading level={3}>{t({ de: 'Kenntnisse', en: 'Skills' })}</Heading>
         <HStack gap={2} wrap="wrap">
-          {SKILLS.map(s => <Token key={s} label={s} size="sm" />)}
+          {SKILLS.map(s => { const l = typeof s === 'string' ? s : t(s); return <Token key={l} label={l} size="sm" />; })}
         </HStack>
       </VStack>
     </VStack>

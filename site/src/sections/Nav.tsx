@@ -17,6 +17,16 @@ const LINKS: { id: Page; label: { de: string; en: string } }[] = [
   { id: 'faq', label: { de: 'FAQ', en: 'FAQ' } },
 ];
 
+const META: Record<Page, { title: { de: string; en: string }; desc: { de: string; en: string } }> = {
+  start: { title: { de: 'Cung Solutions · Automationen und Websites für KMU', en: 'Cung Solutions · Automations and websites for small businesses' }, desc: { de: 'Ich automatisiere Anfragen, Offerten und Termine für KMU im Aargau und baue Websites zum Fixpreis.', en: 'I automate enquiries, quotes and appointments for small businesses in Aargau and build websites at a fixed price.' } },
+  automationen: { title: { de: 'Automationen · Cung Solutions', en: 'Automations · Cung Solutions' }, desc: { de: 'Verpasster Anruf, neue Anfrage, Termin-Erinnerung: Automationen für KMU, ab CHF 300 im Monat.', en: 'Missed call, new enquiry, appointment reminder: automations for small businesses.' } },
+  websites: { title: { de: 'Websites zum Fixpreis · Cung Solutions', en: 'Websites at a fixed price · Cung Solutions' }, desc: { de: 'Stellen Sie Ihre Website selbst zusammen: Core, Pro und Zusätze zum Fixpreis.', en: 'Build your own website: Core, Pro and add-ons at a fixed price.' } },
+  projekte: { title: { de: 'Projekte · Cung Solutions', en: 'Projects · Cung Solutions' }, desc: { de: 'Kundenprojekte und Konzeptentwürfe: Websites und Web-Apps für KMU.', en: 'Client projects and concept designs: websites and web apps for small businesses.' } },
+  'ueber-mich': { title: { de: 'Über mich · Cung Solutions', en: 'About · Cung Solutions' }, desc: { de: 'Khang Cung, Ihr Ansprechpartner für Automationen, Websites und IT in Brugg.', en: 'Khang Cung, your contact for automations, websites and IT in Brugg.' } },
+  faq: { title: { de: 'Häufige Fragen · Cung Solutions', en: 'FAQ · Cung Solutions' }, desc: { de: 'Antworten zu Preisen, Ablauf, Hosting und Automationen.', en: 'Answers on pricing, process, hosting and automations.' } },
+  kontakt: { title: { de: 'Kontakt · Cung Solutions', en: 'Contact · Cung Solutions' }, desc: { de: 'Kostenloses Gespräch, 20 Minuten. Antwort innert 24 Stunden.', en: 'Free 20-minute call. Reply within 24 hours.' } },
+};
+
 const useNarrow = () => {
   const [narrow, setNarrow] = useState(() => window.matchMedia('(max-width: 900px)').matches);
   useEffect(() => {
@@ -34,6 +44,13 @@ export default function Nav({ page }: { page: Page }) {
   const { mode, setMode } = useContext(ModeContext);
   const narrow = useNarrow();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const m = META[page];
+    if (!m) return;
+    document.title = t(m.title);
+    document.querySelector('meta[name="description"]')?.setAttribute('content', t(m.desc));
+  }, [page, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // One globe button toggles DE/EN, one sun/moon button toggles the colour mode (KGC).
   const other: Lang = lang === 'de' ? 'en' : 'de';
@@ -63,13 +80,13 @@ export default function Nav({ page }: { page: Page }) {
           <Logo height={narrow ? 26 : 30} />
         </Button>
         {narrow ? (
-          <Button size="sm" icon={ic(UI.menu)} label={t({ de: 'Menü', en: 'Menu' })} onClick={() => setOpen(true)} />
+          <Button icon={ic(UI.menu)} label={t({ de: 'Menü', en: 'Menu' })} onClick={() => setOpen(true)} />
         ) : (
           <HStack gap={1} vAlign="center">
             {LINKS.map(l => <Button key={l.id} variant={page === l.id ? "secondary" : "ghost"} size="sm" href={`#${l.id}`} label={t(l.label)} />)}
             {langSwitch}
             {modeSwitch}
-            <Button size="sm" variant="primary" icon={ic(UI.mail)} label={contactLabel} href="#kontakt" style={{ background: "var(--color-accent)", color: "var(--color-on-accent)" }} />
+            <Button size="sm" variant="primary" icon={ic(UI.mail)} label={contactLabel} href="#kontakt" />
           </HStack>
         )}
       </HStack>

@@ -6,7 +6,7 @@ import { Card } from '@astryxdesign/core/Card';
 import { Badge } from '@astryxdesign/core/Badge';
 import Eyebrow from './Eyebrow';
 import HeroFilmDemo from './HeroFilmDemo';
-import { AUTOMATIONS, AUTOMATION_MONTHLY, BASE_FEATURES, CARE, CARE_HOURS, DOMAIN_FEE, FEATURES, TIERS, UPGRADE_PRICE, chf, contactDraft, useT, type T } from '../data';
+import { AUTOMATIONS, AUTOMATION_MONTHLY, AUTOPILOT_MONTHLY, BASE_FEATURES, CARE, CARE_HOURS, DOMAIN_FEE, FEATURES, TIERS, UPGRADE_PRICE, chf, contactDraft, useT, type T } from '../data';
 import { UI, ic } from './uiIcons';
 
 const HERO_FILM: T = { de: 'Auf Wunsch komme ich vorbei und filme, wie man Ihr Geschäft betritt, geschnitten als kinoreifer Film für den Startbereich.', en: 'On request I come by and film walking into your business, cut as a cinematic film for the hero.' };
@@ -22,14 +22,14 @@ export default function Packages() {
     <VStack id="pakete" as="section" gap={6} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
       <VStack gap={2}>
         <Eyebrow>{t({ de: 'Fixpreise', en: 'Fixed prices' })}</Eyebrow>
-        <Heading level={2} type="display-3">{t({ de: 'Pakete', en: 'Packages' })}</Heading>
+        <Heading level={1} type="display-3">{t({ de: 'Pakete', en: 'Packages' })}</Heading>
         <Text color="secondary">{t({ de: 'Websites zum Fixpreis. Wählen Sie Ihr Paket, den Rest erledige ich.', en: 'Websites at a fixed price. Pick your package, I take care of the rest.' })}</Text>
       </VStack>
       <Grid columns={{ minWidth: 240, max: 4 }} gap={4} align="stretch">
         <Card variant="muted" padding={5}>
           <VStack gap={3}>
             <Heading level={3}>{t({ de: 'Website-Upgrade', en: 'Website upgrade' })}</Heading>
-            <Heading level={2} type="display-3" color="accent">{t({ de: `ab ${chf(UPGRADE_PRICE)}`, en: `from ${chf(UPGRADE_PRICE)}` })}</Heading>
+            <Text type="large" weight="semibold" color="accent">{t({ de: `ab ${chf(UPGRADE_PRICE)}`, en: `from ${chf(UPGRADE_PRICE)}` })}</Text>
             <Text color="secondary">{t({ de: 'Sie haben schon eine Website, aber sie wirkt veraltet? Ich übernehme Ihre Texte, Bilder und Angaben und baue daraus eine neue, schnelle, mobile Website. Weil der Inhalt schon da ist, bleibt der Preis tief.', en: 'You already have a website but it looks dated? I take your texts, images and details and turn them into a new, fast, mobile website. Because the content exists, the price stays low.' })}</Text>
             <Button icon={ic(UI.chat)} variant="secondary" href="#kontakt" label={t({ de: 'Upgrade anfragen', en: 'Request upgrade' })}
               onClick={cta('Website-Upgrade', t({ de: 'Meine aktuelle Website: ', en: 'My current website: ' }))} />
@@ -38,7 +38,7 @@ export default function Packages() {
         <Card padding={5}>
           <VStack gap={3}>
             <Heading level={3}>{t(CORE.name)}</Heading>
-            <Heading level={2} type="display-3" color="accent">{chf(CORE.price)}</Heading>
+            <Text type="large" weight="semibold" color="accent">{chf(CORE.price)}</Text>
             <Text color="secondary">{t(CORE.tagline)}</Text>
             <VStack gap={1.5} as="ul" style={ul}>
               {BASE_FEATURES.map((f, i) => li('b' + i, f))}
@@ -53,7 +53,7 @@ export default function Packages() {
               <Heading level={3}>{t(PRO.name)}</Heading>
               <Badge variant="yellow" label={t({ de: 'Empfohlen', en: 'Recommended' })} />
             </HStack>
-            <Heading level={2} type="display-3" color="accent">{chf(PRO.price)}</Heading>
+            <Text type="large" weight="semibold" color="accent">{chf(PRO.price)}</Text>
             <Text color="secondary">{t(PRO.tagline)}</Text>
             <VStack gap={1.5} as="ul" style={ul}>
               {li('all', { de: 'Alles aus Core, plus:', en: 'Everything in Core, plus:' }, true)}
@@ -72,8 +72,8 @@ export default function Packages() {
         <Card padding={5}>
           <VStack gap={3}>
             <Heading level={3}>{t({ de: 'Automation Add-on', en: 'Automation add-on' })}</Heading>
-            <Heading level={2} type="display-3" color="accent">{t({ de: `ab ${chf(AUTOMATION_MONTHLY)} / Monat`, en: `from ${chf(AUTOMATION_MONTHLY)} / month` })}</Heading>
-            <Text color="secondary">{t({ de: 'Für Betriebe, die nur Automationen wollen, auch ohne neue Website. Keine Einrichtungsgebühr.', en: 'For businesses that only want automations, even without a new website. No setup fee.' })}</Text>
+            <Text type="large" weight="semibold" color="accent">{t({ de: `ab ${chf(AUTOMATION_MONTHLY)} / Monat`, en: `from ${chf(AUTOMATION_MONTHLY)} / month` })}</Text>
+            <Text color="secondary">{t({ de: `Das Bündel aller Automationen, mit oder ohne neue Website buchbar. Keine Einrichtungsgebühr. Nur Anfragen beantworten und nachfassen? Das macht der Anfragen-Autopilot ab ${chf(AUTOPILOT_MONTHLY)} / Monat.`, en: `The bundle of all automations, bookable with or without a new website. No setup fee. Only need enquiries answered and followed up? That is the Enquiry Autopilot from ${chf(AUTOPILOT_MONTHLY)} / month.` })}</Text>
             <VStack gap={1.5} as="ul" style={ul}>
               {AUTOMATIONS.map(a => li(a.id, a.name))}
             </VStack>
@@ -124,8 +124,8 @@ export default function Packages() {
       </Card>
       <Text type="supporting">
         {t({
-          de: 'Website-Preise einmalig in CHF, Automationen monatlich. Domain und Drittkosten zum Selbstkostenpreis. Die Hälfte bei Auftrag, der Rest bei Fertigstellung.',
-          en: 'Website prices are one-time in CHF, automations monthly. Domain and third-party costs at cost. Half on order, the rest on completion.',
+          de: 'Website-Preise einmalig in CHF, Automationen monatlich. Drittkosten zum Selbstkostenpreis. Die Hälfte bei Auftrag, der Rest bei Fertigstellung.',
+          en: 'Website prices are one-time in CHF, automations monthly. Third-party costs at cost. Half on order, the rest on completion.',
         })}
       </Text>
     </VStack>

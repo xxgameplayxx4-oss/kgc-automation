@@ -1,6 +1,16 @@
+import { useSyncExternalStore } from 'react';
+import { Stack } from '@astryxdesign/core/Stack';
 import { VStack } from '@astryxdesign/core/Layout';
 import { Heading, Text } from '@astryxdesign/core/Text';
 import { useT } from '../data';
+import InViewVideo from './InViewVideo';
+
+const RQ = '(prefers-reduced-motion: reduce)';
+const useReduced = () => useSyncExternalStore(
+  cb => { const m = window.matchMedia(RQ); m.addEventListener('change', cb); return () => m.removeEventListener('change', cb); },
+  () => window.matchMedia(RQ).matches,
+  () => false,
+);
 
 // Demo of the cinematic walk-in hero, using the real walk-in film from the Mobile Master site (KGC, 2026-11-16).
 const CSS = `
@@ -15,17 +25,19 @@ const CSS = `
 
 export default function HeroFilmDemo() {
   const t = useT();
-  const reduce = typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const reduce = useReduced();
   return (
     <VStack id="film-demo" gap={3} style={{ scrollMarginTop: 'var(--spacing-8)' }}>
       <style>{CSS}</style>
       <Heading level={3}>{t({ de: 'So wirkt ein Film im Startbereich', en: 'How a film looks in the hero' })}</Heading>
       <Text color="secondary">{t({ de: 'Ein kurzer, ruhiger Film statt eines Stockfotos: Besucher sehen sofort, wo sie hineingehen.', en: 'A short, calm film instead of a stock photo: visitors see right away where they are walking in.' })}</Text>
-      <div className="kgc-film">
-        <video src="/work/video/mobilemaster-walkin.mp4" poster="/projects/mobilemaster-desktop.webp" muted loop playsInline autoPlay={!reduce} preload="metadata" aria-hidden="true" />
-        <div className="shade" />
-        <div className="bar" style={{ top: 0 }} />
-        <div className="bar" style={{ bottom: 0 }} />
+      <Stack className="kgc-film">
+        {reduce
+          ? <img src="/projects/mobilemaster-desktop.webp" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+          : <InViewVideo src="/work/video/mobilemaster-walkin.mp4" poster="/projects/mobilemaster-desktop.webp" aria-hidden="true" />}
+        <Stack className="shade" />
+        <Stack className="bar" style={{ top: 0 }} />
+        <Stack className="bar" style={{ bottom: 0 }} />
         <VStack gap={2} hAlign="start" vAlign="end" style={{ position: 'absolute', inset: 0, padding: 'var(--spacing-6)', paddingBottom: '12%', color: '#fff' }}>
           <Text size="sm" style={{ color: '#fff', opacity: 0.8, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Mobile Master · Baden-Turgi</Text>
           <Heading level={2} type="display-3" style={{ color: '#fff' }}>{t({ de: 'Willkommen. Treten Sie ein.', en: 'Welcome. Step inside.' })}</Heading>
@@ -33,7 +45,7 @@ export default function HeroFilmDemo() {
         <Text size="sm" style={{ position: 'absolute', top: '11%', left: 'var(--spacing-4)', color: '#fff', background: 'rgba(0,0,0,.55)', padding: '2px var(--spacing-2)', borderRadius: 'var(--radius-2)' }}>
           {t({ de: 'Beispiel: Kundenprojekt Mobile Master', en: 'Example: client project Mobile Master' })}
         </Text>
-      </div>
+      </Stack>
     </VStack>
   );
 }

@@ -14,7 +14,7 @@ type Flow = { id: string; tab: L; steps: Step[] };
 const FLOWS: Flow[] = [
   { id: 'autopilot', tab: { de: 'Autopilot', en: 'Autopilot' }, steps: [
     { from: { de: 'Anruf 22:14', en: 'Call 22:14' }, text: { de: 'Verpasster Anruf, niemand erreichbar.', en: 'Missed call, nobody available.' }, badge: { v: 'warning', label: { de: 'Verpasst', en: 'Missed' } } },
-    { from: { de: 'SMS, 22:15', en: 'SMS, 22:15' }, text: { de: 'Danke für Ihren Anruf! Hier können Sie zurückrufen oder direkt einen Termin buchen: kgc.ch/termin', en: 'Thanks for calling! Request a callback or book a slot here: kgc.ch/termin' }, badge: { v: 'info', label: { de: 'Innert 1 Minute', en: 'Within 1 minute' } } },
+    { from: { de: 'SMS, 22:15', en: 'SMS, 22:15' }, text: { de: 'Danke für Ihren Anruf! Rückruf anfordern oder direkt Termin buchen: muster-sanitaer.ch/termin', en: 'Thanks for calling! Request a callback or book a slot here: muster-sanitaer.ch/termin' }, badge: { v: 'info', label: { de: 'Innert 1 Minute', en: 'Within 1 minute' } } },
     { from: { de: 'Anfragen-Liste', en: 'Enquiry list' }, text: { de: 'Alles an einem Ort:', en: 'Everything in one place:' }, rows: [[{ de: 'Anruf 22:14', en: 'Call 22:14' }, '✓'], [{ de: 'WhatsApp 18:40', en: 'WhatsApp 18:40' }, '✓'], [{ de: 'Formular 16:02', en: 'Form 16:02' }, '✓']] },
   ] },
   { id: 'offerte', tab: { de: 'Offerte', en: 'Quote' }, steps: [

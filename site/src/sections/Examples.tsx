@@ -45,9 +45,9 @@ function WorkCard({ w }: { w: Work }) {
 }
 
 const TABS = [
-  { id: 'hero', label: { de: 'Startbereich', en: 'Hero' } },
-  { id: 'funnel', label: { de: 'Buchungs-Funnel', en: 'Booking funnel' } },
-  { id: 'mail', label: { de: 'E-Mails mit Design', en: 'Designed emails' } },
+  { id: 'hero', label: { de: 'Start', en: 'Hero' } },
+  { id: 'funnel', label: { de: 'Buchung', en: 'Booking' } },
+  { id: 'mail', label: { de: 'E-Mails', en: 'Emails' } },
 ] as const;
 
 // One example at a time keeps the Leistungen page short.
@@ -59,7 +59,7 @@ export default function Examples() {
       <VStack gap={6} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
         <VStack gap={3}>
           <Eyebrow>{t({ de: 'Beispiele', en: 'Examples' })}</Eyebrow>
-          <Heading level={2}>{t({ de: 'So sehen die Zusätze aus', en: 'What the add-ons look like' })}</Heading>
+          <Heading level={2}>{t({ de: 'So sieht das aus', en: 'What it looks like' })}</Heading>
         </VStack>
         <TabList value={tab} onChange={setTab} role="tablist" hasDivider>
           {TABS.map(x => <Tab key={x.id} value={x.id} label={t(x.label)} panelId={"ex-" + x.id} />)}
@@ -80,12 +80,12 @@ export default function Examples() {
         )}
         {tab === 'mail' && (
           <VStack id="ex-mail" role="tabpanel" gap={5}>
-            <Text type="large" color="secondary">{t({ de: 'Dieselbe Reservation, einmal ohne und einmal mit Design. Schalten Sie um und vergleichen Sie.', en: 'The same booking, once without and once with design. Switch and compare.' })}</Text>
+            <Text type="large" color="secondary">{t({ de: 'Dieselbe Reservation, einmal ohne und einmal mit Design. Ziehen Sie den Regler und vergleichen Sie.', en: 'The same booking, once without and once with design. Drag the slider and compare.' })}</Text>
             <Emails />
           </VStack>
         )}
         <HStack>
-          <Button icon={ic(UI.arrow)} variant="primary" href="#konfigurator" label={t({ de: 'Im Konfigurator hinzufügen', en: 'Add in the configurator' })} />
+          <Button icon={ic(UI.arrow)} variant="primary" href="#konfigurator" label={t({ de: 'Paket zusammenstellen', en: 'Build your package' })} />
         </HStack>
       </VStack>
     </Section>

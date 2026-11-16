@@ -15,6 +15,13 @@ export const mailto = (subject: string, body = '') =>
   `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 // The configurator leaves its summary here before sending the visitor to the contact page.
 export const contactDraft = { subject: '', body: '' };
+export const CONTACT_EVENT = 'cung-contact';
+/** Every #kontakt button calls this: sets a fresh subject/body (never stale) and tells an already-open contact form. */
+export const openContact = (subject = 'Anfrage', body = '') => {
+  contactDraft.subject = subject;
+  contactDraft.body = body;
+  window.dispatchEvent(new Event(CONTACT_EVENT));
+};
 export const PHONE = '+41 76 330 79 11';
 
 export type TierId = 'core' | 'pro';

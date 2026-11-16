@@ -31,7 +31,7 @@ const MORE: { name: L; what: L; who: L }[] = [
 
 const TRUST: L[] = [
   { de: 'Ein Ansprechpartner aus Brugg, ich komme bei Ihnen vorbei.', en: 'One contact from Brugg, I come to see you in person.' },
-  { de: 'Nichts geht ohne Ihre Freigabe an Kunden raus.', en: 'Nothing goes out to customers without your approval.' },
+  { de: 'Keine Offerte und keine Rechnung geht ohne Ihre Freigabe raus.', en: 'No quote and no invoice goes out without your approval.' },
   { de: 'Ihre Daten bleiben in der Schweiz oder der EU, ich sage Ihnen genau, wo.', en: 'Your data stays in Switzerland or the EU, and I tell you exactly where.' },
   { de: 'Wenn ein günstiges Programm reicht, sage ich Ihnen das.', en: 'If a cheap tool is enough, I will tell you so.' },
   { de: 'Monatlich, kein grosser Betrag im Voraus.', en: 'Monthly, no large amount up front.' },
@@ -67,10 +67,10 @@ export default function Automations() {
         <WorkflowPreviews />
       </VStack>
 
-      <Card id="autopilot"variant="yellow" elevation="low" padding={5}>
+      <Card id="autopilot" variant="yellow" elevation="low" padding={5}>
         <VStack gap={3}>
-          <Heading level={2}>{t({ de: 'Anfragen-Autopilot', en: 'Enquiry autopilot' })}</Heading>
-          <Heading level={3} color="accent">{t({ de: `ab ${chf(AUTOPILOT_MONTHLY)} / Monat`, en: `from ${chf(AUTOPILOT_MONTHLY)} / month` })}</Heading>
+          <Heading level={2}>{t({ de: 'Anfragen-Autopilot', en: 'Enquiry Autopilot' })}</Heading>
+          <Text type="large" weight="semibold" color="accent">{t({ de: `ab ${chf(AUTOPILOT_MONTHLY)} / Monat`, en: `from ${chf(AUTOPILOT_MONTHLY)} / month` })}</Text>
           <Text>{t({ de: 'Keine Anfrage bleibt mehr liegen. Das läuft im Hintergrund:', en: 'No enquiry gets left behind. This runs in the background:' })}</Text>
           <VStack gap={1.5} as="ol" style={{ margin: 0, paddingInlineStart: 'var(--spacing-4)' }}>
             {STEPS.map((s, i) => <li key={i}><Text size="sm">{t(s)}</Text></li>)}

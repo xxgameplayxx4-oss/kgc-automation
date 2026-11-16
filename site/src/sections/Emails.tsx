@@ -32,6 +32,7 @@ function Mail({ from, subject, children }: { from: string; subject: string; chil
 export default function Emails() {
   const t = useT();
   const [pos, setPos] = useState(50);
+  const [focus, setFocus] = useState(false);
   const clamp = (n: number) => Math.min(100, Math.max(0, n));
   const move = (e: PointerEvent<HTMLElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -112,10 +113,10 @@ export default function Emails() {
         <Text size="xsm" weight="semibold" style={{ ...tag, left: 'var(--spacing-2)' }}>{t({ de: 'Ohne Design', en: 'Without design' })}</Text>
         <Text size="xsm" weight="semibold" style={{ ...tag, right: 'var(--spacing-2)' }}>{t({ de: 'Mit Design', en: 'With design' })}</Text>
         <Stack align="center" justify="center" style={{ position: 'absolute', top: 0, bottom: 0, left: `${pos}%`, width: '2px', marginInlineStart: '-1px', background: 'var(--color-text-primary)', pointerEvents: 'none' }}>
-          <Text size="sm" weight="bold" style={{ width: '2.25rem', height: '2.25rem', flexShrink: 0, display: 'grid', placeItems: 'center', borderRadius: '50%', background: 'var(--color-background-gray)', border: '2px solid var(--color-text-primary)', boxShadow: '0 1px 6px rgba(0,0,0,.35)' }}>{'↔'}</Text>
+          <Text size="sm" weight="bold" style={{ width: '2.25rem', height: '2.25rem', flexShrink: 0, display: 'grid', placeItems: 'center', borderRadius: '50%', background: 'var(--color-background-gray)', border: '2px solid var(--color-text-primary)', boxShadow: focus ? '0 0 0 3px var(--color-accent), 0 1px 6px rgba(0,0,0,.35)' : '0 1px 6px rgba(0,0,0,.35)' }}>{'↔'}</Text>
         </Stack>
         <input
-          type="range" min={0} max={100} step={1} value={Math.round(pos)} onChange={(e) => setPos(Number(e.target.value))} onKeyDown={onKey}
+          type="range" min={0} max={100} step={1} value={Math.round(pos)} onChange={(e) => setPos(Number(e.target.value))} onKeyDown={onKey} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
           aria-label={t({ de: 'Vergleich Ohne Design / Mit Design', en: 'Compare without / with design' })}
           style={{ position: 'absolute', width: 1, height: 1, opacity: 0, overflow: 'hidden', clip: 'rect(0 0 0 0)', pointerEvents: 'none' }}
         />

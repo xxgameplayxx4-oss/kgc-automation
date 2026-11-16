@@ -220,7 +220,7 @@ function Site({ pro, has, phone, mark }: { pro: boolean; has: (id: string) => bo
             <Head k={{ de: 'Diese Woche', en: 'This week' }} title={{ de: 'Die Karte', en: 'The menu' }} />
             <Stack direction="horizontal" gap={3}>
               {([['start', { de: 'Vorspeisen', en: 'Starters' }], ['main', { de: 'Hauptgang', en: 'Mains' }], ['sweet', { de: 'Dessert', en: 'Dessert' }]] as [string, T][]).map(([k, n]) => (
-                <Text key={k} as="span" role="button" tabIndex={0} color="inherit" onClick={() => setMenuTab(k)} style={{ ...caps, background: 'none', border: 0, padding: '0.4em 0', cursor: 'pointer', color: menuTab === k ? C.ink : C.soft, borderBottom: `1px solid ${menuTab === k ? C.ink : 'transparent'}` }}>{t(n)}</Text>
+                <Text key={k} as="span" role="button" tabIndex={0} aria-pressed={menuTab === k} color="inherit" onClick={() => setMenuTab(k)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setMenuTab(k); } }} style={{ ...caps, background: 'none', border: 0, padding: '0.4em 0', cursor: 'pointer', color: menuTab === k ? C.ink : C.soft, borderBottom: `1px solid ${menuTab === k ? C.ink : 'transparent'}` }}>{t(n)}</Text>
               ))}
             </Stack>
           </Stack>
@@ -451,9 +451,7 @@ export default function Configurator() {
     ...(auto ? [`${t({ de: 'Automation Add-on', en: 'Automation add-on' })}: ${from} ${chf(AUTOMATION_MONTHLY)} / ${month}`] : []),
     ...(care ? [`${t({ de: 'Wartung', en: 'Maintenance' })}: ${chf(CARE[tier.id])} / ${month}`] : []),
     '',
-    t({ de: 'Name:', en: 'Name:' }),
     t({ de: 'Geschäft:', en: 'Business:' }),
-    t({ de: 'Telefon:', en: 'Phone:' }),
   ].join('\n');
 
   return (

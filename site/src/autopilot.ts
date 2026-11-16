@@ -6,7 +6,7 @@ export type Buchung = { name: string; telefon: string; email: string; termin_art
 export async function sendBuchung(b: Buchung): Promise<'sent' | 'preview' | 'error'> {
   if (!AUTOPILOT_URL) return 'preview';
   try {
-    const r = await fetch(`${AUTOPILOT_URL}/webhook/buchung`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) });
+    const r = await fetch(`${AUTOPILOT_URL}/webhook/buchung`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b), signal: AbortSignal.timeout(8000) });
     return r.ok ? 'sent' : 'error';
   } catch {
     return 'error';

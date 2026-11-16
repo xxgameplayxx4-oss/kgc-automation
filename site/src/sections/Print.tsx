@@ -31,7 +31,7 @@ export default function Print() {
         <VStack gap={3}>
           <Eyebrow>Print</Eyebrow>
           <Heading level={2}>{t({ de: 'Flyer und Visitenkarten im Design Ihrer Website', en: 'Flyers and business cards in your website’s design' })}</Heading>
-          <Text type="large" color="secondary">{t({ de: 'Gleiche Farben, gleiche Schrift, gleicher Auftritt. Alles aus einem Guss.', en: 'Same colors, same type, same look. All of one piece.' })}</Text>
+          <Text type="large" color="secondary">{t({ de: 'Gleiche Farben, gleiche Schrift, gleicher Auftritt. Alles aus einem Guss.', en: 'Same colours, same type, same look. All of one piece.' })}</Text>
         </VStack>
         <Grid columns={{ minWidth: 300, max: 2 }} gap={6}>
           <VStack gap={4}>
@@ -55,7 +55,7 @@ export default function Print() {
                 <Text type="supporting">{t({ de: 'Visitenkarte 85 × 55 mm, Vorder- und Rückseite', en: 'Business card 85 × 55 mm, front and back' })}</Text>
               </VStack>
             </Grid>
-            <Text type="supporting">{t({ de: 'Beispiele mit erfundenen Firmen. Ihre Version entsteht in den Farben und Schriften Ihrer Website.', en: 'Examples use made-up businesses. Yours is made in your website’s colors and fonts.' })}</Text>
+            <Text type="supporting">{t({ de: 'Beispiele mit erfundenen Firmen. Ihre Version entsteht in den Farben und Schriften Ihrer Website.', en: 'Examples use made-up businesses. Yours is made in your website’s colours and fonts.' })}</Text>
           </VStack>
           <VStack gap={4}>
             {items.map(a => (

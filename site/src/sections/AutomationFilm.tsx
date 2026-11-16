@@ -25,7 +25,7 @@ export const LINES: Line[] = [
   { at: { de: 36.45, en: 37.9 }, text: { de: 'Der Termin steht automatisch in Ihrem Kalender, und am Tag davor kommt die Erinnerung.', en: 'The appointment is in your calendar automatically, and the reminder goes out the day before.' } },
   { at: { de: 42.45, en: 44 }, text: { de: 'Offerte verschickt? Nach fünf Tagen wird freundlich nachgefasst.', en: 'Quote sent? After five days, a friendly follow-up goes out.' } },
   { at: { de: 46.55, en: 48.65 }, text: { de: 'Auftrag erledigt? Die Bitte um eine Google-Bewertung geht von selbst raus. Und offene Rechnungen werden höflich erinnert.', en: 'Job done? The request for a Google review goes out on its own. And unpaid invoices get a polite reminder.' } },
-  { at: { de: 53.35, en: 57.45 }, text: { de: 'Nichts geht ohne Ihre Freigabe raus. Ihre Daten bleiben in der Schweiz oder der EU.', en: 'Nothing goes out without your approval. Your data stays in Switzerland or the EU.' } },
+  { at: { de: 53.35, en: 57.45 }, text: { de: 'Keine Offerte und keine Rechnung geht ohne Ihre Freigabe raus. Ihre Daten bleiben in der Schweiz oder der EU.', en: 'No quote and no invoice goes out without your approval. Your data stays in Switzerland or the EU.' } },
   { at: { de: 59.4, en: 64.1 }, text: { de: `Automationen ab ${AUTOPILOT_MONTHLY} Franken im Monat, ohne Einrichtungsgebühr.`, en: `Automations from ${AUTOPILOT_MONTHLY} francs a month, with no setup fee.` } },
   { at: { de: 64.1, en: 69.3 }, text: { de: 'Buchen Sie jetzt Ihr kostenloses Gespräch.', en: 'Book your free call now.' } },
 ];
@@ -185,7 +185,7 @@ function Scene({ i }: { i: number }) {
     );
     case 11: return (
       <Center gap={1}>
-        <Text color="inherit" style={{ letterSpacing: '0.2em', textTransform: 'uppercase', fontSize: '0.8rem', color: F.soft }}>{t({ de: 'Automations-Add-on', en: 'Automation add-on' })}</Text>
+        <Text color="inherit" style={{ letterSpacing: '0.2em', textTransform: 'uppercase', fontSize: '0.8rem', color: F.soft }}>{t({ de: 'Anfragen-Autopilot', en: 'Enquiry Autopilot' })}</Text>
         <Big color={F.orange}>{t({ de: `ab ${chf(AUTOPILOT_MONTHLY)} / Monat`, en: `from ${chf(AUTOPILOT_MONTHLY)} / month` })}</Big>
         <Text size="sm" color="inherit" style={{ color: F.soft }}>{t({ de: 'Keine Einrichtungsgebühr', en: 'No setup fee' })}</Text>
       </Center>
@@ -230,7 +230,7 @@ export function FilmPlayer({ lines, voice, scene, nightUntil = 0, label }: { lin
     <Stack gap={2}>
       <Card padding={0} elevation="high" style={{ overflow: 'hidden', background: F.night /* the film keeps its own night look in both themes */ }}>
         <AspectRatio ratio={16 / 9}>
-          <Stack onClick={toggle} style={{ position: 'relative', height: '100%', cursor: 'pointer', color: F.ink, overflow: 'hidden',
+          <Stack onClick={toggle} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } }} role="button" tabIndex={0} aria-label={playing ? t({ de: 'Film pausieren', en: 'Pause film' }) : t({ de: 'Film abspielen', en: 'Play film' })} style={{ position: 'relative', height: '100%', cursor: 'pointer', color: F.ink, overflow: 'hidden',
             background: night ? `radial-gradient(60% 70% at 70% 40%, rgba(40,60,90,.35), transparent), ${F.night}` : `radial-gradient(70% 80% at 50% 30%, rgba(252,163,17,.18), transparent), ${F.night}`, transition: 'background 1s' }}>
             <Stack key={idx} data-scene="" style={fill}>{scene(idx)}</Stack>
             {/* subtitles */}
@@ -249,12 +249,14 @@ export function FilmPlayer({ lines, voice, scene, nightUntil = 0, label }: { lin
         </AspectRatio>
       </Card>
       <Stack direction="horizontal" gap={2} align="center">
-        <Button size="sm" variant="secondary" icon={ic(playing ? UI.pause : UI.play)} label={playing ? t({ de: 'Pause', en: 'Pause' }) : t({ de: 'Abspielen', en: 'Play' })} onClick={toggle} />
-        <Stack role="slider" aria-label={t({ de: 'Position im Film', en: 'Film position' })} aria-valuemin={0} aria-valuemax={Math.round(dur)} aria-valuenow={Math.round(time)} tabIndex={0}
+        <Button variant="secondary" icon={ic(playing ? UI.pause : UI.play)} label={playing ? t({ de: 'Pause', en: 'Pause' }) : t({ de: 'Abspielen', en: 'Play' })} onClick={toggle} />
+        <Stack role="slider" aria-label={t({ de: 'Position im Film', en: 'Film position' })} aria-valuemin={0} aria-valuemax={Math.round(dur)} aria-valuenow={Math.round(time)} aria-valuetext={`${Math.floor(time / 60)}:${String(Math.floor(time % 60)).padStart(2, '0')} / ${Math.floor(dur / 60)}:${String(Math.floor(dur % 60)).padStart(2, '0')}`} tabIndex={0}
           onClick={e => { const r = e.currentTarget.getBoundingClientRect(); seek(((e.clientX - r.left) / r.width) * dur); }}
-          onKeyDown={e => { if (e.key === 'ArrowRight') seek(Math.min(dur, time + 5)); if (e.key === 'ArrowLeft') seek(Math.max(0, time - 5)); }}
-          style={{ flex: 1, height: '0.4rem', borderRadius: 'var(--radius-full)', background: 'var(--color-background-muted)', cursor: 'pointer', position: 'relative' }}>
-          <Stack style={{ position: 'absolute', insetBlock: 0, left: 0, width: `${(time / dur) * 100}%`, borderRadius: 'var(--radius-full)', background: 'var(--color-accent)' }} />
+          onKeyDown={e => { if (e.key === 'ArrowRight') seek(Math.min(dur, time + 5)); if (e.key === 'ArrowLeft') seek(Math.max(0, time - 5)); if (e.key === 'Home') seek(0); if (e.key === 'End') seek(dur); }}
+          justify="center" style={{ flex: 1, height: '2.5rem', cursor: 'pointer' }}>
+          <Stack style={{ position: 'relative', height: '0.4rem', borderRadius: 'var(--radius-full)', background: 'var(--color-background-muted)' }}>
+            <Stack style={{ position: 'absolute', insetBlock: 0, left: 0, width: `${(time / dur) * 100}%`, borderRadius: 'var(--radius-full)', background: 'var(--color-accent)' }} />
+          </Stack>
         </Stack>
         <Text size="xsm" color="secondary" hasTabularNumbers>{`${Math.floor(time / 60)}:${String(Math.floor(time % 60)).padStart(2, '0')}`}</Text>
       </Stack>

@@ -15,6 +15,7 @@ import { useState, useSyncExternalStore } from 'react';
 import { useT, type T } from '../data';
 import Eyebrow from './Eyebrow';
 import { UI, ic } from './uiIcons';
+import InViewVideo from './InViewVideo';
 
 // Screenshots live in public/projects/<slug>-desktop.webp and <slug>-phone.webp.
 // Only paid client sites get a name and a link; concept drafts stay anonymised.
@@ -34,7 +35,7 @@ export const CLIENTS: Project[] = [
   {
     slug: 'mjgroup', title: { de: 'MJ Group', en: 'MJ Group' }, place: 'Tessin',
     kind: { de: 'Family Office · Website', en: 'Family office · website' },
-    tags: [{ de: 'Seriöser Auftritt', en: 'Premium look' }, { de: 'Mehrsprachig', en: 'Multilingual' }],
+    tags: [{ de: 'Seriöser Auftritt', en: 'Professional look' }, { de: 'Mehrsprachig', en: 'Multilingual' }],
   },
   {
     slug: 'mobilemaster', title: { de: 'Mobile Master', en: 'Mobile Master' }, url: 'https://mobile-master-entwurf.netlify.app', place: 'Baden-Turgi',
@@ -44,7 +45,7 @@ export const CLIENTS: Project[] = [
   {
     slug: 'edge', title: { de: 'Trading-Journal', en: 'Trading journal' }, place: 'Web-App',
     kind: { de: 'Web-App für einen Kunden', en: 'Web app for a client' },
-    tags: [{ de: 'Kalender mit Tages-P&L', en: 'Calendar with daily P&L' }, { de: 'CSV- und Screenshot-Import', en: 'CSV & screenshot import' }, { de: 'KI-Auswertung', en: 'AI parsing' }],
+    tags: [{ de: 'Kalender mit Tages-P&L', en: 'Calendar with daily P&L' }, { de: 'CSV- und Screenshot-Import', en: 'CSV & screenshot import' }, { de: 'KI-Auswertung', en: 'AI analysis' }],
   },
 ];
 
@@ -72,7 +73,7 @@ const useReducedMotion = () => useSyncExternalStore(
 export function HeroVideo({ src, poster, label }: { src: string; poster: string; label: string }) {
   const reduce = useReducedMotion();
   if (reduce) return <img src={poster} alt={label} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }} />;
-  return <video src={src} poster={poster} aria-label={label} autoPlay muted loop playsInline preload="metadata" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />;
+  return <InViewVideo src={src} poster={poster} aria-label={label} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />;
 }
 
 /** Screenshot of a site; for video sites a recording of the live hero (header and moving video) is laid over its top. */
@@ -84,7 +85,7 @@ export function Screen({ p, kind, alt, lazy }: { p: Project; kind: 'desktop' | '
     <Stack style={{ position: 'relative' }}>
       <img src={img} alt={alt} loading={lazy ? 'lazy' : undefined} decoding="async" style={{ width: '100%', display: 'block' }} />
       {p.video && !reduce && (
-        <video src={`${p.video}-${kind}.mp4`} aria-hidden autoPlay muted loop playsInline preload="metadata"
+        <InViewVideo src={`${p.video}-${kind}.mp4`} aria-hidden
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', aspectRatio: HERO_RATIO[kind], objectFit: 'cover', display: 'block' }} />
       )}
     </Stack>
@@ -138,7 +139,7 @@ export function PreviewDialog({ p, title, open, setOpen }: { p: Project; title: 
       <VStack gap={4}>
         <DialogHeader title={title} subtitle={t({ de: 'Scrollen Sie in Laptop und Handy durch die Website.', en: 'Scroll through the site on laptop and phone.' })} onOpenChange={setOpen} />
         <Viewer p={p} alt={title} />
-        {p.url && <HStack><Button icon={ic(UI.external)} variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Live-Website öffnen', en: 'Open live website' })} /></HStack>}
+        {p.url && <HStack><Button icon={ic(UI.external)} variant="ghost" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Live-Website öffnen', en: 'Open live website' })} /></HStack>}
       </VStack>
     </Dialog>
   );
@@ -154,7 +155,7 @@ export function Preview({ p }: { p: Project }) {
       <ClickableCard variant="transparent" padding={0} label={t({ de: `${title}: Vorschau öffnen`, en: `${title}: open preview` })} onClick={() => setOpen(true)}>
         <Devices p={p} alt={title} />
       </ClickableCard>
-      <HStack><Button variant="secondary" size="sm" icon={ic(UI.eye)} onClick={() => setOpen(true)} label={t({ de: 'Vorschau', en: 'Preview' })} /></HStack>
+      <HStack><Button variant="secondary" icon={ic(UI.eye)} onClick={() => setOpen(true)} label={t({ de: 'Vorschau', en: 'Preview' })} /></HStack>
       <PreviewDialog p={p} title={title} open={open} setOpen={setOpen} />
     </>
   );
@@ -177,7 +178,7 @@ function ProjectCard({ p, paid }: { p: Project; paid?: boolean }) {
         </HStack>
         {p.url && (
           <HStack>
-            <Button icon={ic(UI.external)} variant="ghost" size="sm" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Website ansehen', en: 'View website' })} />
+            <Button icon={ic(UI.external)} variant="ghost" href={p.url} target="_blank" rel="noopener noreferrer" label={t({ de: 'Website ansehen', en: 'View website' })} />
           </HStack>
         )}
       </VStack>

@@ -4,7 +4,7 @@ import { Heading, Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import Eyebrow from './Eyebrow';
-import { AUTOPILOT_MONTHLY, BASE_PRICE, UPGRADE_PRICE, chf, contactDraft, useT } from '../data';
+import { AUTOMATION_MONTHLY, AUTOPILOT_MONTHLY, BASE_PRICE, UPGRADE_PRICE, chf, contactDraft, useT } from '../data';
 import { UI, ic } from './uiIcons';
 
 const wrap = { marginInline: 'auto', width: '100%' } as const;
@@ -89,8 +89,8 @@ export function AutopilotTeaser() {
             <Text weight="semibold">{t({ de: `ab ${chf(AUTOPILOT_MONTHLY)} / Monat`, en: `from ${chf(AUTOPILOT_MONTHLY)} / month` })}</Text>
             <Text color="secondary">
               {t({
-                de: 'Jede Anfrage bekommt sofort eine Antwort und wird nachverfolgt, ohne dass Sie daran denken müssen.',
-                en: 'Every enquiry gets an immediate reply and is followed up, without you having to remember.',
+                de: `Jede Anfrage bekommt sofort eine Antwort und wird nachverfolgt, ohne dass Sie daran denken müssen. Der Autopilot kümmert sich nur um Anfragen. Alle weiteren Automationen (Offerte, Rechnung, Mahnwesen, Termine) bündelt das Automation Add-on ab ${chf(AUTOMATION_MONTHLY)} / Monat.`,
+                en: `Every enquiry gets an immediate reply and is followed up, without you having to remember. The Autopilot only handles enquiries. All further automations (quotes, invoices, reminders, bookings) are bundled in the Automation Add-on from ${chf(AUTOMATION_MONTHLY)} / month.`,
               })}
             </Text>
           </VStack>

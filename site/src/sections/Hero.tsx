@@ -1,13 +1,12 @@
-import { useContext } from 'react';
 import { HStack, VStack } from '@astryxdesign/core/Layout';
 import { Heading, Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
-import { contactDraft, LangContext, useT } from '../data';
+import { contactDraft, useT } from '../data';
+import PromoFilm from './PromoFilm';
 import { UI, ic } from './uiIcons';
 
 export default function Hero() {
   const t = useT();
-  const { lang } = useContext(LangContext);
   return (
     <VStack id="top" as="section" hAlign="center" gap={8} paddingInline={4} paddingBlock={10}>
       <VStack gap={4} hAlign="center" maxWidth={760}>
@@ -32,22 +31,13 @@ export default function Hero() {
         </HStack>
         <Text type="supporting" justify="center">
           {t({
-            de: 'Ein Ansprechpartner aus Brugg · Nichts geht ohne Ihre Freigabe raus · Antwort innert 24 h',
-            en: 'One contact in Brugg · Nothing goes out without your approval · Reply within 24 h',
+            de: 'Ein Ansprechpartner aus Brugg · Keine Offerte ohne Ihre Freigabe · Antwort innert 24 h',
+            en: 'One contact in Brugg · No quote without your approval · Reply within 24 h',
           })}
         </Text>
       </VStack>
       <VStack width="100%" maxWidth={880}>
-        <video
-          key={lang}
-          controls
-          preload="none"
-          poster="/media/promo-poster.webp"
-          style={{ width: '100%', borderRadius: 'var(--radius-page)', aspectRatio: '16 / 9' }}
-        >
-          <source src={`/media/promo-${lang}.mp4`} type="video/mp4" />
-          <track kind="subtitles" src={`/media/promo-${lang}.vtt`} srcLang={lang} label={lang === 'de' ? 'Deutsch' : 'English'} />
-        </video>
+        <PromoFilm />
       </VStack>
     </VStack>
   );

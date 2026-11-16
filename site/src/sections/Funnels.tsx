@@ -14,7 +14,7 @@ import { useT, type T } from '../data';
 import { sendBuchung, type Buchung } from '../autopilot';
 import { UI, ic } from './uiIcons';
 
-// A working booking-funnel demo in the site's own theme. Nothing is sent anywhere.
+// A working booking-funnel demo in the site's own theme, for a fictional business (Praxis Muster). Sends only when AUTOPILOT_URL is set.
 
 type Choice = { id: string; name: T; meta: T; desc?: T };
 
@@ -59,7 +59,9 @@ function Choices({ items, value, onPick, columns = 3 }: { items: Choice[]; value
   );
 }
 
-function Done({ lines, onReset, preview, reply }: { lines: string[]; onReset: () => void; preview?: boolean; reply?: string }) {
+type SendState = 'pending' | 'preview' | 'sent' | 'error';
+
+function Done({ lines, onReset, status, reply }: { lines: string[]; onReset: () => void; status: SendState; reply?: string }) {
   const t = useT();
   return (
     <Stack gap={3} data-pop="">
@@ -68,13 +70,15 @@ function Done({ lines, onReset, preview, reply }: { lines: string[]; onReset: ()
       <Card variant="muted" padding={3}>
         <Stack gap={1}>{lines.map(l => <Text key={l} size="sm">{l}</Text>)}</Stack>
       </Card>
-      {preview && reply && (
+      {status === 'preview' && reply && (
         <Stack gap={1} style={{ maxWidth: '28rem' }}>
           <Text type="supporting" size="sm">{t({ de: 'WhatsApp-Vorschau', en: 'WhatsApp preview' })}</Text>
           <Card variant="muted" padding={3} style={{ borderRadius: 'var(--radius-lg)' }}><Text size="sm">{reply}</Text></Card>
         </Stack>
       )}
-      <Text type="supporting" size="sm">{t({ de: 'Demo: Es wurde nichts gesendet.', en: 'Demo: nothing was sent.' })}</Text>
+      {status === 'preview' && <Text type="supporting" size="sm">{t({ de: 'Demo: Es wurde nichts gesendet.', en: 'Demo: nothing was sent.' })}</Text>}
+      {status === 'sent' && <Text type="supporting" size="sm">{t({ de: 'Ihre Angaben wurden an den Anfragen-Autopilot übermittelt und für die Bestätigung verwendet.', en: 'Your details were passed to the Enquiry Autopilot and used for the confirmation.' })}</Text>}
+      {status === 'error' && <Text type="supporting" size="sm">{t({ de: 'Die Bestätigung konnte gerade nicht versendet werden. Bitte versuchen Sie es später erneut.', en: 'The confirmation could not be sent right now. Please try again later.' })}</Text>}
       <Stack direction="horizontal"><Button icon={ic(UI.retry)} variant="secondary" size="sm" label={t({ de: 'Nochmals ausprobieren', en: 'Try again' })} onClick={onReset} /></Stack>
     </Stack>
   );
@@ -86,14 +90,15 @@ function Contact({ onSubmit, cta }: { onSubmit: (k: Kontakt) => void; cta: T }) 
   const t = useT();
   const [k, setK] = useState<Kontakt>({ name: '', telefon: '', email: '', bemerkung: '' });
   const set = (f: keyof Kontakt) => (v: string) => setK(o => ({ ...o, [f]: v }));
-  const ok = k.name.trim().length > 1 && k.telefon.replace(/[s+]/g, '').length >= 9 && /S+@S+.S+/.test(k.email);
+  const ok = k.name.trim().length > 1 && k.telefon.replace(/[\s+]/g, '').length >= 9 && /^\S+@\S+\.\S+$/.test(k.email);
   return (
     <Stack gap={3} style={{ maxWidth: '28rem' }}>
-      <TextInput label="Name" value={k.name} onChange={set('name')} placeholder="Maria Muster" autoComplete="name" isRequired />
+      <TextInput label="Name" value={k.name} onChange={set('name')} placeholder="Maria Muster" autoComplete="name" />
       <TextInput type="tel" label={t({ de: 'Telefon / WhatsApp', en: 'Phone / WhatsApp' })} value={k.telefon} onChange={set('telefon')} placeholder="079 123 45 67" autoComplete="tel"
-        description={t({ de: 'Sie erhalten die Bestätigung sofort per WhatsApp.', en: 'You get the confirmation right away on WhatsApp.' })} isRequired />
-      <TextInput type="email" label="E-Mail" value={k.email} onChange={set('email')} placeholder="maria@beispiel.ch" autoComplete="email" isRequired />
+        description={t({ de: 'Sie erhalten die Bestätigung sofort per WhatsApp.', en: 'You get the confirmation right away on WhatsApp.' })} />
+      <TextInput type="email" label="E-Mail" value={k.email} onChange={set('email')} placeholder="maria@beispiel.ch" autoComplete="email" />
       <TextArea label={t({ de: 'Bemerkung', en: 'Note' })} value={k.bemerkung} onChange={set('bemerkung')} rows={3} isOptional />
+      <Text type="supporting" size="sm">{t({ de: 'Mit dem Absenden stimmen Sie zu, dass Ihre Angaben für die Terminbestätigung (WhatsApp, E-Mail) verwendet werden.', en: 'By submitting you agree that your details are used for the appointment confirmation (WhatsApp, email).' })}</Text>
       <Stack direction="horizontal">
         <Button variant="primary" icon={ic(UI.send)} label={t(cta)} isDisabled={!ok} onClick={() => onSubmit({ ...k, name: k.name.trim() })} />
       </Stack>
@@ -105,11 +110,11 @@ function Contact({ onSubmit, cta }: { onSubmit: (k: Kontakt) => void; cta: T }) 
 
 const MEETINGS: Choice[] = [
   { id: 'intro', name: { de: 'Erstgespräch', en: 'Intro call' }, meta: { de: '30 Min · kostenlos', en: '30 min · free' },
-    desc: { de: 'Kennenlernen per Telefon oder Video. Sie schildern Ihr Anliegen, wir klären, ob und wie ich helfen kann.', en: 'Get to know each other by phone or video. You describe your need, we check if and how I can help.' } },
+    desc: { de: 'Kennenlernen per Telefon oder Video. Sie schildern Ihr Anliegen, wir klären, ob und wie wir helfen können.', en: 'Get to know each other by phone or video. You describe your need, we check if and how we can help.' } },
   { id: 'consult', name: { de: 'Beratung', en: 'Consultation' }, meta: { de: '60 Min · CHF 60', en: '60 min · CHF 60' },
     desc: { de: 'Wir arbeiten konkret an Ihrem Fall: Analyse, Empfehlungen und klare nächste Schritte.', en: 'We work on your case: analysis, recommendations and clear next steps.' } },
   { id: 'onsite', name: { de: 'Termin vor Ort', en: 'On-site visit' }, meta: { de: '90 Min · CHF 150', en: '90 min · CHF 150' },
-    desc: { de: 'Ich komme zu Ihnen ins Geschäft und schaue mir alles direkt an.', en: 'I come to your business and look at everything in person.' } },
+    desc: { de: 'Wir kommen zu Ihnen ins Geschäft und schauen uns alles direkt an.', en: 'We come to your business and look at everything in person.' } },
 ];
 const SLOTS = ['09:00', '09:30', '10:00', '10:30', '11:00', '13:30', '14:00', '15:30', '16:00'];
 const WEEKDAYS: T[] = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((de, i) => ({ de, en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i] }));
@@ -134,9 +139,9 @@ function Calendar({ value, onPick }: { value?: Date; onPick: (d: Date) => void }
   return (
     <Stack gap={2}>
       <Stack direction="horizontal" justify="between" align="center">
-        <Button size="sm" variant="ghost" label="‹" isDisabled={offset === 0} onClick={() => setOffset(0)} />
+        <Button size="sm" variant="ghost" label={t({ de: 'Vorheriger Monat', en: 'Previous month' })} isDisabled={offset === 0} onClick={() => setOffset(0)} />
         <Text weight="semibold">{first.toLocaleDateString(locale, { month: 'long', year: 'numeric' })}</Text>
-        <Button size="sm" variant="ghost" label="›" isDisabled={offset === 1} onClick={() => setOffset(1)} />
+        <Button size="sm" variant="ghost" label={t({ de: 'Nächster Monat', en: 'Next month' })} isDisabled={offset === 1} onClick={() => setOffset(1)} />
       </Stack>
       <Grid columns={7} gap={1}>
         {WEEKDAYS.map(w => <Text key={w.en} size="xsm" color="secondary" justify="center">{t(w)}</Text>)}
@@ -152,7 +157,7 @@ function ConsultFunnel() {
   const [type, setType] = useState<string>();
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>();
-  const [done, setDone] = useState<{ name: string; reply: string; preview: boolean }>();
+  const [done, setDone] = useState<{ name: string; reply: string; status: SendState }>();
   const meeting = MEETINGS.find(m => m.id === type);
   const day = date?.toLocaleDateString(t({ de: 'de-CH', en: 'en-GB' }), { weekday: 'long', day: 'numeric', month: 'long' });
   const picked = [meeting && t(meeting.name), day, time].filter(Boolean) as string[];
@@ -162,17 +167,17 @@ function ConsultFunnel() {
   const submit = async (k: Kontakt) => {
     const pad = (n: number) => String(n).padStart(2, '0');
     const iso = date ? `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` : '';
-    const first = k.name.split(' ')[0];
-    const reply = t({ de: `Hallo ${first}, danke für Ihre Buchung am ${day} um ${time}. Wir freuen uns auf Sie!`, en: `Hi ${first}, thanks for your booking on ${day} at ${time}. We look forward to seeing you!` });
+    const first = k.name;
+    const reply = t({ de: `Guten Tag ${first}, danke für Ihre Buchung am ${day} um ${time}. Wir freuen uns auf Sie!`, en: `Hello ${first}, thanks for your booking on ${day} at ${time}. We look forward to seeing you!` });
     const b: Buchung = { name: k.name, telefon: k.telefon, email: k.email, termin_art: meeting ? meeting.name.de : '', datum: iso, uhrzeit: time ?? '', bemerkung: k.bemerkung };
-    setDone({ name: k.name, reply, preview: false }); // never blocks the confirmation
+    setDone({ name: k.name, reply, status: 'pending' }); // never blocks the confirmation
     const r = await sendBuchung(b);
-    setDone(d => d && { ...d, preview: r === 'preview' });
+    setDone(d => d && { ...d, status: r });
   };
 
   if (done) return (
     <Shell steps={steps} step={3} picked={[]}>
-      <Done onReset={reset} preview={done.preview} reply={done.reply} lines={[done.name, ...picked]} />
+      <Done onReset={reset} status={done.status} reply={done.reply} lines={[done.name, ...picked]} />
     </Shell>
   );
   return (
@@ -218,6 +223,7 @@ export default function Funnels() {
   const t = useT();
   return (
     <Stack gap={4}>
+      <Text type="supporting" size="sm">{t({ de: 'Beispiel: Praxis Muster. So könnte die Terminbuchung für Ihr Geschäft aussehen.', en: 'Example: Praxis Muster. This is how appointment booking could look for your business.' })}</Text>
       <ConsultFunnel />
       <Text type="supporting" size="sm">
         {t({ de: '3 Schritte: Art, Datum und Zeit, Kontakt. Passt für Beratung, Coiffeur, Praxis.', en: '3 steps: type, date and time, contact. Fits advisors, salons, practices.' })}
