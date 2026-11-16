@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
@@ -37,11 +37,53 @@ export const VOICE = { de: './media/automationen-de.mp3', en: './media/automatio
 export const F = { night: '#05070a', panel: '#15171b', line: 'rgba(255,255,255,.12)', ink: '#f4f2ee', soft: 'rgba(244,242,238,.65)', orange: '#FCA311', red: '#ff5b4f', green: '#38c172' };
 const fill = { position: 'absolute', inset: 0 } as const;
 
-export const Phone = ({ children, glow }: { children: ReactNode; glow?: string }) => (
-  <Stack style={{ height: '82%', aspectRatio: '9 / 16', flexShrink: 0, borderRadius: '1.6rem', padding: '0.4rem', background: '#000', boxShadow: `0 0 0 1px ${F.line}, 0 30px 80px -20px ${glow ?? 'rgba(0,0,0,.8)'}` }}>
-    <Stack gap={1} padding={2} style={{ flex: 1, borderRadius: '1.25rem', background: F.panel, overflow: 'hidden', color: F.ink }}>{children}</Stack>
-  </Stack>
+// KGC: "make the phone a real iPhone". Titanium frame, side buttons, Dynamic Island, iOS status bar and home bar.
+// The screen is drawn at a fixed design size and scaled to fit, so it looks the same on a phone and on a desktop.
+const TI = 'linear-gradient(135deg, #4a4c50 0%, #a7a9ad 16%, #55575c 38%, #26282b 60%, #7d7f84 82%, #3a3c40 100%)';
+const Btn = ({ side, top, h }: { side: 'left' | 'right'; top: string; h: string }) => (
+  <Stack aria-hidden="true" style={{ position: 'absolute', [side]: '-1.6%', top, height: h, width: '1.8%', borderRadius: '0.2rem', background: TI }} />
 );
+const Bars = () => (
+  <svg viewBox="0 0 18 12" width="1.05rem" aria-hidden="true"><g fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1" /><rect x="5" y="5.5" width="3" height="6.5" rx="1" /><rect x="10" y="3" width="3" height="9" rx="1" /><rect x="15" y="0" width="3" height="12" rx="1" /></g></svg>
+);
+const Wifi = () => (
+  <svg viewBox="0 0 16 12" width="0.95rem" aria-hidden="true"><path fill="currentColor" d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3A10.4 10.4 0 0 0 8 .4 10.4 10.4 0 0 0 .8 3.3L2 4.6a8.6 8.6 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.7 6.7 0 0 0 8 4a6.7 6.7 0 0 0-4.6 1.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3zM8 12l2.3-2.5a3.2 3.2 0 0 0-4.6 0z" /></svg>
+);
+const Battery = () => (
+  <svg viewBox="0 0 27 12" width="1.6rem" aria-hidden="true"><rect x=".6" y=".6" width="22.8" height="10.8" rx="3.2" fill="none" stroke="currentColor" strokeOpacity=".45" strokeWidth="1.2" /><rect x="2.3" y="2.3" width="15" height="7.4" rx="1.8" fill="currentColor" /><path d="M25 4v4c.8-.3 1.4-1.1 1.4-2s-.6-1.7-1.4-2z" fill="currentColor" fillOpacity=".45" /></svg>
+);
+export const Phone = ({ children, glow, time = '22:31', bare }: { children: ReactNode; glow?: string; time?: string; bare?: boolean }) => {
+  const screen = useRef<HTMLElement>(null);
+  const canvas = useRef<HTMLElement>(null);
+  const [k, setK] = useState(0);
+  useLayoutEffect(() => {
+    const s = screen.current, c = canvas.current;
+    if (!s || !c) return;
+    const fit = () => setK(s.clientWidth / c.offsetWidth);
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(s);
+    return () => ro.disconnect();
+  }, []);
+  return (
+    <Stack role="img" aria-label="iPhone" style={{ position: 'relative', height: '90%', aspectRatio: '71.5 / 147.6', flexShrink: 0, borderRadius: '19% / 9.2%', padding: '1.1%', background: TI, boxShadow: `inset 0 0 0 1px rgba(255,255,255,.25), 0 30px 80px -20px ${glow ?? 'rgba(0,0,0,.8)'}` }}>
+      <Btn side="left" top="17%" h="5%" /><Btn side="left" top="25%" h="9%" /><Btn side="left" top="36%" h="9%" /><Btn side="right" top="28%" h="14%" />
+      <Stack style={{ flex: 1, borderRadius: '18% / 8.7%', padding: '2.3%', background: '#000' }}>
+        <Stack ref={screen} style={{ position: 'relative', flex: 1, borderRadius: '15.5% / 7.5%', background: bare ? '#000' : `radial-gradient(120% 60% at 50% 0%, #26303f 0%, ${F.panel} 60%)`, overflow: 'hidden', color: F.ink }}>
+          <Stack ref={canvas} style={{ position: 'absolute', top: 0, left: 0, width: '17rem', height: '36.8rem', transform: `scale(${k})`, transformOrigin: '0 0', opacity: k ? 1 : 0 }}>
+            <Stack direction="horizontal" align="center" justify="between" style={{ height: '3.2rem', paddingInline: '1.6rem 1.3rem', flexShrink: 0 }}>
+              <Text size="sm" color="inherit" weight="semibold" style={{ width: '3.4rem' }}>{time}</Text>
+              <Stack direction="horizontal" gap={0.5} align="center"><Bars /><Wifi /><Battery /></Stack>
+            </Stack>
+            <Stack aria-hidden="true" style={{ position: 'absolute', top: '0.7rem', left: '50%', transform: 'translateX(-50%)', width: '5.6rem', height: '1.65rem', borderRadius: 'var(--radius-full)', background: '#000' }} />
+            <Stack gap={1} style={{ flex: 1, paddingInline: '1rem', paddingBlock: '0.6rem 0', minHeight: 0 }}>{children}</Stack>
+            <Stack aria-hidden="true" style={{ alignSelf: 'center', width: '6.4rem', height: '0.3rem', margin: '0.6rem 0 0.5rem', borderRadius: 'var(--radius-full)', background: 'rgba(255,255,255,.85)', flexShrink: 0 }} />
+          </Stack>
+        </Stack>
+      </Stack>
+    </Stack>
+  );
+};
 const Note = ({ title, sub, color, delay = 0 }: { title: string; sub: string; color: string; delay?: number }) => (
   <Stack data-pop="" gap={0} padding={1.5} style={{ background: 'rgba(255,255,255,.07)', borderRadius: '0.8rem', borderInlineStart: `3px solid ${color}`, animationDelay: `${delay}s` }}>
     <Text size="xsm" color="inherit" weight="semibold">{title}</Text>
@@ -67,19 +109,28 @@ function Scene({ i }: { i: number }) {
     case 0: return (
       <Row>
         <Stack gap={1} align="center"><Big color={F.soft}>22:30</Big><Text size="sm" color="inherit" style={{ color: F.soft }}>{t({ de: 'Dienstag', en: 'Tuesday' })}</Text></Stack>
-        <Phone glow="rgba(56,193,114,.35)">
-          <Stack gap={1} align="center" justify="center" style={{ flex: 1 }}>
-            <Stack data-ring="" align="center" justify="center" style={{ width: '3.2rem', height: '3.2rem', borderRadius: 'var(--radius-full)', background: F.green }}><Text color="inherit" style={{ fontSize: '1.4rem' }}>✆</Text></Stack>
-            <Text size="sm" color="inherit" weight="semibold">079 412 33 08</Text>
-            <Text size="xsm" color="inherit" style={{ color: F.soft }}>{t({ de: 'Eingehender Anruf …', en: 'Incoming call …' })}</Text>
+        <Phone glow="rgba(56,193,114,.35)" time="22:30">
+          <Stack gap={0.5} align="center" style={{ paddingTop: '2.4rem', textAlign: 'center' }}>
+            <Text size="sm" color="inherit" style={{ color: F.soft }}>{t({ de: 'Mobil', en: 'Mobile' })}</Text>
+            <Text color="inherit" style={{ fontSize: '1.9rem', lineHeight: 1.15, fontWeight: 400 }}>079 412 33 08</Text>
+          </Stack>
+          <Stack direction="horizontal" justify="between" align="end" style={{ marginTop: 'auto', paddingInline: '1.4rem', paddingBottom: '2.6rem' }}>
+            {[{ c: F.red, l: t({ de: 'Ablehnen', en: 'Decline' }), r: '135deg' }, { c: F.green, l: t({ de: 'Annehmen', en: 'Accept' }), r: '0deg', ring: true }].map(b => (
+              <Stack key={b.l} gap={1} align="center">
+                <Stack data-ring={b.ring ? '' : undefined} align="center" justify="center" style={{ width: '4.2rem', height: '4.2rem', borderRadius: 'var(--radius-full)', background: b.c }}>
+                  <svg viewBox="0 0 24 24" width="1.9rem" aria-hidden="true" style={{ transform: `rotate(${b.r})` }}><path fill="#fff" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z" /></svg>
+                </Stack>
+                <Text size="xsm" color="inherit">{b.l}</Text>
+              </Stack>
+            ))}
           </Stack>
         </Phone>
       </Row>
     );
     case 1: return (
       <Row>
-        <Phone>
-          <Text size="xsm" color="inherit" style={{ color: F.soft }}>22:41</Text>
+        <Phone time="22:41">
+          <Text size="xsm" color="inherit" weight="semibold" style={{ color: F.soft }}>{t({ de: 'Mitteilungen', en: 'Notifications' })}</Text>
           <Note color={F.red} title={t({ de: 'Verpasster Anruf', en: 'Missed call' })} sub="079 412 33 08 · 22:30" />
           <Note color={F.red} title={t({ de: 'Verpasster Anruf', en: 'Missed call' })} sub="076 220 18 45 · 22:34" delay={0.6} />
           <Note color={F.red} title={t({ de: 'Verpasster Anruf', en: 'Missed call' })} sub="078 903 11 72 · 22:39" delay={1.2} />
@@ -151,7 +202,7 @@ function Scene({ i }: { i: number }) {
             </Stack>
           ))}
         </Stack>
-        <Phone><Text size="xsm" color="inherit" style={{ color: F.soft }}>{t({ de: 'Dienstag, 18:00', en: 'Tuesday, 6 pm' })}</Text><Note color={F.orange} title={t({ de: 'Erinnerung', en: 'Reminder' })} sub={t({ de: 'Morgen 8:00 · Muster Sanitär', en: 'Tomorrow 8:00 · Muster Sanitär' })} /></Phone>
+        <Phone time="18:00"><Text size="xsm" color="inherit" style={{ color: F.soft }}>{t({ de: 'Dienstag', en: 'Tuesday' })}</Text><Note color={F.orange} title={t({ de: 'Erinnerung', en: 'Reminder' })} sub={t({ de: 'Morgen 8:00 · Muster Sanitär', en: 'Tomorrow 8:00 · Muster Sanitär' })} /></Phone>
       </Row>
     );
     case 8: return (
