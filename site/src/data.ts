@@ -9,7 +9,7 @@ export const useT = () => {
   return (s: T) => s[lang];
 };
 
-export const CONTACT_EMAIL = 'khangcung196@gmail.com';
+export const CONTACT_EMAIL = 'khang@cung-solutions.ch';
 export const chf = (n: number) => 'CHF ' + n.toLocaleString('de-CH').replace(/[’']/g, "'");
 export const mailto = (subject: string, body = '') =>
   `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
