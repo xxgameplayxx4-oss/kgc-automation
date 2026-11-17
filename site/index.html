@@ -20,6 +20,7 @@
         main > *:not(#top){animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 30%}
         @keyframes rise{from{opacity:0;transform:translateY(32px) scale(.985)}}
       }}
+      .viz-down{transform:rotate(90deg)}
       /* Configurator: the live preview follows while the add-on list scrolls (two-column widths only). */
       @media (min-width: 64rem){[data-sticky]{position:sticky;top:5rem}}
       @media (min-width: 64rem){[data-cfg]{grid-template-columns:minmax(20rem,25rem) minmax(0,1fr)!important}}
