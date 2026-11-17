@@ -39,13 +39,13 @@ const BASE_FEATURES: T[] = [
 ];
 export { BASE_FEATURES };
 
-// Fixed website prices (KGC, 2026-11-14): Core 2'000, Pro 3'000. Upgrade of an existing site from 750.
+// Fixed website prices (KGC, 2026-11-14): Core 2'000, Pro 3'000. Upgrade of an existing site from 1'000 (KGC, 2026-11-17).
 export const CORE_PRICE = 2000;
 export const PRO_PRICE = 3000;
 /** Lowest new-website price, for teasers. */
 export const BASE_PRICE = CORE_PRICE;
 // Redo of an existing site: content already exists, so less back and forth (KGC, 2026-11-14).
-export const UPGRADE_PRICE = 750;
+export const UPGRADE_PRICE = 1000;
 // Anfragen-Autopilot: monthly only, no setup fee (KGC, 2026-11-14).
 export const AUTOPILOT_MONTHLY = 200;
 // Automation Add-on for businesses that only want automations, monthly (KGC, 2026-11-14).
