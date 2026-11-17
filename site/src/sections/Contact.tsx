@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@astryxdesign/core/Link';
-import { VStack } from '@astryxdesign/core/Layout';
-import { Heading, Text } from '@astryxdesign/core/Text';
+import { HStack, VStack } from '@astryxdesign/core/Layout';
+import { Text } from '@astryxdesign/core/Text';
+import { Block, Chips, Flow, SectionHead, VIZ } from './viz';
 import { Button } from '@astryxdesign/core/Button';
 import { Card } from '@astryxdesign/core/Card';
 import { Banner } from '@astryxdesign/core/Banner';
@@ -53,13 +54,9 @@ export default function Contact() {
   };
 
   return (
-    <VStack as="section" gap={6} paddingInline={4} paddingBlock={10} maxWidth={720} style={{ marginInline: 'auto', width: '100%' }}>
-      <VStack gap={2}>
-        <Heading level={1} type="display-2">{t({ de: 'Kontakt', en: 'Contact' })}</Heading>
-        <Text color="secondary">
-          {t({ de: 'Schreiben Sie mir kurz, worum es geht. Ich melde mich innert 24 Stunden bei Ihnen.', en: 'Tell me briefly what it is about. I will get back to you within 24 hours.' })}
-        </Text>
-      </VStack>
+    <Block gap={6}>
+      <SectionHead level={1} title={{ de: 'Kontakt', en: 'Contact' }} sub={{ de: 'Schreiben Sie kurz, worum es geht.', en: 'Tell me briefly what it is about.' }} />
+      <VStack gap={6} maxWidth={720}>
       {state === 'sent' ? (
         <Banner status="success" title={t({ de: 'Danke, Ihre Nachricht ist angekommen.', en: 'Thank you, your message has arrived.' })} description={t({ de: 'Ich melde mich innert 24 Stunden.', en: 'I will reply within 24 hours.' })} />
       ) : (
@@ -83,11 +80,21 @@ export default function Contact() {
           </VStack>
         </Card>
       )}
-      <VStack gap={1}>
-        <Text weight="medium">{t({ de: 'Lieber direkt?', en: 'Prefer direct contact?' })}</Text>
+      </VStack>
+      <Flow steps={[
+        { icon: UI.send, title: { de: 'Nachricht', en: 'Message' } },
+        { icon: VIZ.clock, title: { de: 'Antwort innert 24 h', en: 'Reply within 24 h' } },
+        { icon: UI.chat, title: { de: 'Kostenloses Gespräch', en: 'Free call' }, text: { de: '20 Minuten', en: '20 minutes' }, accent: true },
+      ]} />
+      <Chips items={[
+        { icon: VIZ.pin, label: { de: 'Brugg AG', en: 'Brugg AG' } },
+        { icon: VIZ.clock, label: { de: 'Antwort innert 24 h', en: 'Reply within 24 h' } },
+        { icon: VIZ.lock, label: { de: 'Daten in der Schweiz oder EU', en: 'Data in Switzerland or the EU' } },
+      ]} />
+      <HStack gap={5} wrap="wrap">
         <Text><Link href={mailto('Anfrage')}>{CONTACT_EMAIL}</Link></Text>
         <Text><Link href={`tel:${PHONE.replace(/\s/g, '')}`}>{PHONE}</Link></Text>
-      </VStack>
-    </VStack>
+      </HStack>
+    </Block>
   );
 }

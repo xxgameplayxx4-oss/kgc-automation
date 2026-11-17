@@ -1,5 +1,7 @@
 import { VStack } from '@astryxdesign/core/Layout';
-import { Heading, Text } from '@astryxdesign/core/Text';
+import { Text } from '@astryxdesign/core/Text';
+import Eyebrow from './Eyebrow';
+import { Block, SectionHead } from './viz';
 import { Collapsible, CollapsibleGroup } from '@astryxdesign/core/Collapsible';
 import { AUTOMATION_MONTHLY, AUTOPILOT_MONTHLY, CARE, DOMAIN_FEE, CORE_PRICE, PRO_PRICE, UPGRADE_PRICE, chf, useT, type T } from '../data';
 
@@ -19,18 +21,30 @@ const ITEMS: { q: T; a: T }[] = [
   { q: { de: 'Gehört die Website mir?', en: 'Do I own the website?' }, a: { de: 'Ja. Nach der Schlusszahlung gehören Ihnen die Website und alle Inhalte. Sie erhalten die Dateien auf Wunsch.', en: 'Yes. After final payment the website and all content belong to you. You can have the files on request.' } },
 ];
 
+// Indexes into ITEMS, grouped by topic.
+const GROUPS: { label: T; ids: number[] }[] = [
+  { label: { de: 'Preise', en: 'Pricing' }, ids: [9, 10, 11, 0, 7] },
+  { label: { de: 'Ablauf', en: 'Process' }, ids: [5, 6, 8, 12] },
+  { label: { de: 'Technik und Daten', en: 'Technology and data' }, ids: [1, 2, 3, 4] },
+];
+
 export default function Faq() {
   const t = useT();
   return (
-    <VStack id="faq" as="section" gap={5} paddingInline={4} paddingBlock={10} maxWidth={760} style={{ marginInline: 'auto', width: '100%' }}>
-      <Heading level={1} type="display-3">{t({ de: 'Häufige Fragen', en: 'FAQ' })}</Heading>
-      <CollapsibleGroup type="single" hasDividers>
-        {ITEMS.map((it, i) => (
-          <Collapsible key={i} value={String(i)} trigger={<Text weight="medium">{t(it.q)}</Text>}>
-            <Text color="secondary">{t(it.a)}</Text>
-          </Collapsible>
-        ))}
-      </CollapsibleGroup>
-    </VStack>
+    <Block id="faq" gap={8}>
+      <SectionHead level={1} title={{ de: 'Häufige Fragen', en: 'FAQ' }} />
+      {GROUPS.map(g => (
+        <VStack key={g.label.de} gap={2} maxWidth={760}>
+          <Eyebrow>{t(g.label)}</Eyebrow>
+          <CollapsibleGroup type="single" hasDividers>
+            {g.ids.map(i => (
+              <Collapsible key={i} value={String(i)} trigger={<Text weight="medium">{t(ITEMS[i].q)}</Text>}>
+                <Text color="secondary">{t(ITEMS[i].a)}</Text>
+              </Collapsible>
+            ))}
+          </CollapsibleGroup>
+        </VStack>
+      ))}
+    </Block>
   );
 }

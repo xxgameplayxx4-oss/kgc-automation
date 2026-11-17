@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { LangContext, type Lang } from './data';
 import Nav from './sections/Nav';
 import Hero from './sections/Hero';
-import Packages from './sections/Packages';
+import Packages, { Care } from './sections/Packages';
 import Examples from './sections/Examples';
 import About from './sections/About';
 import Configurator from './sections/Configurator';
@@ -12,7 +12,7 @@ import Footer from './sections/Footer';
 import Projects from './sections/Projects';
 import Teaser from './sections/Teaser';
 import Contact from './sections/Contact';
-import Pains, { AutopilotTeaser, WebsitesTeaser } from './sections/Pains';
+import Pains, { Film, HowItWorks, Offers } from './sections/Pains';
 import Automations from './sections/Automations';
 
 // Hash routing: the artifact viewer only passes a plain #name, so pages and section anchors share the hash.
@@ -21,7 +21,7 @@ export type Page = (typeof PAGES)[number];
 const SECTION_PAGE: Record<string, Page> = {
   top: 'start', pakete: 'websites', beispiele: 'websites', konfigurator: 'websites',
   zusammenfassung: 'websites', print: 'websites', leistungen: 'websites', autopilot: 'automationen',
-  'film-demo': 'websites', 'autopilot-teaser': 'start',
+  'film-demo': 'websites', 'autopilot-teaser': 'start', film: 'start', wartung: 'websites',
 };
 const LANG_KEY = 'cung-lang';
 // Unknown hashes (e.g. #footer) keep the current page.
@@ -78,10 +78,10 @@ export default function App() {
     <LangContext.Provider value={{ lang, setLang }}>
       <Nav page={page} />
       <main>
-        {page === 'start' && <><Hero /><Pains /><AutopilotTeaser /><WebsitesTeaser /><Teaser /></>}
+        {page === 'start' && <><Hero /><Pains /><HowItWorks /><Film /><Offers /><Teaser /></>}
         {page === 'automationen' && <Automations />}
         {(websitesSeen || page === 'websites') && (
-          <section style={{ display: page === 'websites' ? 'contents' : 'none' }}><Packages /><Examples /><Print /><Configurator /></section>
+          <section style={{ display: page === 'websites' ? 'contents' : 'none' }}><Packages /><Examples /><Configurator /><Print /><Care /></section>
         )}
         {page === 'projekte' && <Projects />}
         {page === 'ueber-mich' && <About />}

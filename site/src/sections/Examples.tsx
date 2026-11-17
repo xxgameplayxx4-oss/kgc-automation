@@ -8,7 +8,7 @@ import { Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import { Tab, TabList } from '@astryxdesign/core/TabList';
-import Eyebrow from './Eyebrow';
+import { SectionHead } from './viz';
 import Funnels from './Funnels';
 import Emails from './Emails';
 import { useState } from 'react';
@@ -58,16 +58,13 @@ export default function Examples() {
   return (
     <Section id="beispiele" variant="transparent" padding={6}>
       <VStack gap={6} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
-        <VStack gap={3}>
-          <Eyebrow>{t({ de: 'Beispiele', en: 'Examples' })}</Eyebrow>
-          <Heading level={2}>{t({ de: 'So sieht das aus', en: 'What it looks like' })}</Heading>
-        </VStack>
+        <SectionHead eyebrow={{ de: 'Beispiele', en: 'Examples' }} title={{ de: 'So sieht das aus', en: 'What it looks like' }} />
         <TabList value={tab} onChange={setTab} role="tablist" hasDivider>
           {TABS.map(x => <Tab key={x.id} value={x.id} label={t(x.label)} panelId={"ex-" + x.id} />)}
         </TabList>
         {tab === 'hero' && (
           <VStack id="ex-hero" role="tabpanel" gap={5}>
-            <Text type="large" color="secondary">{t({ de: 'Der Startbereich ist das Erste, was Besucher sehen. Im Pro-Paket gestalte ich ihn mit Video oder Bildern speziell für Ihr Geschäft.', en: 'The hero is the first thing visitors see. In the Pro package I design it with video or imagery for your business.' })}</Text>
+            <Text color="secondary">{t({ de: 'Der erste Eindruck, im Pro-Paket individuell.', en: 'The first impression, custom in Pro.' })}</Text>
             <PhoneMore items={WORK} limit={3}>{shown => (
               <Grid columns={{ minWidth: 280, max: 3 }} gap={4}>
                 {shown.map(w => <WorkCard key={w.img} w={w} />)}
@@ -77,13 +74,13 @@ export default function Examples() {
         )}
         {tab === 'funnel' && (
           <VStack id="ex-funnel" role="tabpanel" gap={5}>
-            <Text type="large" color="secondary">{t({ de: 'Kunden buchen selbst, in 3 Schritten. Probieren Sie es gleich aus.', en: 'Customers book on their own, in 3 steps. Try it right here.' })}</Text>
+            <Text color="secondary">{t({ de: 'Buchen in 3 Schritten. Probieren Sie es aus.', en: 'Booking in 3 steps. Try it.' })}</Text>
             <Funnels />
           </VStack>
         )}
         {tab === 'mail' && (
           <VStack id="ex-mail" role="tabpanel" gap={5}>
-            <Text type="large" color="secondary">{t({ de: 'Dieselbe Reservation, einmal ohne und einmal mit Design. Ziehen Sie den Regler und vergleichen Sie.', en: 'The same booking, once without and once with design. Drag the slider and compare.' })}</Text>
+            <Text color="secondary">{t({ de: 'Ohne und mit Design. Ziehen Sie den Regler.', en: 'Without and with design. Drag the slider.' })}</Text>
             <Emails />
           </VStack>
         )}

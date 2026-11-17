@@ -460,8 +460,8 @@ export default function Configurator() {
     <Stack as="section" id="konfigurator" gap={6} paddingInline={4} paddingBlock={10} style={{ maxWidth: '100rem', marginInline: 'auto', width: '100%' }}>
       <Stack gap={2}>
         <Eyebrow>{t({ de: 'Konfigurator', en: 'Configurator' })}</Eyebrow>
-        <Heading level={2}>{t({ de: 'Stellen Sie Ihre Wunsch-Website zusammen', en: 'Build your dream website' })}</Heading>
-        <Text color="secondary">{t({ de: 'Paket wählen, Automationen und Druckdesign nach Wunsch. Alle Preise sind fix.', en: 'Pick a package, add automations and print design if you like. All prices are fixed.' })}</Text>
+        <Heading level={2}>{t({ de: 'Ihr Paket zusammenstellen', en: 'Build your package' })}</Heading>
+        <Text color="secondary">{t({ de: 'Alle Preise sind fix.', en: 'All prices are fixed.' })}</Text>
         {!phone && <Link href="#beispiele" size="sm">{t({ de: 'Buchungs-Funnels live ausprobieren', en: 'Try the booking funnels live' })}</Link>}
       </Stack>
 

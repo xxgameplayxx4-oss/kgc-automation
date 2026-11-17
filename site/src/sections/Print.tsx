@@ -9,7 +9,7 @@ import { Button } from '@astryxdesign/core/Button';
 import { AspectRatio } from '@astryxdesign/core/AspectRatio';
 import { useState } from 'react';
 import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl';
-import Eyebrow from './Eyebrow';
+import { SectionHead } from './viz';
 import { PRINT, chf, useT } from '../data';
 import { usePhone } from './usePhone';
 import { UI, ic } from './uiIcons';
@@ -30,11 +30,7 @@ export default function Print() {
   return (
     <Section id="print" variant="muted" padding={6}>
       <VStack gap={6} maxWidth={1200} style={{ marginInline: "auto", width: "100%" }}>
-        <VStack gap={3}>
-          <Eyebrow>Print</Eyebrow>
-          <Heading level={2}>{t({ de: 'Flyer und Visitenkarten im Design Ihrer Website', en: 'Flyers and business cards in your website’s design' })}</Heading>
-          <Text type="large" color="secondary">{t({ de: 'Gleiche Farben, gleiche Schrift, gleicher Auftritt. Alles aus einem Guss.', en: 'Same colours, same type, same look. All of one piece.' })}</Text>
-        </VStack>
+        <SectionHead eyebrow={{ de: 'Print', en: 'Print' }} title={{ de: 'Flyer und Visitenkarten', en: 'Flyers and business cards' }} sub={{ de: 'Im Design Ihrer Website.', en: 'In your website’s design.' }} />
         <Grid columns={{ minWidth: 300, max: 2 }} gap={6}>
           <VStack gap={4}>
             <SegmentedControl label={t({ de: 'Beispiel wählen', en: 'Choose an example' })} value={set.id} onChange={v => setId(v)} layout="fill">

@@ -4,54 +4,55 @@ import { Heading, Text } from '@astryxdesign/core/Text';
 import { Button } from '@astryxdesign/core/Button';
 import { contactDraft, useT } from '../data';
 import { usePhone } from './usePhone';
-import PromoFilm from './PromoFilm';
 import NightTicker from './NightTicker';
+import { CLIENTS } from './Projects';
 import { UI, ic } from './uiIcons';
+import { Stats } from './viz';
 
-// Hero (2026-11-16 redesign): the promise on the left, the proof on the right — a night of enquiries that answer themselves.
+// The trading journal is my own product, not a client.
+const REAL_CLIENTS = CLIENTS.filter(c => c.slug !== 'edge');
+
+// Hero (2026-11-18 restructure): promise, one line, two actions; the proof (night ticker, numbers, client names) does the talking.
+const PROOF = [
+  { value: '< 1 Min', label: { de: 'bis zur ersten Antwort', en: 'to the first reply' } },
+  { value: '24/7', label: { de: 'auch abends und am Wochenende', en: 'evenings and weekends too' } },
+  { value: String(REAL_CLIENTS.length), label: { de: 'Kundenprojekte', en: 'client projects' } },
+  { value: '1', label: { de: 'Ansprechpartner, vor Ort', en: 'contact, on site' } },
+];
+
 export default function Hero() {
   const t = useT();
   const phone = usePhone();
   return (
-    <VStack id="top" as="section" gap={10} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
+    <VStack id="top" as="section" gap={phone ? 8 : 10} paddingInline={4} paddingBlock={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
       <Grid columns={{ minWidth: 320, max: 2 }} gap={8} align="center">
-        <VStack gap={4}>
+        <VStack gap={5}>
           <Text size="sm" weight="semibold" color="accent" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            {t({ de: 'Automationen für KMU · Brugg AG', en: 'Automations for small businesses · Brugg AG' })}
+            {t({ de: 'Automationen und Websites für KMU', en: 'Automations and websites for SMEs' })}
           </Text>
           <Heading level={1} type="display-1" textWrap="balance">
             {t({ de: 'Keine Anfrage geht mehr verloren.', en: 'No enquiry gets lost again.' })}
           </Heading>
           <Text type="large" color="secondary" textWrap="pretty">
             {t({
-              de: 'Ich automatisiere die Büroarbeit von KMU im Aargau, mit den Programmen, die Sie schon haben.',
-              en: 'I automate office work for small businesses in Aargau, with the tools you already have.',
+              de: 'Ich automatisiere Anfragen, Offerten und Termine für kleine und mittlere Unternehmen. Und baue die Website dazu.',
+              en: 'I automate enquiries, quotes and bookings for small and medium-sized businesses. And build the website to match.',
             })}
           </Text>
           <HStack gap={3} wrap="wrap">
-            <Button icon={ic(UI.calendar)}
-              size="lg"
-              variant="primary"
-              href="#kontakt"
+            <Button icon={ic(UI.calendar)} size="lg" variant="primary" href="#kontakt"
               onClick={() => { contactDraft.subject = 'Kostenloses Gespräch'; }}
-              label={t({ de: 'Kostenloses Gespräch, 20 Minuten', en: 'Free call, 20 minutes' })}
-            />
-            <Button icon={ic(UI.arrow)} size="lg" href="#automationen" label={t({ de: 'Automationen ansehen', en: 'See automations' })} />
+              label={t({ de: 'Kostenloses Gespräch', en: 'Free call' })} />
+            <Button icon={ic(UI.play)} size="lg" href="#film" label={t({ de: 'Film ansehen, 1 Minute', en: 'Watch the film, 1 minute' })} />
           </HStack>
-          {!phone && (
-            <Text type="supporting">
-              {t({
-                de: 'Ein Ansprechpartner aus Brugg · Keine Offerte ohne Ihre Freigabe · Antwort innert 24 h',
-                en: 'One contact in Brugg · No quote without your approval · Reply within 24 h',
-              })}
-            </Text>
-          )}
         </VStack>
         <NightTicker />
       </Grid>
-      <VStack width="100%" maxWidth={960} style={{ marginInline: 'auto' }}>
-        <PromoFilm />
-      </VStack>
+      <Stats items={PROOF} />
+      <HStack gap={phone ? 3 : 6} wrap="wrap" vAlign="center" paddingBlock={4} style={{ borderBlock: '1px solid var(--color-border)' }}>
+        <Text size="sm" color="secondary" style={{ letterSpacing: '0.08em', textTransform: 'uppercase' }}>{t({ de: 'Im Einsatz bei', en: 'Trusted by' })}</Text>
+        {REAL_CLIENTS.map(c => <Text key={c.slug} weight="semibold">{t(c.title)}</Text>)}
+      </HStack>
     </VStack>
   );
 }

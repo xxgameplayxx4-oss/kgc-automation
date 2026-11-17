@@ -13,7 +13,7 @@ import { ClickableCard } from '@astryxdesign/core/ClickableCard';
 import { Dialog, DialogHeader } from '@astryxdesign/core/Dialog';
 import { useState, useSyncExternalStore } from 'react';
 import { useT, type T } from '../data';
-import Eyebrow from './Eyebrow';
+import { SectionHead } from './viz';
 import { UI, ic } from './uiIcons';
 import InViewVideo from './InViewVideo';
 import { usePhone } from './usePhone';
@@ -190,14 +190,9 @@ function ProjectCard({ p, paid }: { p: Project; paid?: boolean }) {
 }
 
 function Group({ eyebrow, heading, intro, items, paid, min }: { eyebrow: T; heading: T; intro: T; items: Project[]; paid?: boolean; min: number }) {
-  const t = useT();
   return (
     <VStack gap={6}>
-      <VStack gap={2}>
-        <Eyebrow>{t(eyebrow)}</Eyebrow>
-        <Heading level={2}>{t(heading)}</Heading>
-        <Text color="secondary" style={{ maxWidth: "42rem" }}>{t(intro)}</Text>
-      </VStack>
+      <SectionHead eyebrow={eyebrow} title={heading} sub={intro} />
       <PhoneMore items={items} limit={3}>
         {shown => (
           <Grid columns={{ minWidth: min, max: 3 }} gap={8}>
@@ -213,16 +208,17 @@ export default function Projects() {
   return (
     <Section id="projekte" variant="transparent" padding={6}>
       <VStack gap={10} maxWidth={1200} style={{ marginInline: 'auto', width: '100%' }}>
+        <SectionHead level={1} title={{ de: 'Projekte', en: 'Projects' }} />
         <Group
-          eyebrow={{ de: 'Projekte', en: 'Projects' }}
+          eyebrow={{ de: 'Umgesetzt', en: 'Delivered' }}
           heading={{ de: 'Kundenprojekte', en: 'Client projects' }}
-          intro={{ de: 'Für zahlende Kunden umgesetzt. Tippen Sie auf eine Vorschau, um durch die Seite zu scrollen.', en: 'Built for paying clients. Tap a preview to scroll through the site.' }}
+          intro={{ de: 'Für Kunden umgesetzt. Tippen Sie auf eine Vorschau.', en: 'Built for clients. Tap a preview.' }}
           items={CLIENTS} paid min={420}
         />
         <Group
           eyebrow={{ de: 'Entwürfe', en: 'Drafts' }}
           heading={{ de: 'Konzeptentwürfe', en: 'Concept designs' }}
-          intro={{ de: 'Entwürfe für lokale Geschäfte. Namen und Links sind bewusst weggelassen.', en: 'Drafts for local businesses. Names and links are left out on purpose.' }}
+          intro={{ de: 'Unverbindliche Beispiele, anonymisiert und ohne Links.', en: 'Non-binding examples, anonymised and without links.' }}
           items={CONCEPTS} min={280}
         />
       </VStack>
