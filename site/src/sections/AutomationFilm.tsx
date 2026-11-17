@@ -276,7 +276,8 @@ export function FilmPlayer({ lines, voice, scene, nightUntil = 0, label }: { lin
   const toggle = () => {
     const a = audio.current;
     if (!a) return;
-    if (a.paused) { if (a.ended) a.currentTime = 0; void a.play(); } else a.pause();
+    // KGC: the film sat on the dimmed first frame for 1-2 s. Drop the overlay on the click itself, not when the audio finally starts.
+    if (a.paused) { if (a.ended) a.currentTime = 0; setPlaying(true); a.play().catch(() => setPlaying(false)); } else a.pause();
   };
   const seek = (s: number) => { if (audio.current) { audio.current.currentTime = s; setTime(s); } };
 
@@ -318,7 +319,7 @@ export function FilmPlayer({ lines, voice, scene, nightUntil = 0, label }: { lin
         <Button variant={cc ? 'primary' : 'secondary'} icon={ic(UI.cc)} isIconOnly aria-pressed={cc} onClick={toggleCc}
           label={cc ? t({ de: 'Untertitel ausschalten', en: 'Turn captions off' }) : t({ de: 'Untertitel einschalten', en: 'Turn captions on' })} />
       </Stack>
-      <audio ref={audio} src={voice[lang]} preload="metadata"
+      <audio ref={audio} src={voice[lang]} preload="auto"
         onPlay={e => { e.currentTarget.playbackRate = SPEED; setPlaying(true); }} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)}
         onLoadedMetadata={e => { const d = e.currentTarget.duration; if (Number.isFinite(d)) setDur(d); }} />
     </Stack>
