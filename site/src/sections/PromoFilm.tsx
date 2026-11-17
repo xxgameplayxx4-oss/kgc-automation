@@ -70,7 +70,7 @@ function Scene({ i }: { i: number }) {
           <Ticks items={[t({ de: 'Alle Funktionen', en: 'Every feature' }), t({ de: 'Buchungs-Funnel', en: 'Booking funnel' }), t({ de: 'Film als Startbereich', en: 'Film hero' })]} />
         </Stack>
         <Stack style={{ width: '56%', aspectRatio: '16 / 10', borderRadius: '0.6rem', overflow: 'hidden', boxShadow: `0 0 0 1px ${F.line}` }}>{/* Real walk-in footage from client Mobile Master (KGC, 2026-11-16) */}
-          <video src="/work/video/mobilemaster-walkin.mp4" poster="/projects/mobilemaster-desktop.webp" autoPlay muted loop playsInline aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></Stack>
+          <video src="/work/video/mobilemaster-walkin-v2.mp4" poster="/work/video/mobilemaster-walkin.webp" autoPlay muted loop playsInline aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></Stack>
       </Row>
     );
     case 5: return (

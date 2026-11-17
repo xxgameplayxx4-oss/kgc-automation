@@ -33,8 +33,8 @@ export default function HeroFilmDemo() {
       <Text color="secondary">{t({ de: 'Ein kurzer, ruhiger Film statt eines Stockfotos: Besucher sehen sofort, wo sie hineingehen.', en: 'A short, calm film instead of a stock photo: visitors see right away where they are walking in.' })}</Text>
       <Stack className="kgc-film">
         {reduce
-          ? <img src="/projects/mobilemaster-desktop.webp" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <InViewVideo src="/work/video/mobilemaster-walkin.mp4" poster="/projects/mobilemaster-desktop.webp" aria-hidden="true" />}
+          ? <img src="/work/video/mobilemaster-walkin.webp" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+          : <InViewVideo src="/work/video/mobilemaster-walkin-v2.mp4" poster="/work/video/mobilemaster-walkin.webp" aria-hidden="true" />}
         <Stack className="shade" />
         <Stack className="bar" style={{ top: 0 }} />
         <Stack className="bar" style={{ bottom: 0 }} />
